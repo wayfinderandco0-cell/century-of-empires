@@ -871,7 +871,11 @@ function v12TapTarget(p,g,el){
 function v12Waypoint(o){
  const path=Array.isArray(o.route)&&o.route.length>1?o.route:[o.from,o.to];
  const p=Math.max(0,Math.min(.99,((o.travelTime||o.eta)-o.eta)/Math.max(1,o.travelTime||o.eta)));
- return path[Math.min(path.length-2,Math.floor(p*(path.length-1)))]||o.from;
+ const legs=[];let total=0;
+ for(let i=0;i<path.length-1;i++){const weight=Math.max(1,routeLength(path[i],path[i+1]));legs.push(weight);total+=weight;}
+ let covered=p*total,idx=0;
+ for(let i=0;i<legs.length-1;i++){if(covered<legs[i])break;covered-=legs[i];idx++;}
+ return path[idx]||o.from;
 }
 function v12Reroute(o,id){
  if(!state.orders.includes(o)||o.owner!==state.player)return false;
@@ -899,7 +903,7 @@ function v12OrderButtons(o,panel){
  const change=document.createElement('button');change.textContent='➜ Redirect';
  row.append(back,change);root.appendChild(row);
  back.addEventListener('click',()=>{if(!v12Reroute(o,o.home||o.from))notice('Recall unavailable: no friendly route home.');});
- change.addEventListener('click',()=>{v12Reorder=o;v11ActiveOrder=null;panel.hidden=true;notice('Choose a new destination on the map for this marching army.');});
+ change.addEventListener('click',()=>{v12Reorder=o;v11ActiveOrder=null;panel.hidden=true;render();notice('Choose a glowing destination for this marching army.');});
 }
 
 function renderMap(){

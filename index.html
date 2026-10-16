@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#111a22"><title>Century of Empires · 1780–1880 · Prototype 12</title>
+<meta name="theme-color" content="#111a22"><title>Century of Empires · 1780–1880 · Prototype 13</title>
 <style>
 :root{--navy:#101923;--navy2:#192635;--panel:#202c38;--panel2:#263645;--gold:#d9b56d;--cream:#f4ead8;--muted:#a9bdc9;--line:#3b5060;--green:#79cbb0;--red:#f08e87}
 [hidden]{display:none!important}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0d1620;color:var(--cream);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px}body{padding:0 0 max(30px,env(safe-area-inset-bottom))}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.38;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffcf71;outline-offset:3px}.container{max-width:1200px;margin:auto;padding:15px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-size:11px;font-weight:750}.head{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:2px 0 16px}h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(27px,5vw,42px);letter-spacing:.01em;margin:2px 0 4px;line-height:1.08}h2{font-size:18px;font-family:Georgia,'Times New Roman',serif;font-weight:650;margin:0 0 10px}p{line-height:1.48}.small{font-size:12px;color:var(--muted)}.tag{display:inline-block;border:1px solid #6b654c;background:#3d3628;color:#fbe1a0;border-radius:30px;padding:7px 12px;font-size:12px;font-weight:700}.header-actions{display:flex;align-items:center;gap:9px}.outline{border:1px solid #647487;color:var(--cream);background:transparent;border-radius:8px;padding:10px 12px;font-size:13px;min-height:42px}.strong{background:var(--gold);color:#16202b;border:0;border-radius:8px;padding:11px 15px;font-weight:800;min-height:44px}.ghost{border:1px solid var(--line);background:#172430;color:#ecf0ee;border-radius:8px;padding:11px 12px;min-height:44px;font-weight:600}.danger{color:#ffb4a6;border-color:#8b504e}.statbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:13px 0}.stat{min-width:0;background:#1a2935;border:1px solid #344b5a;border-radius:10px;padding:10px}.stat span{display:block;color:#a7b7c1;font-size:10px;text-transform:uppercase;letter-spacing:.08em}.stat strong{display:block;margin-top:3px;font-variant-numeric:tabular-nums;font-size:19px;color:#fff;white-space:nowrap}.stat strong.gold{color:#f5cb79}.stat strong.green{color:#86dab0}.body-grid{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(280px,.85fr);gap:12px}.card{background:var(--navy2);border:1px solid #385061;border-radius:12px;overflow:hidden}.card-pad{padding:15px}.map-top{padding:13px 14px;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.map-title{font-weight:800;letter-spacing:.02em;font-size:14px}.map-wrap{overflow:auto;max-width:100%;background:linear-gradient(130deg,#173e50,#143246 55%,#123548);border-top:1px solid #36566a;border-bottom:1px solid #36566a;-webkit-overflow-scrolling:touch}.map-wrap svg{width:100%;min-width:750px;height:auto;display:block}.legend{display:flex;flex-wrap:wrap;gap:7px 12px;padding:10px 14px;font-size:11px;color:#bfd0db}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.help{margin:0;padding:10px 14px;border-top:1px solid #344955;color:#a6bdcc;font-size:12px}.sidebar{display:flex;flex-direction:column;gap:12px}.province-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.mini{background:#1a2937;border:1px solid #334859;border-radius:8px;padding:8px}.mini span{display:block;color:#9fb5c0;font-size:11px}.mini strong{font-size:15px}.rule{height:1px;background:#354c5b;margin:12px 0}.split{display:flex;justify-content:space-between;gap:9px;align-items:center;flex-wrap:wrap}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{min-width:0;text-align:center}.action-note{font-size:12px;color:#a9bdc9;line-height:1.5;margin:8px 0 0}.status{margin-top:8px;border-left:3px solid var(--gold);padding:9px 12px;background:#172632;font-size:12px;line-height:1.5;color:#e7ddc9;min-height:50px}.slideline{display:flex;align-items:center;gap:8px;margin:12px 0}.slideline input{flex:1;min-width:65px;accent-color:var(--gold)}.slideline output{min-width:30px;text-align:right;font-weight:800}.campaign{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.campaign-buttons{display:flex;gap:7px;flex-wrap:wrap}.eventbox{min-height:130px;max-height:200px;overflow:auto}.event{padding:8px 2px;border-bottom:1px solid #324653;font-size:12px;line-height:1.5}.event em{font-style:normal;color:var(--gold);font-variant-numeric:tabular-nums}.text-green{color:var(--green)}.text-red{color:var(--red)}.text-gold{color:var(--gold)}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.rank-row{display:flex;justify-content:space-between;gap:12px;padding:8px 2px;border-bottom:1px solid #324653;font-size:12px}.rank-score{font-variant-numeric:tabular-nums;color:#dec387}.leader-card{background:#182835;border:1px solid #405264;border-radius:10px;padding:12px}.leader-name{font-family:Georgia,serif;font-size:16px;color:#f4dca6}.leader-card p{font-size:12px;color:#c2d3d6;margin:5px 0}.capsule{display:inline-block;border-radius:30px;background:#294457;padding:4px 8px;color:#b7e6db;font-size:10px;font-weight:700;margin-top:4px}.footer{margin-top:14px;color:#91a7b6;line-height:1.5;font-size:12px}.start-overlay{position:fixed;z-index:99;inset:0;background:rgba(5,10,16,.87);display:flex;justify-content:center;align-items:center;padding:14px;overflow-y:auto}.start-box{background:linear-gradient(160deg,#263749,#192632);border:1px solid #7f7454;border-radius:14px;max-width:530px;width:100%;padding:23px;box-shadow:0 18px 70px #0009}.start-box h2{font-size:30px;line-height:1.1;margin:4px 0 13px}.start-box p{color:#bdcbd3;font-size:14px}.start-box label{display:block;color:#e4d49e;font-size:12px;font-weight:800;margin:16px 0 6px}.start-box select{display:block;width:100%;background:#13202c;color:#fff;border:1px solid #667580;border-radius:8px;padding:13px;font-size:16px}.start-box .strong{width:100%;margin-top:17px}.highlight{color:#f0d28a}.province{cursor:pointer;outline:none}.province .zone{stroke:#88a2b0;stroke-width:1.7;opacity:.86;transition:stroke .15s}.province:hover .zone,.province:focus-visible .zone{stroke:#fff;stroke-width:3}.province.selected .zone{stroke:#ffde88;stroke-width:5;filter:drop-shadow(0 0 5px #ffd77d)}.province.source .zone{stroke:#8cead3;stroke-width:5}.province .city{fill:#122330;stroke:#f5e1bd;stroke-width:1.1}.province .name{font-family:system-ui,sans-serif;font-weight:760;fill:#fff;paint-order:stroke;stroke:#152b37;stroke-width:4;stroke-linejoin:round;font-size:12px;text-anchor:middle;pointer-events:none}.province .troops{font-weight:900;fill:#fff;font-size:11px;text-anchor:middle;pointer-events:none}.route{stroke:#adc3cd;opacity:.43;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:5 6}.sea{stroke:#65bcd3;opacity:.45;stroke-dasharray:3 8}.continent{fill:#2c544e;stroke:#739484;stroke-width:2;opacity:.83}.ship{fill:#b7dce6;opacity:.7}.map-caption{fill:#9ab7c7;font:italic 14px Georgia,serif;letter-spacing:1px;opacity:.7;pointer-events:none}.army-travel{stroke:#ffe29b;stroke-width:5;stroke-dasharray:9 6;opacity:.9}.army-chip{fill:#f2cf76;stroke:#19333c;stroke-width:1.5}.army-text{fill:#172430;font-size:11px;font-weight:900;text-anchor:middle}.pause-label{font-weight:700;font-size:11px;color:#f4d78f}.muted{color:#a9bdc9}.progress{height:6px;border-radius:9px;background:#344450;overflow:hidden;margin-top:8px}.progress>div{height:100%;width:0%;background:#d9b56d;transition:width .1s linear}@media(max-width:860px){.body-grid{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr}.sidebar .card:first-child{grid-column:1/-1}.statbar{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:580px){.container{padding:10px}.header-actions{width:100%;justify-content:space-between}.statbar{gap:5px}.stat{padding:8px 6px}.stat strong{font-size:17px}.stat span{font-size:9px}.sidebar,.two{grid-template-columns:1fr}.map-wrap svg{min-width:1000px}.start-box{padding:17px}.actions{grid-template-columns:1fr 1fr}.tag{font-size:11px;padding:6px 9px}}
@@ -88,20 +88,56 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 #mapPanel .map-top .split button:not([id=mapZoomOut]):not([id=mapZoomIn]){display:none!important}
 @media(orientation:landscape){.statbar{display:flex!important;top:39px;left:5px;right:auto;width:auto;max-width:min(76vw,630px);height:41px}.statbar .stat{display:none} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){display:block;min-width:106px;min-height:38px} .statbar .stat:nth-child(1) strong,.statbar .stat:nth-child(2) strong{font-size:18px}}
 @media(max-width:650px){.statbar .stat{min-width:71px;padding:4px 7px} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){min-width:92px}.statbar .stat strong{font-size:16px}}
+
+/* V13 historical European atlas visual language */
+.historical-caption{position:fixed;left:8px;bottom:max(6px,env(safe-area-inset-bottom));z-index:18;max-width:66vw;
+ font-size:10px;line-height:1.3;color:#f0e2bd;background:#172b3acf;padding:5px 8px;border:1px solid #99a68e87;border-radius:6px;pointer-events:none}
+#map{background:#153a49}.historical-realm{cursor:pointer}.historical-realm:hover{fill-opacity:.78}.historic-border{pointer-events:none}
+#provinceControl path{cursor:pointer}.map-city-label{font-family:Georgia,serif;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:#172a26;stroke-width:3.7;fill:#fff1d2}
+@media(orientation:landscape){.historical-caption{max-width:55vw;font-size:9px;bottom:5px}}
+
+/* Refined historical atlas treatment: terrain shows through political colors. */
+#historyPolygons{filter:drop-shadow(0 1px 2px #051e2f55)}
+#terrainVisual{opacity:.67;mix-blend-mode:multiply}
+#historicalBorders{pointer-events:none}
+#historicalBorders path{stroke-linejoin:round}
+#provinceControl path{transition:fill-opacity .15s}
+#provinceControl path:hover{fill-opacity:.37}
+#map .route{stroke:#ecdbb2;stroke-opacity:.32;stroke-width:1.1;stroke-dasharray:4 9}
+#map .army-travel{stroke:#fff0a4;stroke-width:3.5;stroke-dasharray:11 7}
+#map .army-click{filter:drop-shadow(0 2px 3px #10202bbb)}
+#map .flag-province:focus-visible{outline:2px solid #ffdc80}
 </style></head>
 <body><div class="container">
-<header class="head"><div><div class="eyebrow">Playable prototype 12 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
+<header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
 <div class="statbar" role="group" aria-label="National statistics"><div class="stat"><span>Treasury</span><strong id="hudMoney">120</strong></div><div class="stat"><span>Iron</span><strong id="hudIron">60</strong></div><div class="stat"><span>Food stores</span><strong id="hudFood">90</strong></div><div class="stat"><span>Popularity</span><strong class="gold" id="hudPopularity">65/100</strong></div><div class="stat"><span>Nation</span><strong id="hudNation">France</strong></div><div class="stat"><span>Year</span><strong class="gold" id="hudDate">1780</strong></div><div class="stat"><span>Provinces</span><strong class="green" id="hudLand">3</strong></div></div>
 <nav class="main-tabs" aria-label="Game screens"><button type="button" data-tab="map">🗺️ Map</button><button type="button" data-tab="diplomacy">🤝 Diplomacy</button><button type="button" data-tab="empire">🏛️ Empire</button><button type="button" data-tab="reports">📜 Reports <span id="unreadBadge" hidden></span></button></nav>
 <div class="incoming-alert" id="incomingAlert" hidden role="status" aria-live="polite"><strong id="incomingTitle">📨 Diplomatic message</strong><span id="incomingText"></span><div class="incoming-actions"><button type="button" id="alertAcceptBtn" class="strong">Accept</button><button type="button" id="alertDeclineBtn" class="ghost">Decline</button><button type="button" id="alertInboxBtn" class="outline">All offers</button></div></div>
-<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 2500 1640" role="img" aria-label="Interactive schematic strategy map of Europe. Select city markers to issue orders."><defs><pattern id="seaPattern" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r=".8" fill="#4d7985" opacity=".25"/></pattern></defs><rect x="0" y="0" width="2500" height="1640" fill="url(#seaPattern)"/><g id="worldGeometry" transform="translate(65 60) scale(1.90)"><g id="landscapeBackdrop" transform="translate(-125 -105) scale(1.28)"><path class="continent" d="M107 188 155 169 220 195 239 248 221 303 268 348 289 410 273 472 219 492 179 587 280 598 345 575 377 509 412 501 445 548 508 630 546 617 536 561 566 523 616 489 717 495 762 560 871 581 967 539 999 445 975 335 958 211 907 122 794 113 705 177 657 192 621 152 583 96 503 116 437 172 414 224 374 254 325 280 267 274 239 209 194 183Z"/><path fill="#19495b" stroke="#7597a6" stroke-width="2" d="M143 228 168 183 213 211 208 268 236 293 211 344 175 339 150 301Z"/><path fill="#19495b" stroke="#7597a6" stroke-width="2" d="M411 179 429 126 470 108 499 150 493 209 466 252 425 238Z"/><text class="map-caption" x="103" y="460">ATLANTIC</text><text class="map-caption" x="522" y="580">MEDITERRANEAN</text><text class="map-caption" x="788" y="88">BALTIC &amp; NORTH</text></g><g id="routes"></g><g id="travel"></g><g id="provinces"></g></g></svg></div><details class="legend-fold"><summary>Country colors &amp; map legend</summary><div class="legend" id="legend"></div></details><div id="countryQuick" class="country-quick" aria-live="polite"><div class="split"><div><strong id="quickCountryTitle">Select a country</strong><div class="small" id="quickCountrySummary">Tap a colored city circle on the map.</div></div><span class="tag" id="quickPopularity">Popularity –</span></div><div class="actions" style="margin-top:9px"><button class="strong" id="quickDiplomacyBtn" type="button">Explore diplomacy</button><button class="ghost" id="quickMarchBtn" type="button">Plan march / attack</button><button class="ghost" id="quickManageBtn" type="button" hidden>Manage province</button></div></div><p class="help">☝️ Tap any city's colored circle to choose its country, then use the actions beneath the map. F = food · I = iron · $ = trade. Swipe sideways to explore.</p></section>
+<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 1700 1070" role="img" aria-label="Historical Europe strategy map based on reconstructed 1783 borders and geographic provinces. Tap a territory or army for orders.">
+<defs>
+<linearGradient id="oceanGrad" x1="0" y1="0" x2=".65" y2="1"><stop offset="0" stop-color="#102d41"/><stop offset=".6" stop-color="#164355"/><stop offset="1" stop-color="#254a54"/></linearGradient>
+<linearGradient id="landGrad" x1="0" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#7b8d72"/><stop offset="1" stop-color="#a1a181"/></linearGradient>
+<pattern id="seaStripes" width="21" height="21" patternUnits="userSpaceOnUse"><path d="M0 21 21 0" stroke="#a1c7bf" stroke-width=".45" opacity=".11"/></pattern>
+<pattern id="forestTexture" width="21" height="21" patternUnits="userSpaceOnUse"><path d="M7 2 1 12 13 12 Z M18 7 12 17 24 17 Z" fill="#213e31" fill-opacity=".55"/><path d="M7 12 v5 M18 17 v3" stroke="#213e31" stroke-width="1.5"/></pattern>
+<pattern id="hillTexture" width="36" height="26" patternUnits="userSpaceOnUse"><path d="M0 22 12 8 24 22 M16 26 27 15 38 26" fill="none" stroke="#514c3c" stroke-opacity=".58" stroke-width="1.8"/></pattern>
+<mask id="historicalLandMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1700" height="1070"><rect width="1700" height="1070" fill="black"/><g id="historicalMaskPaths" fill="white"></g></mask>
+<clipPath id="historicalMapClip"><rect width="1700" height="1070"/></clipPath>
+</defs>
+<rect width="1700" height="1070" fill="url(#oceanGrad)"/><rect width="1700" height="1070" fill="url(#seaStripes)"/>
+<g clip-path="url(#historicalMapClip)">
+<g id="historyPolygons"></g><g id="terrainVisual" mask="url(#historicalLandMask)"></g>
+<g id="provinceControl" mask="url(#historicalLandMask)"></g><g id="historicalBorders"></g>
+<g id="naturalDetails" mask="url(#historicalLandMask)"></g>
+<g id="routes"></g><g id="travel"></g><g id="provinces"></g>
+</g></svg></div>
+<div class="historical-caption" id="historicalMapStatus">Historical Europe (1783) · Loading reconstructed political borders…</div><details class="legend-fold"><summary>Country colors &amp; map legend</summary><div class="legend" id="legend"></div></details><div id="countryQuick" class="country-quick" aria-live="polite"><div class="split"><div><strong id="quickCountryTitle">Select a country</strong><div class="small" id="quickCountrySummary">Tap a colored city circle on the map.</div></div><span class="tag" id="quickPopularity">Popularity –</span></div><div class="actions" style="margin-top:9px"><button class="strong" id="quickDiplomacyBtn" type="button">Explore diplomacy</button><button class="ghost" id="quickMarchBtn" type="button">Plan march / attack</button><button class="ghost" id="quickManageBtn" type="button" hidden>Manage province</button></div></div><p class="help">☝️ Tap any city's colored circle to choose its country, then use the actions beneath the map. F = food · I = iron · $ = trade. Swipe sideways to explore.</p></section>
 <div class="sidebar"><section class="card card-pad" id="selectionCard"><div class="split"><h2 id="selectionTitle">Your capital</h2><span class="small" id="selectionType">Tap a province</span></div><div id="selectionSummary" class="small">Select a province on the map to see its owner and army.</div><div class="province-meta"><div class="mini"><span>Troops stationed</span><strong id="selTroops">–</strong></div><div class="mini"><span>Fortification</span><strong id="selFort">–</strong></div><div class="mini"><span>Local income</span><strong id="selIncome">–</strong></div><div class="mini"><span>Terrain</span><strong id="selTerrain">–</strong></div></div><div class="resource-panel"><div class="small" style="margin-bottom:8px;color:#e7c985;font-weight:750">LOCAL GEOGRAPHY · MONTHLY PRODUCTION</div><div class="resource-row"><span>🌾 Food <b id="selFoodOutput">+0</b></span><span>⛏️ Iron <b id="selIronOutput">+0</b></span><span>🪙 Trade & tax <b id="selTradeOutput">+0</b></span></div><div class="geo-note" id="selGeoNote">Geography determines natural resources and construction benefits.</div></div><div class="rule"></div><div id="ownedActions"><h2>Province orders</h2><div class="actions"><button class="strong" id="recruitBtn">Recruit +8<br><small>16 coins · 8 food</small></button><button class="ghost" id="marchBtn">Choose army<br><small>March or attack</small></button></div>
 <div class="rule"></div><details class="build-details" id="buildDetails"><summary>🏗️ Buildings & upgrades (12 types)</summary><p class="action-note">Construction takes game months. Only one project per province at a time.</p><div id="constructionNote" class="construction-note" aria-live="polite">No construction underway</div><div class="build-label">ECONOMY & INFRASTRUCTURE</div><div class="building-grid" id="civilBuilds"></div><div class="build-label">DEFENSE & TRAINING</div><div class="building-grid" id="militaryBuilds"></div></details><div id="marchControls" hidden><div class="slideline"><label for="troopSlider" class="small">Marching troops</label><input id="troopSlider" type="range" min="1" max="10" value="5" hidden><div class="troop-counter"><button type="button" id="ownTroopMinus" aria-label="Send fewer troops">−</button><input type="number" id="troopNumber" inputmode="numeric" min="1" max="10" value="5" aria-label="Troops to send"><button type="button" id="ownTroopPlus" aria-label="Send more troops">+</button><button type="button" id="ownTroopMax">Max</button></div><output id="troopAmount" hidden>5</output></div><p class="action-note">Tap a directly connected province on the map to issue a movement order. War is declared automatically against enemies.</p><div class="army-nav-actions"><button type="button" class="strong" id="ownMarchContinue">Choose destination on map</button><button class="outline" id="cancelMarchBtn">Cancel</button></div></div></div><div id="foreignActions" hidden><p class="small" id="foreignInfo"></p><div class="actions"><button class="strong" id="foreignDiplomacyBtn">🤝 Explore relations</button><button class="ghost" id="showMarchBtn">⚔️ Plan march / attack</button></div><div id="foreignMarchPlan" class="foreign-march-plan" hidden><div class="multi-march" id="multiMarchArea" hidden><strong>⚔️ Coordinated march</strong><p class="small">Select two or more towns and set troops from each. All armies will arrive together.</p><div id="multiMarchRows"></div><p class="action-note" id="multiMarchSummary">Select at least one town.</p><button type="button" class="strong" id="confirmMultiMarchBtn">Send selected armies</button></div><details id="singleMarchDetails" class="single-march"><summary>Send troops from one town instead</summary><label for="foreignOriginSelect">March from your province</label><select id="foreignOriginSelect"></select><div class="slideline"><label for="foreignTroopSlider" class="small">Troops to send</label><input id="foreignTroopSlider" type="range" min="1" max="2" value="1" hidden><div class="troop-counter"><button type="button" id="singleTroopMinus" aria-label="Send fewer troops">−</button><input type="number" id="foreignTroopNumber" inputmode="numeric" min="1" max="2" value="1" aria-label="Troops to send"><button type="button" id="singleTroopPlus" aria-label="Send more troops">+</button><button type="button" id="singleTroopMax">Max</button></div><output id="foreignTroopAmount" hidden>1</output></div><div class="actions"><button class="strong" id="confirmForeignMarchBtn" type="button">Confirm march</button><button class="ghost" id="cancelForeignMarchBtn" type="button">Cancel</button></div><p class="action-note" id="foreignMarchStatus">Armies travel through your provinces to the target in real game time.</p></details></div></div><div id="feedback" class="status" role="status" aria-live="polite">Welcome, commander. Select one of your territories to begin.</div></section>
 <section class="card card-pad"><h2>World clock · always running</h2><div class="campaign"><div><strong id="clockTitle">1780 · January</strong><div class="small" id="clockSubtitle">5 real minutes = 1 game month</div></div><span class="pause-label" id="pauseLabel">● LIVE</span></div><div class="progress"><div id="clockProgress"></div></div><p class="action-note"><strong id="clockCountdown">Next month in 05:00</strong></p><p class="action-note">No pauses, manual skips, or personal speed settings. This campaign advances by elapsed real-world time, including while Safari is closed; it catches up when reopened. Multiplayer synchronization is not yet available.</p></section>
 <section class="card card-pad equipment-panel" id="equipmentPanel"><h2>⚙️ Army equipment</h2><div class="equipment-name" id="equipmentName">Level 1 · Flintlock muskets</div><div class="equipment-help" id="equipmentBonus">National equipment upgrades strengthen all of your troops.</div><button type="button" class="strong" id="upgradeEquipmentBtn">Upgrade national army</button><div class="equipment-help" id="equipmentNext">Next upgrade unlocked in 1800</div><div class="equipment-note" id="equipmentFeedback" role="status" aria-live="polite"></div></section><section class="card card-pad"><h2>Historical leadership</h2><div id="leaderBox" class="leader-card"><div class="leader-name">Marquis de Lafayette</div><p>Military reform and morale</p></div><p class="action-note">Historical figures emerge during plausible periods. Their game bonuses are earned, never purchased.</p></section></div></div>
 <section class="card card-pad diplomacy-panel" id="diplomacyPanel"><div class="diplomacy-header"><div><h2>🤝 Diplomacy</h2><div class="small">Select a country on the map to negotiate, declare war, or seek peace.</div></div><button class="outline" id="backToMap" type="button">← Back to map</button></div><div class="diplomacy-layout"><div><label for="partnerSelect">Nation to negotiate with</label><select id="partnerSelect" aria-label="Select a foreign nation"></select><div class="diplomacy-status" id="diplomacyStatus" aria-live="polite"><b>Neutral</b><p>Choose a country to see relations.</p></div><p class="dip-guide" id="diplomacyGuide">Diplomacy is free: treaties, alliances, and peace proposals can be accepted or rejected. You can propose again to the same country after two game months. Tap any option to see what is possible.</p></div><div><div class="diplomacy-actions"><button type="button" id="pactBtn">🤝 Non-aggression pact<small>Free · promise not to attack</small></button><button type="button" id="allianceBtn">⭐ Propose alliance<small>Free · mutual friendly relations</small></button><button type="button" id="giftBtn">💰 Offer 25 gold<small>Accepted gifts improve relations and popularity</small></button><button type="button" id="peaceBtn">🕊️ Propose peace<small>Free · end an active war</small></button><button type="button" id="endTreatyBtn">📜 End treaty<small>Break a pact or alliance</small></button><button type="button" class="danger" id="warBtn">⚔️ Declare war<small>Make war official before marching</small></button></div><div class="dip-feedback" id="diplomacyFeedback" role="status" aria-live="polite">Select a nation to begin diplomatic negotiations.</div></div></div></section>
 <div class="two"><section class="card card-pad"><div class="split"><h2>World power rankings</h2><span class="small">All nations, including AI</span></div><div id="ranking"></div></section><section class="card card-pad"><div class="split"><h2>Dispatches</h2><span class="small">Battles · diplomacy · reforms</span></div><div class="eventbox" id="eventLog" aria-live="polite"></div></section></div>
-<div class="footer">PROTOTYPE 12 — Designed for phone browsers. Countries and relationships are historically inspired, but city locations, province connections, resource concentrations, strength bonuses, and battles are a simplified game model—not historical resource surveys. No purchases or payment processing are enabled. Save is local to this browser only, and this version is not online multiplayer. All named game brands are independent of this prototype.</div>
+<div class="footer">PROTOTYPE 13 — Designed for phone browsers. Countries and relationships are historically inspired, but city locations, province connections, resource concentrations, strength bonuses, and battles are a simplified game model—not historical resource surveys. No purchases or payment processing are enabled. Save is local to this browser only, and this version is not online multiplayer. All named game brands are independent of this prototype.</div>
 </div>
 <div class="start-overlay" id="startOverlay" hidden><div class="start-box"><div class="eyebrow">1780 · A continent on the brink</div><h2>Who will shape the century?</h2><p>Take command of a major nation. Other kingdoms, republics, and empires will develop, wage wars, and form alliances on their own. <span class="highlight">Small AI countries can rise into great powers.</span> Grain regions feed armies, ore-rich hills forge weapons, and trading ports bring wealth.</p><label for="countrySelect">SELECT YOUR COUNTRY</label><select id="countrySelect"><option value="FR">Kingdom of France — strong armies</option><option value="GB">Great Britain — naval trade</option><option value="PR">Prussia — military organization</option><option value="AT">Habsburg Monarchy — fortifications</option><option value="RU">Russian Empire — deep defenses</option><option value="ES">Spain — colonial trade</option><option value="OT">Ottoman Empire — frontier defense</option></select><p class="small">Mobile demo · schematic map · one game month every five real minutes · no pause · single-player AI prototype.</p><button id="startBtn" class="strong">Begin Campaign</button></div></div>
 <script>
@@ -196,7 +232,15 @@ function save(){if(!state)return;try{localStorage.setItem(SAVE_KEY,JSON.stringif
 function restore(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(!s||!s.player||!Array.isArray(s.provinces)||s.provinces.length!==DATA.length||!s.funds||!s.orders)return false;state=s;state.diplomacyCooldown=state.diplomacyCooldown||{};state.favor=state.favor||{};state.inbox=Array.isArray(state.inbox)?state.inbox:[];state.envoySerial=Number(state.envoySerial)||0;state.aiDiplomaticCooldown=state.aiDiplomaticCooldown||{};state.relations=state.relations||{};state.war=state.war||{};state.popularity=state.popularity||defaultPopularity();state.equipment=state.equipment||{};for(const id of nations())state.equipment[id]=Math.max(1,Math.min(4,Math.floor(Number(state.equipment[id])||1)));if(!Number.isFinite(Number(state.nextTickAt)))state.nextTickAt=Date.now()+MONTH_MS;for(const p of state.provinces){p.buildings=p.buildings||{};p.construction=p.construction||null}lastStamp=Date.now();return true}catch(e){return false}}
 function monthName(){return ['January','February','March','April','May','June','July','August','September','October','November','December'][state.month-1]};
 function currentEra(){if(state.year<1800)return 'Age of Revolutions';if(state.year<1820)return 'Napoleonic era';if(state.year<1848)return 'Early industrial age';if(state.year<1865)return 'Era of national revolutions';if(state.year<1880)return 'Industrial empires';return 'Closing century'}
-function routeLength(a,b){const A=find(a),B=find(b);let d=Math.hypot(A.x-B.x,A.y-B.y);const sea=isSea(a,b),base=Math.max(1,Math.min(5,Math.round(d/110)+(sea?1:0)));const reduction=sea?Math.min(1,buildingLevel(A,'port')):(Math.min(1,buildingLevel(A,'road'))+Math.min(1,buildingLevel(A,'stables')));return Math.max(1,base-reduction)}
+function routeLength(a,b){
+ const A=find(a),B=find(b);if(!A||!B)return 2;
+ const pA=mapPoint(A),pB=mapPoint(B),sea=isSea(a,b),distance=Math.hypot(pA.x-pB.x,pA.y-pB.y);
+ const basic=Math.max(1,Math.min(5,Math.round(distance/140)+(sea?1:0)));
+ const terrainDelay=sea?1:Math.max(1,(terrainStats(A).move+terrainStats(B).move)/2);
+ const rough=Math.max(1,Math.min(7,Math.ceil(basic*terrainDelay)));
+ const roads=sea?Math.min(1,buildingLevel(A,'port')):Math.min(1,buildingLevel(A,'road'))+Math.min(1,buildingLevel(A,'stables'));
+ return Math.max(1,rough-roads)
+}
 function isSea(a,b){return SEA.has(`${a}|${b}`)||SEA.has(`${b}|${a}`)}
 
 const FLAGS={
@@ -208,19 +252,166 @@ const FLAGS={
  NA:['horizontal','#357bd3','#f4f4ec','#ffc75e'],CH:['cross','#e52844','#ffffff','#e52844'],VE:['horizontal','#93294f','#dba838','#93294f'],
  PA:['vertical','#f3c853','#f6f6ed','#e5cb88']
 };
-const MAP_POINTS=(()=>{
- const a=DATA.map(p=>({id:p[0],x:555+(p[3]-555)*1.26,y:355+(p[4]-355)*1.31}));
- for(let iter=0;iter<80;iter++){
-  for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){
-   const one=a[i],two=a[j],dx=two.x-one.x,dy=two.y-one.y,dist=Math.hypot(dx,dy)||.001,needed=96;
-   if(dist<needed){const d=(needed-dist)*.51,ux=dx/dist,uy=dy/dist;one.x-=ux*d;one.y-=uy*d;two.x+=ux*d;two.y+=uy*d}
+const GEO_CITIES={
+ london:[-0.13,51.51],edinburgh:[-3.19,55.95],paris:[2.35,48.86],bordeaux:[-0.58,44.84],lyon:[4.84,45.76],
+ madrid:[-3.70,40.42],barcelona:[2.17,41.39],lisbon:[-9.14,38.72],amsterdam:[4.90,52.37],hanover:[9.73,52.37],
+ berlin:[13.41,52.52],konigsberg:[20.51,54.71],prague:[14.42,50.08],vienna:[16.37,48.21],budapest:[19.05,47.49],
+ munich:[11.58,48.14],dresden:[13.74,51.05],stockholm:[18.06,59.33],gothenburg:[11.97,57.71],copenhagen:[12.57,55.67],
+ oslo:[10.75,59.91],warsaw:[21.01,52.23],vilnius:[25.28,54.69],petersburg:[30.31,59.93],moscow:[37.62,55.75],
+ turin:[7.69,45.07],venice:[12.32,45.44],rome:[12.49,41.90],naples:[14.27,40.85],bern:[7.45,46.95],
+ sofia:[23.32,42.69],constantinople:[28.98,41.01]
+};
+const WORLD_BOUNDS={west:-15,east:47,north:73,south:33};
+function proj(lon,lat){return {x:42+(lon+15)*25.3,y:34+(73-lat)*25.2}}
+const MAP_POINTS=Object.fromEntries(Object.entries(GEO_CITIES).map(([id,loc])=>[id,{id,...proj(loc[0],loc[1])}]));
+function mapPoint(p){return MAP_POINTS[p?.id]||p}
+// Historical political geometry from A. Ourednik et al., historical-basemaps,
+// world_1783.geojson (GPL-3.0, approximate historical reconstruction).
+// Loaded client-side and attributed in the in-game map footer.
+const HISTORIC_GEO_URLS=[
+ 'https://raw.githubusercontent.com/aourednik/historical-basemaps/master/geojson/world_1783.geojson',
+ 'https://cdn.jsdelivr.net/gh/aourednik/historical-basemaps@master/geojson/world_1783.geojson'
+];
+let historyReady=false,historyFeatures=0,historyError='',historicBoundaries=[];
+const SVGNS='http://www.w3.org/2000/svg';
+const elem=(tag,attr,parent)=>{const el=document.createElementNS(SVGNS,tag);Object.entries(attr||{}).forEach(([k,v])=>el.setAttribute(k,v));if(parent)parent.appendChild(el);return el};
+function historicalFaction(label){
+ const t=String(label||'').toLowerCase();
+ const defs=[
+  ['VE',/venet|venice/],['PA',/papal|holy see|pontif/],['NA',/naples|two sicil/],['SD',/sardini|piedmont|savoy/],
+  ['BA',/bavar/],['SA',/saxon|saxony/],['HA',/hanover|hannover/],['CH',/swiss|helvet/],['NL',/dutch|united provinces|netherlands/],
+  ['PT',/portugal/],['GB',/british|great britain|england|scotland|united kingdom/],
+  ['PR',/prussia/],['AT',/austria|habsburg|habsbourg|hungary|bohemia/],['FR',/franc/],['ES',/spain|spanish/],
+  ['DN',/denmark|norway|danish/],['SW',/sweden|swedish/],['PL',/polish|poland|lithuan/],
+  ['RU',/russia|russian/],['OT',/ottoman|turk/]
+ ];
+ return defs.find(x=>x[1].test(t))?.[0]||null;
+}
+function pathsFromGeometry(geom){
+ if(!geom)return [];
+ const groups=geom.type==='Polygon'?[geom.coordinates]:geom.type==='MultiPolygon'?geom.coordinates:[];
+ const result=[];
+ for(const polygon of groups){
+  let path='',valid=false;
+  for(const ring of polygon){
+   if(!ring||ring.length<3)continue;
+   const stride=Math.max(1,Math.floor(ring.length/1300)),pts=ring.filter((p,i)=>i%stride===0||i===ring.length-1);
+   const minLon=Math.min(...pts.map(p=>p[0])),maxLon=Math.max(...pts.map(p=>p[0])),minLat=Math.min(...pts.map(p=>p[1])),maxLat=Math.max(...pts.map(p=>p[1]));
+   if(maxLon<WORLD_BOUNDS.west||minLon>WORLD_BOUNDS.east||maxLat<WORLD_BOUNDS.south||minLat>WORLD_BOUNDS.north)continue;
+   path+='M'+pts.map(p=>{const pt=proj(p[0],p[1]);return pt.x.toFixed(1)+' '+pt.y.toFixed(1)}).join('L')+'Z';
+   valid=true;
+  }
+  if(valid)result.push(path);
+ }
+ return result;
+}
+function historicalClick(evt,faction){
+ if(!state)return;
+ const svg=$('map'),box=svg.getBoundingClientRect(),x=(evt.clientX-box.left)*1700/Math.max(1,box.width),y=(evt.clientY-box.top)*1070/Math.max(1,box.height);
+ const candidates=state.provinces.filter(p=>!faction||p.owner===faction);
+ const closest=(candidates.length?candidates:state.provinces).slice().sort((a,b)=>{
+  const A=mapPoint(a),B=mapPoint(b);return Math.hypot(A.x-x,A.y-y)-Math.hypot(B.x-x,B.y-y)
+ })[0];
+ if(closest)selectProvince(closest.id)
+}
+function renderHistoricalPolygons(data){
+ const base=$('historyPolygons'),mask=$('historicalMaskPaths'),edges=$('historicalBorders');
+ base.textContent='';mask.textContent='';edges.textContent='';historicBoundaries=[];
+ const feats=(data?.features||[]),seen=new Set();
+ for(const feat of feats){
+  const name=String(feat.properties?.NAME||'').trim(),subject=String(feat.properties?.SUBJECTO||'').trim();
+  const owner=historicalFaction(subject)||historicalFaction(name);
+  const polygons=pathsFromGeometry(feat.geometry);
+  for(const d of polygons){
+   const key=d.slice(0,130);if(seen.has(key))continue;seen.add(key);
+   const path=elem('path',{d,fill:owner?FACTIONS[owner].color:'#b2aa87','fill-opacity':owner?.56:.28,'fill-rule':'evenodd',class:'historical-realm'},base);
+   const t=elem('title',{},path);t.textContent=(name||'Historic region')+' · reconstructed boundaries c.1783';
+   path.addEventListener('click',e=>historicalClick(e,owner));
+   elem('path',{d,fill:'white','fill-rule':'evenodd'},mask);
+   elem('path',{d,fill:'none',stroke:'#ede6c9','stroke-opacity':owner?.72:.32,'stroke-width':owner?1.7:1.1,'vector-effect':'non-scaling-stroke',class:'historic-border'},edges);
+   historicBoundaries.push({d,owner})
   }
  }
- return Object.fromEntries(a.map(p=>[p.id,p]))
-})();
-function mapPoint(p){return MAP_POINTS[p.id]||p}
+ historyFeatures=historicBoundaries.length;historyReady=historyFeatures>0;
+ if(historyReady){drawTerrain();renderControlOverlay()}
+ $('historicalMapStatus').textContent=historyReady?
+  '1783 reconstructed European political boundaries · Ourednik historical-basemaps (GPL-3.0) · gameplay province sectors approximate':
+  'Historical outlines are unavailable; check internet connection.';
+ return historyReady
+}
+async function loadHistoricalMap(){
+ let error='';
+ for(const url of HISTORIC_GEO_URLS){
+  try{
+   const response=await fetch(url,{mode:'cors',cache:'force-cache'});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const data=await response.json();
+   if(!data?.features?.length)throw Error('No map features');
+   if(!renderHistoricalPolygons(data))throw Error('No European outlines');
+   if(state)render();
+   return
+  }catch(err){error=String(err)}
+ }
+ historyError=error;
+ $('historicalMapStatus').textContent='Historical border layer unavailable (requires internet access). Cities and commands remain playable.';
+}
+function clipHalfPlane(poly,a,b,c){
+ if(!poly.length)return poly;
+ const inside=p=>a*p.x+b*p.y<=c+.001;
+ const next=[];
+ for(let i=0;i<poly.length;i++){
+  const cur=poly[i],nxt=poly[(i+1)%poly.length],ok1=inside(cur),ok2=inside(nxt);
+  if(ok1)next.push(cur);
+  if(ok1!==ok2){const value1=a*cur.x+b*cur.y-c,value2=a*nxt.x+b*nxt.y-c,f=value1/(value1-value2);next.push({x:cur.x+f*(nxt.x-cur.x),y:cur.y+f*(nxt.y-cur.y)})}
+ }
+ return next
+}
+const PROVINCE_CELLS=Object.fromEntries(DATA.map(data=>{
+ const id=data[0],site=MAP_POINTS[id];
+ let poly=[{x:0,y:0},{x:1700,y:0},{x:1700,y:1070},{x:0,y:1070}];
+ for(const other of DATA){if(other[0]===id)continue;const q=MAP_POINTS[other[0]];
+  const dx=q.x-site.x,dy=q.y-site.y;poly=clipHalfPlane(poly,2*dx,2*dy,q.x*q.x+q.y*q.y-site.x*site.x-site.y*site.y);
+  if(!poly.length)break
+ }
+ return [id,poly.map((pt,i)=>(i?'L':'M')+pt.x.toFixed(1)+' '+pt.y.toFixed(1)).join('')+'Z']
+}));
+function renderControlOverlay(){
+ if(!historyReady||!state)return;
+ const layer=$('provinceControl');layer.textContent='';
+ for(const p of state.provinces){
+  const cell=elem('path',{d:PROVINCE_CELLS[p.id],fill:FACTIONS[p.owner].color,'fill-opacity':'.13',stroke:FACTIONS[p.owner].color,
+   'stroke-opacity':'.42','stroke-width':'1.4','vector-effect':'non-scaling-stroke'},layer);
+  const title=elem('title',{},cell);title.textContent=p.name+' · '+FACTIONS[p.owner].name;
+  cell.addEventListener('click',()=>selectProvince(p.id))
+ }
+}
+function terrainStats(p){
+ const b={plain:{def:1,move:1,label:'Open plains'},coast:{def:1.06,move:1,label:'Coastland'},hill:{def:1.15,move:1.18,label:'Rolling hills'},
+  forest:{def:1.24,move:1.30,label:'Wooded terrain'},mountain:{def:1.38,move:1.55,label:'High mountains'}}[p.terrain]||{def:1,move:1,label:'Open plains'};
+ return b;
+}
+const RIVERS=[
+ [[7.6,47.6],[7.7,49.9],[6.8,51.0],[6.3,51.8],[6,52.0]], // Rhine approximation
+ [[8.0,48.0],[11.6,48.9],[16.4,48.2],[19.1,47.5],[24.9,45.3],[28.8,45.1]], // Danube approximation
+ [[30.2,59.9],[31.4,59.5],[33,60.3]], // Neva
+ [[4.8,45.7],[4.5,44.7],[4.7,43.4]] // Rhone
+];
+function drawTerrain(){
+ const layer=$('terrainVisual'),detail=$('naturalDetails');layer.textContent='';detail.textContent='';
+ for(const p of DATA){
+  const province={id:p[0],terrain:p[6]},pt=MAP_POINTS[province.id],t=province.terrain;
+  if(t==='forest'){elem('ellipse',{cx:pt.x,cy:pt.y,rx:66,ry:48,fill:'url(#forestTexture)',opacity:'.33'},layer)}
+  if(t==='mountain'){elem('ellipse',{cx:pt.x,cy:pt.y,rx:91,ry:50,fill:'url(#hillTexture)',opacity:'.65'},layer)}
+  if(t==='hill'){elem('ellipse',{cx:pt.x,cy:pt.y,rx:60,ry:35,fill:'url(#hillTexture)',opacity:'.38'},layer)}
+ }
+ // Broader geographic alpine and Carpathian ridges, independent of city ownership.
+ for(const area of [[9,46.4,130,45],[14,46.3,92,35],[23.7,47.5,150,55],[10.2,62,105,44]]){
+  const pt=proj(area[0],area[1]);elem('ellipse',{cx:pt.x,cy:pt.y,rx:area[2],ry:area[3],fill:'url(#hillTexture)',opacity:'.37'},layer)
+ }
+ for(const river of RIVERS){const d=river.map((c,i)=>{const pt=proj(c[0],c[1]);return (i?'L':'M')+pt.x.toFixed(1)+','+pt.y.toFixed(1)}).join('');elem('path',{d,stroke:'#8ad3db','stroke-opacity':'.64','stroke-width':3,'stroke-linecap':'round',fill:'none'},detail)}
+}
 function renderMap(){
- const routes=$('routes'),ps=$('provinces'),tr=$('travel');routes.textContent='';ps.textContent='';tr.textContent='';
+ const routes=$('routes'),ps=$('provinces'),tr=$('travel');routes.textContent='';ps.textContent='';tr.textContent='';renderControlOverlay();
  const NS='http://www.w3.org/2000/svg';
  function el(t,attrs,parent){const e=document.createElementNS(NS,t);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.appendChild(e);return e}
  for(const [a,b] of LINKS){const A=mapPoint(find(a)),B=mapPoint(find(b));el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,class:'route '+(isSea(a,b)?'sea':'')},routes)}
@@ -348,12 +539,12 @@ function renderEquipment(){
  $('equipmentNext').textContent=(state.year<cost.year?'Available from '+cost.year+' · ':'Available now · ')+cost.money+' coins + '+cost.iron+' iron. Universities lower upgrade costs (10% per level, max 30%); workshops produce more iron.';
 }
 function render(){if(!state)return;renderEquipment();const player=state.player,owned=nationProvinces(player);$('hudNation').textContent=FACTIONS[player].name;$('hudDate').textContent=state.year;$('hudMoney').textContent=fmt(state.funds[player].money);$('hudFood').textContent=fmt(state.funds[player].food);$('hudIron').textContent=fmt(state.funds[player].iron);$('hudLand').textContent=owned.length;$('hudPopularity').textContent=nationPopularity(player)+'/100';$('eraLabel').textContent=currentEra();$('clockTitle').textContent=`${state.year} · ${monthName()}`;$('clockSubtitle').textContent='5 real minutes = 1 game month';$('pauseLabel').textContent=state.year>=1880?'CAMPAIGN ENDED':'● LIVE';$('legend').innerHTML='';for(const id of [state.player,'FR','GB','PR','AT','RU','ES','OT','PL','BA'].filter((v,i,a)=>a.indexOf(v)===i)){const s=document.createElement('span');const d=document.createElement('i');d.className='dot';d.style.background=FACTIONS[id].color;s.appendChild(d);s.append(document.createTextNode(FACTIONS[id].name));$('legend').appendChild(s)}
-const p=selected?find(selected):owned.find(x=>x.capital)||owned[0]||state.provinces[0];if(!selected||!find(selected))selected=p.id;$('selectionTitle').textContent=p.name;$('selectionType').textContent=p.capital?'Capital region':'Province';$('selectionSummary').textContent=`${FACTIONS[p.owner].full} · ${p.terrain} terrain · ${FACTIONS[p.owner].trait}.`;const geo=geography(p);$('selFoodOutput').textContent=`+${foodProduction(p)}`;$('selIronOutput').textContent=`+${ironProduction(p)}`;$('selTradeOutput').textContent=`+${income(p)}`;$('selGeoNote').textContent=`${geo.desc}. ${geo.specialty==='food'?'Fertile land favors farms':geo.specialty==='iron'?'Mineral deposits favor iron extraction':'Trading crossroads favor commerce'}. Output grows with buildings. ${geo.coastal?'Trading ports available.':'No port access.'}`;$('selTroops').textContent=p.troops;$('selFort').textContent=`Level ${p.fort} · +${p.fort*30}% defense`;$('selIncome').textContent=`+${income(p)} / month`;$('selTerrain').textContent=p.terrain;$('ownedActions').hidden=!getOwned(p.id);$('foreignActions').hidden=getOwned(p.id);$('foreignInfo').textContent=`${FACTIONS[p.owner].name} · Popularity ${nationPopularity(p.owner)}/100 · Diplomatic status: ${relation(player,p.owner)}.`;$('foreignDiplomacyBtn').textContent=`🤝 Diplomacy with ${FACTIONS[p.owner].name}`;renderCountryQuick(p);renderForeignMarchPlan(p);const funds=state.funds[player];$('recruitBtn').disabled=p.troops>180||funds.money<16||funds.food<8;const recruitAmount=8+buildingLevel(p,'barracks')*3;$('recruitBtn').innerHTML=`Recruit +${recruitAmount}<br><small>16 coins · 8 food</small>`;$('marchBtn').disabled=p.troops<2;if(getOwned(p.id))drawBuildings(p);const slider=$('troopSlider');let m=Math.max(1, p.troops-1);slider.max=m;if(Number(slider.value)>m)slider.value=m;$('troopAmount').textContent=slider.value;$('troopNumber').max=String(m);$('troopNumber').value=slider.value;$('marchControls').hidden=!marchMode;
+const p=selected?find(selected):owned.find(x=>x.capital)||owned[0]||state.provinces[0];if(!selected||!find(selected))selected=p.id;$('selectionTitle').textContent=p.name;$('selectionType').textContent=p.capital?'Capital region':'Province';$('selectionSummary').textContent=`${FACTIONS[p.owner].full} · ${p.terrain} terrain · ${FACTIONS[p.owner].trait}.`;const geo=geography(p);$('selFoodOutput').textContent=`+${foodProduction(p)}`;$('selIronOutput').textContent=`+${ironProduction(p)}`;$('selTradeOutput').textContent=`+${income(p)}`;$('selGeoNote').textContent=`${geo.desc}. ${geo.specialty==='food'?'Fertile land favors farms':geo.specialty==='iron'?'Mineral deposits favor iron extraction':'Trading crossroads favor commerce'}. Output grows with buildings. ${geo.coastal?'Trading ports available.':'No port access.'} Terrain: ${terrainStats(p).label}; defense +${Math.round((terrainStats(p).def-1)*100)}% and movement modifier +${Math.round((terrainStats(p).move-1)*100)}% before roads.`;$('selTroops').textContent=p.troops;$('selFort').textContent=`Level ${p.fort} · +${p.fort*30}% defense`;$('selIncome').textContent=`+${income(p)} / month`;$('selTerrain').textContent=terrainStats(p).label+' · +'+Math.round((terrainStats(p).def-1)*100)+'% defense'+(terrainStats(p).move>1?' · slower travel':'');$('ownedActions').hidden=!getOwned(p.id);$('foreignActions').hidden=getOwned(p.id);$('foreignInfo').textContent=`${FACTIONS[p.owner].name} · Popularity ${nationPopularity(p.owner)}/100 · Diplomatic status: ${relation(player,p.owner)}.`;$('foreignDiplomacyBtn').textContent=`🤝 Diplomacy with ${FACTIONS[p.owner].name}`;renderCountryQuick(p);renderForeignMarchPlan(p);const funds=state.funds[player];$('recruitBtn').disabled=p.troops>180||funds.money<16||funds.food<8;const recruitAmount=8+buildingLevel(p,'barracks')*3;$('recruitBtn').innerHTML=`Recruit +${recruitAmount}<br><small>16 coins · 8 food</small>`;$('marchBtn').disabled=p.troops<2;if(getOwned(p.id))drawBuildings(p);const slider=$('troopSlider');let m=Math.max(1, p.troops-1);slider.max=m;if(Number(slider.value)>m)slider.value=m;$('troopAmount').textContent=slider.value;$('troopNumber').max=String(m);$('troopNumber').value=slider.value;$('marchControls').hidden=!marchMode;
 const l=activeLeader(player);$('leaderBox').innerHTML='';const n=document.createElement('div');n.className='leader-name';n.textContent=l?l[0]:'Leadership council';$('leaderBox').appendChild(n);const d=document.createElement('p');d.textContent=l?l[3]:'Historical leaders will emerge as the campaign develops.';$('leaderBox').appendChild(d);const badge=document.createElement('span');badge.className='capsule';badge.textContent=l?'AVAILABLE THROUGH PLAY':'NO PURCHASE REQUIRED';$('leaderBox').appendChild(badge);
 $('ranking').innerHTML='';const scores=nations().map(id=>({id,score:nationScore(id),size:nationProvinces(id).length})).filter(n=>n.size>0).sort((a,b)=>b.score-a.score).slice(0,12);for(let i=0;i<scores.length;i++){const n=scores[i];const div=document.createElement('button');div.type='button';div.className='rank-row country-rank';div.title='Select this country';div.addEventListener('click',()=>selectCountry(n.id));const a=document.createElement('span');a.textContent=`${i+1}. ${FACTIONS[n.id].name}${n.id===player?' ★':''}${!['FR','GB','PR','AT','RU','ES','OT'].includes(n.id)?' (AI)':''}`;const b=document.createElement('span');b.className='rank-score';b.textContent=`${n.size} prov · ★ ${fmt(n.score)} · ♥ ${nationPopularity(n.id)}/100 · ⚙ ${equipmentLevel(n.id)}`;div.append(a,b);$('ranking').appendChild(div)}
 $('eventLog').innerHTML='';for(const evt of state.history.slice(0,9)){const row=document.createElement('div');row.className='event';const em=document.createElement('em');em.textContent=evt.date+'  ';row.append(em,document.createTextNode(evt.msg));$('eventLog').appendChild(row)}renderMap();renderDiplomacy();renderInbox();save()}
-function battle(o,def){const A=FACTIONS[o.owner],D=FACTIONS[def.owner],terrainBonus={plain:1,coast:1.06,hill:1.13,forest:1.14,mountain:1.32}[def.terrain]||1;const at=o.troops*A.atk*leaderModifiers(o.owner).atk*equipmentBonus(o.owner)*(1+(o.attackBonus||0))*(.89+Math.random()*.22);const dv=def.troops*D.def*leaderModifiers(def.owner).def*equipmentBonus(def.owner)*terrainBonus*(1+def.fort*.3)*(.91+Math.random()*.18);if(at>dv){const surviving=Math.max(1,Math.floor(o.troops*(1-Math.min(.75,dv/at*.50))));const previous=def.owner;def.owner=o.owner;def.troops=Math.min(o.troops,Math.max(1,Math.round(surviving+(o.troops-surviving)*Math.min(.32,o.hospitalBonus||0))));def.fort=0;def.industry=Math.max(0,def.industry-1);def.construction=null;state.funds[o.owner].money+=12;popularityChange(o.owner,-2);popularityChange(previous,-1);log(`${FACTIONS[o.owner].name} captured ${def.name} from ${FACTIONS[previous].name} (${def.troops} survivors).`);if(nationProvinces(previous).length===0)log(`${FACTIONS[previous].name} has fallen. A minor or great power can disappear.`)}else{const losses=Math.min(def.troops-1,Math.floor(o.troops*at/Math.max(dv,1)*.52));def.troops=Math.max(1,def.troops-Math.max(0,Math.round(losses*(1-Math.min(.32,buildingLevel(def,'hospital')*.08)))));log(`${FACTIONS[def.owner].name} defended ${def.name} against ${FACTIONS[o.owner].name}.`)} }
-function send(from,to,amount,owner,coordinatedEta=null){const src=find(from),dst=find(to);if(!src||!dst||src.owner!==owner||!(adjacency[from].includes(to)||(owner===state.player&&shortestOwnedRoute(from,to,owner)!==null))||amount<1||src.troops<amount)return false;if(['allied','pact'].includes(relation(owner,dst.owner))&&dst.owner!==owner)return false;if(src.owner!==dst.owner&&!state.war[key(owner,dst.owner)]){state.war[key(owner,dst.owner)]=true;popularityChange(owner,-7);log(`${FACTIONS[owner].name} declared war on ${FACTIONS[dst.owner].name}.`)}src.troops-=amount;const eta=Number.isFinite(coordinatedEta)&&coordinatedEta>=1?coordinatedEta:(shortestOwnedRoute(from,to,owner)??routeLength(from,to));state.orders.push({from,to,troops:amount,owner,eta,attackBonus:buildingLevel(src,'drill')*.07,hospitalBonus:buildingLevel(src,'hospital')*.08});log(`${FACTIONS[owner].name} sent ${amount} troops ${from===to?'':'from '+src.name+' '}toward ${dst.name} (${eta} months).`);return true}
+function battle(o,def){const A=FACTIONS[o.owner],D=FACTIONS[def.owner],terrainBonus=terrainStats(def).def;const waterPenalty=o.waterPenalty?0.80:1;const at=o.troops*A.atk*leaderModifiers(o.owner).atk*equipmentBonus(o.owner)*(1+(o.attackBonus||0))*waterPenalty*(.89+Math.random()*.22);const dv=def.troops*D.def*leaderModifiers(def.owner).def*equipmentBonus(def.owner)*terrainBonus*(1+def.fort*.3)*(.91+Math.random()*.18);if(at>dv){const surviving=Math.max(1,Math.floor(o.troops*(1-Math.min(.75,dv/at*.50))));const previous=def.owner;def.owner=o.owner;def.troops=Math.min(o.troops,Math.max(1,Math.round(surviving+(o.troops-surviving)*Math.min(.32,o.hospitalBonus||0))));def.fort=0;def.industry=Math.max(0,def.industry-1);def.construction=null;state.funds[o.owner].money+=12;popularityChange(o.owner,-2);popularityChange(previous,-1);log(`${FACTIONS[o.owner].name} captured ${def.name} from ${FACTIONS[previous].name} (${def.troops} survivors).`);if(nationProvinces(previous).length===0)log(`${FACTIONS[previous].name} has fallen. A minor or great power can disappear.`)}else{const losses=Math.min(def.troops-1,Math.floor(o.troops*at/Math.max(dv,1)*.52));def.troops=Math.max(1,def.troops-Math.max(0,Math.round(losses*(1-Math.min(.32,buildingLevel(def,'hospital')*.08)))));log(`${FACTIONS[def.owner].name} defended ${def.name} against ${FACTIONS[o.owner].name}.`)} }
+function send(from,to,amount,owner,coordinatedEta=null){const src=find(from),dst=find(to);if(!src||!dst||src.owner!==owner||!(adjacency[from].includes(to)||(owner===state.player&&shortestOwnedRoute(from,to,owner)!==null))||amount<1||src.troops<amount)return false;if(['allied','pact'].includes(relation(owner,dst.owner))&&dst.owner!==owner)return false;if(src.owner!==dst.owner&&!state.war[key(owner,dst.owner)]){state.war[key(owner,dst.owner)]=true;popularityChange(owner,-7);log(`${FACTIONS[owner].name} declared war on ${FACTIONS[dst.owner].name}.`)}src.troops-=amount;const eta=Number.isFinite(coordinatedEta)&&coordinatedEta>=1?coordinatedEta:(shortestOwnedRoute(from,to,owner)??routeLength(from,to));state.orders.push({from,to,troops:amount,owner,eta,waterPenalty:isSea(from,to),attackBonus:buildingLevel(src,'drill')*.07,hospitalBonus:buildingLevel(src,'hospital')*.08});log(`${FACTIONS[owner].name} sent ${amount} troops ${from===to?'':'from '+src.name+' '}toward ${dst.name} (${eta} months).`);return true}
 function doMonth(){if(state.year>=1880)return;const beforeYear=state.year;for(const n of nations()){const ps=nationProvinces(n);if(!ps.length)continue;const f=state.funds[n],bonus=leaderModifiers(n);f.money+=Math.round(ps.reduce((a,p)=>a+income(p),0)*FACTIONS[n].inc*bonus.inc);f.food+=ps.reduce((a,p)=>a+foodProduction(p),0);f.iron+=ps.reduce((a,p)=>a+ironProduction(p),0);const upkeep=Math.ceil(ps.reduce((a,p)=>a+p.troops,0)/22);f.food=Math.max(0,f.food-upkeep);if(f.food===0){if(Math.random()<.25){const victim=ps[Math.floor(Math.random()*ps.length)];victim.troops=Math.max(1,victim.troops-1);if(n===state.player)log('Food shortages caused desertions. Grow your economy.')}if(state.month%3===0)popularityChange(n,-1)}}
 for(const p of state.provinces)finishConstruction(p);
 for(const o of state.orders)o.eta--;
@@ -366,9 +557,9 @@ for(const o of state.orders)o.eta--;
   const target=find(group[0].to),total=group.reduce((n,x)=>n+x.troops,0),owner=group[0].owner;
   if(target.owner===owner){target.troops+=total;log(total+' troops arrived at '+target.name+'.');continue}
   const attackBonus=group.reduce((n,x)=>n+x.attackBonus*x.troops,0)/Math.max(1,total);
-  const hospitalBonus=group.reduce((n,x)=>n+x.hospitalBonus*x.troops,0)/Math.max(1,total);
+  const hospitalBonus=group.reduce((n,x)=>n+x.hospitalBonus*x.troops,0)/Math.max(1,total);const waterPenalty=group.some(x=>x.waterPenalty);
   if(group.length>1)log(group.length+' armies joined in a '+total+'-troop attack on '+target.name+'.');
-  battle({owner,troops:total,attackBonus,hospitalBonus},target)
+  battle({owner,troops:total,attackBonus,hospitalBonus,waterPenalty},target)
  }
 for(const id of nations()){if(id===state.player)continue;aiAct(id)}aiDiplomacyMonth();
 if(state.month===12){for(const id of nations()){const ps=nationProvinces(id);if(!ps.length)continue;const f=state.funds[id];if(f.food>25&&ps.some(p=>buildingLevel(p,'market')||buildingLevel(p,'academy')))popularityChange(id,1);if(Object.entries(state.war).some(([key,v])=>v&&key.split('|').includes(id)))popularityChange(id,-1)}}state.month++;if(state.month>12){state.month=1;state.year++}if(state.year!==beforeYear&&[1800,1820,1848,1860,1870].includes(state.year))log(`A new era begins: ${currentEra()}. Industrial and military possibilities expand.`);}
@@ -571,7 +762,10 @@ function setupScreens(){
  for(const card of [...sidebar.children])empire.appendChild(card);
  // Campaign reset stays available but is removed from the battlefield header.
  empire.appendChild($('resetBtn'));
- const rotate=document.createElement('p');rotate.className='small';rotate.textContent='Landscape play: rotate your iPhone sideways with Portrait Orientation Lock switched off in Control Center.';empire.appendChild(rotate);
+ const rotate=document.createElement('p');rotate.className='small';rotate.textContent='Landscape play: rotate your iPhone sideways with Portrait Orientation Lock off.';empire.appendChild(rotate);
+ const source=document.createElement('p');source.className='small';source.textContent='Historical political boundary layer: 1783 reconstruction by A. Ourednik and contributors. Approximate, GPL-3.0. Province gameplay sectors are a simplified overlay. ';
+ const link=document.createElement('a');link.href='https://github.com/aourednik/historical-basemaps';link.target='_blank';link.rel='noopener noreferrer';link.textContent='Historical Basemaps source and license';
+ source.append(link);empire.appendChild(source);
  dip.appendChild($('diplomacyPanel'));
  const inbox=document.createElement('div');inbox.className='report-inbox';inbox.innerHTML='<h2>📨 Diplomatic inbox</h2><div id="inboxList">No pending messages.</div>';reports.append(inbox,root.querySelector('.two'));
  old.replaceWith(map,dip,empire,reports)
@@ -599,8 +793,8 @@ function openArmyOrder(order){
  $('armySheet').hidden=false
 }
 // Responsive SVG zoom and gesture handling; dimensions are applied directly for iOS Safari.
-let mapPixelWidth=3700,pinchState=null,panState=null;
-const MAP_RATIO=1640/2500;
+let mapPixelWidth=2250,pinchState=null,panState=null;
+const MAP_RATIO=1070/1700;
 function mapWidthRange(){return {min:Math.max(300,$('mapScroll').clientWidth),max:8200}}
 function applyMapZoom(width,pointX=null,pointY=null,anchorX=null,anchorY=null){
  const sc=$('mapScroll'),svg=$('map'),oldW=svg.getBoundingClientRect().width||mapPixelWidth;
@@ -615,7 +809,7 @@ function applyMapZoom(width,pointX=null,pointY=null,anchorX=null,anchorY=null){
  svg.style.setProperty('height','auto','important');
  sc.scrollLeft=Math.max(0,fx*nextW-x);
  sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO-y);
- $('zoomIndicator').textContent=Math.round(nextW/3700*100)+'%';
+ $('zoomIndicator').textContent=Math.round(nextW/2250*100)+'%';
  return nextW
 }
 function pinchDistance(touches){return Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY)}
@@ -651,7 +845,7 @@ function bindMapZoom(){
  svg.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();const rect=sc.getBoundingClientRect();applyMapZoom(mapPixelWidth*(e.deltaY>0?.85:1.15),e.clientX-rect.left,e.clientY-rect.top)}},{passive:false});
  window.addEventListener('orientationchange',()=>{pinchState=null;panState=null});
 }
-function centerMapAt(id){if(!state)return;const p=find(id);if(!p)return;const sc=$('mapScroll'),svg=$('map'),u=svg.getBoundingClientRect().width/2500,dp=mapPoint(p);sc.scrollLeft=Math.max(0,(65+dp.x*1.9)*u-sc.clientWidth/2);sc.scrollTop=Math.max(0,(60+dp.y*1.9)*u-sc.clientHeight/2)}
+function centerMapAt(id){if(!state)return;const p=find(id);if(!p)return;const sc=$('mapScroll'),svg=$('map'),u=svg.getBoundingClientRect().width/1700,pt=mapPoint(p);sc.scrollLeft=Math.max(0,pt.x*u-sc.clientWidth/2);sc.scrollTop=Math.max(0,pt.y*u-sc.clientHeight/2)}
 function syncTroopCount(which,value,writeField=true){
  const own=which==='own',slider=$(own?'troopSlider':'foreignTroopSlider'),input=$(own?'troopNumber':'foreignTroopNumber');
  const max=Math.max(1,Number(slider.max)||1);
@@ -670,7 +864,7 @@ function wireTroopPicker(which,minusId,plusId,maxId){
  input.addEventListener('input',()=>{if(input.value!==''&&Number.isFinite(Number(input.value)))syncTroopCount(which,input.value,false)});
  input.addEventListener('change',()=>syncTroopCount(which,input.value));
 }
-setupScreens();bindMapZoom();
+setupScreens();bindMapZoom();loadHistoricalMap();
 wireTroopPicker('own','ownTroopMinus','ownTroopPlus','ownTroopMax');
 wireTroopPicker('foreign','singleTroopMinus','singleTroopPlus','singleTroopMax');
 $('ownMarchContinue').addEventListener('click',()=>{if(!state||!marchMode)return;syncTroopCount('own',$('troopNumber').value);hideProvinceSheet();notice('Selected '+$('troopSlider').value+' troops. Tap a destination town on the map to send them.')});

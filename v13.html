@@ -481,7 +481,7 @@ function activeLeader(f){return (historicalLeaders[f]||[]).find(z=>state.year>=z
 function leaderModifiers(id){const l=activeLeader(id);if(!l)return {atk:1,def:1,inc:1};const s=l[3];return {atk:1+(s.includes('attack')?parseInt(s.match(/\d+/)?.[0]||0)/100:0),def:1+(s.includes('defense')?parseInt(s.match(/\d+/)?.[0]||0)/100:0),inc:1+(s.includes('income')||s.includes('trade')?parseInt(s.match(/\d+/)?.[0]||0)/100:0)}}
 function initialState(choice){const funds={};for(const n of nations())funds[n]={money:115,food:90,iron:60};return {player:choice,provinces:provinces0(),funds,orders:[],year:1780,month:1,monthTick:0,relations:{'GB|HA':'allied','ES|FR':'allied'},war:{},running:false,stamp:Date.now(),history:[]}}
 function key(a,b){return [a,b].sort().join('|')};function relation(a,b){if(a===b)return 'same';return state.war[key(a,b)]?'war':state.relations[key(a,b)]||'neutral'}
-function log(msg){const event={date:`${state.year}.${String(state.month).padStart(2,'0')}`,msg};state.history.unshift(event);state.history=state.history.slice(0,24)}
+function log(msg){const event={date:`${state.year}.${String(state.month).padStart(2,'0')}`,msg};state.history.unshift(event);state.history=state.history.slice(0,24);v13FromLog(msg)}
 function notice(msg){$('feedback').textContent=msg}
 function getOwned(id){return find(id)?.owner===state.player};
 function buildingLevel(p,type){return type==='fort'?p.fort:(type==='industry'?p.industry:(p.buildings?.[type]||0))}
@@ -969,6 +969,115 @@ function v12OrderButtons(o,panel){
  change.addEventListener('click',()=>{v12Reorder=o;v11ActiveOrder=null;panel.hidden=true;render();notice('Choose a glowing destination for this marching army.');});
 }
 
+
+/* V13 Gazette: in-game dispatches and real-world historical context, kept separate. */
+let v13NewsFilter='all',v13Preview=null,v13FlashTimer=null,v13NewsBooted=false;
+const V13_HISTORY=[
+ [1780,1,'The Age of Revolutions','Europe enters a century of political upheaval, warfare and industrial transformation. This campaign is an alternate-history simulation.','history'],
+ [1781,10,'Yorktown: a turning point in America','In October 1781, British forces surrendered at Yorktown. In the historical timeline this helped bring American independence negotiations to a conclusion.','history'],
+ [1783,9,'Treaty of Paris, 1783','Britain formally recognized the independence of the United States in the Treaty of Paris signed on 3 September 1783.','history'],
+ [1789,7,'The Bastille falls in Paris','On 14 July 1789, the storming of the Bastille became a defining symbol of the French Revolution.','history'],
+ [1799,11,'Napoleon takes power in France','The coup of 18 Brumaire, on 9 November 1799, brought Napoleon Bonaparte to power as First Consul.','history'],
+ [1804,12,'Napoleon crowned emperor','Napoleon crowned himself Emperor of the French on 2 December 1804 in Notre-Dame Cathedral.','history'],
+ [1812,6,'Napoleon invades Russia','The French-led Grande Armée invaded Russia in June 1812. The ensuing retreat devastated the invading force.','history'],
+ [1815,6,'The Battle of Waterloo','Napoleon was defeated at Waterloo on 18 June 1815. The Congress of Vienna also concluded its settlement of Europe that month.','history'],
+ [1830,7,'Revolution returns to France','The July Revolution of 1830 overthrew King Charles X and brought Louis-Philippe to the French throne.','history'],
+ [1848,2,'Revolutions spread across Europe','The wave of revolutions in 1848 challenged monarchies, advanced nationalist movements and reshaped public life across the continent.','history'],
+ [1853,10,'The Crimean War begins','In October 1853, the Ottoman Empire declared war on Russia, opening the conflict known as the Crimean War.','history'],
+ [1861,3,'Kingdom of Italy proclaimed','The Kingdom of Italy was proclaimed on 17 March 1861 under Victor Emmanuel II, though unification continued in later years.','history'],
+ [1866,6,'War between Prussia and Austria','The Austro-Prussian War of 1866 altered the German balance of power and accelerated Prussian-led unification.','history'],
+ [1870,7,'Franco-Prussian War erupts','The Franco-Prussian War began in July 1870 and had major consequences for both France and German unification.','history'],
+ [1871,1,'German Empire proclaimed','On 18 January 1871, the German Empire was proclaimed at Versailles. This historical note does not impose that result on the campaign.','history'],
+ [1876,3,'The telephone age dawns','Alexander Graham Bell received US Patent No. 174,465 for his telephone on 7 March 1876, as communications technology advanced.','history']
+];
+function v13NewsCategory(msg){
+ if(/treaty|allian|peace|war\b|diploma|pact|envoy|negotiat/i.test(msg))return 'diplomacy';
+ if(/attack|defend|battle|captur|troops|artiller|infantry|cavalry|march|fallen|siege|conquer/i.test(msg))return 'war';
+ if(/construction|completed|built|recruit|farm|mine|income|market|workshop|upgrade|industrial|shortage|desertion/i.test(msg))return 'economy';
+ return 'dispatch';
+}
+function v13NewsTitle(msg,cat){
+ if(msg.length<84)return msg.replace(/\.$/,'');
+ if(cat==='war')return /captur/i.test(msg)?'Province changes hands':/defend/i.test(msg)?'Defenders hold their ground':/war/i.test(msg)?'War has been declared':'Army movements reported';
+ if(cat==='diplomacy')return 'Diplomatic developments across Europe';
+ if(cat==='economy')return 'Economic and provincial developments';
+ return 'Dispatches from the continent';
+}
+function v13EnsureNews(){
+ if(!state)return;
+ if(!Array.isArray(state.news)){
+  const old=Array.isArray(state.history)?state.history.slice().reverse():[];
+  state.news=old.map((ev,i)=>({id:i+1,date:ev.date||'1780.01',category:v13NewsCategory(ev.msg||''),title:v13NewsTitle(ev.msg||'',v13NewsCategory(ev.msg||'')),body:ev.msg||'',kind:'simulation'})).reverse();
+  state.newsSeq=old.length;
+ }
+ state.newsSeq=Math.max(Number(state.newsSeq)||0,state.news.reduce((m,n)=>Math.max(m,Number(n.id)||0),0));
+ state.newsRead=Number(state.newsRead)||0;
+ state.historySeen=state.historySeen||{};
+}
+function v13Publish(title,body,category='dispatch',kind='simulation',alert=false){
+ if(!state)return;
+ v13EnsureNews();
+ const item={id:++state.newsSeq,date:String(state.year)+'.'+String(state.month).padStart(2,'0'),title:String(title),body:String(body),category,kind};
+ state.news.unshift(item);if(state.news.length>180)state.news.length=180;
+ v13NewsBadge();if(alert)v13Flash(item);return item;
+}
+function v13FromLog(msg){
+ if(!state)return;
+ const category=v13NewsCategory(msg);
+ const important=/declared war|captured |has fallen|peace treaty|alliance (accepted|formed)|won the battle|defeated/i.test(msg);
+ v13Publish(v13NewsTitle(msg,category),msg,category,'simulation',important);
+}
+function v13CheckHistory(){
+ if(!state)return;
+ v13EnsureNews();
+ for(const [year,month,title,body,category] of V13_HISTORY){
+  if(year===state.year&&month===state.month){
+   const id=year+'-'+month;
+   if(!state.historySeen[id]){state.historySeen[id]=true;v13Publish(title,body,category,'historical',true);}
+  }
+ }
+}
+function v13NewsBadge(){
+ const badge=document.getElementById('v13Unread');if(!badge||!state)return;
+ const unread=state.news.reduce((n,a)=>n+(a.id>state.newsRead?1:0),0);
+ badge.hidden=unread===0;badge.textContent=unread>99?'99+':String(unread);
+}
+function v13OpenPaper(filter){
+ if(!state)return;
+ v13EnsureNews();if(filter)v13NewsFilter=filter;
+ const panel=document.getElementById('v13Paper');
+ panel.hidden=false;document.body.style.overflow='hidden';
+ state.newsRead=state.newsSeq;v13NewsBadge();v13RenderPaper();
+ document.getElementById('v13Flash').hidden=true;save();
+}
+function v13ClosePaper(){
+ document.getElementById('v13Paper').hidden=true;
+ if(!document.getElementById('mapScroll').classList.contains('map-focused'))document.body.style.overflow='';
+}
+function v13RenderPaper(){
+ const panel=document.getElementById('v13Paper'),dest=document.getElementById('v13Articles');if(panel.hidden||!state)return;
+ dest.replaceChildren();
+ document.getElementById('v13PaperDate').textContent='Edition '+state.year+' · '+monthName()+' • European wars, diplomacy and world affairs';
+ document.querySelectorAll('[data-news-filter]').forEach(button=>{const active=button.dataset.newsFilter===v13NewsFilter;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+ const news=state.news.filter(entry=>v13NewsFilter==='all'||entry.category===v13NewsFilter).slice(0,80);
+ if(!news.length){const p=document.createElement('p');p.textContent='No stories in this section yet. Advance the campaign to receive new reports.';dest.appendChild(p);return;}
+ for(const entry of news){
+  const article=document.createElement('article');if(entry.kind==='historical')article.className='v13-feature';
+  const category=document.createElement('div');category.className='v13-category';category.textContent=entry.kind==='historical'?'Historical context · real-world timeline':entry.category==='dispatch'?'Continental dispatch':'In-game '+entry.category;
+  const headline=document.createElement('h3');headline.textContent=entry.title;
+  const date=document.createElement('div');date.className='v13-date';date.textContent=entry.date.replace('.',' · month ')+' · '+(entry.kind==='historical'?'historical article':'campaign event');
+  const text=document.createElement('p');text.textContent=entry.body;
+  article.append(category,headline,date,text);dest.appendChild(article);
+ }
+}
+function v13Flash(item){
+ const el=document.getElementById('v13Flash');if(!el||!document.getElementById('v13Paper').hidden)return;
+ document.getElementById('v13FlashTitle').textContent=item.title;
+ el.hidden=false;
+ if(v13FlashTimer)clearTimeout(v13FlashTimer);
+ v13FlashTimer=setTimeout(()=>{el.hidden=true;},13000);
+}
+
 function renderMap(){
 updateMapZoomMode();v11SightCache=v11Sight();
 for(const p of state.provinces){
@@ -1033,11 +1142,11 @@ for(const p of state.provinces){
 }
 for(const o of state.orders){v11DrawOrder(o,tr,el);}
 }
-function render(){if(!state)return;const player=state.player,owned=nationProvinces(player);$('hudNation').textContent=FACTIONS[player].name;$('hudDate').textContent=state.year;$('hudMoney').textContent=fmt(state.funds[player].money);$('hudFood').textContent=fmt(state.funds[player].food);$('hudIron').textContent=fmt(state.funds[player].iron);$('hudLand').textContent=owned.length;$('eraLabel').textContent=currentEra();$('clockTitle').textContent=`${state.year} · ${monthName()}`;$('clockSpeed').value=String(MONTH_MS);$('clockSubtitle').textContent=`${MONTH_MS/1000} seconds = 1 game month`; $('pauseLabel').textContent=running?'● RUNNING':'Ⅱ PAUSED';$('toggleClock').textContent=running?'Pause clock':'Start clock';$('legend').innerHTML='';for(const id of [state.player,'FR','GB','PR','AT','RU','ES','OT','PL','BA'].filter((v,i,a)=>a.indexOf(v)===i)){const s=document.createElement('span');s.className='legend-nation';const badge=document.createElementNS('http://www.w3.org/2000/svg','svg');badge.setAttribute('viewBox','0 0 38 24');badge.setAttribute('class','legend-flag');const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#flag-'+id);badge.appendChild(use);s.appendChild(badge);s.append(document.createTextNode(FACTIONS[id].name));$('legend').appendChild(s)}
+function render(){if(!state)return;v13EnsureNews();v13CheckHistory();const player=state.player,owned=nationProvinces(player);$('hudNation').textContent=FACTIONS[player].name;$('hudDate').textContent=state.year;$('hudMoney').textContent=fmt(state.funds[player].money);$('hudFood').textContent=fmt(state.funds[player].food);$('hudIron').textContent=fmt(state.funds[player].iron);$('hudLand').textContent=owned.length;$('eraLabel').textContent=currentEra();$('clockTitle').textContent=`${state.year} · ${monthName()}`;$('clockSpeed').value=String(MONTH_MS);$('clockSubtitle').textContent=`${MONTH_MS/1000} seconds = 1 game month`; $('pauseLabel').textContent=running?'● RUNNING':'Ⅱ PAUSED';$('toggleClock').textContent=running?'Pause clock':'Start clock';$('legend').innerHTML='';for(const id of [state.player,'FR','GB','PR','AT','RU','ES','OT','PL','BA'].filter((v,i,a)=>a.indexOf(v)===i)){const s=document.createElement('span');s.className='legend-nation';const badge=document.createElementNS('http://www.w3.org/2000/svg','svg');badge.setAttribute('viewBox','0 0 38 24');badge.setAttribute('class','legend-flag');const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#flag-'+id);badge.appendChild(use);s.appendChild(badge);s.append(document.createTextNode(FACTIONS[id].name));$('legend').appendChild(s)}
 const p=selected?find(selected):owned.find(x=>x.capital)||owned[0]||state.provinces[0];if(!selected||!find(selected))selected=p.id;$('selectionTitle').textContent=p.name;$('selectionType').textContent=p.capital?'Capital region':'Province';$('selectionSummary').textContent=`${FACTIONS[p.owner].full} · ${p.terrain} terrain · ${FACTIONS[p.owner].trait}.`;v9UpdatePanel(p);const geo=geography(p);$('selFoodOutput').textContent=`+${foodProduction(p)}`;$('selIronOutput').textContent=`+${ironProduction(p)}`;$('selTradeOutput').textContent=`+${income(p)}`;$('selGeoNote').textContent=`${geo.desc}. ${geo.specialty==='food'?'Fertile land favors farms':geo.specialty==='iron'?'Mineral deposits favor iron extraction':'Trading crossroads favor commerce'}. Output grows with buildings. ${geo.coastal?'Trading ports available.':'No port access.'}`;$('selTroops').textContent=p.troops;const unitMix=troopMix(p);$('selUnitReadout').textContent=`⚔ ${unitMix.inf} Infantry  ·  ♞ ${unitMix.cav} Cavalry  ·  ♜ ${unitMix.art} Artillery`; $('selFort').textContent=`Level ${p.fort}`;$('selIncome').textContent=`+${income(p)} / month`;$('selTerrain').textContent=p.terrain; $('terrainTactical').textContent='⚔ DEFENSIVE GROUND · '+terrainReport(p)+(geography(p).coastal?' · amphibious attacks −20%':'');$('ownedActions').hidden=!getOwned(p.id);$('foreignActions').hidden=getOwned(p.id);$('foreignInfo').textContent=`Diplomatic status: ${relation(player,p.owner)}. Select a friendly army to send forces into ${p.name}.`;const funds=state.funds[player];$('recruitBtn').disabled=p.troops>180||funds.money<16||funds.food<8;const recruitAmount=8+buildingLevel(p,'barracks')*3;$('recruitBtn').innerHTML=`⚔ Infantry +${recruitAmount}<br><small>16 coins · 8 food</small>`;$('recruitCavBtn').disabled=!getOwned(p.id)||!canRecruitCav(p,player);$('recruitArtBtn').disabled=!getOwned(p.id)||!canRecruitArt(p,player);$('recruitHint').textContent=`${p.industry>=1?'Workshop ready for cannon foundry':'Artillery needs a workshop'} · ${buildingLevel(p,'stables')?'Stables ready':'Cavalry needs stables'}. Artillery costs 55 coins, 25 iron and 4 food for 2 guns; cavalry costs 30 coins and 15 food for 4 troops.`;$('marchBtn').disabled=p.troops<2;if(getOwned(p.id))drawBuildings(p);const slider=$('troopSlider');const marchSrc=marchMode&&origin?find(origin):p;let m=Math.max(1, marchSrc.troops-1);slider.max=m;if(Number(slider.value)>m)slider.value=m;$('troopAmount').textContent=slider.value;const marchMix=splitUnits(marchSrc.units,Number(slider.value));$('marchComposition').textContent=`Marching: ${marchMix.inf} infantry · ${marchMix.cav} cavalry · ${marchMix.art} artillery`;$('marchControls').hidden=!marchMode;
 const l=activeLeader(player);$('leaderBox').innerHTML='';const n=document.createElement('div');n.className='leader-name';n.textContent=l?l[0]:'Leadership council';$('leaderBox').appendChild(n);const d=document.createElement('p');d.textContent=l?l[3]:'Historical leaders will emerge as the campaign develops.';$('leaderBox').appendChild(d);const badge=document.createElement('span');badge.className='capsule';badge.textContent=l?'AVAILABLE THROUGH PLAY':'NO PURCHASE REQUIRED';$('leaderBox').appendChild(badge);
 $('ranking').innerHTML='';const scores=nations().map(id=>({id,score:nationScore(id),size:nationProvinces(id).length})).filter(n=>n.size>0).sort((a,b)=>b.score-a.score).slice(0,12);for(let i=0;i<scores.length;i++){const n=scores[i];const div=document.createElement('div');div.className='rank-row';const a=document.createElement('span');a.textContent=`${i+1}. ${FACTIONS[n.id].name}${n.id===player?' ★':''}${!['FR','GB','PR','AT','RU','ES','OT'].includes(n.id)?' (AI)':''}`;const b=document.createElement('span');b.className='rank-score';b.textContent=`${n.size} prov · ${fmt(n.score)}`;div.append(a,b);$('ranking').appendChild(div)}
-$('eventLog').innerHTML='';for(const evt of state.history.slice(0,9)){const row=document.createElement('div');row.className='event';const em=document.createElement('em');em.textContent=evt.date+'  ';row.append(em,document.createTextNode(evt.msg));$('eventLog').appendChild(row)}renderMap();v11MaskPanel(find(selected));v8UpdateInspector();v12Refresh();save()}
+$('eventLog').innerHTML='';for(const evt of state.history.slice(0,9)){const row=document.createElement('div');row.className='event';const em=document.createElement('em');em.textContent=evt.date+'  ';row.append(em,document.createTextNode(evt.msg));$('eventLog').appendChild(row)}renderMap();v11MaskPanel(find(selected));v12Refresh();v13NewsBadge();save()}
 const RIVER_CROSSINGS=new Set('amsterdam|hanover,paris|amsterdam,hanover|berlin,berlin|warsaw,dresden|prague,munich|vienna,prague|vienna,vienna|budapest,budapest|sofia,venice|rome,berlin|dresden,warsaw|vilnius'.split(',').map(v=>v.split('|').sort().join('|')));
 function riverCrossing(a,b){return RIVER_CROSSINGS.has(key(a,b))}
 function terrainReport(p,from){let parts=[];const vals={plain:0,coast:6,hill:13,forest:14,mountain:32};parts.push(`${p.terrain}: +${vals[p.terrain]||0}% defense`);if(from){if(riverCrossing(from,p.id))parts.push('river crossing: −12% attacker');if(isSea(from,p.id))parts.push('sea landing: −20% attacker')}return parts.join(' · ')}
@@ -1089,7 +1198,7 @@ function doMonth(){if(state.year>=1880){running=false;log('The century ends in 1
 for(const p of state.provinces)finishConstruction(p);
 for(const o of [...state.orders]){o.eta--;if(o.eta<=0){const idx=state.orders.indexOf(o);if(idx>=0)state.orders.splice(idx,1);const dst=find(o.to);if(dst.owner===o.owner){ensureArmy(dst);ensureArmy(o);addUnits(dst.units,o.units);syncArmy(dst);log(`${o.troops} troops arrived in ${dst.name}, including ${o.units.art} artillery.`)}else{battle(o,dst)}}}
 for(const id of nations()){if(id===state.player)continue;aiAct(id)}
-state.month++;if(state.month>12){state.month=1;state.year++}if(state.year!==beforeYear&&[1800,1820,1848,1860,1870].includes(state.year))log(`A new era begins: ${currentEra()}. Industrial and military possibilities expand.`);}
+state.month++;if(state.month>12){state.month=1;state.year++}v13CheckHistory();if(state.year!==beforeYear&&[1800,1820,1848,1860,1870].includes(state.year))log(`A new era begins: ${currentEra()}. Industrial and military possibilities expand.`);}
 function aiAct(id){const ps=nationProvinces(id),f=state.funds[id];if(!ps.length)return;const neighbors=[];for(const p of ps)for(const nid of adjacency[p.id]){const to=find(nid);if(to.owner!==id&&relation(id,to.owner)!=='allied'&&relation(id,to.owner)!=='war')neighbors.push([p,to])}if(neighbors.length&&Math.random()<.035){neighbors.sort((a,b)=>(b[0].troops-b[1].troops+income(b[1])*.18+ironProduction(b[1])*.35+foodProduction(b[1])*.15)-(a[0].troops-a[1].troops+income(a[1])*.18+ironProduction(a[1])*.35+foodProduction(a[1])*.15));const [source,target]=neighbors[0];if(source.troops>target.troops*(source.owner==='BA'||source.owner==='SA'?1.16:1.65)+6){send(source.id,target.id,Math.max(2,source.troops-2),id);return}}
 const atWar=Object.entries(state.war).filter(([key2,val])=>val&&key2.split('|').includes(id)).map(([key2])=>key2.split('|').find(x=>x!==id));if(atWar.length&&Math.random()<.36){for(const p of ps){for(const tid of adjacency[p.id]){const t=find(tid);if(atWar.includes(t.owner)&&p.troops>t.troops*1.2+4){send(p.id,tid,p.troops-2,id);return}}}}
 const p=ps[Math.floor(Math.random()*ps.length)];if(Math.random()<.14&&canRecruitArt(p,id)){recruitSpecial(p,id,'art')}else if(Math.random()<.12&&canRecruitCav(p,id)){recruitSpecial(p,id,'cav')}else if(f.money>=16&&f.food>=8&&p.troops<60&&Math.random()<.32){f.money-=16;f.food-=8;ensureArmy(p);p.units.inf+=8+buildingLevel(p,'barracks')*3;syncArmy(p)}else if(Math.random()<.24&&!p.construction){const choices=['farm','mine','market','industry','fort','barracks','road','drill','hospital','port','stables'].filter(b=>buildAllowed(p,b,id));if(choices.length){const priority=choices.map(type=>({type,score:(type==='farm'?geography(p).farm:type==='mine'?geography(p).mine:type==='port'?geography(p).trade:4)+Math.random()*8})).sort((a,b)=>b.score-a.score);buildProvince(p,priority[0].type,id)}}}
@@ -1123,6 +1232,16 @@ $('marchBtn').addEventListener('click',()=>v12ChooseArmy(selected));$('troopSlid
 $('clockSpeed').addEventListener('change',()=>{MONTH_MS=Number($('clockSpeed').value);state.speedMs=MONTH_MS;lastStamp=Date.now();notice(`Campaign speed updated: 1 month every ${MONTH_MS/1000} seconds.`);render()});$('tickBtn').addEventListener('click',()=>tick(1));$('yearBtn').addEventListener('click',()=>tick(12));$('toggleClock').addEventListener('click',()=>{running=!running;lastStamp=Date.now();render()});$('resetBtn').addEventListener('click',()=>{if(!confirm('Start over? Your current campaign will be erased.'))return;running=false;state=null;selected=null;origin=null;marchMode=false;try{localStorage.removeItem(SAVE_KEY)}catch(e){}$('startOverlay').hidden=false});
 $('startBtn').addEventListener('click',()=>{state=initialState($('countrySelect').value);state.speedMs=MONTH_MS;selected=capitals[state.player]||nationProvinces(state.player)[0]?.id;running=false;lastStamp=Date.now();log(`You took command of ${FACTIONS[state.player].full} in January 1780.`);log('AI nations compete for food-rich plains, mineral deposits, and trading ports.');$('startOverlay').hidden=true;notice('Your campaign begins. Recruit an army or inspect a neighboring country.');render();centerMapAt(selected)});
 function frame(){if(!state)return;const t=Date.now();if(running){const elapsed=t-lastStamp;if(elapsed>=MONTH_MS){const steps=Math.max(1,Math.min(24,Math.floor(elapsed/MONTH_MS)));lastStamp+=steps*MONTH_MS;tick(steps)}$('clockProgress').style.width=`${Math.max(0,Math.min(100,(t-lastStamp)/MONTH_MS*100))}%`}else{$('clockProgress').style.width='0%';lastStamp=t}}
+
+document.getElementById('v13NewsBtn').addEventListener('click',()=>v13OpenPaper('all'));
+document.getElementById('v13ClosePaper').addEventListener('click',v13ClosePaper);
+document.getElementById('v13FlashRead').addEventListener('click',()=>v13OpenPaper('all'));
+document.getElementById('v13FlashDismiss').addEventListener('click',()=>{document.getElementById('v13Flash').hidden=true;});
+document.querySelectorAll('[data-news-filter]').forEach(b=>b.addEventListener('click',()=>{v13NewsFilter=b.dataset.newsFilter;v13RenderPaper();}));
+document.getElementById('v13MapBtn').addEventListener('click',()=>{v13ClosePaper();document.getElementById('mapScroll').scrollIntoView({behavior:'smooth',block:'start'});});
+document.getElementById('v13ArmyBtn').addEventListener('click',()=>{if(!state)return;const army=state.provinces.find(p=>p.owner===state.player&&p.troops>1);if(army){v12ChooseArmy(selected&&getOwned(selected)&&find(selected).troops>1?selected:army.id);centerMapAt(origin);}else notice('Recruit troops in one of your provinces to issue movement orders.');});
+document.getElementById('v13ProvinceBtn').addEventListener('click',()=>{document.getElementById('selectionTitle').scrollIntoView({behavior:'smooth',block:'start'});});
+
 v8SetupInspector();const v9ConditionCard=document.createElement('section');v9ConditionCard.id='v9BattleContext';$('selectionSummary').after(v9ConditionCard);
 if(restore()){selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;lastStamp=Date.now();$('startOverlay').hidden=true;render();centerMapAt(selected);notice('Previous campaign restored. The clock is paused while you are away.')}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state){running=false;lastStamp=Date.now();save()}else if(state){lastStamp=Date.now();render()}});window.addEventListener('pagehide',()=>{if(state){running=false;save()}});setInterval(frame,250);
 })();

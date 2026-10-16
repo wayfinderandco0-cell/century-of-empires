@@ -373,6 +373,20 @@ html,body{background:#0c171b}.container{max-width:1540px}
 #v13Flash button:last-child{background:#334954;color:#fff0d2;border:1px solid #7d8581}
 @media(max-width:600px){.v13-nav button{font-size:11px;padding:6px 8px}.map-mode-note,.map-top .small{display:none!important}#v12ArmyBar{bottom:max(5px,env(safe-area-inset-bottom))!important;padding:10px!important}.header-actions .tag{display:none}#v13Paper .v13-paper-articles{padding-bottom:65px}}
 
+
+#v13DipPanel{position:fixed;inset:0;z-index:215;background:#08151cdb;display:flex;align-items:center;justify-content:center;padding:10px}
+#v13DipPanel[hidden]{display:none!important}
+#v13DipDialog{width:min(510px,100%);max-height:94dvh;overflow:auto;background:#1c3440;border:2px solid #caaa69;border-radius:13px;padding:16px;color:#eee5d0;box-shadow:0 15px 50px #000b}
+#v13DipDialog h2{font:700 28px Georgia,serif;color:#f4d898;margin:0}
+#v13DipDialog p{font-size:12px;color:#b5ced3;margin:5px 0}
+#v13DipDialog select{width:100%;padding:12px;font-size:16px;color:white;background:#112631;border:1px solid #9cb1b9;border-radius:8px;margin:8px 0}
+#v13DipDialog button{font-size:12px;font-weight:750;background:#2b4957;color:#fff0d5;border:1px solid #879a9f;border-radius:8px;padding:8px;min-height:44px}
+#v13DipDialog button:disabled{opacity:.35}
+#v13DipDialog .v13-dip-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+#v13DipDialog .v13-dip-head{display:flex;align-items:center;justify-content:space-between}
+#v13DipStatus{border:1px solid #55717a;border-radius:7px;background:#142d39;color:#efd79e;padding:10px;font-size:12px}
+#v13DipFeedback{border-left:3px solid #d7b46c;background:#29414a;padding:9px;font-size:12px}
+#v13DipWar{background:#61383b!important;border-color:#aa7370!important}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 09 · Historical grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><span class="tag">NO PAY-TO-WIN</span><button class="outline" id="resetBtn">New Campaign</button></div></header>
@@ -423,6 +437,7 @@ html,body{background:#0c171b}.container{max-width:1540px}
 <div class="footer">PROTOTYPE 07 — Designed for phone browsers. Countries and relationships are historically inspired, but political overlays, 1780 borders, province connections, resources, strengths, and battle models are illustrative rather than verified historical boundaries or surveys. Physical coastline uses GSHHS relief coastline data. No purchases or payment processing are enabled. Save is local to this browser only, and this version is not online multiplayer. All named game brands are independent of this prototype.</div>
 </div>
 <section id="v13Paper" hidden role="dialog" aria-label="The Continental Gazette" aria-modal="true"><div class="v13-paper-top"><div class="v13-paper-header"><strong>THE NINETEENTH CENTURY • SPECIAL EDITION</strong><button id="v13ClosePaper" type="button">✕ Return to map</button></div><h2>The Continental Gazette</h2><div class="v13-paper-meta" id="v13PaperDate">War • Diplomacy • Commerce • History</div></div><div class="v13-paper-filters" role="group" aria-label="News sections"><button data-news-filter="all" class="active">All</button><button data-news-filter="war">War</button><button data-news-filter="diplomacy">Diplomacy</button><button data-news-filter="economy">Economy</button><button data-news-filter="history">Historical events</button></div><div class="v13-paper-articles" id="v13Articles"></div></section><aside id="v13Flash" hidden role="alert"><b>🗞 BREAKING NEWS</b><p id="v13FlashTitle"></p><div class="v13-flash-buttons"><button id="v13FlashRead" type="button">Read newspaper</button><button id="v13FlashDismiss" type="button">Dismiss</button></div></aside>
+<section id="v13DipPanel" hidden role="dialog" aria-label="Diplomacy Desk" aria-modal="true"><div id="v13DipDialog"><div class="v13-dip-head"><div><h2>Diplomatic Desk</h2><p>Negotiate directly with foreign powers.</p></div><button id="v13DipClose">✕ Close</button></div><label for="v13DipNation">Other nation</label><select id="v13DipNation"></select><div id="v13DipStatus">Diplomatic relations</div><div class="v13-dip-actions"><button id="v13DipAlliance">★ Propose alliance</button><button id="v13DipPact">🤝 Non-aggression</button><button id="v13DipPeace">🕊 Offer peace</button><button id="v13DipGift">💰 Gift 25 coins</button><button id="v13DipEnd">End treaty</button><button id="v13DipWar">⚔ Declare war</button></div><div id="v13DipFeedback">Other countries independently accept or refuse proposals.</div></div></section>
 <div class="start-overlay" id="startOverlay" hidden><div class="start-box"><div class="eyebrow">1780 · A continent on the brink</div><h2>Who will shape the century?</h2><p>Take command of a major nation. Other kingdoms, republics, and empires will develop, wage wars, and form alliances on their own. <span class="highlight">Small AI countries can rise into great powers.</span> Grain regions feed armies, ore-rich hills forge weapons, and trading ports bring wealth. Real coastlines, forests, rivers, mountains, and sea crossings shape your campaigns.</p><label for="countrySelect">SELECT YOUR COUNTRY</label><select id="countrySelect"><option value="FR">Kingdom of France — strong armies</option><option value="GB">Great Britain — naval trade</option><option value="PR">Prussia — military organization</option><option value="AT">Habsburg Monarchy — fortifications</option><option value="RU">Russian Empire — deep defenses</option><option value="ES">Spain — colonial trade</option><option value="OT">Ottoman Empire — frontier defense</option></select><p class="small">Mobile demo · geographic atlas map · free play · no Goldmarks or paid military advantages.</p><button id="startBtn" class="strong">Begin Campaign</button></div></div>
 <script>
 (()=>{'use strict';
@@ -1019,6 +1034,56 @@ function v13DrawPreview(tr,el){
  const label=el('text',{x,y,class:'v13-preview-label'},tr);label.textContent='ETA '+v13Preview.path.time+' mo';
 }
 
+
+function v13DiplomacyOpen(country){
+ if(!state)return;
+ const list=document.getElementById('v13DipNation'),old=country||list.value;
+ list.replaceChildren();
+ nations().filter(id=>id!==state.player&&nationProvinces(id).length).forEach(id=>{const opt=document.createElement('option');opt.value=id;opt.textContent=FACTIONS[id].full;list.appendChild(opt);});
+ if([...list.options].some(o=>o.value===old))list.value=old;
+ else if(selected&&find(selected).owner!==state.player)list.value=find(selected).owner;
+ document.getElementById('v13DipPanel').hidden=false;document.body.style.overflow='hidden';v13DiplomacyRefresh();
+}
+function v13DiplomacyClose(){
+ document.getElementById('v13DipPanel').hidden=true;
+ if(document.getElementById('v13Paper').hidden&&!document.getElementById('mapScroll').classList.contains('map-focused'))document.body.style.overflow='';
+}
+function v13DiplomacyRefresh(){
+ const id=document.getElementById('v13DipNation').value;if(!state||!id)return;
+ const rel=relation(state.player,id),f=state.dipFavor?.[id]||0;
+ document.getElementById('v13DipStatus').textContent=FACTIONS[id].name+' · '+rel.toUpperCase()+' · '+nationProvinces(id).length+' provinces · goodwill '+f;
+ const e={v13DipAlliance:rel!=='allied'&&rel!=='war',v13DipPact:rel!=='allied'&&rel!=='pact'&&rel!=='war',v13DipPeace:rel==='war',v13DipGift:rel!=='war'&&state.funds[state.player].money>=25,v13DipEnd:rel==='allied'||rel==='pact',v13DipWar:rel!=='war'};
+ Object.entries(e).forEach(([k,enabled])=>document.getElementById(k).disabled=!enabled);
+}
+function v13DipAction(action){
+ if(!state)return;const id=document.getElementById('v13DipNation').value;if(!id)return;
+ const me=state.player,other=FACTIONS[id].name,ours=FACTIONS[me].name,k=key(me,id),rel=relation(me,id),fb=document.getElementById('v13DipFeedback');
+ state.dipFavor=state.dipFavor||{};const favor=state.dipFavor[id]||0;
+ function propose(label,chance,success){
+  if(Math.random()<chance){success();fb.textContent=other+' agreed to '+label+'.';log(other+' accepted '+ours+' proposal for '+label+'.');}
+  else{fb.textContent=other+' rejected '+label+'.';log(other+' rejected '+ours+' diplomatic proposal for '+label+'.');}
+ }
+ if(action==='gift'){
+  if(rel==='war'||state.funds[me].money<25)return;
+  state.funds[me].money-=25;state.funds[id].money+=25;state.dipFavor[id]=Math.min(30,favor+5);
+  fb.textContent='Gift sent. Goodwill improves future negotiations.';log(ours+' sent a diplomatic gift of 25 coins to '+other+'.');
+ }else if(action==='war'){
+  if(rel==='war'||!confirm('Declare war on '+other+'?'))return;
+  state.war[k]=true;delete state.relations[k];state.dipFavor[id]=Math.max(-10,favor-8);
+  log(ours+' declared war on '+other+'.');fb.textContent='War declared.';
+ }else if(action==='peace'&&rel==='war'){
+  propose('peace',.55,()=>{delete state.war[k];delete state.relations[k];});
+ }else if(action==='alliance'&&rel!=='allied'&&rel!=='war'){
+  propose('an alliance',Math.min(.85,.4+favor*.015+(rel==='pact'?.12:0)),()=>{state.relations[k]='allied';delete state.war[k];});
+ }else if(action==='pact'&&rel!=='allied'&&rel!=='pact'&&rel!=='war'){
+  propose('a non-aggression pact',Math.min(.90,.56+favor*.015),()=>{state.relations[k]='pact';});
+ }else if(action==='end'&&(rel==='allied'||rel==='pact')){
+  delete state.relations[k];state.dipFavor[id]=Math.max(-10,favor-3);
+  log(ours+' ended its '+rel+' treaty with '+other+'.');fb.textContent='Treaty ended.';
+ }
+ v13DiplomacyRefresh();render();
+}
+
 /* V13 Gazette: in-game dispatches and real-world historical context, kept separate. */
 let v13NewsFilter='all',v13Preview=null,v13FlashTimer=null,v13NewsBooted=false;
 const V13_HISTORY=[
@@ -1285,6 +1350,10 @@ document.getElementById('v13ClosePaper').addEventListener('click',v13ClosePaper)
 document.getElementById('v13FlashRead').addEventListener('click',()=>v13OpenPaper('all'));
 document.getElementById('v13FlashDismiss').addEventListener('click',()=>{document.getElementById('v13Flash').hidden=true;});
 document.querySelectorAll('[data-news-filter]').forEach(b=>b.addEventListener('click',()=>{v13NewsFilter=b.dataset.newsFilter;v13RenderPaper();}));
+document.getElementById('v13DiplomacyBtn').addEventListener('click',()=>v13DiplomacyOpen());
+document.getElementById('v13DipClose').addEventListener('click',v13DiplomacyClose);
+document.getElementById('v13DipNation').addEventListener('change',v13DiplomacyRefresh);
+[['v13DipAlliance','alliance'],['v13DipPact','pact'],['v13DipPeace','peace'],['v13DipGift','gift'],['v13DipEnd','end'],['v13DipWar','war']].forEach(([id,action])=>document.getElementById(id).addEventListener('click',()=>v13DipAction(action)));
 document.getElementById('v13MapBtn').addEventListener('click',()=>{v13ClosePaper();document.getElementById('mapScroll').scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('v13ArmyBtn').addEventListener('click',()=>{if(!state)return;const army=state.provinces.find(p=>p.owner===state.player&&p.troops>1);if(army){v12ChooseArmy(selected&&getOwned(selected)&&find(selected).troops>1?selected:army.id);centerMapAt(origin);}else notice('Recruit troops in one of your provinces to issue movement orders.');});
 document.getElementById('v13ProvinceBtn').addEventListener('click',()=>{document.getElementById('selectionTitle').scrollIntoView({behavior:'smooth',block:'start'});});

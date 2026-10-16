@@ -1429,7 +1429,7 @@ const terrainBonus={plain:1,coast:1.06,hill:1.13,forest:1.14,mountain:1.32}[def.
 const crossing=(riverCrossing(o.lastLegFrom||o.from,def.id)?0.88:1)*(isSea(o.lastLegFrom||o.from,def.id)?0.80:1);const v9Effects=v9Combat(o,def);
 const fortFactor=1+def.fort*.30;
 const siegeReduction=Math.min(.44,o.units.art*.07);
-const at=armyPower(o.units,def.terrain,def.fort,true)*A.atk*leaderModifiers(o.owner).atk*(1+(o.attackBonus||0))*crossing*v9Effects.attack*(.90+Math.random()*.20);
+const at=armyPower(o.units,def.terrain,def.fort,true)*A.atk*leaderModifiers(o.owner).atk*(1+(o.attackBonus||0))*crossing*v9Effects.attack*(1-Math.min(.30,o.fatigue||0))*(.90+Math.random()*.20);
 const dv=armyPower(def.units,def.terrain,def.fort,false)*D.def*leaderModifiers(def.owner).def*terrainBonus*(fortFactor*(1-siegeReduction))*v9Effects.defense*(.92+Math.random()*.16);
 const attacking=`${o.units.inf} infantry, ${o.units.cav} cavalry, ${o.units.art} artillery`;
 if(at>dv){const lossRate=Math.min(.80,(dv/at)*.48)*(1-Math.min(.32,o.hospitalBonus||0));const casualties=Math.min(o.troops-1,Math.floor(o.troops*lossRate));loseUnits(o,casualties);

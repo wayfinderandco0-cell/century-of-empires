@@ -505,8 +505,17 @@ function v11DrawOrder(o,tr,el){
  if(!v11OrderVisible(o))return;
  const A=find(o.from),B=find(o.to);if(!A||!B)return;
  const total=Math.max(1,o.travelTime||o.eta||1),done=Math.max(0,total-o.eta);
- const progress=Math.max(.16,Math.min(.82,(done+.4)/total)),dx=B.x-A.x,dy=B.y-A.y;
- const x=A.x+dx*progress,y=A.y+dy*progress,len=Math.hypot(dx,dy)||1;
+ const progress=Math.max(.05,Math.min(.95,(done+.4)/total));
+ const points=(Array.isArray(o.route)&&o.route.length>1?o.route:[o.from,o.to]).map(find).filter(Boolean);
+ const steps=[];let distance=0;
+ for(let i=1;i<points.length;i++){const d=Math.max(1,routeLength(points[i-1].id,points[i].id));steps.push(d);distance+=d;}
+ let left=distance*progress,x=A.x,y=A.y;
+ for(let i=0;i<steps.length;i++){const fraction=Math.max(0,Math.min(1,left/steps[i]));
+  x=points[i].x+(points[i+1].x-points[i].x)*fraction;
+  y=points[i].y+(points[i+1].y-points[i].y)*fraction;
+  if(left<=steps[i])break;left-=steps[i];
+ }
+ const prior=points.length>1?points[points.length-2]:A,dx=B.x-prior.x,dy=B.y-prior.y,len=Math.hypot(dx,dy)||1;
  const selectedOrder=(v11ActiveOrder===o);
  const group=el('g',{class:`v11-traveller ${selectedOrder?'v11-march-selected':''}`,tabindex:0,role:'button','aria-label':`${FACTIONS[o.owner].name} army marching to ${B.name}, ETA ${o.eta} months`},tr);
  const color=o.owner===state.player?'#f4db9d':'#e3a2a0';const ax=B.x-dx/len*12,ay=B.y-dy/len*12;
@@ -852,7 +861,9 @@ function v12ChooseArmy(id){
 }
 function v12TapTarget(p,g,el){
  if(marchMode&&origin&&p.id!==origin){const path=v12Path(origin,p.id,state.player);if(path)g.classList.add(p.owner===state.player?'v12-target':'v12-attack');}
- if(p.owner!==state.player||p.troops<2)return;
+ if(v12Reorder){const anchor=v12Waypoint(v12Reorder),path=v12Path(anchor,p.id,state.player);if(path)g.classList.add(p.owner===state.player?'v12-target':'v12-attack');}
+ // In destination-picking mode, the province tap belongs to the destination, not this garrison.
+ if(marchMode||v12Reorder||p.owner!==state.player||p.troops<2)return;
  const hit=el('rect',{x:p.x-31,y:p.y+10,width:62,height:57,rx:9,fill:'transparent','pointer-events':'all',class:'v12-army-tap',role:'button',tabindex:0,'aria-label':'Select army at '+p.name},g);
  hit.addEventListener('click',e=>{e.stopPropagation();v12ChooseArmy(p.id)});
  hit.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();v12ChooseArmy(p.id);}});

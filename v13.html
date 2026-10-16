@@ -496,7 +496,7 @@ function activeLeader(f){return (historicalLeaders[f]||[]).find(z=>state.year>=z
 function leaderModifiers(id){const l=activeLeader(id);if(!l)return {atk:1,def:1,inc:1};const s=l[3];return {atk:1+(s.includes('attack')?parseInt(s.match(/\d+/)?.[0]||0)/100:0),def:1+(s.includes('defense')?parseInt(s.match(/\d+/)?.[0]||0)/100:0),inc:1+(s.includes('income')||s.includes('trade')?parseInt(s.match(/\d+/)?.[0]||0)/100:0)}}
 function initialState(choice){const funds={};for(const n of nations())funds[n]={money:115,food:90,iron:60};return {player:choice,provinces:provinces0(),funds,orders:[],year:1780,month:1,monthTick:0,relations:{'GB|HA':'allied','ES|FR':'allied'},war:{},running:false,stamp:Date.now(),history:[]}}
 function key(a,b){return [a,b].sort().join('|')};function relation(a,b){if(a===b)return 'same';return state.war[key(a,b)]?'war':state.relations[key(a,b)]||'neutral'}
-function log(msg){const event={date:`${state.year}.${String(state.month).padStart(2,'0')}`,msg};state.history.unshift(event);state.history=state.history.slice(0,24);v13FromLog(msg)}
+function log(msg){if(!Array.isArray(state.news))v13EnsureNews();const event={date:`${state.year}.${String(state.month).padStart(2,'0')}`,msg};state.history.unshift(event);state.history=state.history.slice(0,24);v13FromLog(msg)}
 function notice(msg){$('feedback').textContent=msg}
 function getOwned(id){return find(id)?.owner===state.player};
 function buildingLevel(p,type){return type==='fort'?p.fort:(type==='industry'?p.industry:(p.buildings?.[type]||0))}

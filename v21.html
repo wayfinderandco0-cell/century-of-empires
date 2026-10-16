@@ -1029,7 +1029,7 @@ function v12Refresh(){
  v13SyncBar();
 }
 function v12ChooseArmy(id){
- v14CloseProvince();v13Preview=null;
+ v14CloseProvince();const info=document.getElementById('v21ProvinceSheet');if(info)info.hidden=true;v13Preview=null;
  const p=state&&find(id);if(!p||p.owner!==state.player)return;
  if(p.troops<2){notice('Recruit troops first. Each province must retain one defender.');return;}
  v12Reorder=null;origin=p.id;selected=id;marchMode=true;

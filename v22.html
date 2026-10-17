@@ -1552,7 +1552,7 @@ $('recruitBtn').addEventListener('click',()=>provinceAction('recruit'));$('recru
 $('marchBtn').addEventListener('click',()=>v12ChooseArmy(selected));$('troopSlider').addEventListener('input',()=>{$('troopAmount').textContent=$('troopSlider').value;const src=find(origin);if(src){const m=splitUnits(src.units,Number($('troopSlider').value));$('marchComposition').textContent=`Marching: ${m.inf} infantry · ${m.cav} cavalry · ${m.art} artillery`}});$('cancelMarchBtn').addEventListener('click',()=>{marchMode=false;origin=null;notice('Army selection canceled.');render()});$('showMarchBtn').addEventListener('click',()=>notice('Tap a province marked with your nation’s color, choose an army, then tap the destination.'));
 $('clockSpeed').addEventListener('change',()=>{MONTH_MS=Number($('clockSpeed').value);state.speedMs=MONTH_MS;lastStamp=Date.now();notice(`Campaign speed updated: 1 month every ${MONTH_MS/1000} seconds.`);render()});$('tickBtn').addEventListener('click',()=>tick(1));$('yearBtn').addEventListener('click',()=>tick(12));$('toggleClock').addEventListener('click',()=>{});$('resetBtn').addEventListener('click',()=>{if(!confirm('Start over? Your current campaign will be erased.'))return;running=false;state=null;selected=null;origin=null;marchMode=false;try{localStorage.removeItem(SAVE_KEY)}catch(e){}$('startOverlay').hidden=false});
 $('startBtn').addEventListener('click',()=>{state=initialState($('countrySelect').value);state.speedMs=MONTH_MS;selected=capitals[state.player]||nationProvinces(state.player)[0]?.id;running=true;lastStamp=Date.now();log(`You took command of ${FACTIONS[state.player].full} in January 1780.`);log('AI nations compete for food-rich plains, mineral deposits, and trading ports.');$('startOverlay').hidden=true;notice('Your campaign begins. Recruit an army or inspect a neighboring country.');render();centerMapAt(selected)});
-function frame(){if(!state)return;const t=Date.now();running=true;const elapsed=t-lastStamp;if(elapsed>=MONTH_MS){const steps=Math.max(1,Math.min(240,Math.floor(elapsed/MONTH_MS)));lastStamp+=steps*MONTH_MS;tick(steps)}$('clockProgress').style.width=`${Math.max(0,Math.min(100,(t-lastStamp)/MONTH_MS*100))}%`}
+function frame(){if(!state)return;const t=Date.now();running=true;const elapsed=t-lastStamp;if(elapsed>=MONTH_MS){const steps=Math.max(1,Math.min(1200,Math.floor(elapsed/MONTH_MS)));lastStamp+=steps*MONTH_MS;v22QueueCatchup(steps)}$('clockProgress').style.width=`${Math.max(0,Math.min(100,(t-lastStamp)/MONTH_MS*100))}%`}
 
 document.getElementById('v13NewsBtn').addEventListener('click',()=>v13OpenPaper('all'));
 document.getElementById('v13ClosePaper').addEventListener('click',v13ClosePaper);
@@ -1647,8 +1647,32 @@ document.getElementById('v13PerfToggle').addEventListener('click',()=>{
  const strip=document.querySelector('.map-mode-strip');if(strip)strip.appendChild(hint);
 })();
 
+
+/* V22: simulate every elapsed campaign month in small, UI-friendly batches.
+   Persist the backlog so an iPhone page suspension cannot discard the remainder. */
+let v22CatchupBusy=false;
+function v22QueueCatchup(months){
+ if(!state)return;
+ const gained=Math.max(0,Math.min(1200,Math.floor(Number(months)||0)));
+ const previous=Math.max(0,Math.floor(Number(state.v22Backlog)||0));
+ state.v22Backlog=Math.min(1200,previous+gained);
+ if(v22CatchupBusy||!state.v22Backlog)return;
+ v22CatchupBusy=true;
+ const next=()=>{
+  if(!state){v22CatchupBusy=false;return;}
+  const batch=Math.min(12,state.v22Backlog);
+  state.v22Backlog-=batch;
+  for(let i=0;i<batch&&state.year<1880;i++)doMonth();
+  if(state.year>=1880)state.v22Backlog=0;
+  render();
+  if(state.v22Backlog>0)setTimeout(next,0);
+  else {v22CatchupBusy=false;notice('Campaign caught up to the current time.');}
+ };
+ setTimeout(next,0);
+}
+
 v14Setup();
 v8SetupInspector();const v9ConditionCard=document.createElement('section');v9ConditionCard.id='v9BattleContext';$('selectionSummary').after(v9ConditionCard);
-if(restore()){selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;const previous=Number(state.lastWallClock||state.lastStamp||Date.now());const missed=Math.max(0,Math.min(120,Math.floor((Date.now()-previous)/MONTH_MS)));lastStamp=Date.now();running=true;if(missed)tick(missed);$('startOverlay').hidden=true;render();centerMapAt(selected);notice('Campaign running automatically.'+(missed?' '+missed+' elapsed game months simulated while away.':''))}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden)save();else{const now=Date.now(),elapsed=Math.max(0,Math.min(120,Math.floor((now-lastStamp)/MONTH_MS)));lastStamp=now;if(elapsed)tick(elapsed);render()}}});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
+if(restore()){selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;const previous=Number(state.lastWallClock||state.lastStamp||Date.now());const missed=Math.max(0,Math.min(1200,Math.floor((Date.now()-previous)/MONTH_MS)));lastStamp=Date.now();running=true;if(missed||state.v22Backlog)v22QueueCatchup(missed);$('startOverlay').hidden=true;render();centerMapAt(selected);notice('Campaign running automatically.'+(missed?' '+missed+' elapsed game months simulated while away.':''))}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden)save();else{const now=Date.now(),elapsed=Math.max(0,Math.min(1200,Math.floor((now-lastStamp)/MONTH_MS)));lastStamp=now;if(elapsed||state.v22Backlog)v22QueueCatchup(elapsed);render()}}});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
 })();
 </script></body></html>

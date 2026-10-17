@@ -1716,6 +1716,7 @@ function v12ChooseArmy(id){
  const oldOrderPanel=document.getElementById('v11OrderPanel');if(oldOrderPanel)oldOrderPanel.hidden=true;v11ActiveOrder=null;
  v14CloseProvince();v37CloseTown();v12Reorder=null;v22RedirectPreview=null;const info=document.getElementById('v21ProvinceSheet');if(info)info.hidden=true;v13Preview=null;
  const p=state&&find(id);if(!p||p.owner!==state.player)return;
+ if(state.year>=1880){notice('Campaign finished in 1880. Restart your locked nation to issue new orders.');v37Status();return;}
  if(p.troops<2){notice('Recruit troops first. Each province must retain one defender.');return;}
  v12Reorder=null;origin=p.id;selected=id;marchMode=true;
  v10PreviewOpen=false;v8InspectorDismissed=true;
@@ -2829,8 +2830,10 @@ function v31RescaleMapMarkers(){
    // invisible region ABOVE the artwork at high zoom, making taps fail.
    const size=Math.max(15,Math.min(37,52*scale));
    hit.setAttribute('x',String(p.x-size/2));hit.setAttribute('width',String(size));
-   hit.setAttribute('y',String(p.y+12*scale));
-   hit.setAttribute('height',String(Math.max(17,45*scale)));
+   // Artist sprites are positioned at y+13 and scaled about y+21.
+   // Enclose the whole picture, including the horse/cannon base, at every zoom.
+   hit.setAttribute('y',String(p.y+21-12*scale));
+   hit.setAttribute('height',String(Math.max(24,61*scale)));
    }
   }
  }

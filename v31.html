@@ -820,7 +820,7 @@ body.v13-smooth #map .v27-smoke,body.v13-smooth #map .v27-rail{display:none}
 #map.political-map .territory-layer path.v25-own:not(.territory-selected){fill-opacity:.69!important}
 #map .territory-layer path{stroke-opacity:.17!important}
 #map .v26-ink{vector-effect:non-scaling-stroke}
-#mapScroll{touch-action:pan-x pan-y pinch-zoom}
+/* Preserve V30 custom touch handling; do not enable native pinch zoom. */
 @media(max-height:570px) and (orientation:landscape){
   .v13-nav{padding:2px!important;min-height:31px!important}
   .v13-nav button{min-height:30px!important;padding:4px 6px!important;font-size:10px!important}
@@ -2013,7 +2013,7 @@ if(updateProvinces)for(const p of state.provinces){
  const tg=el('text',{x:p.x,y:p.y+4,class:'terrain-glyph'},group);tg.textContent=terrainGlyph(p.terrain);
  el('circle',{cx:p.x,cy:p.y,r:4,class:'city'},group);
  const badge=el('g',{class:'flag-badge'},group);
- v10RoundFlag(p,badge,el);
+ v31RoundFlag(p,badge,el);
  el('circle',{cx:p.x,cy:p.y,r:18.7,fill:'none',stroke:v25Relation(p.owner)==='own'?'#edc361':v25Relation(p.owner)==='ally'?'#6cbffc':v25Relation(p.owner)==='enemy'?'#f9585e':(V25_COUNTRY_COLORS[p.owner]||FACTIONS[p.owner].color),'stroke-width':3.4,class:'v25-ownership-ring'},group);
  const nt=el('g',{class:'v24-nation-tag'+(p.capital?' capital':'')},group),nx=p.x+28,ny=p.y-31;
  el('rect',{x:nx-15,y:ny-10,width:30,height:17,rx:5,fill:'#13232d',stroke:V25_COUNTRY_COLORS[p.owner]||FACTIONS[p.owner].color,'stroke-width':2},nt);
@@ -2493,6 +2493,62 @@ function v28CountryNames(){
  }
 }
 
+
+
+/* V31 vector flags. The FR PNG in the original bundle contains a missing-font box;
+   simple SVG geometry is both Safari-safe and crisp at all zooms. */
+function v31RoundFlag(p,parent,el){
+ const cx=p.x+9,cy=p.y-11,r=7.3,x=cx-r,y=cy-r,d=r*2;
+ const clip=el('clipPath',{id:'v31flag-'+p.id},parent);
+ el('circle',{cx,cy,r:r-.25},clip);
+ const art=el('g',{'clip-path':'url(#v31flag-'+p.id+')'},parent);
+ const rect=(xx,yy,ww,hh,fill)=>el('rect',{x:xx,y:yy,width:ww,height:hh,fill},art);
+ const path=(dd,fill,extra={})=>el('path',{d:dd,fill,...extra},art);
+ const disc=(xx,yy,rr,fill)=>el('circle',{cx:xx,cy:yy,r:rr,fill},art);
+ const horiz=(colors)=>colors.forEach((color,i)=>rect(x,y+i*d/colors.length,d,d/colors.length+.2,color));
+ const vert=(colors)=>colors.forEach((color,i)=>rect(x+i*d/colors.length,y,d/colors.length+.2,d,color));
+ const cross=(bg,fg,bw)=>{rect(x,y,d,d,bg);rect(cx-bw/2,y,bw,d,fg);rect(x,cy-bw/2,d,bw,fg)};
+ switch(p.owner){
+ case 'FR':
+  if(state&&state.year<1790){rect(x,y,d,d,'#f5efd9');path('M'+(cx-4)+' '+(cy-5)+'h8v6q0 5 -4 7q-4 -2 -4 -7Z','#24559a');disc(cx-2,cy-1,1,'#eac65c');disc(cx+2,cy-1,1,'#eac65c');disc(cx,cy+2.3,1,'#eac65c');}
+  else vert(['#244f9a','#f4f0e5','#c74646']);
+  break;
+ case 'GB':
+  rect(x,y,d,d,'#244779');
+  path('M'+x+' '+y+'l'+d+' '+d+'M'+(x+d)+' '+y+'l'+(-d)+' '+d,'none',{stroke:'#f5ecdc','stroke-width':4.1});
+  path('M'+x+' '+y+'l'+d+' '+d+'M'+(x+d)+' '+y+'l'+(-d)+' '+d,'none',{stroke:'#d54748','stroke-width':1.4});
+  rect(cx-2.6,y,5.2,d,'#fff6e5');rect(x,cy-2.6,d,5.2,'#fff6e5');
+  rect(cx-1.25,y,2.5,d,'#d44347');rect(x,cy-1.25,d,2.5,'#d44347');break;
+ case 'PR':
+  horiz(['#f2ead9','#f2ead9']);disc(cx,cy,5.4,'#eee6d5');path('M'+(cx-5)+' '+(cy-1)+'q3 -4 5 -1q2 -3 5 1l-3 2l1 4l-3 -1l-3 1l1 -4Z','#1c2732');disc(cx,cy-2,1,'#d6af4e');break;
+ case 'AT':
+  horiz(['#e4b958','#e4b958']);path('M'+(cx-5)+' '+(cy-3)+'q4 -3 5 0q2 -3 5 0l-2 3l1 5l-4 -2l-4 2l1 -5Z','#212933');break;
+ case 'RU':
+  horiz(['#f4eadd','#f4eadd']);path('M'+(cx-5)+' '+(cy-2)+'q4 -3 5 0q2 -3 5 0l-1 3l2 4l-4 -1l-2 3l-2 -3l-4 1l2 -4Z','#2c2c32');disc(cx,cy-2,1,'#d1ac55');break;
+ case 'ES':horiz(['#b1393f','#e5bf54','#e5bf54','#b1393f']);disc(cx-2,cy,2,'#923f37');break;
+ case 'OT':
+  rect(x,y,d,d,'#bc343b');disc(cx-1.4,cy,4.2,'#f8f0dc');disc(cx,cy-1,3.7,'#bc343b');
+  path('M'+(cx+3)+' '+(cy-3)+'l1 2l2 .2l-1.6 1.5l.5 2l-1.9 -1l-1.9 1l.4 -2l-1.4 -1.5l2 -.2Z','#f8f0dc');break;
+ case 'PT':vert(['#f5efdc','#33568c']);disc(cx,cy,2.3,'#c5a24e');break;
+ case 'NL':horiz(['#b94240','#f3eadb','#315a9a']);break;
+ case 'HA':cross('#e3bc50','#bd4148',3.8);break;
+ case 'BA':
+  rect(x,y,d,d,'#e7edf0');
+  for(let row=0;row<4;row++)for(let col=0;col<4;col++)if((row+col)%2===0)rect(x+col*d/4,y+row*d/4,d/4,d/4,'#457fac');break;
+ case 'SA':horiz(['#f2ead8','#46875d']);break;
+ case 'DN':cross('#b63241','#f3f1e4',3);break;
+ case 'SW':cross('#3360a0','#e2bb48',3.4);break;
+ case 'PL':horiz(['#f1ecdf','#c74955']);break;
+ case 'SD':cross('#f5eee0','#bd4045',3);break;
+ case 'NA':horiz(['#d14d4d','#ede7d9','#cfbc63']);break;
+ case 'CH':cross('#bf3e4a','#f7f0e1',3.8);break;
+ case 'VE':rect(x,y,d,d,'#ba4839');rect(x,y,d*.38,d,'#c89e4d');disc(cx+2,cy,3,'#e7c86b');break;
+ case 'PA':vert(['#f2c34c','#ede6d2']);break;
+ default:rect(x,y,d,d,V25_COUNTRY_COLORS[p.owner]||'#536c69');break;
+ }
+ el('circle',{cx,cy,r:r+.65,fill:'none',stroke:'#17343a','stroke-width':1.6},parent);
+ el('circle',{cx,cy,r:r+.94,fill:'none',stroke:'#efdaaa','stroke-width':.75},parent);
+}
 
 /* V31: region labels are constrained by connected ownership and available map space. 
    Country names follow the CURRENT campaign, not the historical 1780 start. */

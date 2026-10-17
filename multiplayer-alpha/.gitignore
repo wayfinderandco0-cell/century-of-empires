@@ -1,0 +1,4 @@
+data/campaign.json
+data/campaign.json.tmp
+node_modules/
+*.log

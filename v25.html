@@ -1577,6 +1577,8 @@ function v25MapMode(mode){
  $('map').classList.toggle('v25-diplomatic',v25DiplomaticMode);
  $('v25DiplomaticView').classList.toggle('active',v25DiplomaticMode);
  $('v25DiplomaticView').setAttribute('aria-pressed',String(v25DiplomaticMode));
+ $('politicalView').classList.toggle('active',mode==='political');
+ $('politicalView').setAttribute('aria-pressed',String(mode==='political'));
  const legend=$('v25Legend');if(legend)legend.hidden=mode==='terrain';
  try{localStorage.setItem('century_of_empires_v25_map',mode)}catch(e){}
  if(state)renderMap();

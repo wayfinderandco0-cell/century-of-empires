@@ -17,7 +17,7 @@
 node server.js
 ```
 
-Open `http://localhost:8787` in two separate browsers or devices on the same reachable network, select two different nations, then issue orders. By default, 45 real seconds equals one in-game day. You can override `PORT`, `DAY_SEC`, `REALTIME_SCALE` (testing), and `SAVE_FILE` via environment variables. Do not turn on `REALTIME_SCALE` in public campaigns without intentional host-speed rules.
+On the computer running Node, open `http://localhost:8787`. On an iPhone connected to the same Wi-Fi, open `http://<computer-LAN-IP>:8787` (not `localhost`). Choose different nations and issue orders. The host computer must remain on for the shared world to advance. By default, 45 real seconds equals one in-game day. You can override `PORT`, `DAY_SEC`, `REALTIME_SCALE` (testing), and `SAVE_FILE` via environment variables. Do not turn on `REALTIME_SCALE` in public campaigns without intentional host-speed rules.
 
 The server persists state to `data/campaign.json`. Store the save on a durable persistent disk before a public deployment. The checked-in `data/world.json` is seed geometry, not a saved campaign.
 
@@ -38,7 +38,7 @@ Choose a Node.js app host that supports **long-lived SSE requests, HTTPS and per
 ## Test
 
 ```bash
-python test_integration.py
+npm test
 ```
 
 ## Next engineering milestones

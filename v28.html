@@ -2139,30 +2139,6 @@ function v22QueueCatchup(months){
 }
 
 
-v26InitGeometry();
-const v25Legend=document.createElement('div');
-v25Legend.id='v25Legend';
-v25Legend.innerHTML='<span><i style="background:#2f9d5d"></i>Your land</span><span><i style="background:#438cda"></i>Allies / shared intel</span><span><i style="background:#d24a54"></i>Enemy</span><span><i style="background:#a6a29a"></i>Neutral</span>';
-const strip=document.querySelector('.map-mode-strip');if(strip)strip.insertAdjacentElement('afterend',v25Legend);
-let v25SavedMode='political';try{v25SavedMode=localStorage.getItem('century_of_empires_v26_map')||'political'}catch(e){}
-v25MapMode(['political','diplomatic','terrain'].includes(v25SavedMode)?v25SavedMode:'political');
-const v23CancelButton=document.createElement('button');
-v23CancelButton.id='v23CancelRedirect';v23CancelButton.type='button';v23CancelButton.hidden=true;
-v23CancelButton.textContent='✕ Cancel redirect';document.body.appendChild(v23CancelButton);
-v23CancelButton.addEventListener('click',()=>{
- v12Reorder=null;v22RedirectPreview=null;
- const panel=document.getElementById('v11OrderPanel');if(panel)panel.hidden=true;
- render();notice('Redirect canceled; army keeps its original orders.');
-});
-function v23UpdateCancelRedirect(){
- if(v23CancelButton)v23CancelButton.hidden=!(v12Reorder&&!v22RedirectPreview);
-}
-v25PrepareArtwork();
-v14Setup();
-v8SetupInspector();const v9ConditionCard=document.createElement('section');v9ConditionCard.id='v9BattleContext';$('selectionSummary').after(v9ConditionCard);
-if(restore()){selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;const previous=Number(state.lastWallClock||state.lastStamp||Date.now());const missed=Math.max(0,Math.min(1200,Math.floor((Date.now()-previous)/MONTH_MS)));lastStamp=Date.now();running=true;if(missed||state.v22Backlog)v22QueueCatchup(missed);$('startOverlay').hidden=true;render();centerMapAt(selected);notice('Campaign running automatically.'+(missed?' '+missed+' elapsed game months simulated while away.':''))}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden)save();else{const now=Date.now(),elapsed=Math.max(0,Math.min(1200,Math.floor((now-lastStamp)/MONTH_MS)));lastStamp=now;if(elapsed||state.v22Backlog)v22QueueCatchup(elapsed);render()}}});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
-})();
-
 /* V27 visual upgrade: additive rendering, no save-format changes or order rewrites. */
 let v27BuiltSig='';
 function v27Shape(tag,attrs,parent){
@@ -2288,5 +2264,30 @@ function v28CountryNames(){
   layer.appendChild(t);
  }
 }
+
+
+v26InitGeometry();
+const v25Legend=document.createElement('div');
+v25Legend.id='v25Legend';
+v25Legend.innerHTML='<span><i style="background:#2f9d5d"></i>Your land</span><span><i style="background:#438cda"></i>Allies / shared intel</span><span><i style="background:#d24a54"></i>Enemy</span><span><i style="background:#a6a29a"></i>Neutral</span>';
+const strip=document.querySelector('.map-mode-strip');if(strip)strip.insertAdjacentElement('afterend',v25Legend);
+let v25SavedMode='political';try{v25SavedMode=localStorage.getItem('century_of_empires_v26_map')||'political'}catch(e){}
+v25MapMode(['political','diplomatic','terrain'].includes(v25SavedMode)?v25SavedMode:'political');
+const v23CancelButton=document.createElement('button');
+v23CancelButton.id='v23CancelRedirect';v23CancelButton.type='button';v23CancelButton.hidden=true;
+v23CancelButton.textContent='✕ Cancel redirect';document.body.appendChild(v23CancelButton);
+v23CancelButton.addEventListener('click',()=>{
+ v12Reorder=null;v22RedirectPreview=null;
+ const panel=document.getElementById('v11OrderPanel');if(panel)panel.hidden=true;
+ render();notice('Redirect canceled; army keeps its original orders.');
+});
+function v23UpdateCancelRedirect(){
+ if(v23CancelButton)v23CancelButton.hidden=!(v12Reorder&&!v22RedirectPreview);
+}
+v25PrepareArtwork();
+v14Setup();
+v8SetupInspector();const v9ConditionCard=document.createElement('section');v9ConditionCard.id='v9BattleContext';$('selectionSummary').after(v9ConditionCard);
+if(restore()){selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;const previous=Number(state.lastWallClock||state.lastStamp||Date.now());const missed=Math.max(0,Math.min(1200,Math.floor((Date.now()-previous)/MONTH_MS)));lastStamp=Date.now();running=true;if(missed||state.v22Backlog)v22QueueCatchup(missed);$('startOverlay').hidden=true;render();centerMapAt(selected);notice('Campaign running automatically.'+(missed?' '+missed+' elapsed game months simulated while away.':''))}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden)save();else{const now=Date.now(),elapsed=Math.max(0,Math.min(1200,Math.floor((now-lastStamp)/MONTH_MS)));lastStamp=now;if(elapsed||state.v22Backlog)v22QueueCatchup(elapsed);render()}}});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
+})();
 
 </script></body></html>

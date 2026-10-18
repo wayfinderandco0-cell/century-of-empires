@@ -160,6 +160,17 @@
 .sheet-foot button{width:100%;height:38px;color:#f5dfba;background:#364d54;border:1px solid #9fb0a9;border-radius:5px;font-weight:700}
 .gazette-image figcaption{display:none}
 
+
+.split-slider-list{display:grid;gap:9px;margin:12px 0}
+.split-slider-row{display:grid;grid-template-columns:67px 29px minmax(0,1fr) 29px 45px 25px;gap:5px;align-items:center;padding:7px 4px;background:#243640;border:1px solid #50656c;border-radius:4px}
+.split-slider-row strong{font-size:10px;color:#f5e4ba}
+.split-slider-row button{width:28px;height:29px;background:#315768;border:1px solid #91afba;color:#fff3d9;border-radius:50%;font-size:19px;font-weight:800;padding:0}
+.split-slider-row button:first-of-type{background:#78383a;border-color:#cb8585}
+.split-slider-row input[type=range]{width:100%;min-width:0;accent-color:#c9a974}
+.split-slider-row input[type=number]{min-width:0;width:100%;height:32px;text-align:center;background:#192b34;border:1px solid #81999d;color:#fbe8b8;border-radius:4px}
+.split-slider-row span{font-size:10px;color:#b0c2bf}
+.split-totals{background:#2a3735;border-left:3px solid #c7ad79;color:#fff0cc;padding:9px;font-size:12px}
+
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 875" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -660,6 +671,7 @@ $('sheetClose').onclick=()=>showPanel('map');$('returnMap').onclick=()=>showPane
 $('zoomIn').onclick=()=>zoom(.68);$('zoomOut').onclick=()=>zoom(1/.68);$('zoomHome').onclick=()=>{view.cx=686;view.cy=583;view.w=940;setView()};
 $('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
+$('sheetBody').addEventListener('input',e=>{const id=e.target.id||'',k=id.startsWith('split-range-')?id.slice(12):e.target.dataset.splitNumber;if(['inf','cav','art'].includes(k))setSplitValue(k,e.target.value)});
 $('map').addEventListener('pointerdown',down);
 $('map').addEventListener('pointermove',move);
 $('map').addEventListener('pointerup',up);
@@ -910,19 +922,29 @@ function armyDetail(){
  const canMerge=stationary&&game.armies.some(q=>q.id!==a.id&&q.owner===a.owner&&q.at===a.at&&!q.route.length&&!q.battle&&!q.camp&&activeArmy(q));
  const p=roadSpot(a),terrain=p?roadTerrain(p.from,p.to,p.t):byId[a.at]?.terrain||'plain';
  const location=camp?(byId[camp.from].name+'–'+byId[camp.to].name+' roadside camp'):(byId[a.at]?.name||a.at);
- const split=stationary?'<details class="split-details"><summary>Split army or move selected troops</summary><p class="small">Select numbers for a detachment.</p><div class="split-grid">'+
- ['inf','cav','art'].map(k=>'<label>'+({inf:'Infantry',cav:'Cavalry',art:'Cannons'}[k])+'<input id="split-'+k+'" type="number" inputmode="numeric" min="0" max="'+a.units[k]+'" value="'+a.units[k]+'"></label>').join('')+'</div>'+
- '<div class="buttons"><button class="btn" data-act="fillHalf" data-id="'+a.id+'">Half</button><button class="btn" data-act="fillAll" data-id="'+a.id+'">All</button><button class="btn primary" data-act="marchSelected" data-id="'+a.id+'">March selected</button><button class="btn" data-act="splitOnly" data-id="'+a.id+'">Split here</button></div></details>':'';
+const split=!battle?'<details class="split-details"><summary>Split army / detach while marching</summary>'+
+ '<p class="small">Select troops to detach. Moving detachments keep their exact road position and recalculate speed.</p>'+
+ '<div class="split-totals">Selected <strong id="split-total">'+total(a)+'</strong> troops · Speed <strong id="split-speed">'+speedLabel(a.units)+'</strong></div>'+
+ '<div class="split-slider-list">'+['inf','cav','art'].map(k=>{
+ const max=a.units[k],label={inf:'Infantry',cav:'Cavalry',art:'Cannons'}[k];
+ return '<div class="split-slider-row"><strong>'+label+'</strong><button type="button" data-act="splitStep" data-id="'+a.id+'" data-kind="'+k+'" data-step="-1">−</button>'+
+ '<input id="split-range-'+k+'" type="range" min="0" max="'+max+'" step="1" value="'+max+'" aria-label="'+label+' detachment size">'+
+ '<button type="button" data-act="splitStep" data-id="'+a.id+'" data-kind="'+k+'" data-step="1">+</button>'+
+ '<input id="split-'+k+'" data-split-number="'+k+'" type="number" inputmode="numeric" min="0" max="'+max+'" value="'+max+'"><span>/'+max+'</span></div>'}).join('')+'</div>'+
+ '<div class="buttons"><button class="btn" data-act="fillHalf" data-id="'+a.id+'">Half</button><button class="btn" data-act="fillAll" data-id="'+a.id+'">All</button>'+
+ '<button class="btn" data-act="splitPreset" data-kind="inf" data-id="'+a.id+'">Infantry</button><button class="btn" data-act="splitPreset" data-kind="cav" data-id="'+a.id+'">Cavalry</button>'+
+ '<button class="btn" data-act="splitPreset" data-kind="art" data-id="'+a.id+'">Cannons</button>'+
+ '<button class="btn primary" data-act="marchSelected" data-id="'+a.id+'">Move selected</button><button class="btn" data-act="splitOnly" data-id="'+a.id+'">Detach</button></div></details>':'';
  return '<div class="army-heading"><div><span class="eyebrow">'+escapeHtml(FACTIONS[a.owner].name)+' · Army '+escapeHtml(a.id)+'</span>'+
  '<h2>'+escapeHtml(location)+'</h2><div class="small">'+(a.route.length?'Marching toward '+escapeHtml(byId[a.route[a.route.length-1]]?.name||'destination'):battle?'Fighting':camp?'Holding field position':'Stationary')+'</div></div>'+
  '<strong class="army-strength">'+total(a)+'</strong></div>'+
  '<div class="army-stats"><div>Infantry<strong>'+a.units.inf+'</strong></div><div>Cavalry<strong>'+a.units.cav+'</strong></div><div>Cannons<strong>'+a.units.art+'</strong></div><div>Morale<strong>'+a.morale+'%</strong></div></div>'+
  '<div class="army-morale"><span style="width:'+a.morale+'%"></span></div>'+
- '<div class="army-terrain">Terrain: <strong>'+TERRAIN[terrain][0]+'</strong> · Entrenchment '+(a.entrenchLevel||0)+'/3'+(a.entrench?' (digging)':'')+'</div>'+
+ '<div class="army-terrain">Terrain: <strong>'+TERRAIN[terrain][0]+'</strong> · Entrenchment '+(a.entrenchLevel||0)+'/3'+(a.entrench?' (digging)':'')+' · Speed '+speedLabel(a.units)+'</div>'+
  (a.route.length?'<p class="small">ETA: '+etaLabel(a)+(a.haltAt?' · Halt planned':'')+'</p>':'')+
  (battle?'<div class="notice">⚔ '+escapeHtml(battleName(battle))+' <button class="btn primary" data-act="inspectBattle" data-id="'+battleKey(battle)+'">Inspect battle</button></div>':'')+
  '<h3 class="army-section">Formation</h3>'+formationSelector(a,!!battle)+
- '<p class="small">Tactical modifiers depend on formation, terrain and entrenchment.</p><h3 class="army-section">Orders</h3>'+
+ '<p class="small">Attack ×'+attackForm(a,terrain).toFixed(2)+' · Defense ×'+defendForm(a,terrain).toFixed(2)+' · Terrain ×'+TERRAIN[terrain][1].toFixed(2)+'</p><h3 class="army-section">Orders</h3>'+
  '<div class="army-actions">'+
  (a.route.length?'<button class="btn primary" data-act="campHere" data-id="'+a.id+'">Halt here</button><button class="btn" data-act="siteRoad" data-id="'+a.id+'">Choose road position</button>':'')+
  (a.haltAt?'<button class="btn" data-act="clearHalt" data-id="'+a.id+'">Cancel field stop</button>':'')+
@@ -1043,21 +1065,23 @@ if(action==='focusBattle'){const b=game.battles.find(q=>battleKey(q)===id);if(b)
 if(action==='recruit')recruit(kind);
 if(action==='build')build(kind);
 if(action==='order'){siteArmy=null;groupOrderIds=[];orderArmy=id;showPanel('map');updateOrderBanner()}
+if(action==='splitStep'){const el=$('split-'+kind);if(el)setSplitValue(kind,Number(el.value)+Number(b.dataset.step||0));return}
+if(action==='splitPreset'){const a=mobileArmy(id);if(a)for(const k of ['inf','cav','art'])setSplitValue(k,k===kind?a.units[k]:0);return}
 if(action==='fillHalf'||action==='fillAll'){
 const a=mobileArmy(id);if(!a||a.owner!==game.player)return;
-for(const k of ['inf','cav','art']){const el=$('split-'+k);if(el)el.value=action==='fillAll'?a.units[k]:Math.floor(a.units[k]/2)}
-if(action==='fillHalf'&&total(a)===1){for(const k of ['inf','cav','art'])if(a.units[k]){$('split-'+k).value=1;break}}return;
+for(const k of ['inf','cav','art'])if($('split-'+k))setSplitValue(k,action==='fillAll'?a.units[k]:Math.floor(a.units[k]/2))
+if(action==='fillHalf'&&total(a)===1){for(const k of ['inf','cav','art'])if(a.units[k]){setSplitValue(k,1);break}}return;
 }
 if(action==='marchSelected'||action==='splitOnly'){
-const a=mobileArmy(id);if(!a||a.owner!==game.player||a.route.length||a.battle||a.camp){toast('Select a stationary army first');return}
+const a=mobileArmy(id);if(!a||a.owner!==game.player||a.battle){toast('Cannot split during active combat');return}
 const counts={};let valid=true;
 for(const k of ['inf','cav','art']){const el=$('split-'+k),v=Number(el?.value);if(!el||el.value.trim()===''||!Number.isInteger(v)||v<0||v>a.units[k])valid=false;counts[k]=v}
 if(!valid){toast('Enter valid troop counts');return}
 const n=counts.inf+counts.cav+counts.art;if(!n){toast('Select at least one troop');return}
 if(action==='splitOnly'&&n===total(a)){toast('Leave troops in the original army');return}
-const detached=n===total(a)?a:splitArmy(a,counts);selectedArmy=detached.id;
-if(action==='marchSelected'){groupOrderIds=[];siteArmy=null;orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}
-else{renderAll();showPanel('unit');toast('Created '+n+' troop detachment')}
+const beforeMove=a.route.length>0,detached=n===total(a)?a:splitArmy(a,counts);selectedArmy=detached.id;
+if(action==='marchSelected'){if(detached.route.length||detached.camp){renderAll();showPanel('unit');toast('Detachment continues from its position; use Halt or Resume to redirect')}else{groupOrderIds=[];siteArmy=null;orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}}
+else{renderAll();showPanel('unit');toast('Detached '+n+' troops'+(beforeMove?' during the march':''))}
 }
 if(action==='mergeHere'){
 const a=mobileArmy(id);if(!a||a.owner!==game.player||a.battle||a.route.length||a.camp)return;
@@ -1082,13 +1106,37 @@ if(action==='dipBreakPact')breakNonAggression(id);
 if(action==='dipEnd')endAgreement(id,kind);
 save();
 }
-function splitArmy(a,counts){
-const n=counts.inf+counts.cav+counts.art;if(!a||a.owner!==game.player||a.battle||a.route.length||n<=0||n>=total(a))return a;
-const units={inf:counts.inf,cav:counts.cav,art:counts.art};for(const k of ['inf','cav','art'])a.units[k]-=units[k];
-const d={id:'a'+(++game.nextId),owner:a.owner,at:a.at,units,morale:a.morale,formation:a.formation||'balanced',entrenchLevel:0,entrench:false,route:[],edgeRemaining:0,edgeTotal:0,forced:a.forced,battle:null,origin:null};
-game.armies.push(d);line('Detached '+n+' troops in '+byId[a.at].name);return d;
+
+function splitSelection(){
+ const a=mobileArmy(selectedArmy),u={inf:0,cav:0,art:0};
+ if(a)for(const k of ['inf','cav','art'])u[k]=Math.max(0,Math.min(a.units[k],Number($('split-'+k)?.value)||0));
+ return u;
+}
+function setSplitValue(k,n){
+ const a=mobileArmy(selectedArmy);if(!a)return;
+ n=Math.max(0,Math.min(a.units[k]||0,Math.round(Number(n)||0)));
+ if($('split-'+k))$('split-'+k).value=n;if($('split-range-'+k))$('split-range-'+k).value=n;
+ const u=splitSelection();
+ if($('split-total'))$('split-total').textContent=u.inf+u.cav+u.art;
+ if($('split-speed'))$('split-speed').textContent=speedLabel(u);
+}
+function separateArmy(a,u){
+ if(!a||a.battle||!total(a)||u.inf+u.cav+u.art>=total(a))return null;
+ const spot=a.route.length?roadSpot(a):null,route=[...a.route],camp=a.camp?{...a.camp}:null;
+ for(const k of ['inf','cav','art'])a.units[k]-=u[k];
+ const d={id:'a'+(++game.nextId),owner:a.owner,at:a.at,units:{...u},morale:a.morale,
+ formation:a.formation||'balanced',entrench:false,entrenchLevel:camp?(a.entrenchLevel||0):0,
+ route:[...route],edgeRemaining:0,edgeTotal:0,edgePhase:0,forced:a.forced,battle:null,
+ origin:a.origin||a.at,camp,haltAt:a.haltAt?{...a.haltAt}:null};
+ if(route.length){recomputeMarchLeg(a,spot?.t||0);recomputeMarchLeg(d,spot?.t||0)}
+ game.armies.push(d);return d;
 }
 
+function splitArmy(a,counts){
+ const d=separateArmy(a,counts);
+ if(d)line('Detached '+total(d)+' troops from '+byId[a.at].name+(d.route.length?' during march':'')+'.');
+ return d||a;
+}
 function recruit(kind){
  const p=prov(selectedProvince),t=TRAINING[kind];if(!p||p.owner!==game.player||!t)return;
  if(p.trainingQueue){toast('One training order at a time');return}
@@ -1152,10 +1200,23 @@ if(battle.road&&a.camp){
 const out=a.origin&&owner(a.origin)===game.player?a.origin:(connected[a.at]||[]).find(p=>owner(p)===game.player);
 if(!out){toast('No friendly retreat route');return}a.battle=null;a.route=[out];startLeg(a,pct());a.morale=Math.max(20,a.morale-15);game.battles=game.battles.filter(b=>b!==battle);const other=mobileArmy(battle.attackId===id?battle.defendId:battle.attackId);if(other)other.battle=null;line('Retreat ordered from '+byId[a.at].name);renderAll();
 }
+
+function compositionSpeed(u){
+ const i=Math.max(0,Number(u?.inf)||0),c=Math.max(0,Number(u?.cav)||0),a=Math.max(0,Number(u?.art)||0),n=i+c+a;
+ if(!n)return 1;if(c===n)return 1.55;if(a===n)return .68;if(i===n)return 1;
+ let speed=1;if(i&&c)speed+=.24*Math.min(1,c*2/Math.max(1,i));else if(c)speed+=.43*c/n;
+ if(a)speed-=.48*a/n+.08;return Math.max(.62,Math.min(1.55,speed));
+}
+const speedLabel=u=>'×'+compositionSpeed(u).toFixed(2);
+function recomputeMarchLeg(a,progress){
+ if(!a.route.length)return;
+ const duration=edgeDuration(a,a.route[0]);a.edgeTotal=duration;a.edgePhase=pct();a.edgeRemaining=Math.max(.001,duration*(1-progress));
+}
+
 function edgeDurationFrom(a,from,to){
- const b=byId[from],n=byId[to];if(!a||!b||!n)return a?.forced?2:3;
- const distance=Math.hypot(b.x-n.x,b.y-n.y);
- return Math.max(a.forced?2:3,Math.ceil(distance/(a.forced?90:65)));
+ const p=byId[from],q=byId[to];if(!a||!p||!q)return 3;
+ const miles=Math.hypot(p.x-q.x,p.y-q.y);
+ return Math.max(1.05,Math.ceil(miles/65/(compositionSpeed(a.units)*(a.forced?1.28:1))*2)/2);
 }
 function edgeDuration(a,next){return edgeDurationFrom(a,a.at,next)}
 function startLeg(a,phase=0){

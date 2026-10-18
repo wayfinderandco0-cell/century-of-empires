@@ -896,7 +896,7 @@ $('startBtn').onclick=()=>{if(load()&&!confirm('Start a new campaign? This repla
 $('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save found');return}const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();if(game.caretaker)line('Defensive caretaker stood in during your 72+ hour absence.');enter()};
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>showPanel(b.dataset.tab));
 $('sheetClose').onclick=()=>showPanel('map');$('returnMap').onclick=()=>showPanel('map');
-$('zoomIn').onclick=()=>zoom(.66);$('zoomOut').onclick=()=>zoom(1/.66);$('zoomHome').onclick=()=>{if(view.overview){fitAfrica();toast('Europe and Africa')}else{fitTheater();toast('European theater — tap center again for Africa')}};
+$('zoomIn').onclick=()=>zoom(.66);$('zoomOut').onclick=()=>zoom(1/.66);$('zoomHome').onclick=()=>{if(view.overview&&view.cy<780){fitAfrica();toast('Europe and Africa')}else{fitTheater();toast('European theater — tap center again for Africa')}};
 $('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
 $('sheetBody').addEventListener('input',e=>{const id=e.target.id||'',k=id.startsWith('split-range-')?id.slice(12):e.target.dataset.splitNumber;if(['inf','cav','art'].includes(k))setSplitValue(k,e.target.value)});
@@ -1885,9 +1885,36 @@ function warpedEdge(edge,orientation){
 }
 
 
+const AFRICA_WHOLE="M1042.2,891.2 L1057.8,926.1 L1127.5,992.8 L1151.7,1016.4 L1163.1,1056.5 L1213.7,1103.1 L1293.2,1134.8 L1320.7,1160.1 L1457.5,1140.8 L1462.5,1159.6 L1458.3,1171.5 L1395.2,1230.2 L1298.3,1274.6 L1248.9,1306.1 L1224.1,1315.2 L1202.4,1338.2 L1193,1354.4 L1213.5,1401.8 L1234.1,1409.6 L1228.7,1436.6 L1238.5,1459.7 L1216.8,1479.4 L1150.8,1497.1 L1138.9,1509.5 L1101.9,1519.2 L1122,1551 L1121,1575.8 L1055,1599.9 L1052.5,1634.2 L1000.2,1671.5 L934.3,1703.2 L886.5,1712.3 L836.2,1709.1 L780.4,1721.2 L753.4,1710.5 L732.7,1692.7 L740.4,1676.9 L668.8,1604.6 L659,1555.7 L599.6,1498.4 L598.4,1472 L645,1413.5 L625.9,1390.5 L610,1355.5 L531.4,1290.9 L559.5,1246.7 L521.2,1224.9 L471.6,1232.2 L451.8,1215.5 L369.6,1210.3 L296.4,1226.9 L251.6,1221 L175.4,1231.6 L148.2,1226.3 L64.5,1195.8 L42.2,1167 L-1.1,1148.7 L-28.8,1133.7 L-13,1070.5 L-24.1,1050.2 L-16.4,1039.6 L-33.6,1019.8 L12.1,982.7 L21.8,963 L55.9,939.7 L115.2,921.6 L127.4,911.2 L123.4,893.1 L135.7,877.1 L190.1,856.3 L219.6,829.1 L296.9,841.3 L363.9,820.7 L513.8,815.5 L554.4,808 L582.9,811.9 L570.3,825.9 L585.6,839.2 L560.4,854 L610.6,873 L674.5,879.4 L757.8,908.5 L781.3,900.6 L782.2,882.2 L817.6,871.6 L889.6,885.1 L979.4,901 L1042.2,891.2 Z",MADAGASCAR_WHOLE="M1330,1593.7 L1291.1,1552.9 L1318.6,1523.4 L1306.5,1492.4 L1317.6,1476.3 L1378.6,1467.5 L1396.9,1452.8 L1413.9,1442.1 L1424,1424.9 L1450.2,1467.2 L1431.7,1468.4 L1436.4,1484.3 L1376.2,1587.3 Z";
 const AFRICA_COAST="M74.8,966.5L74.1,999.7L74.1,937.7L128.0,913.1L122.4,896.1L133.8,876.8L148.0,867.4L186.6,855.0L208.3,831.3L224.6,831.4L237.9,837.6L291.4,839.9L371.8,819.0L456.9,817.4L477.7,811.6L525.5,814.0L549.5,808.0L565.0,809.8L564.3,817.3L583.1,811.8L584.7,814.7L573.6,821.9L573.5,828.6L581.1,832.2L578.2,844.7L563.7,851.9L567.9,859.7L579.3,859.9L593.3,868.8L676.3,881.0L686.6,893.3L761.2,908.6L782.5,898.7L777.4,888.2L784.3,881.4L815.4,872.9L845.3,875.8L852.9,882.1L890.1,886.1L895.5,890.7L924.9,890.5L978.3,900.3L1004.5,892.0L1023.9,890.9L1039.7,892.6L1045.7,899.4L1050.8,894.9L1085.7,899.0L1096.6,895.5L1111.1,919.0L1094.2,941.5L1089.0,943.8L1071.7,933.6L1053.6,915.5L1093.1,963.7L1128.2,992.5L1124.5,1003.1L1154.1,1017.2L891.9,1017.2L891.9,1042.4L866.4,1042.4L866.2,1047.7L689.9,999.2L651.9,1010.9L639.5,1003.9L604.5,998.4L464.8,1047.4L409.1,1054.2L408.9,1046.3L384.9,1040.6L379.6,1034.7L147.4,947.2L147.4,967.1L74.8,966.5Z";
 function installTheaterGeography(){
  const defs=$('map').querySelector('defs');
+ // Geographic context outside the playable northern African coastal provinces.
+ defs.appendChild(node('path',{id:'africaWhole',d:AFRICA_WHOLE}));
+ defs.appendChild(node('path',{id:'madagascarWhole',d:MADAGASCAR_WHOLE}));
+ const africaContext=node('g',{id:'africaContext','pointer-events':'none'});
+ for(const id of ['africaWhole','madagascarWhole']){
+  africaContext.appendChild(node('use',{href:'#'+id,fill:'#a2a7a2',stroke:'#d3dacd','stroke-width':1.55,'vector-effect':'non-scaling-stroke'}));
+ }
+ const sea=$('map').querySelector('rect[fill="url(#seaLines)"]');
+ if(sea)sea.after(africaContext);
+ const greyClip=node('clipPath',{id:'greyAfricanLand'});
+ greyClip.appendChild(node('use',{href:'#africaWhole'}));
+ greyClip.appendChild(node('use',{href:'#madagascarWhole'}));
+ defs.appendChild(greyClip);
+ const fade=node('linearGradient',{id:'africaGreyFade',x1:0,y1:0,x2:0,y2:1});
+ fade.appendChild(node('stop',{offset:'0%','stop-color':'#969f9c','stop-opacity':'0'}));
+ fade.appendChild(node('stop',{offset:'12%','stop-color':'#969f9c','stop-opacity':'.96'}));
+ fade.appendChild(node('stop',{offset:'100%','stop-color':'#969f9c','stop-opacity':'1'}));
+ defs.appendChild(fade);
+ const muted=node('g',{id:'nonPlayableAfrica','clip-path':'url(#greyAfricanLand)','pointer-events':'none'});
+ muted.appendChild(node('rect',{x:-130,y:910,width:1750,height:980,fill:'url(#africaGreyFade)'}));
+ const caption=node('text',{x:760,y:1210,fill:'#566562','font-family':'Georgia,serif','font-size':26,'letter-spacing':9,opacity:.25,'pointer-events':'none'});
+ caption.textContent='AFRICA';
+ muted.appendChild(caption);
+ $('roads').before(muted);
+ $('roads').before($('weatherLayer'));
+ $('weatherLayer').setAttribute('clip-path','url(#landClip)');
  // Hide the artificial southern truncation line in the legacy GSHHS export.
  const coastMask=node('clipPath',{id:'realCoastInkClip'});
  coastMask.appendChild(node('rect',{x:-100,y:-100,width:1700,height:935}));

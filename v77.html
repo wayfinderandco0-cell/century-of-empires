@@ -987,6 +987,163 @@ const split=!battle?'<details class="split-details"><summary>Split army / detach
  (canMerge?'<button class="btn" data-act="mergeHere" data-id="'+a.id+'">Merge local armies</button>':'')+
  '<button class="btn" data-act="focusArmy" data-id="'+a.id+'">Locate on map</button></div>'+split;
 }
+
+/* V77 bilateral diplomacy and barter. Trade agreements unlock individually negotiated offers. */
+const TRADE_ASSETS={
+ money:{label:'Gold',price:1},manpower:{label:'Manpower',price:3.5},
+ wheat:{label:'Wheat',price:1.5},iron:{label:'Iron',price:2.8},
+ wood:{label:'Wood',price:1.7},coal:{label:'Coal',price:3.2},
+ inf:{label:'Infantry',price:8},cav:{label:'Cavalry',price:18},
+ art:{label:'Artillery',price:34},
+ goodwill:{label:'Improved relations (trust)',price:12}
+};
+const IS_TRADE_TROOPS=new Set(['inf','cav','art']);
+let tradeDraft=null;
+function tradeHome(k){
+ return game.provinces.find(p=>p.owner===k&&byId[p.id]?.capital)?.id||
+  game.provinces.find(p=>p.owner===k)?.id||null;
+}
+function tradeAvailableArmies(k,type){
+ return game.armies.filter(a=>a.owner===k&&activeArmy(a)&&owner(a.at)===k&&
+  !a.battle&&!a.route.length&&!a.camp&&(a.units[type]||0)>0);
+}
+function tradeSource(k,type,id){
+ const list=tradeAvailableArmies(k,type);
+ return (id?list.find(a=>a.id===id):null)||list.sort((a,b)=>b.units[type]-a.units[type])[0]||null;
+}
+function tradeLimit(k,type,sourceId,partner){
+ if(type==='goodwill')return Math.max(0,Math.min(25,100-treaty(partner).trust));
+ if(IS_TRADE_TROOPS.has(type))return Math.max(0,tradeSource(k,type,sourceId)?.units[type]||0);
+ return Math.max(0,Math.min(type==='money'?9999:5000,Math.floor(game.resources[type]?.[k]||0)));
+}
+function resetTradeDraft(k){tradeDraft={k,give:{type:'money',qty:25},want:{type:'wheat',qty:15},sourceId:null}}
+const tradePrice=p=>(TRADE_ASSETS[p?.type]?.price||0)*Math.max(0,p?.qty||0);
+function tradeChance(k,p){
+ const ratio=(tradePrice(p.offer)-tradePrice(p.request))/Math.max(20,tradePrice(p.request));
+ return Math.max(5,Math.min(94,Math.round(53+38*ratio+.45*(treaty(k).trust-50)+(treaty(k).alliance?10:0))));
+}
+function tradeProposalValid(k,p){
+ if(!p||!p.offer||!p.request||!TRADE_ASSETS[p.offer.type]||!TRADE_ASSETS[p.request.type]||
+  p.offer.type==='goodwill'||!Number.isInteger(p.offer.qty)||!Number.isInteger(p.request.qty)||
+  p.offer.qty<1||p.request.qty<1||p.offer.qty>99999||p.request.qty>99999||!tradeHome(k)||!tradeHome(game.player))return null;
+ const sources={};
+ for(const side of ['offer','request']){
+  const spec=p[side],giver=side==='offer'?game.player:k,receiver=side==='offer'?k:game.player;
+  if(spec.type==='goodwill'){
+   if(side!=='request'||spec.qty>25||spec.qty+treaty(k).trust>100)return null;
+  }else if(IS_TRADE_TROOPS.has(spec.type)){
+   const lockedId=side==='offer'?p.sourceId:p.partnerSourceId;
+   const a=tradeSource(giver,spec.type,lockedId);
+   if(!a||!lockedId||a.id!==lockedId||a.units[spec.type]<spec.qty)return null;
+   sources[side]=a;
+  }else{
+   if(!STOCK.includes(spec.type)||(game.resources[spec.type]?.[giver]||0)<spec.qty)return null;
+   const cap=spec.type==='money'?99999:spec.type==='manpower'?9999:25000;
+   if(game.resources[spec.type][receiver]+spec.qty>cap)return null;
+  }
+ }
+ return sources;
+}
+function fulfillBarter(k,p,sources){
+ function shift(spec,from,to,source){
+  if(spec.type==='goodwill'){treaty(k).trust=Math.min(100,treaty(k).trust+spec.qty);return}
+  if(IS_TRADE_TROOPS.has(spec.type)){
+   source.units[spec.type]-=spec.qty;
+   const home=tradeHome(to);
+   const u={inf:0,cav:0,art:0};u[spec.type]=spec.qty;
+   game.armies.push({id:'a'+(++game.nextId),owner:to,at:home,units:u,
+    morale:Math.max(60,Math.min(90,source.morale||80)),health:Math.max(60,Math.min(100,source.health??100)),
+    marchMonths:0,restMonths:0,formation:'balanced',entrench:false,entrenchLevel:0,
+    route:[],edgeRemaining:0,edgeTotal:0,edgePhase:0,forced:false,battle:null,
+    origin:home,camp:null,haltAt:null});
+  }else{
+   game.resources[spec.type][from]-=spec.qty;
+   game.resources[spec.type][to]+=spec.qty;
+  }
+ }
+ shift(p.offer,game.player,k,sources.offer);
+ shift(p.request,k,game.player,sources.request);
+ treaty(k).trust=Math.min(100,treaty(k).trust+2);
+ line('Trade accepted by '+FACTIONS[k].name+': sent '+p.offer.qty+' '+TRADE_ASSETS[p.offer.type].label+
+  ', received '+p.request.qty+' '+TRADE_ASSETS[p.request.type].label+'.');
+}
+function resolveBarterOffer(k,p){
+ const t=treaty(k);
+ if(t.war||!t.trade){line('Trade offer with '+FACTIONS[k].name+' cancelled after the trade agreement ended.');return}
+ const sources=tradeProposalValid(k,p);
+ if(!sources){line('Trade offer with '+FACTIONS[k].name+' cancelled: available stock, troops or capacity changed.');return}
+ if(Math.random()*100<tradeChance(k,p)){fulfillBarter(k,p,sources)}
+ else{t.trust=Math.max(0,t.trust-1);line(FACTIONS[k].name+' rejects the proposed exchange. Nothing was transferred.')}
+}
+function makeTradeOffer(k){
+ const d=tradeDraft,t=treaty(k);
+ if(!d||d.k!==k||!t.trade||t.war||t.pending){toast('Trade agreement and free diplomats required');return}
+ const p={type:'barter',responseAt:currentMonth()+1,offer:{...d.give},request:{...d.want},
+  sourceId:null,partnerSourceId:null};
+ if(IS_TRADE_TROOPS.has(p.offer.type))p.sourceId=tradeSource(game.player,p.offer.type,d.sourceId)?.id||null;
+ if(IS_TRADE_TROOPS.has(p.request.type))p.partnerSourceId=tradeSource(k,p.request.type,null)?.id||null;
+ if(!tradeProposalValid(k,p)){toast('Not enough available goods, capacity or stationed troops');return}
+ t.pending=p;
+ line('Envoys offer '+p.offer.qty+' '+TRADE_ASSETS[p.offer.type].label+' for '+
+  p.request.qty+' '+TRADE_ASSETS[p.request.type].label+' to '+FACTIONS[k].full+'.');
+ toast('Offer sent · reply in one game month');showPanel('diplomacy');save();
+}
+function tradePartHtml(k,side){
+ const d=tradeDraft[side],giving=side==='give',who=giving?game.player:k;
+ const types=Object.entries(TRADE_ASSETS).filter(([name])=>!giving||name!=='goodwill');
+ const armies=IS_TRADE_TROOPS.has(d.type)?tradeAvailableArmies(who,d.type):[];
+ const source=giving&&IS_TRADE_TROOPS.has(d.type)?tradeSource(who,d.type,tradeDraft.sourceId):null;
+ if(source)tradeDraft.sourceId=source.id;
+ const max=tradeLimit(who,d.type,source?.id,k);
+ d.qty=Math.max(0,Math.min(max,d.qty|0));
+ const sourceHtml=giving&&IS_TRADE_TROOPS.has(d.type)?
+  '<label class="small" for="trade-source">Stationary source army</label><select class="trade-select" id="trade-source">'+
+  armies.map(a=>'<option value="'+escapeHtml(a.id)+'"'+(source?.id===a.id?' selected':'')+'>'+
+    escapeHtml(byId[a.at]?.name||a.at)+' · '+a.units[d.type]+' available</option>').join('')+'</select>':'';
+ return '<div class="tile"><div class="eyebrow">'+(giving?'YOU GIVE':'YOU REQUEST')+'</div>'+
+  '<label class="small" for="trade-'+side+'-type">Asset</label><select class="trade-select" id="trade-'+side+'-type">'+
+  types.map(([key,data])=>'<option value="'+key+'"'+(key===d.type?' selected':'')+'>'+escapeHtml(data.label)+'</option>').join('')+'</select>'+
+  sourceHtml+
+  '<div class="trade-range">'+
+  '<button class="btn" data-act="tradeStep" data-id="'+side+'" data-step="-1">−</button>'+
+  '<input id="trade-'+side+'-range" type="range" min="0" max="'+max+'" step="1" value="'+d.qty+'" aria-label="Trade quantity">'+
+  '<button class="btn" data-act="tradeStep" data-id="'+side+'" data-step="1">+</button>'+
+  '<input id="trade-'+side+'-qty" type="number" inputmode="numeric" min="0" max="'+max+'" value="'+d.qty+'">'+
+  '</div><div class="small">Available '+fmt(max)+' · Approximate value <strong id="trade-'+side+'-worth">'+fmt(tradePrice(d))+'</strong> gold</div></div>';
+}
+function tradePanelHtml(){
+ const k=selectedDiplomat,t=treaty(k);
+ if(!t.trade||t.war)return '<div class="notice">Establish a peaceful trade agreement first.</div><button class="btn" data-act="tradeBack">Back to Diplomacy</button>';
+ if(!tradeDraft||tradeDraft.k!==k)resetTradeDraft(k);
+ const d=tradeDraft;
+ return '<div class="eyebrow">Imperial Commerce · '+escapeHtml(FACTIONS[k].full)+'</div>'+
+  '<p class="small">Negotiate one-time exchanges of money, supplies, infantry, cavalry, artillery or diplomatic goodwill. AI approval depends on the offer and diplomatic trust.</p>'+
+  tradePartHtml(k,'give')+tradePartHtml(k,'want')+
+  '<div class="notice">Estimated AI acceptance: <strong id="trade-chance">'+
+  (d.give.qty&&d.want.qty?tradeChance(k,{offer:d.give,request:d.want})+'%':'—')+'</strong></div>'+
+  '<p class="small">Reply arrives next game month (120 real minutes). No goods or troops are taken unless accepted. Units come from stationary armies and arrive at the receiving nation’s capital.</p>'+
+  '<div class="buttons"><button class="btn primary" data-act="tradeOffer" data-id="'+k+'"'+(t.pending||!d.give.qty||!d.want.qty?' disabled':'')+'>Submit exchange proposal</button>'+
+  '<button class="btn" data-act="tradeBack">Back to Diplomacy</button></div>';
+}
+function handleTradeInput(e){
+ if(panel!=='trade'||!tradeDraft)return;
+ const id=e.target.id||'',match=id.match(/^trade-(give|want)-(type|qty|range)$/);
+ if(id==='trade-source'){tradeDraft.sourceId=e.target.value;renderPanel();return}
+ if(!match)return;
+ const side=match[1],kind=match[2],d=tradeDraft[side],who=side==='give'?game.player:tradeDraft.k;
+ if(kind==='type'){
+  d.type=e.target.value;
+  if(side==='give')tradeDraft.sourceId=null;
+  d.qty=Math.min(20,tradeLimit(who,d.type,null,tradeDraft.k));renderPanel();return;
+ }
+ d.qty=Math.max(0,Math.min(tradeLimit(who,d.type,side==='give'?tradeDraft.sourceId:null,tradeDraft.k),Math.floor(Number(e.target.value)||0)));
+ for(const q of ['range','qty']){const input=$('trade-'+side+'-'+q);if(input)input.value=d.qty}
+ const price=$('trade-'+side+'-worth');if(price)price.textContent=fmt(tradePrice(d));
+ const chance=$('trade-chance');if(chance)chance.textContent=tradeDraft.give.qty&&tradeDraft.want.qty?
+    tradeChance(tradeDraft.k,{offer:tradeDraft.give,request:tradeDraft.want})+'%':'—';
+ const submit=document.querySelector('[data-act="tradeOffer"]');if(submit)submit.disabled=!tradeDraft.give.qty||!tradeDraft.want.qty;
+}
+
 const currentMonth=()=>Math.max(0,(game.year-1780)*12+game.month);
 function treaty(k){
 if(!game.treaties)game.treaties={};

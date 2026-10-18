@@ -1,0 +1,16 @@
+{
+  "name": "Century of Empires",
+  "short_name": "Empires",
+  "description": "Historical grand-strategy campaign, 1780–1880",
+  "id": "./v72.html",
+  "start_url": "./v72.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#101d25",
+  "theme_color": "#101d25",
+  "orientation": "any",
+  "lang": "en"
+}

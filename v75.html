@@ -1798,6 +1798,8 @@ function nationBorders(){
   el.textContent=(FACTIONS[p.owner]?.name||p.owner).toUpperCase();labels.appendChild(el);
  }
 }
+const SEA_LANES=new Set(('edinburgh:oslo,london:paris,london:amsterdam,lisbon:bordeaux,stockholm:petersburg,stockholm:konigsberg,gothenburg:copenhagen,copenhagen:oslo,copenhagen:berlin,sofia:naples,constantinople:naples,cardiff:dublin,dublin:edinburgh,dublin:london,corsica:turin,corsica:sardinia,sardinia:turin,sardinia:palermo,palermo:naples,palermo:rome,palermo:tunis,algiers:madrid,algiers:barcelona,tripoli:constantinople,tunis:naples').split(',').map(k=>k.split(':').sort().join(':')));
+const TRADE_ROADS=new Set('paris:lyon,paris:amsterdam,paris:bordeaux,bordeaux:madrid,madrid:barcelona,madrid:lisbon,berlin:hanover,berlin:dresden,berlin:warsaw,berlin:konigsberg,prague:vienna,vienna:budapest,vienna:venice,warsaw:vilnius,stockholm:gothenburg,oslo:gothenburg,rome:naples,venice:rome,algiers:tunis,tunis:tripoli'.split(',').map(k=>k.split(':').sort().join(':')));
 function renderRoads(){
  const roads=$('roads'),sea=$('seaLanes'),lod=mapLod(),level=String(lod);
  if(roads.dataset.lod===level)return;

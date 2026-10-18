@@ -205,6 +205,13 @@
 .army-bars-legend{display:grid;gap:4px;padding:9px 0;font-size:12px;color:#e5e8da}
 .army-bars-legend>span{display:flex;justify-content:space-between}
 .army-bars-legend small{font-size:10px;color:#b4c7c0}
+
+.army-bars-legend{display:grid;gap:4px;padding:9px 0;font-size:12px;color:#e5e8da}
+.army-bars-legend>span{display:flex;justify-content:space-between}
+.army-bars-legend small{font-size:10px;color:#b4c7c0;margin:4px 0}
+.army-health-meter,.army-morale-meter{width:100%;height:8px;background:#182b2c;border:1px solid #b5baa5;border-radius:3px;overflow:hidden}
+.army-health-meter span,.army-morale-meter span{height:100%;display:block}
+.army-health-meter span{background:#70ed9b}.army-morale-meter span{background:#74c5ed}
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 1120" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -1070,8 +1077,13 @@ const split=!battle?'<details class="split-details"><summary>Split army / detach
  '<h2>'+escapeHtml(location)+'</h2><div class="small">'+(a.route.length?'Marching toward '+escapeHtml(byId[a.route[a.route.length-1]]?.name||'destination'):battle?'Fighting':camp?'Holding field position':'Stationary')+'</div></div>'+
  '<strong class="army-strength">'+total(a)+'</strong></div>'+
  '<div class="army-stats"><div>Infantry<strong>'+a.units.inf+'</strong></div><div>Cavalry<strong>'+a.units.cav+'</strong></div><div>Cannons<strong>'+a.units.art+'</strong></div><div>Morale<strong>'+a.morale+'%</strong></div></div>'+
- '<div class="army-morale"><span style="width:'+a.morale+'%"></span></div>'+
- '<div class="army-terrain">Terrain: <strong>'+TERRAIN[terrain][0]+'</strong> · Entrenchment '+(a.entrenchLevel||0)+'/3'+(a.entrench?' (digging)':'')+' · Speed '+speedLabel(a.units)+'</div>'+
+ '<div class="army-bars-legend"><span>Health <strong>'+Math.round(a.health??100)+'%</strong></span>'+
+ '<div class="army-health-meter"><span style="width:'+(a.health??100)+'%"></span></div>'+
+ '<span>Morale <strong>'+a.morale+'%</strong></span>'+
+ '<div class="army-morale-meter"><span style="width:'+a.morale+'%"></span></div>'+
+ '<small>National morale '+(game.nationalMorale?.[a.owner]??82)+'% · '+(a.marchMonths||0)+' marching months · '+(a.restMonths||0)+' resting months</small></div>'+
+ '<div class="army-terrain">Terrain: <strong>'+TERRAIN[terrain][0]+'</strong> · Weather: '+weatherAt(a.at).name+
+ ' · Entrenchment '+(a.entrenchLevel||0)+'/3'+(a.entrench?' (digging)':'')+' · Speed '+speedLabel(a.units)+'</div>'+
  (a.route.length?'<p class="small">ETA: '+etaLabel(a)+(a.haltAt?' · Halt planned':'')+'</p>':'')+
  (battle?'<div class="notice">⚔ '+escapeHtml(battleName(battle))+' <button class="btn primary" data-act="inspectBattle" data-id="'+battleKey(battle)+'">Inspect battle</button></div>':'')+
  '<h3 class="army-section">Formation</h3>'+formationSelector(a,!!battle)+

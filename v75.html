@@ -356,7 +356,8 @@ const DATA=[
 ['tunis','Tunis','TN',564.4,816.1,13,'coast',1],
 ['tripoli','Tripoli','TR',630.9,872.3,13,'coast',1],['fez','Fez','MR',104,872,13,'hill',1]
 ];
-const ATLAS_CITY_COORDS={"london":[434,341],"edinburgh":[379,172],"paris":[490,442],"bordeaux":[386,552],"lyon":[531,559],"madrid":[227,683],"barcelona":[405,669],"lisbon":[50,675],"amsterdam":[572,323],"hanover":[751,347],"berlin":[925,349],"konigsberg":[1108,299],"prague":[910,440],"vienna":[975,494],"budapest":[1110,522],"munich":[789,478],"dresden":[944,392],"stockholm":[1022,149],"gothenburg":[922,200],"copenhagen":[847,231],"oslo":[821,137],"warsaw":[1169,391],"vilnius":[1263,319],"petersburg":[1341,139],"moscow":[1411,409],"turin":[659,570],"venice":[790,576],"rome":[761,671],"naples":[833,710],"bern":[667,503],"sofia":[1167,689],"constantinople":[1390,750],"cardiff":[363,332],"dublin":[206,296],"corsica":[672,679],"sardinia":[656,759],"palermo":[810,826],"algiers":[446,851],"tunis":[693,890],"tripoli":[849,968],"fez":[108,875]};
+const TRAVEL_CITY_COORDS=Object.fromEntries(DATA.map(b=>[b[0],{x:b[3],y:b[4]}]));
+const ATLAS_CITY_COORDS={"london":[434,341],"edinburgh":[379,172],"paris":[490,442],"bordeaux":[386,552],"lyon":[531,559],"madrid":[227,683],"barcelona":[405,669],"lisbon":[50,675],"amsterdam":[570,365],"hanover":[751,347],"berlin":[925,349],"konigsberg":[1108,354],"prague":[910,440],"vienna":[975,494],"budapest":[1110,522],"munich":[789,478],"dresden":[944,392],"stockholm":[1022,149],"gothenburg":[877,187],"copenhagen":[815,256],"oslo":[821,137],"warsaw":[1169,391],"vilnius":[1263,319],"petersburg":[1341,139],"moscow":[1411,409],"turin":[659,570],"venice":[790,576],"rome":[761,671],"naples":[833,710],"bern":[667,503],"sofia":[1167,689],"constantinople":[1390,750],"cardiff":[363,332],"dublin":[206,296],"corsica":[672,679],"sardinia":[656,759],"palermo":[828,852],"algiers":[446,851],"tunis":[693,890],"tripoli":[849,968],"fez":[108,875]};
 for(const rec of DATA){const point=ATLAS_CITY_COORDS[rec[0]];if(point){rec[3]=point[0];rec[4]=point[1]}}
 const LINKS=`edinburgh:london,edinburgh:oslo,london:paris,london:amsterdam,lisbon:madrid,lisbon:bordeaux,madrid:barcelona,madrid:bordeaux,barcelona:bordeaux,barcelona:lyon,barcelona:turin,bordeaux:paris,bordeaux:lyon,paris:lyon,paris:amsterdam,paris:bern,amsterdam:hanover,hanover:berlin,hanover:dresden,hanover:copenhagen,hanover:munich,berlin:dresden,berlin:warsaw,berlin:konigsberg,dresden:prague,dresden:munich,dresden:warsaw,munich:prague,munich:vienna,munich:bern,munich:turin,prague:vienna,prague:warsaw,vienna:budapest,vienna:venice,vienna:turin,budapest:sofia,budapest:warsaw,budapest:venice,bern:lyon,bern:turin,turin:venice,turin:rome,venice:rome,venice:naples,rome:naples,stockholm:gothenburg,stockholm:petersburg,stockholm:konigsberg,gothenburg:oslo,gothenburg:copenhagen,copenhagen:oslo,copenhagen:berlin,konigsberg:warsaw,konigsberg:vilnius,konigsberg:petersburg,warsaw:vilnius,vilnius:petersburg,vilnius:moscow,petersburg:moscow,sofia:constantinople,sofia:naples,constantinople:naples,london:cardiff,cardiff:dublin,dublin:edinburgh,dublin:london,corsica:turin,corsica:sardinia,sardinia:turin,sardinia:palermo,palermo:naples,palermo:rome,palermo:tunis,algiers:tunis,tunis:tripoli,algiers:madrid,algiers:barcelona,tripoli:constantinople,tunis:naples,fez:algiers,fez:lisbon,fez:madrid`.split(',').map(s=>s.split(':'));
 
@@ -388,13 +389,12 @@ const WEATHER={
  heat:{name:'Heat',symbol:'☀',speed:1.13,fatigue:1.1,attack:.98}
 };
 function weatherRegion(id){
- const b=byId[id];if(!b)return 'central';
- if(['algiers','tunis','tripoli'].includes(id)||b.y>910)return 'desert';
- if(b.x<460&&b.y<670)return 'atlantic';
- if(b.y<510)return 'nordic';
- if(b.x>850&&b.y<690)return 'east';
- if(b.y>730)return 'med';
- if(b.y>625&&b.x<720)return 'alpine';
+ if(['fez','algiers','tunis','tripoli'].includes(id))return 'desert';
+ if(['edinburgh','london','cardiff','dublin'].includes(id))return 'atlantic';
+ if(['oslo','copenhagen','gothenburg','stockholm','petersburg'].includes(id))return 'nordic';
+ if(['berlin','dresden','konigsberg','warsaw','vilnius','moscow'].includes(id))return 'east';
+ if(['bern','turin','munich','prague','vienna','budapest'].includes(id))return 'alpine';
+ if(['barcelona','corsica','sardinia','rome','venice','naples','palermo','sofia','constantinople'].includes(id))return 'med';
  return 'central';
 }
 function weatherState(region,year,month){
@@ -1196,7 +1196,8 @@ function recomputeMarchLeg(a,progress){
 
 function edgeDurationFrom(a,from,to){
  const p=byId[from],q=byId[to];if(!a||!p||!q)return 3;
- const miles=Math.hypot(p.x-q.x,p.y-q.y);
+ const oldA=TRAVEL_CITY_COORDS[from]||p,oldB=TRAVEL_CITY_COORDS[to]||q;
+  const miles=Math.hypot(oldA.x-oldB.x,oldA.y-oldB.y);
  return Math.max(1.05,Math.ceil(miles/65/(compositionSpeed(a.units)*(a.forced?1.28:1))*weatherAt(to).speed*2)/2);
 }
 function edgeDuration(a,next){return edgeDurationFrom(a,a.at,next)}

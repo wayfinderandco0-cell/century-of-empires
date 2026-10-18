@@ -1017,7 +1017,28 @@ if(!silent&&game.month===0)line('The year '+game.year+' begins. A new era for Eu
 function runAI(){
 for(const k of Object.keys(FACTIONS)){if(k===game.player)continue;
 const armies=game.armies.filter(a=>a.owner===k&&activeArmy(a)&&!a.route.length&&!a.battle);if(!armies.length)continue;
-if(game.resources.money[k]>90&&game.resources.manpower[k]>15){const a=armies[Math.floor(Math.random()*armies.length)];a.units.inf+=3;game.resources.money[k]-=35;game.resources.manpower[k]-=10}
+// Foreign nations use the same regional supplies and training queues as the player.
+const owned=game.provinces.filter(p=>p.owner===k);
+const trainable=owned.filter(p=>p.recruitment>0&&!p.trainingQueue&&afford(TRAINING.inf.cost,k));
+if(trainable.length&&Math.random()<.75){
+ const p=trainable.find(p=>byId[p.id]?.capital)||trainable[0];
+ spend(TRAINING.inf.cost,k);
+ p.trainingQueue={owner:k,kind:'inf',units:TRAINING.inf.qty,remaining:trainMonths(p,'inf')};
+}
+const buildable=owned.filter(p=>!p.constructionQueue);
+if(buildable.length&&Math.random()<.65){
+ const options=['farm','market','mine','recruitment','stable','factory','drill','fort'];
+ const priorities=(p)=>options.filter(name=>p[name]<3&&afford(buildCost(name,p[name]+1),k)).sort((a,b)=>{
+  const score=name=>name==='farm'?p.farm<1?5:2:name==='recruitment'?p.recruitment<1?5:2:name==='market'?3:name==='mine'?p.mine<1?3:1:1;
+  return score(b)-score(a);
+ });
+ for(const p of buildable.sort((a,b)=>Number(!!byId[b.id]?.capital)-Number(!!byId[a.id]?.capital))){
+  const pick=priorities(p)[0];if(!pick)continue;
+  const level=p[pick]+1;spend(buildCost(pick,level),k);
+  p.constructionQueue={owner:k,kind:pick,level,remaining:buildMonths(p,level)};
+  break;
+ }
+}
 if(Math.random()<.22){const candidate=armies.filter(a=>(connected[a.at]||[]).some(id=>owner(id)!==k&&!protectedPair(k,owner(id))&&total(a)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4)).sort((a,b)=>total(b)-total(a))[0];
 if(candidate){const targets=(connected[candidate.at]||[]).filter(id=>owner(id)!==k&&!protectedPair(k,owner(id))&&total(candidate)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4);
 if(targets.length){const to=targets[Math.floor(Math.random()*targets.length)];if(owner(to)===game.player){const t=treaty(k);t.war=true;t.trade=false;t.access=false;t.pending=null;game.diplomacy[k]='War';line(FACTIONS[k].full+' declares war on '+FACTIONS[game.player].full+'.')}candidate.origin=candidate.at;candidate.route=[to];startLeg(candidate,0);line(FACTIONS[k].name+' launches a campaign toward '+byId[to].name+'.')}}}

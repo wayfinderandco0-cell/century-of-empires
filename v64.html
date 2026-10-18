@@ -766,7 +766,7 @@ const GAZETTE_ART={
 function gazetteArticle(entry){
  const msg=entry.msg||'',battle=/battle|war|retreat|hostilit|defender|victor|wins/i.test(msg),
  industry=/build|factory|mine|cannon|construction|farm|market|train|complete/i.test(msg),
- march=/march|orders|army|troop|detached|reinforce/i.test(msg);
+ march=/march|orders|army|troop|detached|reinforce|formation|entrench|field camp/i.test(msg);
  const title=battle?'Dispatches from the Front':industry?'Industry and Provincial Works':march?'The Movement of Our Regiments':'At the Royal Courts';
  const art=GAZETTE_ART[battle?'battle':industry?'industry':march?'march':'courts'];
  const url='https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(art.name)+'?width=480';
@@ -1028,7 +1028,7 @@ if(!valid){toast('Enter valid troop counts');return}
 const n=counts.inf+counts.cav+counts.art;if(!n){toast('Select at least one troop');return}
 if(action==='splitOnly'&&n===total(a)){toast('Leave troops in the original army');return}
 const detached=n===total(a)?a:splitArmy(a,counts);selectedArmy=detached.id;
-if(action==='marchSelected'){groupOrderIds=[];orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}
+if(action==='marchSelected'){groupOrderIds=[];siteArmy=null;orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}
 else{renderAll();showPanel('unit');toast('Created '+n+' troop detachment')}
 }
 if(action==='mergeHere'){
@@ -1408,20 +1408,20 @@ const battles=(game.battles||[]).map(b=>({b,p:battlePoint(b)})).filter(q=>q.p);
  if(armyPx<=19&&(orderArmy||groupOrderIds.length||armyPx+5<battlePx||battlePx>22)){
   const a=armies[0].a;
   if(groupOrderIds.length){groupMarchTo(a.at);return true}
-   if(groupOrderIds.length){groupMarchTo(a.at);return true}
    if(orderArmy){dispatch(mobileArmy(orderArmy),a.at);return true}
   selectedArmy=a.id;selectedProvince=a.at;renderArmies();
-  if(a.battle){const found=(game.battles||[]).find(q=>q.attackId===a.id||q.defendId===a.id);selectedBattle=found?battleKey(found):a.at;showPanel('battle')}
-  else showPanel(a.owner===game.player?'unit':'enemy');
+  if(a.battle){const found=(game.battles||[]).find(q=>q.attackId===a.id||q.defendId===a.id);selectedBattle=found?battleKey(found):a.at}
+  showPanel(a.owner===game.player?'unit':'enemy');
   return true;
  }
  if(!orderArmy&&!groupOrderIds.length&&battlePx<=22){selectedBattle=battleKey(battles[0].b);showPanel('battle');return true}
  if(armyPx<=24){
   const a=armies[0].a;
+  if(groupOrderIds.length){groupMarchTo(a.at);return true}
   if(orderArmy){dispatch(mobileArmy(orderArmy),a.at);return true}
   selectedArmy=a.id;selectedProvince=a.at;renderArmies();
-  if(a.battle){const found=(game.battles||[]).find(q=>q.attackId===a.id||q.defendId===a.id);selectedBattle=found?battleKey(found):a.at;showPanel('battle')}
-  else showPanel(a.owner===game.player?'unit':'enemy');
+  if(a.battle){const found=(game.battles||[]).find(q=>q.attackId===a.id||q.defendId===a.id);selectedBattle=found?battleKey(found):a.at}
+  showPanel(a.owner===game.player?'unit':'enemy');
   return true;
  }
  const pt=$('map').createSVGPoint();pt.x=x;pt.y=y;

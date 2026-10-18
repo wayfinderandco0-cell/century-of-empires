@@ -2278,7 +2278,7 @@ for(const p of state.provinces){
  z.classList.toggle('v38-destination',reachable);z.classList.toggle('v38-enemy',p.owner!==state.player);if(!z.dataset.wired){z.dataset.wired='1';z.addEventListener('click',()=>{if(!marchMode&&!v12Reorder){v10PreviewOpen=true;v8InspectorDismissed=false;}selectProvince(p.id)});}}
 }
 const routes=$('routes'),ps=$('provinces'),tr=$('travel');tr.textContent='';
- const signature=state.provinces.map(p=>[p.owner,p.troops,p.fort,p.industry,p.units?.inf,p.units?.cav,p.units?.art,JSON.stringify(p.buildings||{}),v11SightCache.has(p.id)?1:0].join(':')).join('|')+'|'+selected+'|'+origin+'|'+marchMode+'|'+(v12Reorder?.to||'');
+ const signature=state.provinces.map(p=>[p.owner,p.troops,p.fort,p.industry,p.units?.inf,p.units?.cav,p.units?.art,JSON.stringify(p.buildings||{}),v11SightCache.has(p.id)?1:0].join(':')).join('|')+'|'+selected+'|'+origin+'|'+marchMode+'|'+(v12Reorder?.to||'')+'|combat:'+(state.battles||[]).map(b=>b.province+':'+b.owner).join(',');
  const updateProvinces=v13ProvinceSig!==signature;v13ProvinceSig=signature;
  if(updateProvinces)ps.textContent='';const NS='http://www.w3.org/2000/svg';function el(t,at,parent){const e=document.createElementNS(NS,t);Object.entries(at).forEach(([k,v])=>e.setAttribute(k,v));if(parent)parent.appendChild(e);return e}
 function drawUnitIcon(parent,type,cx,cy,scale=1){

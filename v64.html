@@ -142,6 +142,14 @@
 #map #v26Terrain path[fill="#787e74"]{opacity:.27}
 .sea-strip{top:auto;bottom:9px;left:9px;opacity:.65!important;font-size:9px!important}
 
+
+/* V64 mass order picker */
+.army-roster-item{margin:7px 0;padding:10px;display:block;text-align:left}
+.army-roster-item strong{font-size:13px;color:#eedcb6}
+.army-roster-item .small{font-size:10px}
+.army-roster-item.selected{border:1.5px solid #c6ab75;background:#35413c}
+.army-roster-item:disabled{opacity:.4}
+
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 875" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -548,7 +556,7 @@ const connected={};for(const [a,b] of LINKS){(connected[a]||=[]).push(b);(connec
 const bases=DATA.map(([id,name,owner,x,y,troops,terrain,capital])=>({id,name,owner,x,y,troops,terrain,capital:!!capital}));
 const byId=Object.fromEntries(bases.map(p=>[p.id,p]));
 const colors=Object.fromEntries(Object.keys(FACTIONS).map(k=>[k,FACTIONS[k].color]));
-let game=null,chosen='PR',panel='map',selectedProvince='berlin',selectedArmy=null,selectedBattle=null,orderArmy=null,siteArmy=null,lastRoadCheck=0,lastDraw=0,lastRouteDraw=0,lastLod=-1;
+let game=null,chosen='PR',panel='map',selectedProvince='berlin',selectedArmy=null,selectedBattle=null,orderArmy=null,siteArmy=null,groupOrderIds=[],multiMode=false,armySelection=new Set(),lastRoadCheck=0,lastDraw=0,lastRouteDraw=0,lastLod=-1;
 const view={cx:686,cy:583,w:940};const pointers=new Map();let gesture=null,suppressUntil=0;
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const node=(tag,attrs={})=>{const n=document.createElementNS(SVG,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n};
@@ -640,7 +648,7 @@ $('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save fo
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>showPanel(b.dataset.tab));
 $('sheetClose').onclick=()=>showPanel('map');
 $('zoomIn').onclick=()=>zoom(.68);$('zoomOut').onclick=()=>zoom(1/.68);$('zoomHome').onclick=()=>{view.cx=686;view.cy=583;view.w=940;setView()};
-$('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;updateOrderBanner();toast('Order cancelled')};
+$('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
 $('map').addEventListener('pointerdown',down);
 $('map').addEventListener('pointermove',move);
@@ -648,7 +656,7 @@ $('map').addEventListener('pointerup',up);
 $('map').addEventListener('pointercancel',up);
 $('map').addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?.86:1.14)},{passive:false});
 $('map').addEventListener('click',mapClick);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){orderArmy=null;siteArmy=null;updateOrderBanner();showPanel('map')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();showPanel('map')}});
 window.addEventListener('visibilitychange',()=>{if(document.hidden){save();return}if(game){const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();game.caretaker=false;processPreciseArrivals();renderAll();save()}});
 organicProvinces();textureTerrain();setView();setInterval(tick,170);setInterval(save,10000);
 }
@@ -694,12 +702,22 @@ if(panel==='province'){
  '<p class="small">Regional output: '+y.iron+' iron · '+y.wood+' wood per month. Terrain gives +'+Math.round((TERRAIN[b.terrain][1]-1)*100)+'% defense.</p>';
 }
 if(panel==='armies'){
-const mineArmies=mine();
-body.innerHTML='<div class="small">Choose infantry, cavalry and artillery counts before marching. Stationary stacks can split and merge.</div>'+((game.battles||[]).length?'<div class="strong" style="margin:10px 0 4px">⚔ Battles underway</div>'+game.battles.map(b=>'<button class="tile block" data-act="inspectBattle" data-id="'+battleKey(b)+'">⚔ '+escapeHtml(battleName(b))+' · month '+b.months+' · Inspect combat</button>').join(''):'')+
-(mineArmies.length?mineArmies.map(a=>{
-const b=byId[a.at],moving=a.route.length?' → '+byId[a.route[a.route.length-1]].name:a.camp?' · Field camp':'',fighting=a.battle?' · In battle':'';
-return '<div class="tile'+(selectedArmy===a.id?' selected':'')+'" role="button" tabindex="0" data-act="inspectArmy" data-id="'+a.id+'"><div class="row"><div><div class="unitname">'+escapeHtml(b?.name||a.at)+escapeHtml(moving)+'</div><div class="small">'+a.units.inf+' infantry · '+a.units.cav+' cavalry · '+a.units.art+' artillery'+fighting+'</div></div><strong>'+total(a)+'</strong></div><div class="progress"><span style="width:'+Math.max(0,a.morale)+'%"></span></div></div>'}).join(''):'<p>No armies remain.</p>')+
-'';
+ const mineArmies=mine();
+ const header='<div class="row"><span class="small">National army roster</span><button class="btn" data-act="toggleMulti">'+(multiMode?'Exit multi-select':'Select multiple')+'</button></div>';
+ const selected=multiMode?'<div class="notice">'+armySelection.size+' stationary armies selected</div><div class="buttons">'+
+ '<button class="btn primary" data-act="groupMarch" '+(armySelection.size?'':'disabled')+'>Move selected ('+armySelection.size+')</button>'+
+ '<button class="btn" data-act="clearSelected">Clear</button></div>':'<p class="small">Tap an army to inspect its individual orders.</p>';
+ const battles=game.battles.length?'<h3 class="army-section">Battles underway</h3>'+game.battles.map(b=>
+ '<button class="tile block" data-act="inspectBattle" data-id="'+battleKey(b)+'">⚔ '+escapeHtml(battleName(b))+' · month '+b.months+'</button>').join(''):'';
+ const roster=mineArmies.map(a=>{
+  const canSelect=!a.route.length&&!a.battle&&!a.camp;
+  const b=byId[a.at],where=a.camp?' · Field camp':a.route.length?' → '+byId[a.route[a.route.length-1]]?.name:'';
+  return '<button class="tile block army-roster-item'+(armySelection.has(a.id)?' selected':'')+'" data-act="'+(multiMode?'groupToggle':'inspectArmy')+'" data-id="'+a.id+'" '+(multiMode&&!canSelect?'disabled':'')+'>'+
+   '<div class="row"><div><strong>'+(multiMode?(armySelection.has(a.id)?'☑ ':'□ '):'')+escapeHtml(b?.name||a.at)+escapeHtml(where)+'</strong>'+
+   '<div class="small">'+a.units.inf+' infantry · '+a.units.cav+' cavalry · '+a.units.art+' cannons</div></div><strong>'+total(a)+'</strong></div>'+
+   '<div class="progress"><span style="width:'+a.morale+'%"></span></div></button>';
+ }).join('');
+ body.innerHTML=header+selected+battles+(roster||'<p>No armies available.</p>');
 }
 if(panel==='diplomacy'){
 const partners=Object.keys(FACTIONS).filter(k=>k!==game.player);
@@ -982,6 +1000,10 @@ function handleAction(e){
 const b=e.target.closest('[data-act]');if(!b||!game)return;
 const action=b.dataset.act,id=b.dataset.id,kind=b.dataset.kind;
 if(action==='save'){save();toast('Campaign saved locally')}
+if(action==='toggleMulti'){multiMode=!multiMode;armySelection.clear();renderPanel();return}
+if(action==='clearSelected'){armySelection.clear();renderPanel();return}
+if(action==='groupToggle'){const a=mobileArmy(id);if(a?.owner===game.player&&!a.route.length&&!a.battle&&!a.camp){if(armySelection.has(id))armySelection.delete(id);else armySelection.add(id);renderPanel()}return}
+if(action==='groupMarch'){groupOrderIds=[...armySelection].filter(k=>{const a=mobileArmy(k);return a?.owner===game.player&&!a.route.length&&!a.battle&&!a.camp});if(!groupOrderIds.length){toast('Select stationed armies');return}orderArmy=null;siteArmy=null;showPanel('map');updateOrderBanner();toast('Choose a destination for '+groupOrderIds.length+' armies');return}
 
 if(action==='focusProvince'){focus(id);showPanel('map')}
 if(action==='selectLocalArmy'){const a=friendlyAt(id);if(a){selectedArmy=a.id;showPanel('unit')}else toast('No available army stationed here')}
@@ -992,26 +1014,26 @@ if(action==='focusArmy'){const a=mobileArmy(id);if(a){const p=positionOf(a);view
 if(action==='focusBattle'){const b=game.battles.find(q=>battleKey(q)===id);if(b){const p=battlePoint(b);view.cx=p.x;view.cy=p.y;view.w=Math.min(view.w,480);setView();showPanel('map')}}
 if(action==='recruit')recruit(kind);
 if(action==='build')build(kind);
-if(action==='order'){siteArmy=null;orderArmy=id;showPanel('map');updateOrderBanner()}
+if(action==='order'){siteArmy=null;groupOrderIds=[];orderArmy=id;showPanel('map');updateOrderBanner()}
 if(action==='fillHalf'||action==='fillAll'){
 const a=mobileArmy(id);if(!a||a.owner!==game.player)return;
 for(const k of ['inf','cav','art']){const el=$('split-'+k);if(el)el.value=action==='fillAll'?a.units[k]:Math.floor(a.units[k]/2)}
 if(action==='fillHalf'&&total(a)===1){for(const k of ['inf','cav','art'])if(a.units[k]){$('split-'+k).value=1;break}}return;
 }
 if(action==='marchSelected'||action==='splitOnly'){
-const a=mobileArmy(id);if(!a||a.owner!==game.player||a.route.length||a.battle){toast('Select a stationary army first');return}
+const a=mobileArmy(id);if(!a||a.owner!==game.player||a.route.length||a.battle||a.camp){toast('Select a stationary army first');return}
 const counts={};let valid=true;
 for(const k of ['inf','cav','art']){const el=$('split-'+k),v=Number(el?.value);if(!el||el.value.trim()===''||!Number.isInteger(v)||v<0||v>a.units[k])valid=false;counts[k]=v}
 if(!valid){toast('Enter valid troop counts');return}
 const n=counts.inf+counts.cav+counts.art;if(!n){toast('Select at least one troop');return}
 if(action==='splitOnly'&&n===total(a)){toast('Leave troops in the original army');return}
 const detached=n===total(a)?a:splitArmy(a,counts);selectedArmy=detached.id;
-if(action==='marchSelected'){orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}
+if(action==='marchSelected'){groupOrderIds=[];orderArmy=detached.id;showPanel('map');updateOrderBanner();toast('Choose a destination for '+n+' troops')}
 else{renderAll();showPanel('unit');toast('Created '+n+' troop detachment')}
 }
 if(action==='mergeHere'){
-const a=mobileArmy(id);if(!a||a.owner!==game.player||a.battle||a.route.length)return;
-const others=game.armies.filter(q=>q!==a&&q.owner===a.owner&&q.at===a.at&&!q.battle&&!q.route.length&&activeArmy(q));
+const a=mobileArmy(id);if(!a||a.owner!==game.player||a.battle||a.route.length||a.camp)return;
+const others=game.armies.filter(q=>q!==a&&q.owner===a.owner&&q.at===a.at&&!q.battle&&!q.route.length&&!q.camp&&activeArmy(q));
 if(others.length){let weighted=a.morale*total(a),n=total(a);for(const q of others){const count=total(q);weighted+=q.morale*count;n+=count;for(const k of ['inf','cav','art'])a.units[k]+=q.units[k]}a.morale=Math.round(weighted/n);
 const ids=new Set(others.map(q=>q.id));game.armies=game.armies.filter(q=>!ids.has(q.id));line('Merged '+others.length+' detachment(s) at '+byId[a.at].name);renderAll();toast('Armies merged')}
 }
@@ -1022,7 +1044,7 @@ if(action==='retreat')retreat(id);
 if(action==='formation'){const a=mobileArmy(id);if(a?.owner===game.player&&!a.battle&&FORMATIONS[kind]){a.formation=kind;line('Formation: '+FORMATIONS[kind][0]);renderAll()}}
 if(action==='entrench'){const a=mobileArmy(id);if(a?.owner===game.player&&!a.battle&&!a.route.length){a.entrench=!a.entrench;line(a.entrench?'Entrenchment begun.':'Entrenchment paused.');renderAll()}}
 if(action==='campHere'){const a=mobileArmy(id);if(a?.owner===game.player&&campHere(a)){line('Army halts on the road.');renderAll()}}
-if(action==='siteRoad'){const a=mobileArmy(id);if(a?.owner===game.player&&a.route.length&&!a.battle){siteArmy=id;orderArmy=null;showPanel('map');updateOrderBanner();toast('Tap a point ahead on the army route')}}
+if(action==='siteRoad'){const a=mobileArmy(id);if(a?.owner===game.player&&a.route.length&&!a.battle){siteArmy=id;orderArmy=null;groupOrderIds=[];showPanel('map');updateOrderBanner();toast('Tap a point ahead on the army route')}}
 if(action==='clearHalt'){const a=mobileArmy(id);if(a){a.haltAt=null;renderAll()}}
 if(action==='resumeCamp'||action==='reverseCamp'){const a=mobileArmy(id);if(a?.owner===game.player&&resumeCamp(a,action==='reverseCamp')){line('Army breaks camp.');renderAll()}}
 if(action==='dipSelect'){selectedDiplomat=id;renderPanel()}
@@ -1034,7 +1056,7 @@ save();
 function splitArmy(a,counts){
 const n=counts.inf+counts.cav+counts.art;if(!a||a.owner!==game.player||a.battle||a.route.length||n<=0||n>=total(a))return a;
 const units={inf:counts.inf,cav:counts.cav,art:counts.art};for(const k of ['inf','cav','art'])a.units[k]-=units[k];
-const d={id:'a'+(++game.nextId),owner:a.owner,at:a.at,units,morale:a.morale,route:[],edgeRemaining:0,edgeTotal:0,forced:a.forced,battle:null,origin:null};
+const d={id:'a'+(++game.nextId),owner:a.owner,at:a.at,units,morale:a.morale,formation:a.formation||'balanced',entrenchLevel:0,entrench:false,route:[],edgeRemaining:0,edgeTotal:0,forced:a.forced,battle:null,origin:null};
 game.armies.push(d);line('Detached '+n+' troops in '+byId[a.at].name);return d;
 }
 
@@ -1090,7 +1112,7 @@ if(!route){toast('No route through your or access-granted provinces. Enemy targe
 a.route=route;a.origin=a.at;a.haltAt=null;a.entrench=false;a.entrenchLevel=0;startLeg(a,pct());orderArmy=null;
 line('Orders issued: '+byId[a.at].name+' → '+byId[to].name+'. ETA: '+etaLabel(a)+'.');updateOrderBanner();renderAll();toast('Marching · '+etaLabel(a));
 }
-function updateOrderBanner(){const a=mobileArmy(siteArmy||orderArmy);$('orderBanner').classList.toggle('show',!!a);if(a)$('orderText').textContent=siteArmy?'Choose a field position on the current road ahead':'Select a destination for '+total(a)+' troops · '+byId[a.at].name}
+function updateOrderBanner(){const a=mobileArmy(siteArmy||orderArmy);$('orderBanner').classList.toggle('show',!!a||groupOrderIds.length>0);if(groupOrderIds.length)$('orderText').textContent='Tap destination for '+groupOrderIds.length+' selected armies';else if(a)$('orderText').textContent=siteArmy?'Choose a field position on the current road ahead':'Select a destination for '+total(a)+' troops · '+byId[a.at].name}
 function retreat(id){const a=mobileArmy(id);if(!a||!a.battle)return;const battle=game.battles.find(b=>b.attackId===id||b.defendId===id);if(!battle)return;
 if(battle.road&&a.camp){
  const other=mobileArmy(battle.attackId===id?battle.defendId:battle.attackId);
@@ -1336,6 +1358,22 @@ function up(e){
  if(!pointers.size)gesture=null;else{let p=[...pointers.values()][0];gesture={x:p.x,y:p.y,cx:view.cx,cy:view.cy,w:view.w,dragged:false}}
  if(maybeTap&&pickMapTap(e)){suppressUntil=Date.now()+440;e.preventDefault()}
 }
+function groupMarchTo(destination){
+ let sent=0;
+ for(const id of groupOrderIds){
+  const a=mobileArmy(id);
+  if(!a||a.owner!==game.player||a.battle||a.route.length||a.camp||a.at===destination)continue;
+  const destOwner=owner(destination);
+  if(destOwner!==a.owner&&!canPass(a.owner,destOwner)&&!atWar(a.owner,destOwner))continue;
+  const route=neighbors(a.at,destination,a.owner);
+  if(!route)continue;
+  a.route=route;a.origin=a.at;a.haltAt=null;a.entrench=false;a.entrenchLevel=0;
+  startLeg(a,pct());sent++;
+ }
+ groupOrderIds=[];armySelection.clear();multiMode=false;updateOrderBanner();
+ if(sent){line('Coordinated march: '+sent+' armies toward '+byId[destination].name+'.');renderAll();save()}
+ toast(sent?sent+' armies ordered to march':'No eligible route for selected armies');
+}
 function pickMapTap(e){
  if(!game)return false;
  const r=$('map').getBoundingClientRect(),s=Math.max(r.width/view.w,r.height/(view.w*875/1420));
@@ -1367,15 +1405,17 @@ const battles=(game.battles||[]).map(b=>({b,p:battlePoint(b)})).filter(q=>q.p);
  const armies=game.armies.filter(activeArmy).map(a=>({a,p:positionOf(a)})).sort((a,b)=>armyTouch(a.p)-armyTouch(b.p));
  const armyPx=armies.length?armyTouch(armies[0].p):Infinity,battlePx=battles.length?battleDistance(battles[0])*s:Infinity;
  // A soldier gets first chance at the tap, even when he stands beside a battle.
- if(armyPx<=19&&(orderArmy||armyPx+5<battlePx||battlePx>22)){
+ if(armyPx<=19&&(orderArmy||groupOrderIds.length||armyPx+5<battlePx||battlePx>22)){
   const a=armies[0].a;
-  if(orderArmy){dispatch(mobileArmy(orderArmy),a.at);return true}
+  if(groupOrderIds.length){groupMarchTo(a.at);return true}
+   if(groupOrderIds.length){groupMarchTo(a.at);return true}
+   if(orderArmy){dispatch(mobileArmy(orderArmy),a.at);return true}
   selectedArmy=a.id;selectedProvince=a.at;renderArmies();
   if(a.battle){const found=(game.battles||[]).find(q=>q.attackId===a.id||q.defendId===a.id);selectedBattle=found?battleKey(found):a.at;showPanel('battle')}
   else showPanel(a.owner===game.player?'unit':'enemy');
   return true;
  }
- if(!orderArmy&&battlePx<=22){selectedBattle=battleKey(battles[0].b);showPanel('battle');return true}
+ if(!orderArmy&&!groupOrderIds.length&&battlePx<=22){selectedBattle=battleKey(battles[0].b);showPanel('battle');return true}
  if(armyPx<=24){
   const a=armies[0].a;
   if(orderArmy){dispatch(mobileArmy(orderArmy),a.at);return true}
@@ -1388,13 +1428,14 @@ const battles=(game.battles||[]).map(b=>({b,p:battlePoint(b)})).filter(q=>q.p);
  for(const path of document.querySelectorAll('#territories [data-zone]')){
   if(typeof path.isPointInFill==='function'&&path.isPointInFill(pt)){
    const id=path.getAttribute('data-zone');
-   if(orderArmy)dispatch(mobileArmy(orderArmy),id);
+   if(groupOrderIds.length)groupMarchTo(id);
+    else if(orderArmy)dispatch(mobileArmy(orderArmy),id);
    else{selectedProvince=id;selectedArmy=null;renderAll();showPanel('province')}
    return true;
   }
  }
  const el=document.elementFromPoint(e.clientX,e.clientY),province=el?.closest?.('[data-zone]')?.getAttribute('data-zone');
- if(province){if(orderArmy)dispatch(mobileArmy(orderArmy),province);else{selectedProvince=province;renderAll();showPanel('province')}return true}
+ if(province){if(groupOrderIds.length)groupMarchTo(province);else if(orderArmy)dispatch(mobileArmy(orderArmy),province);else{selectedProvince=province;renderAll();showPanel('province')}return true}
  return false;
 }
 function mapClick(e){

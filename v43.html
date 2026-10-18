@@ -1078,6 +1078,8 @@ body.v13-smooth #map .v27-smoke,body.v13-smooth #map .v27-rail{display:none}
 
 /* V43: map-first iPhone UI, anchored mini flags, light province outlines. */
 @media(max-width:700px){
+ .head,.map-top{display:none!important}
+ .v13-nav{position:relative!important;top:auto!important}
  .v13-nav{display:flex!important;flex-wrap:nowrap!important;min-height:39px!important;height:42px!important;gap:3px!important;padding:3px!important;overflow-x:auto!important;overflow-y:hidden!important}
  .v13-nav button{flex:0 0 auto!important;min-height:32px!important;height:34px!important;min-width:0!important;padding:3px 8px!important;font:700 11px system-ui,sans-serif!important;white-space:nowrap!important}
  .statbar{height:41px!important;min-height:41px!important;overflow-x:auto!important;gap:3px!important;margin:0!important;padding:2px!important;display:flex!important}
@@ -2406,11 +2408,11 @@ function v35AdvanceBattles(){
   ensureArmy(d);ensureArmy(o);
   if(d.owner===o.owner){addUnits(d.units,o.units);syncArmy(d);continue;}
   const terrain={plain:1,hill:1.13,forest:1.14,mountain:1.32,coast:1.06}[d.terrain]||1;
-  const defPower=armyPower(d.units,d.terrain,d.fort,false)*(1+d.fort*.3)*terrain*(1-Math.min(.35,Number(b.defenderFatigue)||0));
-  const atkPower=armyPower(o.units,d.terrain,d.fort,true)*(1-Math.min(.3,o.fatigue||0));
+  const defPower=armyPower(d.units,d.terrain,d.fort,false)*(1+d.fort*.3)*terrain*(1-Math.min(.35,Number(b.defenderFatigue)||0))*(b.holdPosition?1.12:1);
+  const atkPower=armyPower(o.units,d.terrain,d.fort,true)*(1-Math.min(.3,o.fatigue||0))*(b.cautiousAttack?.87:1);
   const ratio=atkPower/Math.max(1,atkPower+defPower);
-  loseUnits(o,Math.max(1,Math.round(o.troops*(.04+.13*(1-ratio)))));
-  loseUnits(d,Math.max(1,Math.round(d.troops*(.04+.15*ratio))));
+  loseUnits(o,Math.max(1,Math.round(o.troops*(.04+.13*(1-ratio))*(b.cautiousAttack?.77:1))));
+  loseUnits(d,Math.max(1,Math.round(d.troops*(.04+.15*ratio)*(b.holdPosition?.85:1))));
   o.fatigue=Math.min(.35,(Number(o.fatigue)||0)+.045);b.defenderFatigue=Math.min(.35,(Number(b.defenderFatigue)||0)+.05);
   b.round++;
   if(b.round>=b.duration){v35FinishBattle(o,d);log('Battle for '+d.name+' concluded after '+b.round+' game months.');}
@@ -2897,7 +2899,7 @@ function v28CountryNames(){
    simple SVG geometry is both Safari-safe and crisp at all zooms. */
 
 function v31RoundFlag(p,parent,el){
- const u=!!p.unitMarker,x=p.x,y=p.y,w=u?8:11,h=u?5.5:7,fx=x+(u?0:1),fy=y-(u?7:16);
+ const u=!!p.unitMarker||String(p.id||'').startsWith('v39-'),x=p.x,y=p.y,w=u?8:11,h=u?5.5:7,fx=x+(u?0:1),fy=y-(u?7:16);
  if(!u){el('line',{x1:x,y1:y,x2:x,y2:fy-1,stroke:'#293a3f','stroke-width':1.2,'pointer-events':'none'},parent);}
  el('rect',{x:fx-.3,y:fy-.3,width:w+.6,height:h+.6,rx:.35,fill:'#f0eadb',stroke:'#24343d','stroke-width':.6,'pointer-events':'none'},parent);
  el('use',{href:'#flag-'+p.owner,x:fx,y:fy,width:w,height:h,preserveAspectRatio:'none','pointer-events':'none'},parent);
@@ -3323,14 +3325,23 @@ function v43Retreat(b){
  const army=side==='attacker'?b.order:p;ensureArmy(army);ensureArmy(target);
  const loss=Math.max(0,Math.min(Math.max(0,army.troops-1),Math.ceil(army.troops*.1)));
  if(loss)loseUnits(army,loss);
- const survivors=army.troops;addUnits(target.units,army.units);syncArmy(target);
- if(side==='defender'){
+ const survivors=army.troops;
+ if(side==='attacker'){
+  const retreatOrder=b.order;
+  retreatOrder.from=p.id;retreatOrder.to=target.id;retreatOrder.home=target.id;
+  retreatOrder.route=[p.id,target.id];retreatOrder.lastLegFrom=p.id;
+  retreatOrder.eta=Math.max(1,routeLength(p.id,target.id));retreatOrder.travelTime=retreatOrder.eta;
+  retreatOrder.v22TravelStart={x:p.x,y:p.y};
+  retreatOrder.forcedMarch=false;retreatOrder.fatigue=Math.min(.55,(retreatOrder.fatigue||0)+.08);
+  state.orders.push(retreatOrder);
+ }else{
+  addUnits(target.units,army.units);syncArmy(target);
   ensureArmy(b.order);p.owner=b.owner;p.units=copyUnits(b.order.units);syncArmy(p);
   p.fort=0;p.construction=null;
  }
  state.battles=state.battles.filter(entry=>entry!==b);
- log(FACTIONS[state.player].name+' withdrew '+survivors+' soldiers from '+p.name+' to '+target.name+'; '+loss+' casualties on retreat.');
- v42CloseBattle();save();render();notice('Retreated to '+target.name+'. '+loss+' additional casualties.');
+ log(FACTIONS[state.player].name+' withdrew '+survivors+' soldiers from '+p.name+' toward '+target.name+'; '+loss+' casualties on retreat.');
+ v42CloseBattle();save();render();notice((side==='attacker'?'Retreating toward ':'Retreated to ')+target.name+'. '+loss+' additional casualties.');
 }
 
 /* Combat troops need a battle inspector because they leave the marching order list. */
@@ -3359,7 +3370,7 @@ function v42SyncBattle(){
  };
  fill('attacker',b.order,b.owner,orderMix(b.order),b.initialAttacker);
  fill('defender',p,p.owner,troopMix(p),b.initialDefender);
- box.querySelector('.v42-help').textContent=(b.owner===state.player||p.owner===state.player)?'Tap either army to inspect it. Retreat transfers your surviving troops into an adjacent friendly province.':'Tap either side to examine the engaged units.';const buttons=box.querySelector('.v43-actions');if(buttons){const side=b.owner===state.player?'attacker':p.owner===state.player?'defender':null,target=side&&v43RetreatTarget(b,side);buttons.hidden=!side;const btn=buttons.querySelector('[data-v43-retreat]');btn.disabled=!target||state.year>=1880;btn.textContent=target?'↩ Retreat to '+target.name:'↩ Retreat unavailable';}
+ box.querySelector('.v42-help').textContent=(b.owner===state.player||p.owner===state.player)?'Tap either army to inspect it. Retreat transfers your surviving troops into an adjacent friendly province.':'Tap either side to examine the engaged units.';const buttons=box.querySelector('.v43-actions');if(buttons){const side=b.owner===state.player?'attacker':p.owner===state.player?'defender':null,target=side&&v43RetreatTarget(b,side);buttons.hidden=!side;const btn=buttons.querySelector('[data-v43-retreat]');btn.disabled=!target||state.year>=1880;btn.textContent=target?'↩ Retreat to '+target.name:'↩ Retreat unavailable';const hold=buttons.querySelector('[data-v43-hold]');hold.disabled=state.year>=1880;hold.textContent=side==='defender'?(b.holdPosition?'✓ Hold formation':'🛡 Hold position'):(b.cautiousAttack?'✓ Cautious assault':'🛡 Cautious assault');}
  box.hidden=false;
 }
 function v42Setup(){
@@ -3371,7 +3382,14 @@ function v42Setup(){
  '<div class="v42-side" data-v42-side="defender"><div class="v42-topline"><b>🛡 Defending · <span class="v42-owner"></span></b><strong class="v42-total"></strong></div><div class="v42-hp defend"><span class="v42-fill"></span></div><div class="v42-facts"><span class="v42-mix"></span><span class="v42-percent"></span></div></div>'+
  '<div class="v43-actions"><button type="button" data-v43-retreat>↩ Retreat</button><button type="button" data-v43-hold>🛡 Hold position</button></div><p class="v42-help"></p><p class="v42-note">Troop strength tracks casualties; readiness reflects fatigue. They are separate factors.</p>';
  document.body.appendChild(box);
- box.querySelector('.v42-dismiss').addEventListener('click',v42CloseBattle);for(const side of box.querySelectorAll('.v42-side'))side.addEventListener('click',()=>{v43SelectedSide=side.dataset.v42Side;v42SyncBattle();});box.querySelector('[data-v43-retreat]').addEventListener('click',()=>{if(v42SelectedBattle)v43Retreat(v42SelectedBattle);});box.querySelector('[data-v43-hold]').addEventListener('click',()=>{v42CloseBattle();notice('Army holds position and continues fighting.');});
+ box.querySelector('.v42-dismiss').addEventListener('click',v42CloseBattle);for(const side of box.querySelectorAll('.v42-side'))side.addEventListener('click',()=>{v43SelectedSide=side.dataset.v42Side;v42SyncBattle();});box.querySelector('[data-v43-retreat]').addEventListener('click',()=>{if(v42SelectedBattle)v43Retreat(v42SelectedBattle);});box.querySelector('[data-v43-hold]').addEventListener('click',()=>{
+ const b=v42SelectedBattle;if(!b||!state?.battles?.includes(b))return;
+ const p=find(b.province);if(!p)return;
+ if(b.owner===state.player){b.cautiousAttack=!b.cautiousAttack;notice(b.cautiousAttack?'Attacking cautiously: lower casualties but reduced attack power.':'Resumed normal attack.');}
+ else if(p.owner===state.player){b.holdPosition=!b.holdPosition;notice(b.holdPosition?'Holding position: stronger defense and fewer casualties.':'Resumed normal defense.');}
+ else {notice('Only your armies can receive orders.');return;}
+ save();render();
+ });
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)v42CloseBattle();});
 }
 

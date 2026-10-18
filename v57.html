@@ -171,7 +171,7 @@ $('map').addEventListener('pointercancel',up);
 $('map').addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?.86:1.14)},{passive:false});
 $('map').addEventListener('click',mapClick);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){orderArmy=null;updateOrderBanner();showPanel('map')}});
-window.addEventListener('visibilitychange',()=>{if(document.hidden){save();return}if(game){const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();game.caretaker=false;renderAll();save()}});
+window.addEventListener('visibilitychange',()=>{if(document.hidden){save();return}if(game){const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();game.caretaker=false;processPreciseArrivals();renderAll();save()}});
 setView();setInterval(tick,170);setInterval(save,10000);
 }
 function enter(){
@@ -499,7 +499,7 @@ function startLeg(a,phase=0){
 function arrival(a,to){
 a.at=to;a.edgeRemaining=0;a.edgeTotal=0;a.edgePhase=0;a.route.shift();
 if(owner(to)!==a.owner&&!canPass(a.owner,owner(to))){a.route=[];if(atWar(a.owner,owner(to)))startBattle(a,to);else line('Movement into '+byId[to].name+' halted by diplomatic restrictions.')}
-if(a.route.length&&!a.battle)startLeg(a,0);
+if(a.route.length&&!a.battle)startLeg(a,pct());
 }
 function startBattle(a,to){
 if(!atWar(a.owner,owner(to))){a.route=[];line('Attack on '+byId[to].name+' forbidden by treaty.');return}
@@ -563,11 +563,24 @@ army.units.inf+=5;game.resources.money[k]-=40;game.resources.manpower[k]-=10;lin
 function catchUp(){
 if(!game)return;const period=gameMonthMs(),age=Math.max(0,Date.now()-game.lastTick),elapsed=Math.min(36,Math.floor(age/period));for(let i=0;i<elapsed;i++)advanceMonth(true);game.lastTick=Date.now()-(age%period);
 }
+function processPreciseArrivals(){
+ let moved=false;
+ // Complete legs when the fractional game month actually reaches the destination.
+ for(const a of game.armies){
+  if(!activeArmy(a)||a.battle||!a.route.length||!(a.edgeTotal>0))continue;
+  const progressed=Math.max(0,pct()-(a.edgePhase||0));
+  if(a.edgeRemaining>0&&a.edgeRemaining<=progressed+1e-7){
+   arrival(a,a.route[0]);moved=true;
+  }
+ }
+ return moved;
+}
 function tick(){
 if(!game||game.ended)return;
 const period=gameMonthMs();
-if(Date.now()-game.lastTick>36*period){game.caretaker=Date.now()-game.lastSeen>=72*3600e3;catchUp();game.caretaker=false;renderAll();save();return}
+if(Date.now()-game.lastTick>36*period){game.caretaker=Date.now()-game.lastSeen>=72*3600e3;catchUp();game.caretaker=false;processPreciseArrivals();renderAll();save();return}
 let n=0;while(Date.now()-game.lastTick>=period&&n<4){game.lastTick+=period;advanceMonth(false);n++}
+if(processPreciseArrivals())n++;
 if(n){renderAll();save()}
 if(Date.now()-lastDraw>110){updateArmyMarkers();lastDraw=Date.now();if(lastDraw-lastRouteDraw>650){drawRoutes();lastRouteDraw=lastDraw}}
 if(panel==='battle'){const el=$('battleTimer');if(el)el.textContent=Math.max(0,Math.ceil((period-(Date.now()-game.lastTick))/1000))}

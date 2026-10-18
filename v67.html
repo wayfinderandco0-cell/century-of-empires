@@ -212,6 +212,16 @@
 .army-health-meter,.army-morale-meter{width:100%;height:8px;background:#182b2c;border:1px solid #b5baa5;border-radius:3px;overflow:hidden}
 .army-health-meter span,.army-morale-meter span{height:100%;display:block}
 .army-health-meter span{background:#70ed9b}.army-morale-meter span{background:#74c5ed}
+
+/* V67 cartographic relief: remove semicircular decorative hill arcs,
+ * retaining subdued elevation contours and organic forest stippling. */
+#v26Terrain path[stroke="#756e5f"],#v26Terrain path[stroke="#f8eed5"]{display:none!important}
+#v26Terrain path[stroke="#595f55"]{display:none!important}
+#v26Terrain ellipse[fill="#ccbd8b"]{fill-opacity:.055!important}
+#v59Relief{opacity:.48}
+#v60Topo{opacity:.48;mix-blend-mode:multiply}
+#atlasTerrain{opacity:.9}
+
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 1120" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -679,7 +689,7 @@ function monthlyArmyReadiness(){
    a.morale=Math.max(18,Math.round((a.morale??100)-(a.forced?3:1)-strain*.65));
   }else{
    a.marchMonths=0;a.restMonths=(a.restMonths||0)+1;
-   a.health=Math.min(100,Math.round(((a.health??100)+(home?2.8:1.1))*10)/10);
+   a.health=Math.min(100,Math.round(((a.health??100)+(home?2.8:1.1)*(w.name==='Storm'?.65:w.name==='Snow'?.80:1))*10)/10);
    a.morale=Math.min(100,Math.round((a.morale??100)+(home?2:1)+(a.entrench?1:0)));
   }
   a.morale=Math.max(15,Math.min(100,Math.round(a.morale+(faith-a.morale)*.035)));
@@ -1375,7 +1385,7 @@ if(a.route.length&&!a.battle)startLeg(a,pct());
 function startBattle(a,to){
 if(!atWar(a.owner,owner(to))){a.route=[];line('Attack on '+byId[to].name+' forbidden by treaty.');return}
 let defender=at(to).filter(q=>q.owner===owner(to)&&q.id!==a.id&&q.battle===null).sort((x,y)=>total(y)-total(x))[0];
-if(!defender){prov(to).owner=a.owner;line(FACTIONS[a.owner].name+' takes '+byId[to].name+' without resistance.');return}
+if(!defender){const previous=owner(to);prov(to).owner=a.owner;updateNationalMorale(a.owner,1);updateNationalMorale(previous,-1);line(FACTIONS[a.owner].name+' takes '+byId[to].name+' without resistance.');return}
 if(game.battles.some(b=>!b.road&&b.province===to)){a.battle='support';return}
 a.battle=to;defender.battle=to;game.battles.push({province:to,attackId:a.id,defendId:defender.id,months:0,attackStart:total(a),defendStart:total(defender),history:[]});line('Battle begins in '+byId[to].name+' between '+FACTIONS[a.owner].name+' and '+FACTIONS[defender.owner].name+'.');
 }
@@ -1383,7 +1393,7 @@ function losses(a,amount){let n=Math.min(total(a),Math.max(1,Math.round(amount))
 function resolveBattles(){
 for(const b of [...game.battles]){
 const atk=mobileArmy(b.attackId),def=mobileArmy(b.defendId);if(!atk||!def){finishBattle(b,atk&&total(atk)>0);continue}
-b.months++;const kind=b.road?roadTerrain(b.road.from,b.road.to,b.road.t):byId[b.province].terrain;const terrain=TERRAIN[kind][1];const fort=b.road?0:prov(b.province).fort;const atkPower=total(atk)*healthEffect(atk)*(atk.morale/100)*(FACTIONS[atk.owner].atk||1)*(1+(prov(atk.origin||atk.at)?.drill||0)*.035)*attackForm(atk,kind);
+b.months++;const kind=b.road?roadTerrain(b.road.from,b.road.to,b.road.t):byId[b.province].terrain;const terrain=TERRAIN[kind][1];const fort=b.road?0:prov(b.province).fort;const atkPower=total(atk)*healthEffect(atk)*weatherAt(b.road?b.road.to:b.province).attack*(atk.morale/100)*(FACTIONS[atk.owner].atk||1)*(1+(prov(atk.origin||atk.at)?.drill||0)*.035)*attackForm(atk,kind);
 const alliedSupport=b.road?0:game.armies.filter(q=>activeArmy(q)&&isAllied(q.owner,def.owner)&&(q.at===b.province||(connected[b.province]||[]).includes(q.at))).reduce((n,q)=>n+total(q)*.12,0);
 const defPower=total(def)*healthEffect(def)*(def.morale/100)*(FACTIONS[def.owner].def||1)*terrain*defendForm(def,kind)*(1+fort*.25)*(1+(b.road?0:(prov(b.province)?.drill||0))*.045)+alliedSupport;
 const atkLoss=Math.max(1,Math.ceil(defPower*.13)),defLoss=Math.max(1,Math.ceil(atkPower*.13));
@@ -1426,7 +1436,7 @@ for(const k of Object.keys(FACTIONS)){
  stocks.wheat-=ownedArmies.reduce((n,a)=>n+Math.ceil(total(a)/9),0);
  stocks.money+=k===game.player?Object.values(game.treaties||{}).filter(t=>t.trade).length*6:(game.treaties?.[k]?.trade?6:0);
  for(const key of STOCK)game.resources[key][k]=Math.max(0,Math.min(key==='money'?99999:key==='manpower'?9999:25000,game.resources[key][k]+stocks[key]));
- if(stocks.wheat<0&&game.resources.wheat[k]===0){for(const a of ownedArmies)a.morale=Math.max(25,a.morale-3);if(k===game.player)line('Wheat shortages weaken army morale; expand farms.')}
+ if(stocks.wheat<0&&game.resources.wheat[k]===0){for(const a of ownedArmies)a.morale=Math.max(25,a.morale-3);updateNationalMorale(k,-1);if(k===game.player)line('Wheat shortages weaken army morale and national confidence; expand farms.')}
 }
 resolveBattles();monthlyArmyReadiness();
 for(const a of game.armies){if(activeArmy(a)&&!a.route.length&&!a.battle&&a.entrench)a.entrenchLevel=Math.min(3,(a.entrenchLevel||0)+1)}

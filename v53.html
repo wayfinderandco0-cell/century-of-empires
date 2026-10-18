@@ -83,8 +83,9 @@ const LINKS=`edinburgh:london,edinburgh:oslo,london:paris,london:amsterdam,lisbo
 'use strict';
 const $=id=>document.getElementById(id);
 const SVG='http://www.w3.org/2000/svg';
-const SAVE='century-empires-clean-v52';const MONTH_MS=60000;
+const SAVE='century-empires-clean-v53';const PREVIOUS_SAVE='century-empires-clean-v52';const MONTH_MS=60000;
 const CHOICES=['PR','AT','FR','GB','RU','SW','DN','SA','BA'];
+let selectedDiplomat='AT';
 const CHOICE_NAMES={PR:'Kingdom of Prussia',AT:'Habsburg Austria',FR:'Kingdom of France',GB:'Great Britain',RU:'Russian Empire',SW:'Sweden',DN:'Denmark–Norway',SA:'Saxony',BA:'Bavaria'};
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const TERRAIN={plain:['Open plains',1],hill:['Hills',1.18],mountain:['Mountains',1.35],forest:['Woodland',1.2],coast:['Coastal region',1.08]};
@@ -102,12 +103,20 @@ const when=()=>MONTHS[game.month]+' '+game.year;
 const line=(s)=>{game.log.unshift({date:when(),msg:s});game.log=game.log.slice(0,120)};
 function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.add('hidden'),3200)}
 function save(){if(!game)return;game.lastSeen=Date.now();try{localStorage.setItem(SAVE,JSON.stringify(game))}catch(e){toast('Local save unavailable in this browser')}}
-function load(){try{let o=JSON.parse(localStorage.getItem(SAVE)||'null');if(!o||o.version!==52||!CHOICES.includes(o.player)||!Array.isArray(o.armies)||!Array.isArray(o.provinces))return null;return o}catch(e){return null}}
+function load(){
+try{
+const saved=localStorage.getItem(SAVE)||localStorage.getItem(PREVIOUS_SAVE);
+const o=JSON.parse(saved||'null');
+if(!o||![52,53].includes(o.version)||!CHOICES.includes(o.player)||!Array.isArray(o.armies)||!Array.isArray(o.provinces))return null;
+if(o.version===52){o.version=53;o.treaties={};for(const [k,v] of Object.entries(o.diplomacy||{}))if(v==='War')o.treaties[k]={war:true,alliance:false,access:false,trade:false,pactUntil:0,truceUntil:0,trust:25,cooldownUntil:0,pending:null}}
+o.treaties=o.treaties||{};o.diplomacy=o.diplomacy||{};return o;
+}catch(e){return null}
+}
 function fresh(p){
 const armies=bases.map((b,i)=>({id:'a'+(i+1),owner:b.owner,at:b.id,units:{inf:b.troops,cav:b.capital?2:0,art:0},morale:100,route:[],edgeRemaining:0,edgeTotal:0,forced:false,battle:null,origin:null}));
 const provinces=bases.map(b=>({id:b.id,owner:b.owner,fort:0,farm:0,market:0}));
 const money={};const manpower={};for(const c of Object.keys(FACTIONS)){money[c]=175;manpower[c]=90}
-return {version:52,player:p,year:1780,month:0,provinces,armies,resources:{money,manpower},diplomacy:{},battles:[],log:[],lastTick:Date.now(),lastSeen:Date.now(),caretaker:false,ended:false,nextId:100,aiMonth:0};
+return {version:53,player:p,year:1780,month:0,provinces,armies,resources:{money,manpower},diplomacy:{},treaties:{},battles:[],log:[],lastTick:Date.now(),lastSeen:Date.now(),caretaker:false,ended:false,nextId:100,aiMonth:0};
 }
 const prov=id=>game.provinces.find(p=>p.id===id);
 const owner=id=>prov(id)?.owner;
@@ -194,7 +203,79 @@ return '<hr class="sep"><div class="eyebrow">Selected Army</div><h3>'+escapeHtml
 (battle?'<button class="btn danger" data-act="retreat" data-id="'+a.id+'">Retreat</button>':'')+
 '<button class="btn" data-act="focusArmy" data-id="'+a.id+'">⌖ Locate</button></div>';
 }
-function relation(k){return game.diplomacy[k]||'Neutral'}
+const currentMonth=()=>Math.max(0,(game.year-1780)*12+game.month);
+function treaty(k){
+if(!game.treaties)game.treaties={};
+return game.treaties[k]||(game.treaties[k]={war:game.diplomacy?.[k]==='War',alliance:false,access:false,trade:false,pactUntil:0,truceUntil:0,trust:50,cooldownUntil:0,pending:null});
+}
+function pactRemaining(k){return Math.max(0,treaty(k).pactUntil-currentMonth())}
+function truceRemaining(k){return Math.max(0,treaty(k).truceUntil-currentMonth())}
+function relation(k){const t=treaty(k);return t.war?'War':t.alliance?'Allied':pactRemaining(k)?'Non-aggression pact':truceRemaining(k)?'Truce':'Neutral'}
+function isAllied(a,b){return a!==b&&(a===game.player||b===game.player)&&treaty(a===game.player?b:a).alliance}
+function protectedPair(a,b){if(a===b)return true;if(a!==game.player&&b!==game.player)return false;const k=a===game.player?b:a;return isAllied(a,b)||pactRemaining(k)>0||truceRemaining(k)>0}
+function atWar(a,b){if(a===b||protectedPair(a,b))return false;if(a!==game.player&&b!==game.player)return true;return treaty(a===game.player?b:a).war}
+function canPass(a,b){return a===b||isAllied(a,b)||(a===game.player&&b!==game.player&&treaty(b).access)}
+function dipTypeName(type){return ({alliance:'Military alliance',access:'Military access',trade:'Trade agreement',pact:'Non-aggression pact',peace:'Peace treaty'})[type]||type}
+function beginRequest(k,type,term){
+const t=treaty(k),now=currentMonth();
+if(t.pending){toast('Wait for the existing negotiation');return}
+if(now<t.cooldownUntil){toast('Envoys can return in '+(t.cooldownUntil-now)+' months');return}
+if(type==='peace'?!t.war:t.war){toast('Proposal unavailable with this war status');return}
+if(type==='pact'&&pactRemaining(k)){toast('A pact is already active');return}
+if(type==='alliance'&&t.alliance||type==='access'&&(t.access||t.alliance)||type==='trade'&&t.trade){toast('Agreement is already in force');return}
+const duration=type==='pact'?([12,24,36].includes(term)?term:12):0;
+t.pending={type,duration,responseAt:now+1};
+line('Envoys request '+dipTypeName(type).toLowerCase()+(duration?' for '+duration+' months':'')+' from '+FACTIONS[k].full+'.');
+toast('Request sent. Response next month.');renderAll();
+}
+function acceptChance(k,type,duration){
+const t=treaty(k),base={alliance:28,access:55,trade:70,pact:66,peace:58}[type]||35;
+const affinity=(t.trust-50)*.6+(t.trade&&type==='alliance'?17:0)+(t.access&&type==='alliance'?8:0)+(t.alliance&&type==='trade'?12:0);
+return Math.max(8,Math.min(94,base+affinity+(type==='pact'&&duration===36?-14:type==='pact'&&duration===24?-7:0)));
+}
+function ceaseHostilities(k){
+for(const b of [...game.battles]){
+const a=game.armies.find(x=>x.id===b.attackId),d=game.armies.find(x=>x.id===b.defendId);
+if(a&&d&&[a.owner,d.owner].includes(game.player)&&[a.owner,d.owner].includes(k)){
+a.battle=null;d.battle=null;game.battles=game.battles.filter(x=>x!==b)
+}}
+for(const a of game.armies){if(a.route?.length&&((a.owner===game.player&&owner(a.route[a.route.length-1])===k)||(a.owner===k&&owner(a.route[a.route.length-1])===game.player))){a.route=[];a.edgeTotal=0;a.edgeRemaining=0}}
+}
+function processTreatyTerms(){
+const now=currentMonth();
+for(const k of Object.keys(game.treaties||{})){
+const t=treaty(k);
+if(t.pactUntil&&now>=t.pactUntil){t.pactUntil=0;line('Non-aggression pact with '+FACTIONS[k].full+' expired.')}
+if(t.truceUntil&&now>=t.truceUntil){t.truceUntil=0;line('Truce with '+FACTIONS[k].full+' expired.')}
+const p=t.pending;if(!p||p.responseAt>now)continue;t.pending=null;
+if(Math.random()*100>=acceptChance(k,p.type,p.duration)){t.trust=Math.max(0,t.trust-4);t.cooldownUntil=now+5;line(FACTIONS[k].full+' rejects '+dipTypeName(p.type).toLowerCase()+'. Envoys may return in five months.');continue}
+t.trust=Math.min(100,t.trust+7);
+if(p.type==='alliance'){t.alliance=true;t.access=true}
+if(p.type==='access')t.access=true;
+if(p.type==='trade')t.trade=true;
+if(p.type==='pact')t.pactUntil=now+p.duration;
+if(p.type==='peace'){t.war=false;game.diplomacy[k]='Neutral';t.truceUntil=now+6;ceaseHostilities(k)}
+line(FACTIONS[k].full+' accepts '+dipTypeName(p.type).toLowerCase()+(p.type==='pact'?' for '+p.duration+' months':'')+'.');
+}
+}
+function endAgreement(k,type){
+const t=treaty(k);
+if(type==='alliance'&&t.alliance){t.alliance=false;t.access=false;t.truceUntil=currentMonth()+6;t.trust=Math.max(0,t.trust-20);line('Alliance with '+FACTIONS[k].full+' ended. Six-month truce applies.')}
+if(type==='trade'&&t.trade){t.trade=false;t.trust=Math.max(0,t.trust-4);line('Trade agreement with '+FACTIONS[k].full+' ended.')}
+if(type==='access'&&t.access&&!t.alliance){
+if(game.armies.some(a=>a.owner===game.player&&activeArmy(a)&&owner(a.at)===k)){toast('Withdraw your armies before cancelling military access');return}
+t.access=false;line('Military access through '+FACTIONS[k].full+' cancelled.')}
+renderAll();
+}
+function declareWar(k){
+const t=treaty(k);if(t.war)return;
+if(pactRemaining(k)){toast('Cannot attack: pact has '+pactRemaining(k)+' months remaining');return}
+if(truceRemaining(k)){toast('Truce has '+truceRemaining(k)+' months remaining');return}
+if(t.alliance){toast('End the alliance before declaring war');return}
+if(!confirm('Declare war on '+FACTIONS[k].full+'? Trade and access agreements will end.'))return;
+t.war=true;t.trade=false;t.access=false;t.pending=null;t.trust=Math.max(0,t.trust-35);
+game.diplomacy[k]='War';line(FACTIONS[game.player].full+' declares war on '+FACTIONS[k].full+'.');renderAll();
+}
 function handleAction(e){
 const b=e.target.closest('[data-act]');if(!b||!game)return;
 const action=b.dataset.act,id=b.dataset.id,kind=b.dataset.kind;

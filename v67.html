@@ -198,6 +198,13 @@
 #mediterraneanCoasts{pointer-events:none}
 #map .atlas-decor{pointer-events:none}
 
+
+.army-health-meter,.army-morale-meter{width:100%;height:8px;background:#182b2c;border:1px solid #b5baa5;border-radius:3px;overflow:hidden}
+.army-health-meter span,.army-morale-meter span{height:100%;display:block}
+.army-health-meter span{background:#70ed9b}.army-morale-meter span{background:#74c5ed}
+.army-bars-legend{display:grid;gap:4px;padding:9px 0;font-size:12px;color:#e5e8da}
+.army-bars-legend>span{display:flex;justify-content:space-between}
+.army-bars-legend small{font-size:10px;color:#b4c7c0}
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 1120" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -1501,7 +1508,7 @@ function updateMapSymbols(){
  const obstacles=[];
  for(const a of game.armies.filter(activeArmy)){
   const p=positionOf(a),sz=markerScale(view.w)*screenScale()*40;
-  obstacles.push({x:p.x*s- Math.max(10,sz*.54),y:p.y*s-Math.max(15,sz*.88)-11,w:Math.max(20,sz*1.1),h:Math.max(28,sz*1.55)});
+  obstacles.push({x:p.x*s-Math.max(10,sz*.54),y:p.y*s-Math.max(28,sz*1.45)-15,w:Math.max(20,sz*1.1),h:Math.max(48,sz*2.15)});
  }
  for(const b of game.battles||[]){
   const p=byId[b.province];if(!p)continue;
@@ -1933,13 +1940,16 @@ function renderCompositeArmyArt(a,wrap,proxy){
 function renderArmies(){
 $('provinces').replaceChildren();const lod=mapLod(),strategic=lod===0,medium=lod===1;
 const labels=node('g',{'pointer-events':'none'}),figures=node('g');
-for(const b of bases){const p=prov(b.id);if(strategic&&!b.capital)continue;
+for(const b of bases){const p=prov(b.id);if(strategic&&!b.capital&&!['sardinia','palermo','corsica','dublin','cardiff'].includes(b.id))continue;
 const g=node('g');g.appendChild(node('circle',{class:'city-marker','data-fort':p.fort?'1':'0',cx:b.x,cy:b.y,r:2.8/screenScale(),fill:'#282e29',stroke:'#eee3c9','stroke-width':.9/screenScale()}));
 const t=node('text',{class:'city-name','data-id':b.id,x:b.x,y:b.y,fill:'#343126','font-size':10/screenScale(),'font-family':'Georgia,serif','font-weight':b.capital?700:500,'paint-order':'stroke',stroke:'#efe8d5','stroke-width':1/screenScale(),'stroke-linejoin':'round'});
 t.textContent=b.name;g.appendChild(t);
 if(p.fort){const q=3/screenScale();g.appendChild(node('rect',{x:b.x-q,y:b.y-q*2.7,width:q*2,height:q*1.4,fill:'#51483a',stroke:'#eadab2','stroke-width':.7/screenScale(),'pointer-events':'none'}));}
 labels.appendChild(g);
-if(!strategic||b.capital){const f=node('g',{class:'city-flag province-standard','data-cx':b.x,'data-cy':b.y,transform:cityFlagTransform(b.x,b.y)});f.appendChild(node('ellipse',{cx:0,cy:4,rx:7,ry:3,fill:'#29372d',opacity:.65}));f.appendChild(node('line',{x1:0,y1:4,x2:0,y2:-12,stroke:'#49402c','stroke-width':1.1}));f.appendChild(node('use',{href:'#flag-'+p.owner,x:0,y:-12,width:11,height:7}));labels.appendChild(f);}
+if(!strategic||b.capital||['sardinia','palermo','corsica'].includes(b.id)){const f=node('g',{class:'city-flag province-standard','data-cx':b.x,'data-cy':b.y,transform:cityFlagTransform(b.x,b.y)});f.appendChild(node('ellipse',{cx:0,cy:4,rx:7,ry:2.5,fill:'#26372f',opacity:.66}));
+f.appendChild(node('line',{x1:0,y1:4,x2:0,y2:-14,stroke:'#39372d','stroke-width':1.3}));
+f.appendChild(node('rect',{x:0,y:-14,width:14,height:9,fill:colors[p.owner]||'#aaa',stroke:'#172a2d','stroke-width':.7}));
+f.appendChild(node('use',{href:'#flag-'+p.owner,x:.8,y:-13.3,width:12.4,height:7.4,style:'filter:saturate(1.5) contrast(1.25)'}));labels.appendChild(f);}
 }
 $('provinces').appendChild(labels);
 for(const a of game.armies.filter(activeArmy)){
@@ -1951,13 +1961,20 @@ const scale=markerScale(view.w),wrap=node('g',{class:'unit-wrap',transform:'scal
 const proxy=ART_PROXY[a.owner]||'PR';
  wrap.appendChild(node('ellipse',{cx:0,cy:13,rx:13,ry:2.5,fill:'#111a1b','fill-opacity':a.route.length?.33:.16,'pointer-events':'none'}));
  renderCompositeArmyArt(a,wrap,proxy);
-if(selectedArmy===a.id)wrap.appendChild(node('ellipse',{class:'unit-selected-ring',cx:0,cy:0,rx:15,ry:20,fill:'none',stroke:'#f1d6a1','stroke-width':.8,'stroke-dasharray':'2 2','pointer-events':'none'}));
-wrap.appendChild(node('ellipse',{cx:0,cy:-20,rx:total(a)>99?10.7:8.5,ry:8.6,fill:a.owner===game.player?'#293f36':'#28353b',stroke:'#d0bf9b','stroke-width':.85,'pointer-events':'none'}));
-const count=node('text',{x:0,y:-17,'text-anchor':'middle','font-size':9.1,'font-weight':700,fill:'#fff4dd','pointer-events':'none'});count.textContent=total(a);wrap.appendChild(count);
-wrap.appendChild(node('line',{x1:0,y1:-27,x2:0,y2:-36,stroke:'#483c2a','stroke-width':.85,'pointer-events':'none'}));wrap.appendChild(node('use',{href:'#flag-'+a.owner,x:-6,y:-36,width:12,height:7,'pointer-events':'none'}));
-wrap.appendChild(node('rect',{class:'unit-morale-track',x:-10,y:17,width:20,height:2.2,rx:1,fill:'#28302e','pointer-events':'none'}));
-wrap.appendChild(node('rect',{x:-10,y:17,width:20*a.morale/100,height:2.2,rx:1,fill:a.morale<45?'#c06e57':'#7aaf90','pointer-events':'none'}));
-if(a.battle)wrap.appendChild(node('circle',{cx:13,cy:4,r:4,fill:'#c0674f',stroke:'#f3d7b4','stroke-width':.7,'pointer-events':'none'}));
+
+wrap.appendChild(node('ellipse',{cx:0,cy:-31,rx:total(a)>99?11.1:8.5,ry:8.5,fill:a.owner===game.player?'#1f3935':'#26363c',stroke:'#f4e4c0','stroke-width':1,'pointer-events':'none'}));
+const count=node('text',{x:0,y:-28.2,'text-anchor':'middle','font-size':9.2,'font-weight':700,fill:'#fff6db','pointer-events':'none'});count.textContent=total(a);wrap.appendChild(count);
+wrap.appendChild(node('line',{x1:0,y1:-40,x2:0,y2:-57,stroke:'#34352c','stroke-width':1.15,'pointer-events':'none'}));
+wrap.appendChild(node('rect',{x:-.4,y:-57.5,width:15,height:10,fill:colors[a.owner]||'#c7aa7a',stroke:'#19282b','stroke-width':.7,'pointer-events':'none'}));
+wrap.appendChild(node('use',{href:'#flag-'+a.owner,x:.35,y:-56.7,width:13.5,height:8.5,
+ style:'filter:saturate(1.7) contrast(1.2)','pointer-events':'none'}));
+wrap.appendChild(node('rect',{class:'unit-health-track',x:-11,y:18,width:22,height:3.4,rx:.75,fill:'#1b2827',stroke:'#e9e0c7','stroke-width':.5,'pointer-events':'none'}));
+wrap.appendChild(node('rect',{class:'unit-health-fill',x:-10.6,y:18.45,width:21.2*Math.max(0,Math.min(100,a.health??100))/100,height:2.5,rx:.6,
+ fill:(a.health??100)<35?'#f07c60':(a.health??100)<65?'#f5bd66':'#70ed9b','pointer-events':'none'}));
+wrap.appendChild(node('rect',{class:'unit-morale-track',x:-11,y:22.6,width:22,height:2.7,rx:.7,fill:'#1a262b',stroke:'#d7d6c6','stroke-width':.45,'pointer-events':'none'}));
+wrap.appendChild(node('rect',{class:'unit-morale-fill',x:-10.6,y:23,width:21.2*Math.max(0,Math.min(100,a.morale??100))/100,height:1.9,rx:.5,
+ fill:a.morale<40?'#fa9d70':'#74c5ed','pointer-events':'none'}));
+if(a.battle)wrap.appendChild(node('circle',{cx:16,cy:6,r:3.5,fill:'#c0674f',stroke:'#f3d7b4','stroke-width':.7,'pointer-events':'none'}));
 figures.appendChild(g);
 }
 $('provinces').appendChild(figures);

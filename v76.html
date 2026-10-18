@@ -478,6 +478,25 @@ function drawWeather(){
 /* V74: Safari-safe precipitation in a low-resolution transparent canvas.
    Particles are always screen-pixel sized regardless of camera zoom. */
 let weatherMotionFrame=0,weatherMotionLast=0,weatherMotionSeed=0,weatherMotionMonth='',weatherDrops=[];
+let lastWeatherCamera=null,atlasLandData=null;
+/* Local precipitation: use the land mask and regional climate, not the prior camera. */
+function precipitationAtMapPoint(gx,gy){
+ if(!game||gx<0||gx>=1448||gy<0||gy>=1086)return null;
+ if(atlasLandData){
+  const x=Math.max(0,Math.min(atlasLandData.w-1,Math.floor(gx/1448*atlasLandData.w)));
+  const y=Math.max(0,Math.min(atlasLandData.h-1,Math.floor(gy/1086*atlasLandData.h)));
+  if(atlasLandData.alpha[(y*atlasLandData.w+x)*4+3]<125)return null;
+ }
+ let nearest=null,dist=Infinity;
+ for(const city of bases){const d=(gx-city.x)**2+(gy-city.y)**2;if(d<dist){nearest=city;dist=d}}
+ if(!nearest)return null;
+ let region=weatherRegion(nearest.id);
+ // The southern Mediterranean and North Africa cannot borrow Alpine snowfall.
+ if(gy>835)region='desert';
+ else if(gy>765&&region!=='desert'&&region!=='med')region='med';
+ const state=weatherState(region,game.year,game.month);
+ return state==='snow'&&gy>750?null:(state==='snow'||state==='rain'||state==='storm'?state:null);
+}
 function startWeatherMotion(){
  if(weatherMotionFrame)return;
  const canvas=$('weatherMotion');if(!canvas)return;
@@ -485,15 +504,11 @@ function startWeatherMotion(){
  const reduce=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(reduce)return;
  function newDrop(w,h,anywhere){
-  const reach=Math.max(95,view.w*.13);
-  for(let tries=0;tries<14;tries++){
+  for(let tries=0;tries<18;tries++){
    const x=Math.random()*w,y=anywhere?Math.random()*h:-12;
    const gx=view.cx+(x-w/2)*view.w/w,gy=view.cy+(y-h/2)*view.w/w;
-   let near=null,dist=Infinity;
-   for(const city of bases){const d=(gx-city.x)**2+(gy-city.y)**2;if(d<dist){near=city;dist=d}}
-   if(!near||dist>reach*reach)continue;
-   const state=weatherState(weatherRegion(near.id),game.year,game.month);
-   if(state!=='rain'&&state!=='snow'&&state!=='storm')continue;
+   const state=precipitationAtMapPoint(gx,gy);
+   if(!state)continue;
    const snow=state==='snow';
    return {x,y,kind:snow?'snow':'rain',speed:snow?19+Math.random()*21:180+Math.random()*95,
     drift:snow?(Math.random()-.5)*20:-(22+Math.random()*14),
@@ -514,11 +529,16 @@ function startWeatherMotion(){
   }
   const month=game.year+'-'+game.month;
   if(weatherMotionMonth!==month){weatherMotionMonth=month;weatherDrops=[];weatherMotionSeed=0}
+  if(!lastWeatherCamera||Math.abs(lastWeatherCamera.cx-view.cx)>view.w*.012||
+     Math.abs(lastWeatherCamera.cy-view.cy)>view.w*.012||Math.abs(lastWeatherCamera.w-view.w)>view.w*.008){
+   lastWeatherCamera={cx:view.cx,cy:view.cy,w:view.w};weatherDrops=[];weatherMotionSeed=0;
+  }
   ctx.clearRect(0,0,w,h);
   for(let i=weatherDrops.length-1;i>=0;i--){
    const p=weatherDrops[i];
    p.y+=p.speed*delta;p.x+=p.drift*delta;
-   if(p.y>h+18||p.x< -25){weatherDrops.splice(i,1);continue}
+   const local=precipitationAtMapPoint(view.cx+(p.x-w/2)*view.w/w,view.cy+(p.y-h/2)*view.w/w);
+   if(p.y>h+18||p.x< -25||!local||(p.kind==='snow')!==(local==='snow')){weatherDrops.splice(i,1);continue}
    if(p.kind==='snow'){
     ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
     ctx.fillStyle='rgba(242,249,255,'+p.alpha+')';ctx.fill();
@@ -1784,15 +1804,39 @@ async function loadNewAtlas(){
  }catch(error){console.warn('Atlas artwork could not load',error)}
 }
 function drawAtlasTerrain(){
- const g=$('terrainDetail');g.replaceChildren();
- for(const b of bases){if(!['mountain','hill','forest'].includes(b.terrain))continue;
-  const g2=node('g',{transform:'translate('+b.x+' '+b.y+')'});
-  for(let i=0;i<(b.terrain==='forest'?20:12);i++){
-   const x=((i*41+b.x)%72)-36,y=((i*31+b.y)%50)-25;
-   if(b.terrain==='forest')g2.appendChild(node('circle',{cx:x,cy:y,r:.55+(i%3)*.4,fill:'#24482e','fill-opacity':'.3'}));
-   else g2.appendChild(node('path',{d:'M'+(x-9)+' '+(y+4)+'q9 '+(b.terrain==='mountain'?-13:-7)+' 18 0',fill:'none',stroke:'#5e5644','stroke-width':1,'stroke-opacity':'.35'}));
-  }g.appendChild(g2);
+ // Fine geometry is vector, so it stays sharp when the underlying relief image scales.
+ const parent=$('terrainDetail');parent.replaceChildren();
+ const major=node('g',{class:'terrain-major'}),fine=node('g',{class:'terrain-fine'});
+ for(const city of bases){
+  const type=city.terrain;
+  if(!['mountain','hill','forest','coast'].includes(type))continue;
+  const seed=[...city.id].reduce((v,c)=>(v*33+c.charCodeAt(0))>>>0,77);
+  const count=type==='forest'?22:type==='coast'?8:16;
+  for(let i=0;i<count;i++){
+   const angle=seed*.013+i*2.39996,r=9+Math.sqrt((i+1)/count)*40;
+   const x=city.x+Math.cos(angle)*r,y=city.y+Math.sin(angle)*r*.72;
+   if(type==='forest'){
+    major.appendChild(node('path',{d:'M'+(x-2).toFixed(1)+','+(y+2).toFixed(1)+'q2 -5 4 0',fill:'none',stroke:'#315641','stroke-opacity':'.52','stroke-width':.9}));
+   }else if(type==='mountain'||type==='hill'){
+    major.appendChild(node('path',{d:'M'+(x-8).toFixed(1)+','+(y+4).toFixed(1)+'q8 '+(type==='mountain'?-12:-6)+' 16 0',fill:'none',stroke:'#655d4c','stroke-opacity':'.58','stroke-width':.9}));
+   }else{
+    major.appendChild(node('path',{d:'M'+x.toFixed(1)+','+y.toFixed(1)+'q4 -3 8 -1',fill:'none',stroke:'#a99166','stroke-opacity':'.36','stroke-width':.8}));
+   }
+  }
+  for(let i=0;i<40;i++){
+   const angle=i*2.39996+seed*.002,r=5+Math.sqrt((i+1)/40)*51;
+   const x=city.x+Math.cos(angle)*r,y=city.y+Math.sin(angle)*r*.76;
+   if(type==='forest'){
+    fine.appendChild(node('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.45+(i%4)*.2).toFixed(2),fill:'#224c37','fill-opacity':'.65'}));
+   }else if(type==='mountain'||type==='hill'){
+    const span=type==='mountain'?6:4,height=type==='mountain'?8:5;
+    fine.appendChild(node('path',{d:'M'+(x-span).toFixed(1)+','+(y+3).toFixed(1)+'q'+span+' -'+height+' '+span*2+' 0',fill:'none',stroke:'#5d5848','stroke-opacity':'.46','stroke-width':.7}));
+   }else{
+    fine.appendChild(node('path',{d:'M'+(x-3).toFixed(1)+','+y.toFixed(1)+'q3 -1 6 .5',fill:'none',stroke:'#b59e78','stroke-opacity':'.42','stroke-width':.6}));
+   }
+  }
  }
+ parent.appendChild(major);parent.appendChild(fine);
 }
 function clipCell(poly,a,b){
  const nx=b.x-a.x,ny=b.y-a.y,h=(b.x*b.x+b.y*b.y-a.x*a.x-a.y*a.y)/2,inside=p=>p[0]*nx+p[1]*ny<=h+1e-7;

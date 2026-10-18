@@ -334,15 +334,32 @@ function build(kind){
 const p=prov(selectedProvince);if(p.owner!==game.player)return;const cost={fort:65,farm:45,market:55}[kind];if(cost===undefined)return;if(p[kind]>=3){toast('Maximum building level reached');return}
 if(game.resources.money[game.player]<cost){toast('Insufficient gold');return}game.resources.money[game.player]-=cost;p[kind]++;line(byId[p.id].name+': '+kind+' improved to level '+p[kind]);renderAll();
 }
-function neighbors(from,to){const queue=[[from]],visited=new Set([from]);while(queue.length){const path=queue.shift(),last=path[path.length-1];if(last===to)return path.slice(1);for(const next of connected[last]||[]){if(visited.has(next))continue;if(owner(next)!==game.player&&next!==to)continue;visited.add(next);queue.push(path.concat(next))}}return null}
+
+function canEnter(armyOwner,id,last){
+if(owner(id)===armyOwner)return true;
+if(canPass(armyOwner,owner(id)))return true;
+return !!last&&atWar(armyOwner,owner(id));
+}
+function neighbors(from,to,armyOwner=game.player){
+const queue=[[from]],visited=new Set([from]);
+while(queue.length){const path=queue.shift(),last=path[path.length-1];if(last===to)return path.slice(1);
+for(const next of connected[last]||[]){if(visited.has(next)||!canEnter(armyOwner,next,next===to))continue;
+visited.add(next);queue.push(path.concat(next))}
+}return null;
+}
 function dispatch(a,to){
 if(!a||!activeArmy(a)||a.owner!==game.player)return;
-if(a.at===to){toast('Army is already at this province');return}
-if(a.battle){toast('Retreat before issuing another order');return}
-const enemy=owner(to)!==game.player;
-if(enemy&&relation(owner(to))!=='War'){toast('Declare war in Diplomacy before attacking');showPanel('diplomacy');return}
-const route=neighbors(a.at,to);if(!route){toast('No route through friendly provinces. Attack adjacent territory first.');return}
-a.route=route;a.origin=a.at;a.edgeRemaining=0;a.edgeTotal=0;orderArmy=null;line('Orders issued: '+byId[a.at].name+' → '+byId[to].name+'.');updateOrderBanner();renderAll();toast('March orders issued');
+if(a.at===to){toast('Army is already in this province');return}
+if(a.battle){toast('Retreat before giving a new order');return}
+const foreign=owner(to)!==game.player;
+if(foreign&&!canPass(game.player,owner(to))&&!atWar(game.player,owner(to))){
+toast(protectedPair(game.player,owner(to))?'Treaty forbids an attack; request access.':'Request military access or declare war.');
+selectedDiplomat=owner(to);showPanel('diplomacy');return
+}
+const route=neighbors(a.at,to,a.owner);
+if(!route){toast('No route through your or access-granted provinces. Enemy targets must be adjacent.');return}
+a.route=route;a.origin=a.at;a.edgeRemaining=0;a.edgeTotal=0;orderArmy=null;
+line('Orders issued: '+byId[a.at].name+' → '+byId[to].name+'.');updateOrderBanner();renderAll();toast('March orders issued');
 }
 function updateOrderBanner(){const a=mobileArmy(orderArmy);$('orderBanner').classList.toggle('show',!!a);if(a)$('orderText').textContent='Select a destination for '+total(a)+' troops · '+byId[a.at].name}
 function retreat(id){const a=mobileArmy(id);if(!a||!a.battle)return;const battle=game.battles.find(b=>b.attackId===id||b.defendId===id);if(!battle)return;
@@ -352,9 +369,10 @@ if(!out){toast('No friendly retreat route');return}a.battle=null;a.route=[out];a
 function edgeDuration(a,next){const base=Math.hypot(byId[a.at].x-byId[next].x,byId[a.at].y-byId[next].y);return Math.max(1,Math.ceil(base/(a.forced?205:145)))}
 function arrival(a,to){
 a.at=to;a.edgeRemaining=0;a.edgeTotal=0;a.route.shift();
-if(owner(to)!==a.owner){a.route=[];startBattle(a,to)}
+if(owner(to)!==a.owner&&!canPass(a.owner,owner(to))){a.route=[];if(atWar(a.owner,owner(to)))startBattle(a,to);else line('Movement into '+byId[to].name+' halted by diplomatic restrictions.')}
 }
 function startBattle(a,to){
+if(!atWar(a.owner,owner(to))){a.route=[];line('Attack on '+byId[to].name+' forbidden by treaty.');return}
 let defender=at(to).filter(q=>q.owner===owner(to)&&q.id!==a.id&&q.battle===null).sort((x,y)=>total(y)-total(x))[0];
 if(!defender){prov(to).owner=a.owner;line(FACTIONS[a.owner].name+' takes '+byId[to].name+' without resistance.');return}
 if(game.battles.some(b=>b.province===to)){a.battle='support';return}
@@ -365,7 +383,8 @@ function resolveBattles(){
 for(const b of [...game.battles]){
 const atk=mobileArmy(b.attackId),def=mobileArmy(b.defendId);if(!atk||!def){finishBattle(b,atk&&total(atk)>0);continue}
 b.months++;const terrain=TERRAIN[byId[b.province].terrain][1];const fort=prov(b.province).fort;const atkPower=total(atk)*(atk.morale/100)*(FACTIONS[atk.owner].atk||1);
-const defPower=total(def)*(def.morale/100)*(FACTIONS[def.owner].def||1)*terrain*(1+fort*.25);
+const alliedSupport=game.armies.filter(q=>activeArmy(q)&&isAllied(q.owner,def.owner)&&(q.at===b.province||(connected[b.province]||[]).includes(q.at))).reduce((n,q)=>n+total(q)*.12,0);
+const defPower=total(def)*(def.morale/100)*(FACTIONS[def.owner].def||1)*terrain*(1+fort*.25)+alliedSupport;
 const atkLoss=Math.max(1,Math.ceil(defPower*.13)),defLoss=Math.max(1,Math.ceil(atkPower*.13));
 losses(atk,atkLoss);losses(def,defLoss);atk.morale=Math.max(20,atk.morale-5);def.morale=Math.max(20,def.morale-5);
 if(b.months>=2&&(total(atk)===0||total(def)===0||b.months>=8))finishBattle(b,total(atk)>total(def));
@@ -381,7 +400,8 @@ function advanceMonth(silent){
 if(game.ended)return;
 game.month++;if(game.month===12){game.month=0;game.year++}
 if(game.year>=1880){game.ended=true;line('The Century of Empires ends. '+FACTIONS[game.player].full+' holds '+game.provinces.filter(p=>p.owner===game.player).length+' provinces.');return}
-for(const k of Object.keys(FACTIONS)){const lands=game.provinces.filter(p=>p.owner===k);game.resources.money[k]=Math.min(99999,game.resources.money[k]+Math.max(0,lands.reduce((n,p)=>n+8+p.market*5,0)-game.armies.filter(a=>a.owner===k).reduce((n,a)=>n+Math.ceil(total(a)/10),0)));game.resources.manpower[k]=Math.min(9999,game.resources.manpower[k]+lands.reduce((n,p)=>n+2+p.farm*2,0))}
+processTreatyTerms();
+for(const k of Object.keys(FACTIONS)){const lands=game.provinces.filter(p=>p.owner===k);const tradeBonus=k===game.player?Object.values(game.treaties||{}).filter(t=>t.trade).length*6:treaty(k).trade?6:0;game.resources.money[k]=Math.min(99999,game.resources.money[k]+Math.max(0,lands.reduce((n,p)=>n+8+p.market*5,0)-game.armies.filter(a=>a.owner===k).reduce((n,a)=>n+Math.ceil(total(a)/10),0))+tradeBonus);game.resources.manpower[k]=Math.min(9999,game.resources.manpower[k]+lands.reduce((n,p)=>n+2+p.farm*2,0))}
 resolveBattles();
 for(const a of game.armies){if(!activeArmy(a)||a.battle||!a.route.length)continue;if(a.edgeRemaining<=0){a.edgeTotal=edgeDuration(a,a.route[0]);a.edgeRemaining=a.edgeTotal}a.edgeRemaining--;if(a.edgeRemaining<=0)arrival(a,a.route[0]);if(a.forced){a.morale=Math.max(40,a.morale-3)}else{a.morale=Math.min(100,a.morale+1)}}
 if(game.month%3===0){runAI();if(game.caretaker)runCaretaker();}
@@ -391,9 +411,9 @@ function runAI(){
 for(const k of Object.keys(FACTIONS)){if(k===game.player)continue;
 const armies=game.armies.filter(a=>a.owner===k&&activeArmy(a)&&!a.route.length&&!a.battle);if(!armies.length)continue;
 if(game.resources.money[k]>90&&game.resources.manpower[k]>15){const a=armies[Math.floor(Math.random()*armies.length)];a.units.inf+=3;game.resources.money[k]-=35;game.resources.manpower[k]-=10}
-if(Math.random()<.22){const candidate=armies.filter(a=>(connected[a.at]||[]).some(id=>owner(id)!==k&&total(a)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4)).sort((a,b)=>total(b)-total(a))[0];
-if(candidate){const targets=(connected[candidate.at]||[]).filter(id=>owner(id)!==k&&total(candidate)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4);
-if(targets.length){const to=targets[Math.floor(Math.random()*targets.length)];candidate.origin=candidate.at;candidate.route=[to];candidate.edgeTotal=0;candidate.edgeRemaining=0;line(FACTIONS[k].name+' launches a campaign toward '+byId[to].name+'.')}}}
+if(Math.random()<.22){const candidate=armies.filter(a=>(connected[a.at]||[]).some(id=>owner(id)!==k&&!protectedPair(k,owner(id))&&total(a)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4)).sort((a,b)=>total(b)-total(a))[0];
+if(candidate){const targets=(connected[candidate.at]||[]).filter(id=>owner(id)!==k&&!protectedPair(k,owner(id))&&total(candidate)>at(id).filter(o=>o.owner===owner(id)).reduce((n,o)=>n+total(o),0)*1.5+4);
+if(targets.length){const to=targets[Math.floor(Math.random()*targets.length)];if(owner(to)===game.player){const t=treaty(k);t.war=true;t.trade=false;t.access=false;t.pending=null;game.diplomacy[k]='War';line(FACTIONS[k].full+' declares war on '+FACTIONS[game.player].full+'.')}candidate.origin=candidate.at;candidate.route=[to];candidate.edgeTotal=0;candidate.edgeRemaining=0;line(FACTIONS[k].name+' launches a campaign toward '+byId[to].name+'.')}}}
 }}
 function runCaretaker(){
 const k=game.player;if(game.resources.money[k]<45||game.resources.manpower[k]<10)return;

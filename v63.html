@@ -1037,7 +1037,7 @@ function startBattle(a,to){
 if(!atWar(a.owner,owner(to))){a.route=[];line('Attack on '+byId[to].name+' forbidden by treaty.');return}
 let defender=at(to).filter(q=>q.owner===owner(to)&&q.id!==a.id&&q.battle===null).sort((x,y)=>total(y)-total(x))[0];
 if(!defender){prov(to).owner=a.owner;line(FACTIONS[a.owner].name+' takes '+byId[to].name+' without resistance.');return}
-if(game.battles.some(b=>b.province===to)){a.battle='support';return}
+if(game.battles.some(b=>!b.road&&b.province===to)){a.battle='support';return}
 a.battle=to;defender.battle=to;game.battles.push({province:to,attackId:a.id,defendId:defender.id,months:0,attackStart:total(a),defendStart:total(defender),history:[]});line('Battle begins in '+byId[to].name+' between '+FACTIONS[a.owner].name+' and '+FACTIONS[defender.owner].name+'.');
 }
 function losses(a,amount){let n=Math.min(total(a),Math.max(1,Math.round(amount)));for(const key of ['inf','cav','art']){const kill=Math.min(a.units[key],n);a.units[key]-=kill;n-=kill;if(!n)break}}
@@ -1094,7 +1094,7 @@ if(!silent&&game.month===0)line('The year '+game.year+' begins. A new era for Eu
 }
 function runAI(){
 for(const k of Object.keys(FACTIONS)){if(k===game.player)continue;
-const armies=game.armies.filter(a=>a.owner===k&&activeArmy(a)&&!a.route.length&&!a.battle);if(!armies.length)continue;
+const armies=game.armies.filter(a=>a.owner===k&&activeArmy(a)&&!a.route.length&&!a.battle&&!a.camp);if(!armies.length)continue;
 // Foreign nations use the same regional supplies and training queues as the player.
 const owned=game.provinces.filter(p=>p.owner===k);
 const trainable=owned.filter(p=>p.recruitment>0&&!p.trainingQueue&&afford(TRAINING.inf.cost,k));

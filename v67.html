@@ -717,7 +717,7 @@ const bases=DATA.map(([id,name,owner,x,y,troops,terrain,capital])=>({id,name,own
 const byId=Object.fromEntries(bases.map(p=>[p.id,p]));
 const colors=Object.fromEntries(Object.keys(FACTIONS).map(k=>[k,FACTIONS[k].color]));
 let game=null,chosen='PR',panel='map',selectedProvince='berlin',selectedArmy=null,selectedBattle=null,orderArmy=null,siteArmy=null,groupOrderIds=[],multiMode=false,armySelection=new Set(),lastRoadCheck=0,lastDraw=0,lastRouteDraw=0,lastLod=-1;
-const view={cx:650,cy:565,w:1550};const pointers=new Map();let gesture=null,suppressUntil=0,pinchCooldown=0;
+const view={cx:675,cy:635,w:1550};const pointers=new Map();let gesture=null,suppressUntil=0,pinchCooldown=0;
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const node=(tag,attrs={})=>{const n=document.createElementNS(SVG,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n};
 const total=a=>a?Math.max(0,a.units.inf+a.units.cav+a.units.art):0;
@@ -816,7 +816,7 @@ $('startBtn').onclick=()=>{if(load()&&!confirm('Start a new campaign? This repla
 $('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save found');return}const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();if(game.caretaker)line('Defensive caretaker stood in during your 72+ hour absence.');enter()};
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>showPanel(b.dataset.tab));
 $('sheetClose').onclick=()=>showPanel('map');$('returnMap').onclick=()=>showPanel('map');
-$('zoomIn').onclick=()=>zoom(.68);$('zoomOut').onclick=()=>zoom(1/.68);$('zoomHome').onclick=()=>{view.cx=675;view.cy=565;view.w=1550;setView();toast('Full European and Mediterranean theater')};
+$('zoomIn').onclick=()=>zoom(.68);$('zoomOut').onclick=()=>zoom(1/.68);$('zoomHome').onclick=()=>{view.cx=675;view.cy=580;view.w=1710;setView();toast('Full European and Mediterranean theater')};
 $('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
 $('sheetBody').addEventListener('input',e=>{const id=e.target.id||'',k=id.startsWith('split-range-')?id.slice(12):e.target.dataset.splitNumber;if(['inf','cav','art'].includes(k))setSplitValue(k,e.target.value)});
@@ -832,7 +832,7 @@ installTheaterGeography();organicProvinces();textureTerrain();setView();setInter
 }
 function enter(){
 $('start').classList.add('hidden');$('goldVal').textContent=fmt(game.resources.money[game.player]);$('mpVal').textContent=fmt(game.resources.manpower[game.player]);
-const p=bases.find(b=>b.owner===game.player&&b.capital)||bases.find(b=>b.owner===game.player);if(p){selectedProvince=p.id;view.cx=675;view.cy=560;view.w=1530}
+const p=bases.find(b=>b.owner===game.player&&b.capital)||bases.find(b=>b.owner===game.player);if(p){selectedProvince=p.id;view.cx=675;view.cy=635;view.w=1530}
 game.caretaker=false;setView();renderAll();showPanel('map');save();
 }
 function showPanel(which){
@@ -1962,7 +1962,7 @@ function renderCompositeArmyArt(a,wrap,proxy){
 function renderArmies(){
 $('provinces').replaceChildren();const lod=mapLod(),strategic=lod===0,medium=lod===1;
 const labels=node('g',{'pointer-events':'none'}),figures=node('g');
-for(const b of bases){const p=prov(b.id);if(strategic&&!b.capital&&!['sardinia','palermo','corsica','dublin','cardiff'].includes(b.id))continue;
+for(const b of bases){const p=prov(b.id);if(strategic&&!b.capital&&!['edinburgh','sardinia','palermo','corsica','dublin','cardiff'].includes(b.id))continue;
 const g=node('g');g.appendChild(node('circle',{class:'city-marker','data-fort':p.fort?'1':'0',cx:b.x,cy:b.y,r:2.8/screenScale(),fill:'#282e29',stroke:'#eee3c9','stroke-width':.9/screenScale()}));
 const t=node('text',{class:'city-name','data-id':b.id,x:b.x,y:b.y,fill:'#343126','font-size':10/screenScale(),'font-family':'Georgia,serif','font-weight':b.capital?700:500,'paint-order':'stroke',stroke:'#efe8d5','stroke-width':1/screenScale(),'stroke-linejoin':'round'});
 t.textContent=b.name;g.appendChild(t);

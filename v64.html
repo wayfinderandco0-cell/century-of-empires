@@ -128,6 +128,20 @@
 .gazette-image img{display:block;width:100%;height:100px;object-fit:cover;filter:grayscale(.35) sepia(.95) contrast(1.12);background:#c7af85}
 .gazette-image figcaption{font:8px/1.3 Georgia,serif;color:#53412c;margin-top:4px}
 
+
+/* V64 atlas map tuning */
+#map .territory-layer path{fill-opacity:.20;stroke:#6f6a5c;stroke-opacity:.64;stroke-width:.88}
+#map .territory-layer path.selected{fill-opacity:.34;stroke:#fff2c8;stroke-opacity:1;stroke-width:1.55}
+#map #nationFrontiers path{fill:none;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+#map #nationFrontiers .frontier-shadow{stroke:#38433e;stroke-width:3.3;stroke-opacity:.73}
+#map #nationFrontiers .frontier-cream{stroke:#f8eed7;stroke-width:1.5;stroke-opacity:.97}
+#map #atlasTerrain{mix-blend-mode:multiply}
+#map #v60Topo{opacity:.85;mix-blend-mode:multiply}
+#map .river-line{opacity:.78;stroke-width:1.1;stroke:#527c8e}
+#map #v26Terrain [fill="url(#v26Forest)"]{opacity:.27}
+#map #v26Terrain path[fill="#787e74"]{opacity:.27}
+.sea-strip{top:auto;bottom:9px;left:9px;opacity:.65!important;font-size:9px!important}
+
 </style></head><body>
 <div id="app"><header class="topbar"><div class="logo">Century of Empires</div><div class="date" id="dateVal">Jan 1780</div></header><div class="resources" aria-label="Campaign resources"><div class="resource"><span class="k">NET / MO</span><span class="v" id="econVal">—</span></div><div class="resource"><span class="k">GOLD</span><span class="v" id="goldVal">—</span></div><div class="resource"><span class="k">WHEAT</span><span class="v" id="wheatVal">—</span></div><div class="resource"><span class="k">IRON</span><span class="v" id="ironVal">—</span></div><div class="resource"><span class="k">WOOD</span><span class="v" id="woodVal">—</span></div><div class="resource"><span class="k">COAL</span><span class="v" id="coalVal">—</span></div><div class="resource"><span class="k">MEN</span><span class="v" id="mpVal">—</span></div><div class="resource"><span class="k">ARMIES</span><span class="v" id="armyVal">—</span></div></div>
 <main class="stage"><div class="sea-strip" id="paceLabel">1780 · EUROPE</div><svg id="map" viewBox="0 0 1420 875" preserveAspectRatio="xMidYMid slice" class="political-map" role="img" aria-label="Geographic relief atlas of Europe with selectable historical-inspired game provinces, flags and armies">
@@ -636,7 +650,7 @@ $('map').addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?.86:1.1
 $('map').addEventListener('click',mapClick);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){orderArmy=null;siteArmy=null;updateOrderBanner();showPanel('map')}});
 window.addEventListener('visibilitychange',()=>{if(document.hidden){save();return}if(game){const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();game.caretaker=false;processPreciseArrivals();renderAll();save()}});
-setView();setInterval(tick,170);setInterval(save,10000);
+organicProvinces();textureTerrain();setView();setInterval(tick,170);setInterval(save,10000);
 }
 function enter(){
 $('start').classList.add('hidden');$('goldVal').textContent=fmt(game.resources.money[game.player]);$('mpVal').textContent=fmt(game.resources.manpower[game.player]);
@@ -1392,7 +1406,93 @@ function renderAll(){
 if(!game)return;
 $('dateVal').textContent=when();$('goldVal').textContent=fmt(game.resources.money[game.player]);$('mpVal').textContent=fmt(game.resources.manpower[game.player]);$('armyVal').textContent=mine().length;for(const r of ['wheat','iron','wood','coal'])$(r+'Val').textContent=fmt(game.resources[r][game.player]);$('econVal').textContent=(netEconomy(game.player)>=0?'+':'')+netEconomy(game.player);
 for(const p of game.provinces){const path=document.querySelector('#territories [data-zone="'+p.id+'"]');if(path){path.style.setProperty('--nation',colors[p.owner]);path.classList.toggle('selected',p.id===selectedProvince)}}
-renderRoads();renderArmies();if(panel!=='map')renderPanel();updateOrderBanner();
+renderRoads();nationBorders();renderArmies();if(panel!=='map')renderPanel();updateOrderBanner();
+}
+
+
+const BORDER_EDGES=new Map();
+let previousNations='';
+const bkey=p=>p[0].toFixed(1)+','+p[1].toFixed(1);
+const edgeId=(p,q)=>[bkey(p),bkey(q)].sort().join('|');
+function warpedEdge(edge,orientation){
+ const src=edge.list[0],first=bkey(src.p)<bkey(src.q)?src.p:src.q,last=bkey(src.p)<bkey(src.q)?src.q:src.p;
+ const dx=last[0]-first[0],dy=last[1]-first[1],len=Math.hypot(dx,dy)||1;
+ const hash=[...edge.key].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,29);
+ const bend=edge.list.length===2&&len>22?Math.min(6,len*.045):0;
+ const points=[0,.2,.4,.6,.8,1].map(t=>{
+  const offset=(hash%2?1:-1)*bend*Math.sin(Math.PI*t)*(0.75+0.25*Math.cos(t*3*Math.PI+(hash%17)));
+  return[first[0]+dx*t-dy/len*offset,first[1]+dy*t+dx/len*offset];
+ });
+ if(orientation&&bkey(orientation[0])!==bkey(first))points.reverse();
+ return points;
+}
+function organicProvinces(){
+ BORDER_EDGES.clear();
+ const polygons=[];
+ for(const path of document.querySelectorAll('#territories path[data-zone]')){
+  const nums=(path.getAttribute('d').match(/-?\d+(?:\.\d+)?/g)||[]).map(Number),points=[];
+  for(let i=0;i+1<nums.length;i+=2)points.push([nums[i],nums[i+1]]);
+  if(points.length<3)continue;polygons.push({path,points});
+  for(let i=0;i<points.length;i++){
+   const p=points[i],q=points[(i+1)%points.length],key=edgeId(p,q);
+   if(!BORDER_EDGES.has(key))BORDER_EDGES.set(key,{key,list:[]});
+   BORDER_EDGES.get(key).list.push({id:path.dataset.zone,p,q});
+  }
+ }
+ for(const {path,points} of polygons){
+  let d='';
+  for(let i=0;i<points.length;i++){
+   const p=points[i],q=points[(i+1)%points.length],section=warpedEdge(BORDER_EDGES.get(edgeId(p,q)),[p,q]);
+   if(!i)d+='M'+section[0][0].toFixed(2)+','+section[0][1].toFixed(2);
+   for(const v of section.slice(1))d+=' L'+v[0].toFixed(2)+','+v[1].toFixed(2);
+  }
+  path.setAttribute('d',d+'Z');
+ }
+ $('roads').after(node('g',{id:'nationFrontiers','clip-path':'url(#landClip)','pointer-events':'none'}));
+}
+function nationBorders(){
+ const g=$('nationFrontiers');if(!g||!game)return;
+ const hash=game.provinces.map(p=>p.id+':'+p.owner).join('|');
+ if(hash===previousNations)return;previousNations=hash;g.replaceChildren();
+ const frag=document.createDocumentFragment();
+ for(const edge of BORDER_EDGES.values()){
+  if(edge.list.length!==2||owner(edge.list[0].id)===owner(edge.list[1].id))continue;
+  const d='M'+warpedEdge(edge).map(p=>p.map(n=>n.toFixed(2)).join(',')).join(' L');
+  frag.appendChild(node('path',{d,class:'frontier-shadow'}));
+  frag.appendChild(node('path',{d,class:'frontier-cream'}));
+ }
+ g.appendChild(frag);
+}
+function textureTerrain(){
+ const layer=node('g',{id:'atlasTerrain','clip-path':'url(#landClip)','pointer-events':'none'});
+ $('roads').before(layer);
+ const spots=[];
+ for(const b of bases)if(['forest','hill','mountain'].includes(b.terrain))spots.push({x:b.x,y:b.y,kind:b.terrain,scale:1});
+ for(const [pair,feature] of Object.entries(ROAD_FEATURES)){
+  const [idA,idB]=pair.split(':'),a=byId[idA],b=byId[idB];
+  if(a&&b)spots.push({x:(a.x+b.x)/2,y:(a.y+b.y)/2,kind:feature[0],scale:.7});
+ }
+ for(const site of spots){
+  const g=node('g',{transform:'translate('+site.x+' '+site.y+') scale('+site.scale+')'});
+  if(site.kind==='forest'){
+   g.appendChild(node('path',{d:'M-39 -12Q-26 -29 3 -25Q37 -24 39 2Q25 22 -9 19Q-36 16 -39 -12Z',fill:'#345b43','fill-opacity':'.12'}));
+   for(let r=0;r<5;r++)for(let c=0;c<9;c++){
+    if((c+2*r)%8===0)continue;
+    const x=-33+c*8+(r%2)*3,y=-15+r*8;
+    g.appendChild(node('path',{d:'M'+x+' '+(y+4)+'l2 -8l3 8 M'+(x-1)+' '+y+'l3 -4l4 4',stroke:'#31513a','stroke-opacity':'.32','stroke-width':'.9',fill:'none'}));
+   }
+  }else if(site.kind==='hill'||site.kind==='mountain'){
+   const count=site.kind==='mountain'?9:6;
+   for(let i=0;i<count;i++){
+    const w=9+i*5,h=8+i*2;
+    g.appendChild(node('path',{d:'M'+(-w)+' '+h+' Q'+(-w/2)+' '+(-h)+' 0 '+(-h-2)+' Q'+(w/2)+' '+(-h)+' '+w+' '+h,
+     fill:'none',stroke:'#726b52','stroke-width':site.kind==='mountain'?'1.2':'.9','stroke-opacity':site.kind==='mountain'?'.32':'.24'}));
+   }
+  }else if(site.kind==='river'){
+   g.appendChild(node('path',{d:'M-8 -36Q13 -17 -3 5Q-15 22 11 36',stroke:'#578a98','stroke-width':'2.7','stroke-opacity':'.38',fill:'none'}));
+  }
+  layer.appendChild(g);
+ }
 }
 
 function renderRoads(){
@@ -1411,10 +1511,10 @@ function renderRoads(){
   const c1x=a.x+dx*.31+nx*bend,c1y=a.y+dy*.31+ny*bend;
   const c2x=a.x+dx*.68-nx*bend*.7,c2y=a.y+dy*.68-ny*bend*.7;
   const d='M'+a.x+' '+a.y+' C'+c1x.toFixed(1)+' '+c1y.toFixed(1)+' '+c2x.toFixed(1)+' '+c2y.toFixed(1)+' '+b.x+' '+b.y;
-  const isMajor=index<major.length,width=isMajor?.65:.42,opacity=lod===0?.22:lod===1?.34:isMajor?.52:.32;
+  const isMajor=index<major.length,width=isMajor?.95:.63,opacity=lod===0?.40:lod===1?.62:isMajor?.73:.49;
   // Thin cream backing makes the road readable without a thick black spiderweb.
-  frag.appendChild(node('path',{d,fill:'none',stroke:'#efe5cb','stroke-width':width+1.1,'stroke-opacity':opacity*.5,'stroke-linecap':'round','vector-effect':'non-scaling-stroke'}));
-  frag.appendChild(node('path',{d,fill:'none',stroke:'#474638','stroke-width':width,'stroke-opacity':opacity,'stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke', 'stroke-dasharray':isMajor?'none':'2.2 3'}));
+  frag.appendChild(node('path',{d,fill:'none',stroke:'#f0dfbc','stroke-width':width+1.05,'stroke-opacity':opacity*.36,'stroke-linecap':'round','vector-effect':'non-scaling-stroke'}));
+  frag.appendChild(node('path',{d,fill:'none',stroke:'#353932','stroke-width':width,'stroke-opacity':opacity,'stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke', 'stroke-dasharray':isMajor?'none':'2.2 3'}));
  }
  roads.appendChild(frag);
 }

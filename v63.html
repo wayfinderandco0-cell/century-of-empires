@@ -708,7 +708,7 @@ function gazetteArticle(entry){
 }
 
 const FORMATIONS={balanced:['Balanced',1,1],line:['Line',1.08,1.03],assault:['Assault column',1.16,.90],defensive:['Defensive',.89,1.17],skirmish:['Skirmish',1.03,1.04]};
-const ROAD_FEATURES={'bern:turin':['mountain',.12,.85],'lyon:turin':['mountain',.28,.8],'dresden:prague':['hill',.18,.83],'munich:vienna':['hill',.22,.78],'prague:vienna':['hill',.22,.78],'vienna:budapest':['river',.43,.57],'budapest:sofia':['river',.43,.57],'berlin:konigsberg':['forest',.28,.76],'konigsberg:vilnius':['forest',.24,.8],'warsaw:vilnius':['forest',.2,.78],'vilnius:petersburg':['forest',.2,.8],'barcelona:bordeaux':['mountain',.28,.73],'gothenburg:oslo':['forest',.25,.8]};
+const ROAD_FEATURES={'bern:turin':['mountain',.12,.85],'lyon:turin':['mountain',.28,.8],'dresden:prague':['hill',.18,.83],'munich:vienna':['hill',.22,.78],'prague:vienna':['hill',.22,.78],'budapest:vienna':['river',.43,.57],'budapest:sofia':['river',.43,.57],'berlin:konigsberg':['forest',.28,.76],'konigsberg:vilnius':['forest',.24,.8],'vilnius:warsaw':['forest',.2,.78],'petersburg:vilnius':['forest',.2,.8],'barcelona:bordeaux':['mountain',.28,.73],'gothenburg:oslo':['forest',.25,.8]};
 function roadTerrain(from,to,t){
  const f=ROAD_FEATURES[[from,to].sort().join(':')];if(f){const z=from<to?t:1-t;if(z>=f[1]&&z<=f[2])return f[0]}
  const a=byId[from]?.terrain||'plain',b=byId[to]?.terrain||'plain';

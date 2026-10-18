@@ -107,7 +107,7 @@ function fresh(p){
 const armies=bases.map((b,i)=>({id:'a'+(i+1),owner:b.owner,at:b.id,units:{inf:b.troops,cav:b.capital?2:0,art:0},morale:100,route:[],edgeRemaining:0,edgeTotal:0,forced:false,battle:null,origin:null}));
 const provinces=bases.map(b=>({id:b.id,owner:b.owner,fort:0,farm:0,market:0}));
 const money={};const manpower={};for(const c of Object.keys(FACTIONS)){money[c]=175;manpower[c]=90}
-return {version:52,player:p,year:1780,month:0,provinces,armies,resources:{money,manpower},diplomacy:{},battles:[],log:[],lastTick:Date.now(),lastSeen:Date.now(),caretaker:false,nextId:100,aiMonth:0};
+return {version:52,player:p,year:1780,month:0,provinces,armies,resources:{money,manpower},diplomacy:{},battles:[],log:[],lastTick:Date.now(),lastSeen:Date.now(),caretaker:false,ended:false,nextId:100,aiMonth:0};
 }
 const prov=id=>game.provinces.find(p=>p.id===id);
 const owner=id=>prov(id)?.owner;
@@ -121,7 +121,7 @@ const existing=load();$('continueBtn').disabled=!existing;
 $('nationChoices').innerHTML=CHOICES.map(k=>'<button class="nation'+(chosen===k?' active':'')+'" data-choice="'+k+'"><span class="swatch" style="background:'+colors[k]+'"></span><span>'+escapeHtml(CHOICE_NAMES[k])+'</span></button>').join('');
 $('nationChoices').addEventListener('click',e=>{let b=e.target.closest('[data-choice]');if(!b)return;chosen=b.dataset.choice;for(const n of $('nationChoices').querySelectorAll('.nation'))n.classList.toggle('active',n.dataset.choice===chosen)});
 $('startBtn').onclick=()=>{if(load()&&!confirm('Start a new campaign? This replaces the saved campaign on this device.'))return;game=fresh(chosen);line('Your reign begins as '+FACTIONS[chosen].full+'.');line('Europe enters the year 1780.');enter()};
-$('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save found');return}const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;const elapsed=Math.min(36,Math.floor(Math.max(0,Date.now()-game.lastTick)/MONTH_MS));for(let i=0;i<elapsed;i++)advanceMonth(true);game.lastTick=Date.now()-(Math.max(0,Date.now()-game.lastTick)%MONTH_MS);if(game.caretaker)line('Defensive caretaker stood in during your 72+ hour absence.');enter()};
+$('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save found');return}const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();if(game.caretaker)line('Defensive caretaker stood in during your 72+ hour absence.');enter()};
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>showPanel(b.dataset.tab));
 $('sheetClose').onclick=()=>showPanel('map');
 $('zoomIn').onclick=()=>zoom(.75);$('zoomOut').onclick=()=>zoom(1/.75);$('zoomHome').onclick=()=>{view.cx=686;view.cy=583;view.w=940;setView()};
@@ -134,7 +134,7 @@ $('map').addEventListener('pointercancel',up);
 $('map').addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?.86:1.14)},{passive:false});
 $('map').addEventListener('click',mapClick);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){orderArmy=null;updateOrderBanner();showPanel('map')}});
-window.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+window.addEventListener('visibilitychange',()=>{if(document.hidden){save();return}if(game){const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();game.caretaker=false;renderAll();save()}});
 setView();setInterval(tick,170);setInterval(save,10000);
 }
 function enter(){
@@ -267,7 +267,9 @@ else{line('Defenders hold '+byId[b.province].name+' after '+b.months+' months of
 if(atk)atk.battle=null;if(def)def.battle=null;game.battles=game.battles.filter(x=>x!==b);
 }
 function advanceMonth(silent){
+if(game.ended)return;
 game.month++;if(game.month===12){game.month=0;game.year++}
+if(game.year>=1880){game.ended=true;line('The Century of Empires ends. '+FACTIONS[game.player].full+' holds '+game.provinces.filter(p=>p.owner===game.player).length+' provinces.');return}
 for(const k of Object.keys(FACTIONS)){const lands=game.provinces.filter(p=>p.owner===k);game.resources.money[k]=Math.min(99999,game.resources.money[k]+Math.max(0,lands.reduce((n,p)=>n+8+p.market*5,0)-game.armies.filter(a=>a.owner===k).reduce((n,a)=>n+Math.ceil(total(a)/10),0)));game.resources.manpower[k]=Math.min(9999,game.resources.manpower[k]+lands.reduce((n,p)=>n+2+p.farm*2,0))}
 resolveBattles();
 for(const a of game.armies){if(!activeArmy(a)||a.battle||!a.route.length)continue;if(a.edgeRemaining<=0){a.edgeTotal=edgeDuration(a,a.route[0]);a.edgeRemaining=a.edgeTotal}a.edgeRemaining--;if(a.edgeRemaining<=0)arrival(a,a.route[0]);if(a.forced){a.morale=Math.max(40,a.morale-3)}else{a.morale=Math.min(100,a.morale+1)}}
@@ -291,8 +293,12 @@ let army=at(place.id).find(a=>a.owner===k&&!a.route.length&&!a.battle);
 if(!army){army={id:'a'+(++game.nextId),owner:k,at:place.id,units:{inf:0,cav:0,art:0},morale:100,route:[],edgeRemaining:0,edgeTotal:0,forced:false,battle:null,origin:null};game.armies.push(army)}
 army.units.inf+=5;game.resources.money[k]-=40;game.resources.manpower[k]-=10;line('Defensive caretaker reinforces '+byId[place.id].name+' during your absence.');
 }
+function catchUp(){
+if(!game)return;const age=Math.max(0,Date.now()-game.lastTick);const elapsed=Math.min(36,Math.floor(age/MONTH_MS));for(let i=0;i<elapsed;i++)advanceMonth(true);game.lastTick=Date.now()-(age%MONTH_MS);
+}
 function tick(){
-if(!game)return;
+if(!game||game.ended)return;
+if(Date.now()-game.lastTick>36*MONTH_MS){game.caretaker=Date.now()-game.lastSeen>=72*3600e3;catchUp();game.caretaker=false;renderAll();save();return}
 let n=0;while(Date.now()-game.lastTick>=MONTH_MS&&n<4){game.lastTick+=MONTH_MS;advanceMonth(false);n++}
 if(n){renderAll();save()}
 if(Date.now()-lastDraw>110){updateArmyMarkers();lastDraw=Date.now()}

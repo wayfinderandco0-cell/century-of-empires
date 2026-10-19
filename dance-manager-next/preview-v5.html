@@ -741,7 +741,7 @@ doAction=function(a){
  if(a.indexOf('n3-style-')===0){chosenStyle=a.slice(9);render();return;}
  prevAction(a);
 };
-demoBanner=function(){return '<div class="demo-banner">V4 TEST PREVIEW · Fictional data · Original site unchanged</div>';};
+demoBanner=function(){return '<div class="demo-banner">V5 CHAT PREVIEW · Fictional data · Original site unchanged</div>';};
 
 render();
 })();
@@ -815,6 +815,7 @@ function dm5Decorate(){
     d.innerHTML='<button type="button" class="dm5-invite-text" data-dm5-action="open"><b>Hi there! 👋</b> Running a studio or planning a dance competition? I can help you explore.</button>'+
     '<button type="button" class="dm5-invite-close" data-dm5-action="dismiss" aria-label="Dismiss welcome message">×</button>';
     document.body.appendChild(d);
+    setTimeout(function(){if(d.isConnected)d.remove();},11000);
   },1800);
  }
 }

@@ -12,7 +12,13 @@ const configuredOrigins = (process.env.ALLOWED_ORIGINS || 'https://wayfinderandc
 const port = Number(process.env.PORT || 10000);
 const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const prompt = [
-  'You are Dance Manager Next Guide, a friendly, concise, helpful website assistant.',
+  'You are Dance Manager Next Guide, a warm, clear, helpful website concierge.',
+  'Your first goal is to help visitors discover and navigate relevant product features.',
+  'Your second goal is to invite adult studio owners and competition organizers who',
+  'show genuine interest to request a product demonstration, without pressure.',
+  'Never repeatedly request contact details after a visitor declines. Do not be pushy.',
+  'Use contextual follow-up questions to understand whether the visitor runs a studio,',
+  'organizes competitions, instructs classes or represents a family.',
   'Dance Manager Next is an independent demonstration of software for dance studios,',
   'competition directors, instructors and parents. Features in the prototype include',
   'fictional dancer cards, competition categories/entries, studio class scheduling,',
@@ -21,9 +27,14 @@ const prompt = [
   'Never suggest that sample products, competitions, results, fees, software availability',
   'or demo requests are real. Pricing, production availability and actual integrations',
   'are not confirmed. You cannot book demos or send notifications yourself.',
+  'If the visitor asks about pricing, availability or workflows, explain the prototype',
+  'status and offer an optional demo request when that would be relevant.',
   'To request a demonstration, direct the visitor to the website Request a demo form;',
   'do not ask visitors to post email addresses or contact details into chat.',
-  'Do not solicit children’s names, photos, ages, school names, or contact information.',
+  'Only adult visitors may submit contact forms. If a visitor appears to be a minor,',
+  'suggest asking their parent, guardian, studio director or other trusted adult.',
+  'Never solicit children’s names, photos, ages, school names or contact information.',
+  'Never request or infer a visitor IP address, ad identity or private identifiers.',
   'If asked about sensitive student records, explain that production security and',
   'guardian controls would need to be implemented before storing real details.',
   'Be natural, avoid hype and false promises. If unsure, say you do not know.',
@@ -114,8 +125,9 @@ async function sendLead(body, fetchFn) {
   const name = cleanText(body?.name, 70), email = cleanText(body?.email, 120);
   const studio = cleanText(body?.studio, 90), visitorType = cleanText(body?.visitorType, 45);
   const message = cleanText(body?.message, 400);
+  const marketingOptIn = body?.marketingOptIn === true;
   if (cleanText(body?.website, 200)) return {ok:true,code:202}; // honeypot, no email
-  if (!body?.consent || !name || !validEmail(email) || !studio || !visitorType) {
+  if (!body?.consent || body?.adultConfirmed !== true || !name || !validEmail(email) || !studio || !visitorType) {
     return {error:'Complete the required fields and consent before submitting.',code:400};
   }
   const sentAt = new Date().toISOString();
@@ -123,6 +135,8 @@ async function sendLead(body, fetchFn) {
     'Dance Manager Next — New demo inquiry', '',
     'Visitor: '+name, 'Email: '+email, 'Organization: '+studio,
     'Interested as: '+visitorType, 'Notes: '+(message || '(none)'),
+    'Adult confirmed: Yes',
+    'Optional email updates consent: '+(marketingOptIn?'YES':'No'),
     'Received (UTC): '+sentAt, '',
     'Submitted through the preview. Follow up directly if appropriate.'
   ].join('\n');
@@ -166,8 +180,8 @@ function createHandler(fetchFn = globalThis.fetch) {
       return json(res,415,{error:'Use application/json'},origin);
     }
     const source = clientKey(req);
-    if (limited('global:'+pathname,pathname==='/api/chat'?500:150,3600000) ||
-        limited(source+pathname,pathname==='/api/chat'?25:4,3600000)) {
+    if (limited('global:'+pathname,pathname==='/api/chat'?100:60,3600000) ||
+        limited(source+pathname,pathname==='/api/chat'?15:4,3600000)) {
       return json(res,429,{error:'Please wait before trying again.'},origin);
     }
     if (pathname === '/api/chat' && !hasAi()) {

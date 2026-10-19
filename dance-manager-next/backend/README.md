@@ -84,3 +84,18 @@ With no keys, expected health properties: \`aiConfigured: false\`, \`leadsConfig
 - Do not assume a ChatGPT subscription includes OpenAI API usage. Limit API spend and enable alerts before adding real credentials.
 - The test repo also contains an unrelated strategy game. Use a narrowly scoped backend deploy for this Dance Manager API; do not alter other services.
 
+
+## Cloudflare Workers AI (free alternative)
+
+Preferred zero-dollar chatbot option for small demo: Cloudflare Workers AI includes a 10,000 Neurons/day Free allocation, subject to its terms. Once exhausted, requests fail until reset; select a free-eligible model.
+
+The existing separate Render API can now call Cloudflare Workers AI **directly via REST**, avoiding any need for another hosting service.
+
+1. Open Cloudflare dashboard > Workers AI > Use REST API; create a scoped Workers AI API token and find the 32-character Account ID.
+2. Add CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN as **private** Render service environment variables for dance-manager-next-ai-v7. Never share them in chat or commit them to GitHub.
+3. Optional CLOUDFLARE_AI_MODEL defaults to @cf/google/gemma-4-26b-a4b-it. Other permitted choices: @cf/zai-org/glm-4.7-flash; @cf/meta/llama-3.1-8b-instruct-fp8.
+4. Redeploy the new backend service if not automatic. The public v7-config.json already references its HTTPS origin; V8 checks /health to decide whether to enable live AI.
+
+When both Cloudflare variables are configured, the server prefers Workers AI even if an OpenAI key exists. The response is still an AI-generated answer. A 429 free-tier limit error is shown as a temporary unavailable message.
+
+Real inquiry emails remain separate and disabled until email delivery is configured. No IP-based ad tracking is installed. Only adults may submit inquiries, and consent for promotional marketing is separate.

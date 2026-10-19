@@ -33,6 +33,29 @@ async function persistTicket(ticket,fetchFn){
  await redis(['ZADD','dmnext:tickets',Date.parse(ticket.receivedAt),ticket.id],fetchFn);
  return true;
 }
+
+function conversationKey(ticket){
+ if(!hasStore()||!process.env.CONVERSATION_HMAC_SECRET)return '';
+ const contact=(ticket.email?'email:'+ticket.email.toLowerCase():ticket.phone?'sms:'+ticket.phone:'');
+ if(!contact)return '';
+ return 'dmnext:conversation:'+crypto.createHmac('sha256',process.env.CONVERSATION_HMAC_SECRET).update(contact).digest('hex');
+}
+async function loadConversation(ticket,fetchFn){
+ const key=conversationKey(ticket);
+ if(!key)return {history:[],humanMode:false};
+ const saved=await redis(['GET',key],fetchFn);
+ if(!saved)return {history:[],humanMode:false};
+ try{
+  const parsed=JSON.parse(saved);
+  return {history:Array.isArray(parsed.history)?parsed.history.slice(-8).filter(x=>['user','assistant'].includes(x.role)).map(x=>({role:x.role,text:plain(x.text,500)})):[],humanMode:parsed.humanMode===true};
+ }catch(e){return {history:[],humanMode:false};}
+}
+async function saveConversation(ticket,conversation,fetchFn){
+ const key=conversationKey(ticket);if(!key)return false;
+ await redis(['SET',key,JSON.stringify({history:(conversation.history||[]).slice(-10),humanMode:conversation.humanMode===true,updatedAt:new Date().toISOString()}),'EX',expiry],fetchFn);
+ return true;
+}
+
 async function sendEmail(to,subject,body,fetchFn,replyTo){
  if(!hasEmail())return false;
  const address=Array.isArray(to)?to:[to];if(!address.every(emailOK))return false;
@@ -123,16 +146,25 @@ function verifyTwilio(headers,raw){
 }
 function repeated(id){const now=Date.now();if(replay.size>2000)replay.clear();if(replay.has(id)&&replay.get(id)>now)return true;replay.set(id,now+3600000);return false;}
 async function inboundMessage(ticket,fetchFn,aiReply){
+ // Recalls a short, private conversation only when managed storage and HMAC key are configured.
+ const conversation=await loadConversation(ticket,fetchFn);
+ if(conversation.history.length){
+  ticket.transcript=conversation.history.map(h=>(h.role==='user'?'Visitor: ':'Assistant: ')+h.text).join('\n').slice(-1800);
+ }
  let saved=false;
- if(hasStore()) saved=await persistTicket(ticket,fetchFn);
+ if(hasStore())saved=await persistTicket(ticket,fetchFn);
  const owner=await notifyOwner(ticket,fetchFn);
  if(!owner.email)throw Error('Owner notification failed');
- let reply='Thank you for contacting Dance Manager Next. Your message has reached the team, and someone will follow up when available.';
- if(typeof aiReply==='function' && ticket.message.length>3){
-  try{const a=await aiReply({message:'Incoming '+ticket.channel+' inquiry from an adult visitor. Answer their studio-software question briefly, then state that the team has been notified: '+ticket.message},fetchFn);
+ let reply=conversation.humanMode
+  ?'Thank you. Your inquiry is already assigned to a team member. They can continue the conversation directly.'
+  :'Thank you for contacting Dance Manager Next. Your message has reached the team, and someone will follow up when available.';
+ if(!conversation.humanMode&&typeof aiReply==='function'&&ticket.message.length>3){
+  try{const a=await aiReply({message:'Answer this incoming '+ticket.channel+' software question briefly, do not invent details, then state a staff member has been notified: '+ticket.message,history:conversation.history},fetchFn);
    if(a.reply&&a.code===200)reply=a.reply.slice(0,420)+'\n\nA team member has also been notified.';
   }catch(e){}
  }
+ conversation.history.push({role:'user',text:plain(ticket.message,500)},{role:'assistant',text:plain(reply,500)});
+ await saveConversation(ticket,conversation,fetchFn);
  return {reply,saved};
 }
 async function inboundSms(req,res,fetchFn,aiReply){
@@ -190,7 +222,10 @@ async function ownerInbox(req,res,fetchFn){
   if(!stored)return json(res,404,{error:'Ticket not found'});
   const t=JSON.parse(stored);t.status='Human follow-up recorded';t.resolvedAt=new Date().toISOString();
   await redis(['SET','dmnext:ticket:'+id,JSON.stringify(t),'EX',expiry],fetchFn);
-  return json(res,200,{ok:true,id,status:t.status});
+  const context=await loadConversation(t,fetchFn);
+  context.humanMode=true;
+  await saveConversation(t,context,fetchFn);
+  return json(res,200,{ok:true,id,status:t.status,automaticRepliesPaused:true});
  }
  return json(res,405,{error:'Method not allowed'});
 }

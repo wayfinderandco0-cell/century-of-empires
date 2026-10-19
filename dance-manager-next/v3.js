@@ -84,6 +84,7 @@ doAction=function(a){
  if(a.indexOf('n3-style-')===0){chosenStyle=a.slice(9);render();return;}
  prevAction(a);
 };
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="./v3.css?v=3">');
+demoBanner=function(){return '<div class="demo-banner">DEMO PREVIEW · Fictional data · Original site unchanged</div>';};
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="./v3.css?v=31">');
 render();
 })();

@@ -1,0 +1,28 @@
+/* V9 response center — calm, mobile-first operational controls */
+.dm9-help-band{background:#f5ecf8;border-top:1px solid #ead9ee;padding:8px 12px;color:#6d4d79;font-size:10px;line-height:1.45}.dm9-help-band .icon{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
+.dm9-human{grid-column:1/-1;display:grid;gap:3px;margin:7px 0 0;padding:9px;border-top:1px solid #ecdfef;text-align:center}
+.dm9-human button{display:flex;justify-content:center;align-items:center;gap:7px;border:1px solid #b890c5;border-radius:9px;background:#fbf3fd;color:#743d88;font-size:12px;font-weight:850;padding:12px;min-height:43px;width:100%}.dm9-human button:hover{background:#f5e5f8}
+.dm9-human small{font-size:10px;color:#86718d}.dm9-human .icon{height:16px;width:16px}
+.dm9-demo-warning{margin:12px 14px;padding:11px;background:#fff5e9;border:1px solid #f2d9b6;border-radius:10px;color:#865a27;font-size:11px;line-height:1.5}
+.dm9-owner-hero{display:flex;align-items:center;justify-content:space-between;padding:26px 29px;border-radius:20px;margin:16px 0;background:linear-gradient(130deg,#20172f,#4d2c64 78%,#694079);color:white;overflow:hidden}
+.dm9-owner-hero h2{font-family:Georgia,serif;font-weight:650;font-size:clamp(24px,3vw,34px);max-width:650px;letter-spacing:-1px;line-height:1.18;margin:11px 0}.dm9-owner-hero p{font-size:12px;color:#eddaef;max-width:630px;line-height:1.7;margin:0}.dm9-eyebrow{font-size:9px;letter-spacing:1.4px;font-weight:850;color:#e6b0ea}.dm9-symbol{font-size:90px;line-height:1;color:#edb8f5a0;margin:0 35px}
+.dm9-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.dm9-metrics>div{background:white;border:1px solid #eee5f1;border-radius:13px;padding:17px;display:grid;gap:5px}
+.dm9-metrics b{font-size:22px;line-height:1.2;color:#5e3874;letter-spacing:-.5px}.dm9-metrics span{font-size:11px;color:#8b7d96;font-weight:650}
+.dm9-owner-panel{background:#fff;border:1px solid #ece4ef;border-radius:17px;padding:20px 22px;margin-bottom:16px;box-shadow:0 8px 26px #271b3d09}
+.dm9-owner-panel>header{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #f1eaf4;padding-bottom:13px;margin-bottom:5px}
+.dm9-owner-panel header h3{font-size:16px;color:#30213f;margin:0;font-weight:820}.dm9-owner-panel header span{font-size:10px;color:#9a879e}
+.dm9-channel{display:flex;gap:12px;align-items:center;padding:15px 2px;border-bottom:1px solid #f2edf3}.dm9-channel:last-child{border-bottom:none}
+.dm9-channel-icon{display:grid;place-items:center;height:36px;width:36px;flex-shrink:0;background:#f4eaf8;color:#8556a4;border-radius:10px}
+.dm9-channel-icon .icon{width:19px;height:19px}.dm9-channel>div{min-width:0;flex:1}
+.dm9-channel b{font-size:12px;color:#3d2b4c}.dm9-channel p{font-size:10px;color:#887d90;line-height:1.55;margin:3px 0 0}
+.dm9-indicator{flex-shrink:0;font-size:10px;font-weight:850;padding:6px 9px;border-radius:100px;background:#fff2e3;color:#a86e26}.dm9-indicator.connected{background:#e7f7ef;color:#167b61}
+.dm9-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.dm9-journey{counter-reset:step;list-style:none;padding:6px 0 0;margin:0;display:grid;gap:17px}
+.dm9-journey li{position:relative;padding-left:41px;min-height:31px}
+.dm9-journey li:before{counter-increment:step;content:counter(step);position:absolute;top:1px;left:0;width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:#efe3f6;color:#795194;font-weight:850;font-size:12px}
+.dm9-journey b,.dm9-journey span{display:block}.dm9-journey b{font-size:12px;color:#3e2d4a}.dm9-journey span{font-size:11px;color:#827486;line-height:1.6;margin-top:2px}
+.dm9-guidelines{margin:8px 0 19px}.dm9-guidelines p{font-size:11px;line-height:1.65;color:#655b6b;padding:11px 0;border-bottom:1px solid #f2ecf4;margin:0}
+.dm9-missing{font-size:12px;padding:20px 7px;color:#8d6a44;display:flex;gap:6px}
+@media(max-width:850px){.dm9-two{grid-template-columns:1fr}.dm9-owner-hero{padding:23px}.dm9-symbol{display:none}}
+@media(max-width:500px){.dm9-metrics{gap:6px}.dm9-metrics>div{padding:12px 9px}.dm9-metrics b{font-size:15px;letter-spacing:0}.dm9-metrics span{font-size:9px}.dm9-owner-panel{padding:16px 13px}.dm9-owner-panel>header{align-items:flex-start;flex-direction:column}.dm9-channel{gap:8px}.dm9-channel-icon{width:29px;height:29px}.dm9-indicator{font-size:9px;padding:5px 7px}.dm9-owner-hero h2{font-size:25px}}

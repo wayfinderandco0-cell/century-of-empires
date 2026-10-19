@@ -45,10 +45,11 @@ content=function(){if(role==='owner'&&route==='dancers')return dancerCards();if(
 const v1Marketing=marketing;
 marketing=function(){
  const teaser='<section id="spotlight-preview" class="section alt-section"><div class="section-inner"><div class="section-head"><div class="eyebrow">Celebrate every milestone</div><h2>Every dancer has a story worth telling.</h2><p>Player-card inspired dancer profiles, achievements, past competitions and a dedicated planner for what comes next.</p></div><div class="dm-marketing-teaser"><div class="dm-teaser-art">★ <span>DANCER SPOTLIGHT</span> ★</div><div><h3>Profiles meet performance history.</h3><p>Discover specialties, personal bios, award records, and event entries, all linked in one studio workspace.</p><div class="dm-hero-buttons">'+button('Explore dancer cards '+icon('arrow'),'show-dancers','btn-primary')+button('Competition planner','show-competitions','btn-outline')+'</div><p class="fineprint">All displayed profiles and competitions are fictional. No public profiles of children are published from this demo.</p></div></div></div></section>';
- return v1Marketing().replace('<section id="how-it-works"',teaser+'<section id="how-it-works"').replace('NEXT · PRIVATE V1','NEXT · PRIVATE V2');
+ return v1Marketing().replace('<section id="how-it-works"',teaser+'<section id="how-it-works"').replace('NEXT · PRIVATE V1','NEXT · DEMO V2');
 };
 const v1Brand=brand;
-brand=function(){return v1Brand().replace('NEXT · PRIVATE V1','NEXT · PRIVATE V2');};
+brand=function(){return v1Brand().replace('NEXT · PRIVATE V1','NEXT · DEMO V2');};
+demoBanner=function(){return `<div class="demo-banner">${icon('shield')} PUBLIC TEST PREVIEW · Fictional data only · No real dancer information · Original site untouched</div>`;};
 function profile(studentId){return db.dancerProfiles.find(p=>p.studentId===studentId)||{studentId,specialties:db.students.find(s=>s.id===studentId)?.level||'Dance',bio:'Add a short dancer biography from the profile editor.',listed:false};}
 function competitionsFor(id){return db.competitions.filter(e=>Array.isArray(e.participants)&&e.participants.includes(id));}
 function awardsFor(id){return db.awards.filter(a=>a.studentId===id);}

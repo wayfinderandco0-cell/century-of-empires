@@ -13,7 +13,7 @@ function hasEmail(){return Boolean(process.env.RESEND_API_KEY&&process.env.LEAD_
 function hasSms(){return Boolean(process.env.TWILIO_ACCOUNT_SID&&process.env.TWILIO_AUTH_TOKEN&&process.env.TWILIO_FROM_NUMBER&&process.env.OWNER_MOBILE);}
 function hasStore(){return Boolean(process.env.UPSTASH_REDIS_REST_URL&&process.env.UPSTASH_REDIS_REST_TOKEN);}
 function hasInboundEmail(){return hasEmail()&&Boolean(process.env.RESEND_WEBHOOK_SECRET&&process.env.RESEND_INBOUND_ADDRESS);}
-function hasInboundSms(){return Boolean(process.env.TWILIO_AUTH_TOKEN&&process.env.TWILIO_FROM_NUMBER&&process.env.PUBLIC_API_BASE);}
+function hasInboundSms(){return hasEmail()&&Boolean(process.env.TWILIO_AUTH_TOKEN&&process.env.TWILIO_FROM_NUMBER&&process.env.PUBLIC_API_BASE);}
 function status(){return {leadsConfigured:hasEmail(),ownerAlertsConfigured:hasEmail(),smsConfigured:hasSms(),inboxConfigured:hasStore(),inboundEmailConfigured:hasInboundEmail(),inboundSmsConfigured:hasInboundSms()};}
 function matches(p){return ['/api/lead','/api/handoff','/api/owner/inquiries','/api/owner/resolve','/webhooks/twilio/sms','/webhooks/resend/inbound'].includes(p);}
 function plain(x,max=200){return typeof x==='string'?x.trim().slice(0,max):'';}
@@ -61,7 +61,7 @@ async function sendEmail(to,subject,body,fetchFn,replyTo){
  const address=Array.isArray(to)?to:[to];if(!address.every(emailOK))return false;
  const payload={from:process.env.LEAD_FROM_EMAIL,to:address,subject:subject.slice(0,160),text:body.slice(0,7000)};
  if(replyTo&&emailOK(replyTo))payload.reply_to=replyTo;
- const res=await fetchFn('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(11000)});
+ const res=await fetchFn('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(7000)});
  return res.ok;
 }
 async function sendSms(to,body,fetchFn){
@@ -139,7 +139,7 @@ function verifyTwilio(headers,raw){
  if(!token||!base||!headers['x-twilio-signature'])return false;
  const params=new URLSearchParams(raw);
  const url=base.replace(/\/$/,'')+'/webhooks/twilio/sms';
- const data=[...params].sort((a,b)=>a[0].localeCompare(b[0])).reduce((s,[k,v])=>s+k+v,url);
+ const data=[...params].sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0).reduce((s,[k,v])=>s+k+v,url);
  const expected=crypto.createHmac('sha1',token).update(data,'utf8').digest('base64');
  const a=Buffer.from(headers['x-twilio-signature']),b=Buffer.from(expected);
  return a.length===b.length&&crypto.timingSafeEqual(a,b);
@@ -153,16 +153,20 @@ async function inboundMessage(ticket,fetchFn,aiReply){
  }
  let saved=false;
  if(hasStore())saved=await persistTicket(ticket,fetchFn);
- const owner=await notifyOwner(ticket,fetchFn);
+ const ownerPromise=notifyOwner(ticket,fetchFn);
+ // Start AI concurrently with the owner alert. Bound its contribution to protect
+ // synchronous SMS webhook response time; use safe fallback if the AI is slow.
+ const generated=(!conversation.humanMode&&typeof aiReply==='function'&&ticket.message.length>3)
+  ?Promise.race([
+     Promise.resolve().then(()=>aiReply({message:'Answer this incoming '+ticket.channel+' software question briefly, do not invent details, then state a staff member has been notified: '+ticket.message,history:conversation.history},fetchFn)).catch(()=>null),
+     new Promise(resolve=>setTimeout(()=>resolve(null),4500))
+   ]):Promise.resolve(null);
+ const [owner,answer]=await Promise.all([ownerPromise,generated]);
  if(!owner.email)throw Error('Owner notification failed');
  let reply=conversation.humanMode
   ?'Thank you. Your inquiry is already assigned to a team member. They can continue the conversation directly.'
   :'Thank you for contacting Dance Manager Next. Your message has reached the team, and someone will follow up when available.';
- if(!conversation.humanMode&&typeof aiReply==='function'&&ticket.message.length>3){
-  try{const a=await aiReply({message:'Answer this incoming '+ticket.channel+' software question briefly, do not invent details, then state a staff member has been notified: '+ticket.message,history:conversation.history},fetchFn);
-   if(a.reply&&a.code===200)reply=a.reply.slice(0,420)+'\n\nA team member has also been notified.';
-  }catch(e){}
- }
+ if(answer?.reply&&answer.code===200)reply=answer.reply.slice(0,420)+'\n\nA team member has also been notified.';
  conversation.history.push({role:'user',text:plain(ticket.message,500)},{role:'assistant',text:plain(reply,500)});
  await saveConversation(ticket,conversation,fetchFn);
  return {reply,saved};

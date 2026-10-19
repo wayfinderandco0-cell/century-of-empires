@@ -86,7 +86,10 @@ async function readBody(req, limit = 12000) {
   catch { const error = new Error('Invalid JSON'); error.status = 400; throw error; }
 }
 function cleanText(x, n) { return typeof x === 'string' ? x.trim().slice(0, n) : ''; }
-function hasAi() { return Boolean(process.env.OPENAI_API_KEY); }
+function hasCloudflareAi() {
+  return Boolean(process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_AI_TOKEN);
+}
+function hasAi() { return hasCloudflareAi() || Boolean(process.env.OPENAI_API_KEY); }
 function hasMail() {
   return Boolean(process.env.RESEND_API_KEY && process.env.LEAD_TO_EMAIL && process.env.LEAD_FROM_EMAIL);
 }
@@ -102,6 +105,50 @@ async function aiReply(body, fetchFn) {
     if (msg) input.push({role:item.role, content:msg});
   }
   input.push({role:'user',content:message});
+  // Prefer Cloudflare's Workers AI Free allocation when configured.
+  if (hasCloudflareAi()) {
+    const allowedModels = new Set([
+      '@cf/google/gemma-4-26b-a4b-it',
+      '@cf/zai-org/glm-4.7-flash',
+      '@cf/meta/llama-3.1-8b-instruct-fp8'
+    ]);
+    const chosen = process.env.CLOUDFLARE_AI_MODEL || '@cf/google/gemma-4-26b-a4b-it';
+    const cfModel = allowedModels.has(chosen) ? chosen : '@cf/google/gemma-4-26b-a4b-it';
+    const account = process.env.CLOUDFLARE_ACCOUNT_ID;
+    if (!/^[a-fA-F0-9]{32}$/.test(account)) {
+      return {error:'Cloudflare account configuration is invalid.', code:503};
+    }
+    const response = await fetchFn(
+      'https://api.cloudflare.com/client/v4/accounts/'+account+'/ai/run/'+cfModel,
+      {
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+process.env.CLOUDFLARE_AI_TOKEN,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          messages:[{role:'system', content:prompt},...input],
+          max_tokens:280,
+          temperature:0.45
+        }),
+        signal:AbortSignal.timeout(20000)
+      }
+    );
+    if (response.status === 429) {
+      return {error:'Our free AI allowance is temporarily exhausted. Please try again tomorrow or explore with the guided menu.',code:429};
+    }
+    if (!response.ok) {
+      return {error:'The free AI guide is temporarily unavailable. Please use the guided menu.',code:502};
+    }
+    const data = await response.json();
+    const result = data?.result;
+    const output = typeof result?.response === 'string' ? result.response
+      : typeof result?.choices?.[0]?.message?.content === 'string'
+      ? result.choices[0].message.content : '';
+    const answer = output.trim().slice(0,2400);
+    return answer ? {reply:answer, mode:'cloudflare-ai', code:200}
+      : {error:'The free AI guide could not complete its answer. Please try again.',code:502};
+  }
   const response = await fetchFn('https://api.openai.com/v1/responses', {
     method:'POST',
     headers: {

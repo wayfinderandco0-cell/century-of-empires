@@ -6,8 +6,9 @@
 'use strict';
 const http = require('node:http');
 const crypto = require('node:crypto');
+const operations = require('./operations.cjs');
 
-const configuredOrigins = (process.env.ALLOWED_ORIGINS || 'https://wayfinderandco0-cell.github.io')
+const configuredOrigins = (process.env.ALLOWED_ORIGINS || 'https://wayfinderandco0-cell.github.io,https://dance-manager-next-v2.onrender.com,https://dance-manager-next-preview.onrender.com')
   .split(',').map(s => s.trim()).filter(Boolean);
 const port = Number(process.env.PORT || 10000);
 const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
@@ -209,9 +210,10 @@ function createHandler(fetchFn = globalThis.fetch) {
     const origin = req.headers.origin;
     const pathname = (req.url||'').split('?')[0];
     if (pathname === '/health' && req.method === 'GET') {
-      return json(res,200,{status:'ok',aiConfigured:hasAi(),leadsConfigured:hasMail()},origin);
+      return json(res,200,{status:'ok',aiConfigured:hasAi(),...operations.status()},origin);
     }
-    if (!['/api/chat','/api/lead'].includes(pathname)) {
+    if (operations.matches(pathname)) return operations.handle(req,res,fetchFn,aiReply);
+    if (!['/api/chat'].includes(pathname)) {
       return json(res,404,{error:'Not found'},origin);
     }
     if (!allowed(req)) return json(res,403,{error:'Origin not permitted'},origin);

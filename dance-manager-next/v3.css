@@ -112,3 +112,36 @@
 .dm-portrait{height:200px!important}
 }
 @media(max-width:380px){.n3-routines{grid-template-columns:1fr}.n3-format-btn{font-size:10px}.n3-hero h1{font-size:51px}}
+
+
+/* V3.1 mobile visual refinements after real iPhone screenshot */
+@media(max-width:620px){
+ .demo-banner{height:30px;min-height:30px;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px;line-height:18px;letter-spacing:.1px}
+ .demo-banner .icon{display:none}
+ .n3-bar{min-height:62px;padding:10px 16px}
+ .n3-brand{font-size:18.5px}
+ .n3-brand em{font-size:23px}
+ .n3-brand small{font-size:6.5px;letter-spacing:.9px}
+ .n3-menu-btn{height:41px;width:41px}
+ .n3-hero{min-height:655px}
+ .n3-hero-visual{height:440px}
+ .n3-hero-photo{filter:brightness(1.43) contrast(1.03) saturate(1.15);object-position:62% 24%}
+ .n3-hero-visual:after{background:linear-gradient(0deg,#080a11 0%,#080a11a0 8%,#080a1100 54%,#080a1100 100%)}
+ .n3-hero-glow{background:linear-gradient(0deg,#080a11 9%,#080a11c9 26%,#080a1100 62%)}
+ .n3-hero-copy{padding:190px 22px 26px}
+ .n3-hero h1{font-size:clamp(47px,12vw,55px);line-height:1.025;letter-spacing:-2px;margin:12px 0 12px}
+ .n3-subtitle{font-size:15px;line-height:1.46;margin:0 0 14px;max-width:330px}
+ .n3-highlights{margin:12px 0 15px;gap:7px 12px}
+ .n3-highlights span{font-size:10px}
+ .n3-hero-actions{gap:9px}
+ .n3-hero-actions button{min-height:44px;padding:11px 14px;font-size:12px}
+ .n3-demo-detail{margin:13px 0 0}
+ .n3-site ~ .chat-trigger{width:44px;height:44px;min-width:44px;min-height:44px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:0;font-size:0;justify-content:center;background:#bd6dcc;box-shadow:0 7px 20px #37113c50}
+ .n3-site ~ .chat-trigger .icon{width:21px;height:21px}
+ .n3-site ~ .chat-pane{right:10px;bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:380px){
+ .n3-hero h1{font-size:46px}
+ .n3-brand{font-size:17px}
+ .n3-hero-copy{padding-top:183px}
+}

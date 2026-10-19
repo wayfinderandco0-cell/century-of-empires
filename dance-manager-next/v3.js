@@ -3,6 +3,10 @@
 (function(){
 'use strict';
 const priorMarketing=marketing,priorContent=content,priorAction=doAction;
+const priorBrand=brand;
+brand=function(){return priorBrand().replace('NEXT · DEMO V2','NEXT · STAGING V3');};
+const priorLayout=layout;
+layout=function(){return priorLayout().replace('Independent V1 preview','Independent V3 preview');};
 const formats=['Solo','Duo / Trio','Small Group','Large Group','Line','Production'];
 const styles=['Ballet','Jazz','Lyrical','Contemporary','Hip-Hop','Tap','Musical Theatre'];
 const initialRoutines=[
@@ -88,8 +92,17 @@ function categoriesView(){
  (found.length?'<div class="dm3-routines">'+found.map(routineCard).join('')+'</div>':'<div class="empty">No routines match these filters. Choose another category or create a fictional routine.</div>')+
  '<div class="safe-notice dm3-category-note">'+icon('shield')+' These formats are editable examples, not a verified list of any organizer’s official rules. No real dancer information is used.</div>';
 }
+function sectionTabs(active){
+ return '<nav class="dm3-module-tabs" aria-label="Dance features">'+
+ actionButton(icon('medal')+' Dancer cards','show-dancers','dm3-module-tab'+(active==='dancers'?' active':''))+
+ actionButton(icon('trophy')+' Competitions','show-competitions','dm3-module-tab'+(active==='competitions'?' active':''))+
+ actionButton(icon('flag')+' Categories & routines','show-categories','dm3-module-tab'+(active==='categories'?' active':''))+
+ '</nav>';
+}
 content=function(){
- if(role==='owner'&&route==='categories')return categoriesView();
+ if(role==='owner'&&route==='categories')return sectionTabs('categories')+categoriesView();
+ if(role==='owner'&&route==='competitions')return priorContent().replace('<div class="dm-event-intro">',sectionTabs('competitions')+'<div class="dm-event-intro">');
+ if(role==='owner'&&route==='dancers')return priorContent().replace('<div class="dm-spotlight-hero">',sectionTabs('dancers')+'<div class="dm-spotlight-hero">');
  return priorContent();
 };
 function newRoutineDialog(){

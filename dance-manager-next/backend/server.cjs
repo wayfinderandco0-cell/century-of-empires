@@ -124,16 +124,18 @@ function validEmail(x) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x) && x.length
 async function sendLead(body, fetchFn) {
   const name = cleanText(body?.name, 70), email = cleanText(body?.email, 120);
   const studio = cleanText(body?.studio, 90), visitorType = cleanText(body?.visitorType, 45);
+  const phone = cleanText(body?.phone, 30);
   const message = cleanText(body?.message, 400);
   const marketingOptIn = body?.marketingOptIn === true;
   if (cleanText(body?.website, 200)) return {ok:true,code:202}; // honeypot, no email
-  if (!body?.consent || body?.adultConfirmed !== true || !name || !validEmail(email) || !studio || !visitorType) {
+  if (!body?.consent || body?.adultConfirmed !== true || !name || !validEmail(email) || !studio || !visitorType ||
+      (phone && !/^[+0-9().\-\s]{7,30}$/.test(phone))) {
     return {error:'Complete the required fields and consent before submitting.',code:400};
   }
   const sentAt = new Date().toISOString();
   const text = [
     'Dance Manager Next — New demo inquiry', '',
-    'Visitor: '+name, 'Email: '+email, 'Organization: '+studio,
+    'Visitor: '+name, 'Email: '+email, 'Phone (optional): '+(phone||'(none)'), 'Organization: '+studio,
     'Interested as: '+visitorType, 'Notes: '+(message || '(none)'),
     'Adult confirmed: Yes',
     'Optional email updates consent: '+(marketingOptIn?'YES':'No'),

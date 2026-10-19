@@ -15,7 +15,7 @@ function hasStore(){return Boolean(process.env.UPSTASH_REDIS_REST_URL&&process.e
 function hasInboundEmail(){return hasEmail()&&Boolean(process.env.RESEND_WEBHOOK_SECRET&&process.env.RESEND_INBOUND_ADDRESS);}
 function hasInboundSms(){return hasEmail()&&Boolean(process.env.TWILIO_AUTH_TOKEN&&process.env.TWILIO_FROM_NUMBER&&process.env.PUBLIC_API_BASE);}
 function status(){return {leadsConfigured:hasEmail(),ownerAlertsConfigured:hasEmail(),smsConfigured:hasSms(),inboxConfigured:hasStore(),inboundEmailConfigured:hasInboundEmail(),inboundSmsConfigured:hasInboundSms()};}
-function matches(p){return ['/api/lead','/api/handoff','/api/owner/inquiries','/api/owner/resolve','/webhooks/twilio/sms','/webhooks/resend/inbound'].includes(p);}
+function matches(p){return ['/api/lead','/api/handoff','/api/application','/api/owner/inquiries','/api/owner/resolve','/webhooks/twilio/sms','/webhooks/resend/inbound'].includes(p);}
 function plain(x,max=200){return typeof x==='string'?x.trim().slice(0,max):'';}
 function emailOK(s){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s)&&s.length<=120;}
 function phoneOK(s){return /^\+[1-9]\d{7,14}$/.test(s);}
@@ -248,7 +248,7 @@ async function handle(req,res,fetchFn,aiReply){
  if(req.method!=='POST')return json(res,405,{error:'Method not allowed'},origin);
  if(!String(req.headers['content-type']||'').startsWith('application/json'))return json(res,415,{error:'Use JSON'},origin);
  if(throttle('lead:'+clientHash(req),4,3600000)||throttle('lead:global',75,3600000))return json(res,429,{error:'Too many inquiries. Please try again later.'},origin);
- try{const raw=await readRaw(req),body=JSON.parse(raw),result=await submitLead(body,fetchFn,p==='/api/handoff'?'Human handoff request':'Website inquiry');
+ try{const raw=await readRaw(req),body=JSON.parse(raw),result=await submitLead(body,fetchFn,p==='/api/handoff'?'Human handoff request':p==='/api/application'?'Adult studio application inquiry':'Website inquiry');
   const {code=202,...rest}=result;return json(res,code,rest,origin);
  }catch(e){return json(res,e.status===413?413:502,{error:e.status===413?'Your message is too long.':'Unable to send right now. Please try again.'},origin);}
 }

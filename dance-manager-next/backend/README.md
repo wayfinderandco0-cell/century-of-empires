@@ -69,3 +69,18 @@ With no keys, expected health properties: \`aiConfigured: false\`, \`leadsConfig
 5. Deploy managed spam protection and appropriate privacy notices before wider rollout.
 
 **Nothing in V7 changes the existing Dance Manager website.**
+
+
+## V8 visitor-conversion decisions (2026-10-19)
+
+- Independent Render API created: \`https://dance-manager-next-ai-v7.onrender.com\` in workspace \`Stan's workspace\` (\`srv-dbb7rq9jfumc73er36ug\`), free tier, manual deploy. Do **not** change the existing game server or original Dance Manager domain.
+- The public \`v7-config.json\` links only to the HTTPS API hostname. No secrets or private information are in GitHub.
+- The V8 chat begins as a navigation guide. It offers relevant feature demos, and may offer an optional demo request to clearly interested adults. It must not interrupt, pester, or request a contact address inside the conversation.
+- Adults must affirm they are 18+ and authorize follow-up before live inquiry delivery.
+- Promotional email consent is a separate, unchecked opt-in. The server includes that decision in the lead notification for authorized staff. This does **not** establish a production mailing list or an automated marketing campaign.
+- Live AI requires a dedicated server-side \`OPENAI_API_KEY\`; live lead delivery requires \`RESEND_API_KEY\`, \`LEAD_FROM_EMAIL\` (verified sender), and \`LEAD_TO_EMAIL\`. The UI must truthfully remain a scripted demo when either service is not configured.
+- IP addresses: **do not store or export visitor IPs for advertising in this prototype**. Temporary in-memory hashed network data are used solely for coarse abuse throttling, not behavioral profiling. A service provider may still process normal network/request logs according to its policies. Before any future first-party analytics or ads audience feature: create a real privacy notice, set a retention period, obtain applicable consent, ensure audience restrictions for minors, and assess account/platform eligibility.
+- If authorized later, consider consent-based website retargeting and adult first-party email lists as the primary customer acquisition paths. Google Ads Customer Match has conditional IP support, but IP targeting is not equivalent to reliably identifying individuals; eligibility, geography, consent, and match-rate limitations apply.
+- Do not assume a ChatGPT subscription includes OpenAI API usage. Limit API spend and enable alerts before adding real credentials.
+- The test repo also contains an unrelated strategy game. Use a narrowly scoped backend deploy for this Dance Manager API; do not alter other services.
+

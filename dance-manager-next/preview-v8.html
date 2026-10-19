@@ -819,6 +819,7 @@ function dm5LeadForm(){
  '<h3>Preview your demo request</h3><p>Adults only. In this preview use sample information. An actual inquiry will only be sent after secure email delivery is enabled.</p>'+
  '<div class="dm5-lead-grid"><div><label for="dm5-name">Your name</label><input id="dm5-name" name="name" maxlength="70" required placeholder="Sample Visitor" autocomplete="off"></div>'+
  '<div><label for="dm5-email">Email</label><input id="dm5-email" name="email" type="email" maxlength="120" required placeholder="sample@example.test" autocomplete="off"></div></div>'+
+ '<label for="dm8-phone">Phone number (optional)</label><input id="dm8-phone" name="phone" type="tel" inputmode="tel" maxlength="30" placeholder="For a call back (optional)" autocomplete="off">'+
  '<label for="dm5-organization">Studio or organization</label><input id="dm5-organization" name="studio" maxlength="90" required placeholder="Example Dance Academy" autocomplete="off">'+
  '<label for="dm5-role">I’m interested as a</label><select id="dm5-role" name="visitorType">'+
  ['Studio owner','Competition director','Parent / family','Dancer','Other'].map(x=>'<option'+(x===dm5Type?' selected':'')+'>'+x+'</option>').join('')+'</select>'+
@@ -989,6 +990,7 @@ window.addEventListener('submit',async function(e){
   const d=new FormData(form), payload={
     name:String(d.get('name')||'').trim(),
     email:String(d.get('email')||'').trim(),
+    phone:String(d.get('phone')||'').trim(),
     studio:String(d.get('studio')||'').trim(),
     visitorType:String(d.get('visitorType')||'').trim(),
     message:String(d.get('message')||'').trim(),

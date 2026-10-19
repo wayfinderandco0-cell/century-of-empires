@@ -1,0 +1,115 @@
+/* Dance Manager Next V3 — premium responsive shell, studio-first marketing, category gallery. */
+.marketing-body{background:#f8f7fb;color:#1b1a2b}
+.dm3-header.site-header{background:#0d0e17;color:#f8f3ff;border-bottom:1px solid #2c2436}
+.dm3-header .marketing-nav{max-width:1420px;padding:10px clamp(18px,3.6vw,55px);min-height:77px}
+.dm3-header .brand-mark{background:linear-gradient(135deg,#bf6bbf,#885ab7);box-shadow:0 5px 23px #d47ab83d}
+.dm3-header .brand-name{font-family:Georgia,serif;font-size:21px;letter-spacing:-.65px}
+.dm3-header .brand small{color:#d8a8da;letter-spacing:1.05px}
+.dm3-header .dm3-top-links{gap:clamp(11px,1.5vw,24px);align-items:center}
+.dm3-header .dm3-top-links a,.dm3-header .dm3-nav-action{padding:9px 0;border:0;background:transparent;color:#f5effa;font-size:13px;font-weight:650;white-space:nowrap;cursor:pointer}
+.dm3-header .dm3-top-links a:hover,.dm3-header .dm3-nav-action:hover{color:#ed98e9}
+.dm3-header .site-actions .btn-light{background:#e895ea;color:#1a1022;border-radius:12px}
+.dm3-header .menu-toggle{color:#f9f0ff}
+.dm3-header .marketing-mobile{background:#11101d;border-top:1px solid #2c2535;box-shadow:0 15px 25px #03020b40}
+.dm3-header .marketing-mobile a,.dm3-header .marketing-mobile .dm3-mobile-action{display:block;width:100%;padding:13px 18px;color:#fff;font-size:14px;text-align:left;border:0;background:transparent}
+.dm3-header .marketing-mobile a:hover,.dm3-header .marketing-mobile button:hover{background:#2a2138}
+.dm3-hero.hero{padding:0;background:radial-gradient(circle at 38% 18%,#46324a66,transparent 50%),#090b14;color:white;position:relative;overflow:hidden;min-height:660px}
+.dm3-hero-shade{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 55%,#ed81e51f,transparent 55%),linear-gradient(145deg,#16111d,#0b0d16 72%);pointer-events:none}
+.dm3-hero-inner{max-width:1470px;margin:0 auto;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);min-height:630px;gap:20px;padding:43px clamp(22px,4.6vw,70px) 43px;position:relative;align-items:center}
+.dm3-hero-text{position:relative;z-index:2;padding:12px 0}
+.dm3-kicker{font-size:11px;color:#e7adf0;letter-spacing:2.3px;font-weight:800;display:flex;align-items:center;gap:11px;margin-bottom:27px}
+.dm3-kicker span{display:block;width:25px;height:2px;background:#d886dc}
+.dm3-hero h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(42px,5.5vw,79px);font-weight:680;line-height:1.08;letter-spacing:-2.5px;margin:0;max-width:760px}
+.dm3-hero h1 em{font-weight:500;background:linear-gradient(98deg,#e6a0e9,#a97de7);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+.dm3-hero-text>p{font-size:17px;color:#d2cbd9;line-height:1.75;max-width:505px;margin:29px 0}
+.dm3-hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-bottom:32px}
+.dm3-hero .btn.dm3-primary-btn{background:linear-gradient(125deg,#f0a5ed,#c77ce0);color:#261b30;border:0;box-shadow:0 13px 35px #d684de24;padding:15px 22px;font-weight:800;border-radius:12px}
+.dm3-hero .dm3-ghost-btn{display:inline-flex;gap:8px;align-items:center;justify-content:center;border:1px solid #9c769d;color:white;border-radius:12px;padding:13px 18px;font-weight:700;font-size:14px}
+.dm3-small-proof{display:flex;flex-wrap:wrap;gap:12px 20px;color:#bcb1ca;font-size:11px;font-weight:700}
+.dm3-small-proof span{display:inline-flex;align-items:center;gap:6px}
+.dm3-small-proof .icon{color:#dca2e5;width:16px;height:16px}
+.dm3-hero-photo{position:relative;width:100%;height:560px;border-radius:24px;background:#22192c url("https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1300&q=82") center 42%/cover no-repeat;box-shadow:0 28px 85px #0008;overflow:hidden;isolation:isolate}
+.dm3-hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#05051100 30%,#090611b8 100%),linear-gradient(90deg,#25112450,#1f133600);z-index:0}
+.dm3-hero-photo:before{content:"";position:absolute;inset:0;border:1px solid #f7d2fa35;border-radius:24px;z-index:2;pointer-events:none}
+.dm3-photo-label{position:absolute;bottom:114px;left:30px;right:20px;color:#f6daff;font-size:10px;font-weight:850;line-height:1.6;letter-spacing:2px;z-index:1}
+.dm3-photo-label b{display:block;color:white;font-size:23px;line-height:1.2;letter-spacing:0;max-width:370px;font-family:Georgia,serif;margin-top:5px}
+.dm3-photo-widget{position:absolute;bottom:23px;left:24px;right:24px;z-index:1;background:#f4eff8f0;backdrop-filter:blur(12px);color:#262136;display:flex;align-items:center;gap:12px;padding:15px 17px;border:1px solid #fff7;border-radius:14px;box-shadow:0 8px 30px #01010c30}
+.dm3-widget-icon{background:#ebdbf4;border-radius:10px;color:#a25ab2;padding:10px;display:inline-flex}
+.dm3-photo-widget>span:nth-child(2){display:grid;flex:1;min-width:0}.dm3-photo-widget b{font-size:13px}.dm3-photo-widget small{font-size:11px;color:#65596e}
+.dm3-check{background:#dff9f0;color:#167963;border-radius:50%;width:29px;height:29px;display:grid;place-items:center}
+.dm3-footnote{position:relative;font-size:10px;text-align:right;color:#afa1b7;max-width:1400px;padding:0 35px 13px;margin:auto}
+.dm3-value-strip{background:#171521;border-top:1px solid #342c3c;border-bottom:1px solid #342c3c;display:grid;grid-template-columns:repeat(4,1fr);color:#eedbef;gap:0;padding:0 32px}
+.dm3-value-strip>span{display:flex;align-items:center;justify-content:center;gap:13px;padding:24px 15px;min-height:73px;text-align:center;border-right:1px solid #453b48;font-size:11px;letter-spacing:1px;font-weight:750}
+.dm3-value-strip>span:last-child{border-right:0}.dm3-value-strip .icon{color:#e6a0e9;width:24px;height:24px}
+.dm3-explore{padding:83px 20px 95px;background:#15131e;color:white}
+.dm3-content-width{max-width:1370px;margin:0 auto}
+.dm3-section-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:30px}
+.dm3-section-head h2{font:600 clamp(28px,3.6vw,46px)/1.15 Georgia,serif;letter-spacing:-1px;margin:11px 0 0;max-width:720px}
+.dm3-section-head p{max-width:410px;line-height:1.7;color:#c2b6cb;margin:0 0 5px;font-size:14px}
+.dm3-eyebrow{color:#dc96de;font-size:11px;letter-spacing:2px;font-weight:800}
+.dm3-explore-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.dm3-explore-card{position:relative;min-width:0;border:1px solid #55465f;border-radius:17px;overflow:hidden;background:#211c29;min-height:440px;display:flex;align-items:end;transition:transform .18s ease,border .18s ease}
+.dm3-explore-card:hover{transform:translateY(-4px);border-color:#d98be0}
+.dm3-explore-card .dm3-card-photo{position:absolute;inset:0;background:linear-gradient(180deg,#07060c00 3%,#0c0713aa 45%,#110b1bf5 85%,#140e1f 100%),url("https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=600&q=78") center/cover}
+.dm3-card-studio .dm3-card-photo{background-image:linear-gradient(180deg,#07060c00 8%,#0c0713a3 45%,#140e1ff8 92%),url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=78")}
+.dm3-card-dancers .dm3-card-photo{background-image:linear-gradient(180deg,#07060c00 8%,#0c0713ad 45%,#140e1ff8 92%),url("https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=600&q=78")}
+.dm3-card-comp .dm3-card-photo{background-image:linear-gradient(180deg,#07060c00 8%,#0c0713ac 45%,#140e1ff8 92%),url("https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=600&q=78")}
+.dm3-card-parent .dm3-card-photo{background-image:linear-gradient(180deg,#22182b2f 8%,#0c0713b4 45%,#140e1ff8 92%),url("https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=600&q=78")}
+.dm3-card-content{position:relative;z-index:1;padding:23px 18px;width:100%}
+.dm3-card-content>span{color:#e6ade5;font-weight:800;font-size:10px;letter-spacing:1.4px}
+.dm3-card-content h3{font:600 25px/1.2 Georgia,serif;letter-spacing:-.5px;margin:12px 0 9px;color:white}
+.dm3-card-content p{color:#e3d8e8;font-size:12px;line-height:1.6;min-height:59px;margin:0 0 19px}
+.dm3-card-btn{border:1px solid #e9a0e8;background:#190f23af;color:white;border-radius:10px;font-size:12px;font-weight:750;display:inline-flex;justify-content:center;align-items:center;gap:7px;padding:12px 14px;max-width:100%;width:100%}
+.dm3-card-btn:hover,.dm3-categories-btn:hover{background:#e7a6ec;color:#22132d}
+.dm3-quick-row{margin-top:22px;padding:19px 23px;border-radius:15px;border:1px solid #513e5c;display:flex;justify-content:space-between;align-items:center;gap:25px;background:linear-gradient(110deg,#292038,#1d1828)}
+.dm3-quick-row>div{display:grid;gap:4px}.dm3-quick-row b{font-size:17px}.dm3-quick-row span{font-size:13px;color:#cbbcd2}
+.dm3-categories-btn{display:inline-flex;align-items:center;gap:9px;border:1px solid #ad7bc4;background:transparent;color:white;font-weight:780;padding:13px 17px;border-radius:12px;white-space:nowrap}
+.marketing-body .section-head .eyebrow{color:#94609c}
+.marketing-body .feature-icon{background:#f5e8f6;color:#934eac}
+.marketing-body .cta-section{background:#251b32}
+.marketing-body .cta-section .btn-light{background:#e8adeb;color:#221129}
+.dm-spotlight-hero,.dm-event-intro{background:radial-gradient(circle at 95% 10%,#b54da65c,transparent 36%),linear-gradient(122deg,#151327,#332345 67%,#654379);border:1px solid #ffffff1c}
+.dm-hero-trophy,.dm-calendar-art{color:#ecc1f0}
+.dm-player-card:hover{border-color:#b989d0}
+.dm3-category-hero{background:radial-gradient(circle at 80% 10%,#d376c444,transparent 39%),linear-gradient(125deg,#1a1529,#493059);color:white;border-radius:20px;padding:37px 40px;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:230px}
+.dm3-category-hero>div:first-child{max-width:600px}.dm3-category-hero span{font-size:10px;letter-spacing:2px;font-weight:850;color:#eda8f2}
+.dm3-category-hero h2{font:600 clamp(29px,3.5vw,44px)/1.1 Georgia,serif;margin:11px 0}
+.dm3-category-hero p{color:#e4d3eb;font-size:14px;line-height:1.6;margin:0 0 20px}
+.dm3-category-medal{width:143px;height:143px;background:#ffffff12;border:1px solid #ffffff2c;color:#ecabed;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.dm3-category-medal .icon{width:85px;height:85px}
+.dm3-filter-box{margin:21px 0 26px;background:white;border:1px solid #e5dfea;border-radius:16px;padding:22px;box-shadow:0 8px 28px #2921370a}
+.dm3-filter-box h3{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:#685572;margin:0 0 12px;font-weight:850}.dm3-filter-box h3:not(:first-child){margin-top:21px}
+.dm3-chip-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.dm3-chip{border:1px solid #ded2e2;color:#594364;background:#fff;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:750}
+.dm3-chip:hover{border-color:#a466b6}.dm3-chip.selected{background:#4a2f5b;color:white;border-color:#4a2f5b}
+.dm3-routine-title{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:19px 0 15px}
+.dm3-routine-title h2{font-size:21px;color:#292037;margin:0}.dm3-routine-title span{color:#797084;font-size:12px;font-weight:700}
+.dm3-routines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.dm3-routine-card{background:white;border:1px solid #e5dde9;border-radius:19px;overflow:hidden;box-shadow:0 9px 25px #170d2610;min-width:0}
+.dm3-routine-visual{position:relative;height:148px;background:radial-gradient(circle at 75% 25%,#eea1e160,transparent 45%),linear-gradient(140deg,#271934,#6c4b7c);color:white}
+.dm3-routine-visual-1{background:radial-gradient(circle at 70% 22%,#b9a4fa77,transparent 47%),linear-gradient(125deg,#182c43,#416b88)}
+.dm3-routine-visual-2{background:radial-gradient(circle at 80% 25%,#9ae6d06e,transparent 50%),linear-gradient(125deg,#163f41,#4d807e)}
+.dm3-routine-visual-3{background:radial-gradient(circle at 75% 25%,#fad29e85,transparent 50%),linear-gradient(125deg,#443142,#866174)}
+.dm3-routine-no{position:absolute;left:17px;top:17px;font:600 28px Georgia,serif;color:#ffffffb1}
+.dm3-routine-style{position:absolute;right:14px;top:17px;border:1px solid #ffffff7c;color:white;background:#0002;border-radius:100px;padding:5px 12px;font-size:11px;font-weight:800}
+.dm3-routine-art{position:absolute;bottom:-20px;right:23px;opacity:.23;transform:rotate(-18deg)}
+.dm3-routine-art .icon{width:145px;height:145px}
+.dm3-routine-info{padding:20px}
+.dm3-routine-type{font-size:11px;letter-spacing:.8px;font-weight:800;color:#9953ad;text-transform:uppercase}
+.dm3-routine-type span{color:#8b7e91}
+.dm3-routine-info h3{font-size:21px;letter-spacing:-.5px;color:#252036;margin:8px 0}
+.dm3-routine-info p{color:#6b6471;font-size:12px;line-height:1.65;min-height:37px;margin:6px 0 15px}
+.dm3-routine-bottom{border-top:1px solid #eee5f0;padding-top:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dm3-routine-bottom small{font-size:11px;color:#786580}
+.dm3-routine-open{border:0;background:#f6eafb;color:#673675;border-radius:9px;font-size:11px;font-weight:750;padding:10px 12px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.dm3-category-note{margin-top:22px}
+.dm3-student-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:220px;overflow:auto}
+.dm3-student-checks label{border:1px solid #e4dcea;border-radius:8px;padding:9px;font-size:12px;display:flex;gap:7px;align-items:center;cursor:pointer}
+.dm3-dialog-students{display:grid;gap:10px;margin:18px 0}
+.dm3-dialog-person{display:flex;align-items:center;gap:11px;padding:9px 12px;background:#f9f6fb;border:1px solid #ebe3ef;border-radius:11px}
+.dm3-dialog-person>div{flex:1;min-width:0}.dm3-dialog-person b{display:block;font-size:13px}.dm3-dialog-person small{display:block;color:#6b647a;font-size:10px}
+.dm3-modal-routine{display:flex;gap:6px}
+@media(max-width:1180px){.dm3-header .dm3-top-links{gap:11px}.dm3-header .dm3-top-links a,.dm3-header .dm3-nav-action{font-size:12px}.dm3-explore-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dm3-explore-card{min-height:415px}.dm3-hero-inner{grid-template-columns:1.06fr .94fr}.dm3-hero-photo{height:475px}}
+@media(max-width:900px){.dm3-header .dm3-top-links{display:none}.dm3-hero-inner{grid-template-columns:1fr;gap:22px;min-height:0;padding:56px 28px 34px}.dm3-hero h1{max-width:700px}.dm3-hero-photo{height:365px;max-width:100%}.dm3-hero-text>p{max-width:620px}.dm3-value-strip{grid-template-columns:repeat(2,1fr)}.dm3-value-strip>span:nth-child(2){border-right:0}.dm3-value-strip>span:nth-child(-n+2){border-bottom:1px solid #453b48}.dm3-routines{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.dm3-header .marketing-nav{padding:10px 17px;min-height:70px}.dm3-header .brand-name{font-size:18px}.dm3-hero-inner{padding:39px 19px 18px}.dm3-kicker{font-size:9px;letter-spacing:1.4px}.dm3-hero h1{font-size:clamp(37px,10vw,52px);letter-spacing:-1.9px}.dm3-hero-text>p{font-size:14px;margin:23px 0}.dm3-hero-actions{display:grid;gap:10px}.dm3-hero-actions .btn,.dm3-hero-actions .dm3-ghost-btn{width:100%;min-height:50px}.dm3-hero-photo{height:325px;border-radius:16px}.dm3-photo-label{left:18px;bottom:102px}.dm3-photo-label b{font-size:18px}.dm3-photo-widget{left:13px;right:13px;bottom:13px;padding:11px}.dm3-footnote{padding:0 20px 13px;text-align:left}.dm3-value-strip{padding:0 9px}.dm3-value-strip>span{padding:14px 6px;gap:7px;font-size:9px;letter-spacing:.5px}.dm3-value-strip .icon{width:17px;height:17px}.dm3-explore{padding:56px 15px 65px}.dm3-section-head{display:block}.dm3-section-head h2{font-size:32px;margin-bottom:15px}.dm3-section-head p{font-size:13px}.dm3-explore-grid{grid-template-columns:1fr;gap:14px}.dm3-explore-card{min-height:320px}.dm3-card-content p{min-height:0}.dm3-card-content{padding:20px}.dm3-quick-row{display:grid;padding:17px}.dm3-categories-btn{justify-content:center;white-space:normal;text-align:center}.dm3-category-hero{padding:25px 22px;min-height:200px}.dm3-category-hero h2{font-size:30px}.dm3-category-medal{width:68px;height:68px}.dm3-category-medal .icon{width:37px;height:37px}.dm3-filter-box{padding:16px}.dm3-chip{font-size:11px;padding:8px 12px}.dm3-routines{grid-template-columns:1fr}.dm3-student-checks{grid-template-columns:1fr}.dm3-routine-visual{height:125px}.dm3-routine-info p{min-height:0}}
+@media(prefers-reduced-motion:reduce){.dm3-explore-card{transition:none}}

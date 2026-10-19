@@ -993,6 +993,30 @@ $('sheetClose').onclick=()=>showPanel('map');$('returnMap').onclick=()=>showPane
 $('zoomIn').onclick=()=>zoom(.56);$('zoomOut').onclick=()=>zoom(1/.56);$('zoomHome').onclick=()=>{if(view.overview&&view.cy<780){fitAfrica();toast('Europe and Africa')}else{fitTheater();toast('European theater — tap center again for Africa')}};
 $('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
+const terrainInput=document.createElement('input');terrainInput.id='terrainImportInput';
+terrainInput.type='file';terrainInput.accept='image/webp';terrainInput.style.display='none';
+document.body.appendChild(terrainInput);
+terrainInput.addEventListener('change',async()=>{
+ const file=terrainInput.files?.[0];terrainInput.value='';
+ if(!file)return;
+ if(file.type!=='image/webp'||file.size<20000||file.size>3500000){
+  toast('Choose the supplied atlas-v83.webp file');return;
+ }
+ const reader=new FileReader();
+ reader.onload=async()=>{
+  try{
+   const url=String(reader.result||'');
+   const photo=new Image();photo.src=url;await photo.decode();
+   if(photo.naturalWidth!==1448||photo.naturalHeight!==1086){
+    toast('Terrain must be exactly 1448 × 1086');return;
+   }
+   localStorage.setItem('century-empires-v83-relief',url);
+   await loadNewAtlas();
+   toast('New terrain installed on this iPhone');
+  }catch(e){console.warn('Terrain installation failed',e);toast('Unable to install terrain; storage may be full')}
+ };
+ reader.readAsDataURL(file);
+});
 // All stock indicators are shortcuts to the Market; gold and manpower open the market overview.
 document.querySelector('.resources').addEventListener('click',e=>{
  const el=e.target.closest('.resource');if(!el||!game)return;
@@ -1124,6 +1148,7 @@ partners.map(c=>{const o=treaty(c),tags=[relation(c),o.trade?'Trade':null,o.acce
 
 if(panel==='news'){
  body.innerHTML='<div class="row"><span class="small">120 real minutes = 1 game month</span><button class="btn" data-act="save">Save</button></div>'+
+ '<button class="btn" data-act="terrainImport">⛰ Install terrain map</button>'+
  '<div class="gazette"><div class="masthead"><div class="edition">HIS MAJESTY’S CONTINENTAL DISPATCHES</div><h2>The European Gazette</h2><div class="edition">'+escapeHtml(when())+' · Wars, Courts & Commerce</div></div>'+
  (game.log.length?[...game.log].map((e,i)=>({e,i})).sort((a,b)=>(b.e.type==='war'?3:b.e.type==='leader'?2:b.e.type==='history'?1:0)-(a.e.type==='war'?3:a.e.type==='leader'?2:a.e.type==='history'?1:0)||a.i-b.i).slice(0,60).map(x=>gazetteArticle(x.e)).join(''):'<p>No dispatches yet.</p>')+'</div>'+
  '<p class="small">Historical illustrations are not depictions of simulated events. Images require internet access. Your campaign continues when you return.</p>';
@@ -1686,6 +1711,7 @@ if(action==='leaderQuickAttach'){
 }
 if(action==='leaderDetach'){if(detachCommander(id))showPanel('leader');return}
 if(action==='leaderMove'){if(sendCommander(id,$('leaderDestination')?.value))showPanel('leader');return}
+if(action==='terrainImport'){$('terrainImportInput')?.click();return}
 if(action==='save'){save();toast('Campaign saved locally')}
 if(action==='marketExecute'){executeSpotTrade();return}
 if(action==='marketStep'){marketDraft.qty=Math.max(0,marketDraft.qty+Number(b.dataset.step||0));renderPanel();return}
@@ -2421,10 +2447,15 @@ async function loadNewAtlas(){
   let photo,url,isNew=false;
   try{
    const modern=await fetch('./atlas-v83.webp',{cache:'force-cache'});
-   if(!modern.ok)throw Error('New terrain asset not installed');
-   const bytes=await modern.blob();
-   if(bytes.size<20000)throw Error('Terrain file incomplete');
-   url=URL.createObjectURL(bytes);
+   if(modern.ok){
+    const bytes=await modern.blob();
+    if(bytes.size<20000)throw Error('Terrain file incomplete');
+    url=URL.createObjectURL(bytes);
+   }else{
+    url=localStorage.getItem('century-empires-v83-relief');
+    if(!url||!url.startsWith('data:image/webp;base64,'))
+     throw Error('New terrain asset not installed');
+   }
    photo=new Image();photo.src=url;await photo.decode();
    if(photo.naturalWidth!==1448||photo.naturalHeight!==1086)throw Error('Incorrect terrain dimensions');
    isNew=true;
@@ -2456,8 +2487,10 @@ async function loadNewAtlas(){
   ctx.putImageData(pixels,0,0);
   const mask=node('mask',{id:'atlasLandMask',maskUnits:'userSpaceOnUse',maskContentUnits:'userSpaceOnUse',x:0,y:0,width:1448,height:1086,style:'mask-type:alpha'});
   mask.appendChild(node('image',{href:canvas.toDataURL('image/png'),x:0,y:0,width:1448,height:1086,preserveAspectRatio:'none'}));
+  $('map').querySelector('#atlasLandMask')?.remove();
   $('map').querySelector('defs').appendChild(mask);
   for(const name of ['territories','nationFrontiers','weatherLayer','terrainDetail','atlasRivers'])$(name).setAttribute('mask','url(#atlasLandMask)');
+  if(isNew&&game)renderAll();
  }catch(error){console.warn('Atlas artwork could not load',error)}
 }
 /* Major waterways anchored to the current Europe atlas: stylized tributaries follow

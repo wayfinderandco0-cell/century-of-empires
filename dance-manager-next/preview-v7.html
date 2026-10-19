@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#092645" />
+  <meta name="description" content="Private, independently developed Dance Manager Next prototype. Fictional demonstration data only." />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <style>
+:root{--navy:#092645;--navy2:#103453;--blue:#1971b7;--blue2:#e6f3fb;--sky:#74cadc;--ink:#14283c;--muted:#63768a;--border:#e2eaf1;--bg:#f5f8fc;--white:#fff;--green:#117a64;--greenbg:#e8f7f0;--amber:#9c6715;--amberbg:#fff6e5;--red:#bc5157;--redbg:#fff0f0;--shadow:0 16px 48px rgba(16,45,70,.07);--radius:20px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #73bbee;outline-offset:2px}.icon{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;flex-shrink:0}.icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}.hide{display:none!important}.brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.4px;white-space:nowrap}.brand-mark{width:41px;height:41px;border-radius:13px;background:linear-gradient(140deg,#2379c0,#115190);color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px #14466c2c}.brand-mark .icon{width:25px;height:25px}.brand-name{font-size:19px;line-height:1.1}.brand small{display:block;font-weight:580;color:#a9d4eb;font-size:10px;letter-spacing:1.75px;text-transform:uppercase;margin-top:5px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;border-radius:12px;min-height:42px;padding:10px 17px;font-weight:740;line-height:1.2;transition:filter .12s ease,transform .1s ease}.btn:active{transform:scale(.985)}.btn-primary{background:var(--blue);color:white;box-shadow:0 6px 18px #1971b71e}.btn-primary:hover{filter:brightness(.94)}.btn-navy{background:var(--navy);color:#fff}.btn-light{background:var(--white);color:var(--blue)}.btn-outline{background:transparent;color:var(--navy);border-color:#bacfe0}.btn-soft{background:var(--blue2);color:#135b98}.btn-quiet{background:transparent;color:var(--muted)}.btn-small{min-height:35px;padding:7px 12px;font-size:12px;border-radius:9px}.btn-block{width:100%}.btn .icon{width:17px;height:17px}.eyebrow{font-size:11px;font-weight:850;letter-spacing:2px;text-transform:uppercase;color:var(--blue)}.label{font-size:12px;font-weight:790;color:#51677d;letter-spacing:.2px;display:block;margin:0 0 6px}.muted{color:var(--muted)}.note{font-size:12px;color:var(--muted)}.small{font-size:13px}.fineprint{font-size:11px;color:#7c8c9c}.pill{display:inline-flex;gap:5px;align-items:center;white-space:nowrap;padding:4px 9px;border-radius:50px;font-size:11px;font-weight:750;background:#e8f0f6;color:#47627a}.pill.green{background:var(--greenbg);color:var(--green)}.pill.amber{background:var(--amberbg);color:var(--amber)}.pill.red{background:var(--redbg);color:var(--red)}.pill.blue{background:var(--blue2);color:var(--blue)}.demo-banner{position:sticky;top:0;z-index:60;padding:8px 15px;background:#e0f2ff;color:#0a4d85;text-align:center;font-size:11px;font-weight:740;border-bottom:1px solid #b9dcf5}.demo-banner .icon{width:14px;height:14px;vertical-align:-3px;margin-right:5px}.site-header{position:relative;z-index:10;background:var(--navy);color:#fff}.marketing-nav{max-width:1230px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:77px;padding:12px 27px}.nav-links{display:flex;gap:29px;align-items:center;color:#c6d8e6;font-size:13px;font-weight:680}.nav-links a:hover{color:white}.site-actions{display:flex;gap:10px;align-items:center}.menu-toggle{display:none;min-width:44px;min-height:44px;border:1px solid #ffffff3b;border-radius:12px;background:#ffffff0d;color:white}.menu-toggle .icon{width:23px;height:23px}.marketing-mobile{display:none;padding:12px 25px 24px;border-top:1px solid #ffffff1a}.marketing-mobile a{display:block;padding:13px;color:#d6e2ec;font-weight:680}.marketing-mobile .btn{width:100%;margin-top:8px}.marketing-body{background:#fff}.hero{position:relative;overflow:hidden;background:radial-gradient(circle at 95% 9%,#dbf1fd 0,transparent 42%),linear-gradient(135deg,#fafdff,#eff5fb 70%,#f8fcff);padding:79px 22px 75px}.hero-inner{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center;max-width:1190px;margin:auto}.hero-text h1{font-size:clamp(41px,4.4vw,64px);line-height:1.08;letter-spacing:-2.2px;margin:20px 0 21px;color:var(--navy)}.hero-text h1 span{color:var(--blue)}.hero-copy{color:#536d83;font-size:17px;max-width:490px;line-height:1.72;margin:0 0 29px}.hero-cta{display:flex;flex-wrap:wrap;gap:12px}.hero-proof{display:flex;gap:17px;flex-wrap:wrap;margin-top:29px;color:#5b7389;font-size:12px}.hero-proof span{display:flex;align-items:center;gap:6px}.hero-proof .icon{width:16px;height:16px;color:#299479}.mock-window{border:1px solid #dbe7f1;background:white;border-radius:20px;box-shadow:0 29px 78px #183f6627;overflow:hidden;transform:rotate(-1.15deg)}.mock-top{background:#f6fafc;border-bottom:1px solid #e5edf4;padding:11px 15px;display:flex;align-items:center;justify-content:space-between}.dots{display:flex;gap:5px}.dots i{width:8px;height:8px;background:#c4d1dd;border-radius:50%}.mock-top small{font-size:10px;color:#7d94a8;font-weight:750}.mock-content{display:grid;grid-template-columns:105px 1fr;min-height:365px}.mock-sidebar{background:#0e304d;padding:19px 9px}.mock-mini-logo{height:24px;margin-bottom:22px;color:white;display:flex;gap:5px;align-items:center;font-size:11px;font-weight:800}.mock-nav{display:flex;align-items:center;gap:7px;margin:7px 0;padding:8px;border-radius:6px;font-size:10px;color:#a9c2d3}.mock-nav.active{background:#226da4;color:white}.mock-main{padding:23px;background:#fff}.mock-main-title{display:flex;align-items:center;justify-content:space-between;font-weight:790;font-size:14px;color:var(--navy);margin-bottom:21px}.mock-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.mock-stat{border:1px solid #e6edf2;border-radius:10px;padding:12px}.mock-stat small{font-size:9px;color:#8091a1;display:block}.mock-stat b{font-size:21px;letter-spacing:-.6px;color:#153551}.mock-chart{margin-top:13px;border:1px solid #e7edf3;border-radius:12px;padding:14px}.mock-chart-head{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#557088;font-weight:750}.mock-bars{height:115px;display:flex;align-items:flex-end;gap:9px;margin-top:16px;border-bottom:1px solid #dbe4eb}.mock-bars i{display:block;flex:1;background:linear-gradient(180deg,#3291cc,#a3d8ef);border-radius:4px 4px 0 0}.mock-bars i:nth-child(even){background:linear-gradient(180deg,#9ed5e9,#dff3f9)}.mock-table{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.mock-table div{background:#f5f9fb;border-radius:9px;height:33px}.benefit-strip{display:grid;grid-template-columns:repeat(4,1fr);max-width:1180px;margin:0 auto;padding:26px 20px;gap:10px;border-bottom:1px solid #edf1f5}.benefit-strip span{font-size:13px;color:#36556f;font-weight:750;display:flex;gap:10px;align-items:center;justify-content:center}.benefit-strip .icon{color:var(--blue)}.section{padding:79px 22px}.section-inner{max-width:1130px;margin:0 auto}.section-head{max-width:680px;margin:0 auto 34px;text-align:center}.section-head h2{font-size:clamp(30px,3.5vw,43px);letter-spacing:-1.3px;line-height:1.18;color:var(--navy);margin:12px 0}.section-head p{margin:12px auto;color:#667f90;font-size:15px}.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature-card{border:1px solid #e5edf3;border-radius:17px;padding:27px;background:#fff;box-shadow:0 5px 20px #183d5505}.feature-icon{display:flex;width:48px;height:48px;align-items:center;justify-content:center;background:var(--blue2);color:var(--blue);border-radius:13px;margin-bottom:18px}.feature-icon .icon{width:25px;height:25px}.feature-card h3{color:#143653;margin:0 0 9px;font-size:18px}.feature-card p{color:#6a8194;margin:0;font-size:13px;line-height:1.7}.alt-section{background:#f5f9fd}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}.step{border:1px solid #e4edf4;background:white;padding:25px;border-radius:18px}.step-count{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#e3f1fb;color:#176cae;border-radius:10px;font-weight:900;margin-bottom:14px}.step h3{margin:0 0 9px}.step p{margin:0;color:var(--muted);font-size:13px}.cta-section{background:linear-gradient(130deg,#0a2a49,#13517a);color:white;padding:68px 22px}.cta-section .section-inner{display:flex;justify-content:space-between;align-items:center;gap:25px}.cta-section h2{font-size:34px;line-height:1.2;letter-spacing:-1px;margin:0 0 8px}.cta-section p{color:#c4d8e5;margin:0}.faq-list{max-width:780px;margin:auto}.faq-item{border-bottom:1px solid #e4eaf0;padding:15px 1px}.faq-item summary{cursor:pointer;color:#213e58;font-weight:800;list-style-position:inside}.faq-item p{color:#6c8193;font-size:13px;padding-left:18px}.footer{background:#061e36;color:#d8e6f0;padding:37px 22px}.footer-inner{max-width:1140px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:25px}.footer small{color:#9ab5c9}.footer a{color:#b7d3e7}.footer .brand small{color:#7cafd1}.platform{display:flex;min-height:calc(100vh - 32px);background:#f5f8fc}.sidebar{width:244px;flex:0 0 244px;background:var(--navy);color:#d1e2ed;display:flex;flex-direction:column;position:sticky;top:31px;height:calc(100vh - 31px);padding:23px 14px 15px;overflow-y:auto}.sidebar .brand{padding:0 12px 33px;color:white}.sidebar .brand-name{font-size:16px}.sidebar .brand-mark{width:37px;height:37px}.side-category{font-size:10px;letter-spacing:1.8px;color:#81a5be;font-weight:820;margin:7px 13px 10px}.side-item{display:flex;width:100%;align-items:center;gap:12px;border:0;background:transparent;color:#bad1e1;padding:12px;border-radius:11px;text-align:left;font-size:13px;font-weight:680;margin:2px 0}.side-item.active{background:#23648f;color:#fff}.side-item:hover{background:#173d5b}.side-item .icon{width:18px;height:18px}.side-bottom{margin-top:auto;border-top:1px solid #ffffff2a;padding-top:15px}.side-footer{font-size:11px;color:#84a2b9;padding:12px}.workspace{min-width:0;flex:1}.workspace-top{height:74px;padding:15px 33px;background:#fff;border-bottom:1px solid #e5edf3;display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:31px;z-index:20}.crumbs{font-size:12px;color:#7b90a0}.crumbs b{font-size:13px;color:#1d425f}.top-actions{display:flex;align-items:center;gap:10px}.role-switch{border:1px solid #dce7ef;background:#f7fafc;color:#30516a;padding:9px 30px 9px 12px;border-radius:10px;font-size:12px;font-weight:750;max-width:155px}.avatar{height:34px;width:34px;border-radius:50%;background:#d9eef8;color:#226795;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px}.main{max-width:1350px;margin:auto;padding:31px 33px 90px}.page-title-row{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:0 0 24px}.page-title-row h1{font-size:29px;margin:3px 0 3px;line-height:1.2;letter-spacing:-.75px;color:#102f4b}.page-title-row p{font-size:13px;margin:0;color:#788b9c}.page-actions{display:flex;flex-wrap:wrap;gap:9px}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}.stat-card{background:#fff;border:1px solid #e2ebf1;border-radius:16px;padding:20px;box-shadow:0 3px 14px #17394b08}.stat-line{display:flex;justify-content:space-between;align-items:center;color:#627f94;font-size:12px;font-weight:690}.stat-icon{height:34px;width:34px;border-radius:10px;background:#e9f4fb;display:flex;align-items:center;justify-content:center;color:#1971b7}.stat-value{font-size:31px;font-weight:850;letter-spacing:-1px;color:#123450;margin:13px 0 1px}.stat-foot{color:#8ca1b0;font-size:11px}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(310px,1fr);gap:18px}.panel{background:white;border:1px solid #e3eaf0;border-radius:17px;box-shadow:0 3px 13px #102a4504;overflow:hidden}.panel-head{padding:20px 21px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h2{font-size:16px;margin:0;color:#143c59;letter-spacing:-.15px}.panel-head p{font-size:12px;color:var(--muted);margin:4px 0 0}.panel-body{padding:0 21px 20px}.divider{height:1px;background:#ebf0f4;margin:0 20px}.class-row{padding:15px 0;border-top:1px solid #eff2f5;display:flex;align-items:center;gap:12px}.class-row:first-child{border-top:0}.time-chip{background:#eff6fc;padding:10px 8px;border-radius:10px;min-width:75px;text-align:center;font-size:11px;font-weight:840;color:#246491}.class-info{flex:1;min-width:0}.class-info strong{display:block;color:#193c59;font-size:13px}.class-info small{color:#8091a1;font-size:11px}.class-count{font-size:12px;color:#46677e;font-weight:730;white-space:nowrap}.empty{padding:36px 20px;text-align:center;color:#748b9a;font-size:13px}.activity-list{list-style:none;padding:0;margin:0}.activity-list li{padding:13px 0;display:flex;gap:11px;border-top:1px solid #f0f2f5}.activity-list li:first-child{border-top:0}.activity-dot{height:8px;width:8px;background:#298bbf;border-radius:50%;margin-top:6px;flex-shrink:0}.activity-list b{font-size:12px;color:#315470;display:block}.activity-list small{font-size:11px;color:#8b9caa}.revenue-chart{height:162px;display:flex;gap:13px;align-items:flex-end;border-bottom:1px solid #dce5ed;padding-top:15px}.revenue-month{flex:1;text-align:center}.bar{display:block;min-height:4px;border-radius:7px 7px 0 0;background:linear-gradient(#298ad0,#a4d9ed)}.revenue-month small{font-size:10px;color:#8597a4;display:block;position:relative;top:8px}.table-controls{padding:16px 21px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #edf1f4}.search-wrap{display:flex;align-items:center;gap:8px;border:1px solid #dce7ef;padding:9px 11px;border-radius:10px;background:#fafcfe;min-width:220px;flex:1;max-width:380px}.search-wrap .icon{color:#7895a9}.search-wrap input{background:transparent;border:0;outline:0;width:100%;font-size:13px;color:#23465f}.scroll-x{overflow:auto;max-width:100%}table{border-collapse:collapse;width:100%;min-width:570px}thead{background:#f7fafc}th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7790a3;padding:13px 20px;white-space:nowrap}td{border-top:1px solid #edf2f5;padding:14px 20px;font-size:12px;color:#4b6980}td strong{color:#1b415c;font-size:12px}.student-profile{display:flex;align-items:center;gap:10px}.student-avatar{height:35px;width:35px;border-radius:11px;color:#3d6682;background:#e4f1f8;font-size:12px;font-weight:850;display:flex;align-items:center;justify-content:center;flex-shrink:0}.student-avatar.v2{background:#f2e9f6;color:#88699d}.student-avatar.v3{background:#eaf3e4;color:#678955}.student-avatar.v4{background:#fef0de;color:#b18b58}.progress-track{height:6px;border-radius:99px;background:#e9eff3;overflow:hidden;margin-top:8px}.progress-fill{height:100%;border-radius:99px;background:#3698bf}.class-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.class-card{background:#fff;border:1px solid #e2ebf1;border-radius:17px;padding:20px;box-shadow:0 3px 14px #17394b08}.class-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.class-card h3{font-size:16px;margin:0 0 6px;color:#153b58}.class-card p{font-size:12px;color:#748a9b;margin:0 0 13px}.class-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding-top:14px;border-top:1px solid #edf1f4}.class-card .icon{width:16px;height:16px}.inline-actions{display:flex;gap:7px;flex-wrap:wrap}.split-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.attendance-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:7px 0}.attendance-person{display:flex;align-items:center;justify-content:space-between;gap:9px;border:1px solid #e3ebf1;padding:11px;border-radius:12px}.attendance-person .student-profile strong{display:block}.attendance-buttons{display:flex;gap:4px}.attendance-buttons button{background:#f3f7fa;color:#68849a;border:1px solid #e5edf3;border-radius:8px;font-size:11px;padding:5px 8px}.attendance-buttons button.present{background:#dcf5e9;color:#13765a;border-color:#b6e5cb}.attendance-buttons button.absent{background:#fff0ee;color:#b45b53;border-color:#f6cbc7}.form-field{margin-bottom:14px}.form-field input,.form-field select,.form-field textarea{width:100%;min-height:42px;background:#fbfdfe;border:1px solid #dce6ef;border-radius:10px;padding:10px 12px;color:#1e415b;font-size:13px}.form-field textarea{resize:vertical;min-height:104px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.modal-scrim{position:fixed;inset:0;z-index:100;background:#0a2238a6;display:flex;align-items:center;justify-content:center;padding:14px}.modal{width:min(570px,100%);max-height:min(87vh,850px);overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 30px 90px #08162e66}.modal-header{padding:22px 25px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #ebf0f4}.modal-header h2{margin:0;font-size:20px;color:#183e5c}.modal-body{padding:22px 25px}.modal-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}.icon-button{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #e3ebf1;background:#fff;border-radius:10px;color:#5c7488}.toast{position:fixed;bottom:29px;right:29px;z-index:130;background:#0b364d;color:white;padding:13px 19px;border-radius:12px;box-shadow:0 9px 30px #113f5f38;font-size:13px;font-weight:690;max-width:calc(100vw - 40px)}.parent-greeting{border-radius:20px;background:linear-gradient(120deg,#0c3152,#206c9a);padding:26px 29px;margin-bottom:20px;color:#fff;position:relative;overflow:hidden}.parent-greeting h2{margin:0 0 7px;font-size:25px}.parent-greeting p{margin:0;color:#d1e4ef;font-size:13px}.parent-greeting .watermark{position:absolute;right:-30px;top:-40px;opacity:.08;width:200px;height:200px}.parent-greeting .watermark svg{width:100%;height:100%}.highlight{background:#e9f4fa;border:1px solid #d6eaf6;border-radius:13px;padding:15px 18px;margin-bottom:17px;display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#335d77}.highlight .icon{color:#237db4}.safe-notice{font-size:11px;background:#fff5e5;color:#946b28;border:1px solid #f8e1b5;padding:10px 13px;border-radius:10px;margin-bottom:17px}.chat-trigger{position:fixed;right:22px;bottom:20px;z-index:45;display:flex;align-items:center;gap:8px;background:#176dad;color:white;border:0;border-radius:99px;padding:13px 18px;font-size:13px;font-weight:800;box-shadow:0 12px 35px #0e457850}.chat-pane{position:fixed;right:22px;bottom:82px;z-index:48;background:white;border:1px solid #d4e2ed;border-radius:19px;width:min(375px,calc(100vw - 26px));height:min(510px,calc(100dvh - 140px));box-shadow:0 22px 70px #092b4e44;overflow:hidden;display:flex;flex-direction:column}.chat-head{background:#103b5d;color:white;padding:17px;display:flex;align-items:center;justify-content:space-between}.chat-head b{display:block}.chat-head small{font-size:10px;color:#b5d4e6}.chat-messages{padding:16px;overflow:auto;flex:1;background:#f8fbfe}.bubble{max-width:88%;width:max-content;white-space:pre-wrap;background:#fff;border:1px solid #e5ecf2;border-radius:12px 12px 12px 3px;padding:11px 13px;font-size:12px;margin-bottom:10px;color:#2c506a}.bubble.mine{margin-left:auto;background:#e3f1fa;border-color:#cce5f7;border-radius:12px 12px 3px 12px}.chat-quick{display:flex;gap:5px;overflow:auto;padding:10px 12px;border-top:1px solid #e9f1f5}.chat-quick button{font-size:10px;white-space:nowrap;padding:7px 9px;border:1px solid #cfdfec;background:#fff;color:#206795;border-radius:90px}.chat-input{display:flex;border-top:1px solid #e9f1f5;padding:10px;gap:7px}.chat-input input{flex:1;min-width:0;border:1px solid #e0e9f0;border-radius:9px;padding:9px 11px;font-size:12px}.chat-input button{border:0;background:#1b70aa;color:white;border-radius:9px;padding:8px 12px}.app-footer-note{font-size:11px;color:#8498a8;margin-top:19px;display:flex;gap:7px;align-items:center}.mobile-tabs{display:none}.contact-form{max-width:590px;margin:0 auto}.contact-card{background:white;border:1px solid #e0eaf1;padding:26px;border-radius:18px;box-shadow:var(--shadow)}.price-card{background:#fff;border:1px solid #dde8f0;border-radius:18px;padding:30px;max-width:750px;margin:auto;text-align:center}.price-card h3{font-size:23px;margin:10px}.price-card p{color:#668295}.enroll-card{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid #eaf0f4;gap:15px}.enroll-card:first-child{border-top:0}.message-entry{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid #eef2f5}.message-entry:first-child{border-top:0}.message-entry .icon{color:var(--blue)}.message-entry strong{color:#234a64;font-size:12px}.message-entry p{margin:4px 0;color:#637b90;font-size:12px}.tagline{display:flex;gap:6px;align-items:center;font-size:11px;color:#728ba0}.quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.quick-link{display:flex;align-items:center;gap:10px;padding:16px;border:1px solid #e4ecf3;background:#fff;border-radius:12px;color:#23506e;font-weight:780;font-size:12px}.quick-link .icon{color:var(--blue)}.login-demo{margin-top:20px;display:inline-flex;gap:8px;align-items:center;color:#4a7593;font-size:12px}.device-warning{padding:10px;color:#9b6520;background:#fff4df;border-radius:10px;font-size:11px}.screen-reader{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:1100px){.hero-inner{gap:30px}.hero-text h1{font-size:47px}.stats-grid{grid-template-columns:repeat(2,1fr)}.class-card-grid{grid-template-columns:repeat(2,1fr)}.sidebar{width:209px;flex-basis:209px}.dashboard-grid{grid-template-columns:1fr 1fr}.main{padding:23px 23px 90px}}
+@media(max-width:780px){.marketing-nav{padding:11px 19px;min-height:68px}.site-actions .btn{display:none}.nav-links{display:none}.menu-toggle{display:inline-flex;align-items:center;justify-content:center}.marketing-mobile.open{display:block}.brand-name{font-size:17px}.hero{padding:57px 20px 49px}.hero-inner{grid-template-columns:1fr;gap:34px}.hero-text h1{font-size:43px;max-width:600px;letter-spacing:-1.8px}.hero-copy{font-size:15px}.mock-window{max-width:590px;justify-self:stretch;transform:none}.benefit-strip{grid-template-columns:repeat(2,1fr);padding:20px 15px;gap:12px}.benefit-strip span{justify-content:flex-start}.features-grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.section{padding:60px 19px}.footer-inner{align-items:flex-start;flex-direction:column}.cta-section .section-inner{flex-direction:column;align-items:flex-start}.sidebar{display:none}.workspace-top{top:31px;padding:11px 17px;height:67px}.main{padding:23px 17px 100px}.mobile-tabs{position:fixed;bottom:0;left:0;right:0;padding:7px 9px calc(6px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dce7ef;box-shadow:0 -8px 25px #1d46620c;z-index:30;display:flex;align-items:center;justify-content:space-around;gap:4px}.mobile-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:#70899e;font-size:9px;font-weight:740;min-height:46px;flex:1;border-radius:9px}.mobile-tab .icon{width:20px;height:20px}.mobile-tab.active{background:#e9f4fb;color:#1368a7}.page-title-row{flex-wrap:wrap;gap:12px}.page-title-row h1{font-size:24px}.dashboard-grid{grid-template-columns:1fr}.stats-grid{gap:11px}.stat-card{padding:14px}.stat-value{font-size:27px}.class-card-grid{grid-template-columns:1fr}.split-2{grid-template-columns:1fr}.chat-trigger{bottom:78px;right:14px}.chat-pane{bottom:143px;right:10px;height:min(490px,calc(100dvh - 200px))}.toast{bottom:88px;right:12px}.form-grid{grid-template-columns:1fr}.attendance-list{grid-template-columns:1fr}.quick-links{grid-template-columns:1fr 1fr}}
+@media(max-width:470px){.hero-text h1{font-size:38px}.hero-cta{flex-direction:column}.hero-cta .btn{width:100%}.features-grid{grid-template-columns:1fr}.mock-content{grid-template-columns:76px 1fr;min-height:320px}.mock-sidebar{padding:12px 6px}.mock-nav{font-size:0;gap:0;justify-content:center}.mock-nav .icon{width:15px;height:15px}.mock-mini-logo{font-size:0;justify-content:center}.mock-main{padding:15px 11px}.mock-stats{gap:5px}.mock-stat{padding:8px 5px}.mock-stat b{font-size:15px}.mock-stat small{font-size:8px}.mock-bars{height:96px;gap:5px}.benefit-strip span{font-size:11px}.brand small{font-size:9px}.top-actions{gap:6px}.role-switch{max-width:119px;font-size:11px;padding:8px 20px 8px 7px}.top-actions .avatar{display:none}.stats-grid{gap:8px}.stat-card{padding:12px}.stat-line{font-size:11px}.stat-icon{width:28px;height:28px}.stat-value{font-size:25px;margin-top:8px}.stat-foot{font-size:10px}.panel-head{padding:17px 15px 12px}.panel-body{padding:0 15px 17px}.table-controls{padding:13px}.search-wrap{min-width:0}.class-row{gap:8px}.time-chip{min-width:62px;font-size:10px}.enroll-card{flex-wrap:wrap}.enroll-card .btn{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* V1 QA refinements */
+.revenue-month{height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}.revenue-month .bar{flex:0 0 auto}.revenue-chart{padding-bottom:9px}.more-link{width:100%;display:flex;align-items:center;gap:13px;padding:14px 10px;background:white;border:0;border-bottom:1px solid #e5edf3;color:#234d69;font-weight:760;text-align:left}.more-link>span:nth-child(2){flex:1}.more-link:last-child{border-bottom:0}.more-link .icon{color:#257bb3}.more-link .icon:last-child{color:#8aa4b7;width:16px;height:16px}
+
+  </style>
+  <title>Dance Manager Next — Private V1 Prototype</title>
+<style id="dance-v2-inline">
+/* Dance Manager Next — V2 cards and competition module. Fictional demo only. */
+.dm-spotlight-hero,.dm-event-intro{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;background:radial-gradient(circle at 85% 15%,#317fb899,transparent 31%),linear-gradient(125deg,#092645 7%,#103f6e 66%,#176ca2 100%);color:#fff;border-radius:22px;padding:35px 38px;margin-bottom:20px;isolation:isolate;min-height:215px}
+.dm-spotlight-hero h2,.dm-event-intro h2{font-size:clamp(25px,3.6vw,35px);line-height:1.18;letter-spacing:-1px;margin:10px 0;max-width:510px}
+.dm-spotlight-hero p,.dm-event-intro p{max-width:600px;color:#d4e5f5;margin:8px 0 18px;line-height:1.6}
+.dm-mini-label{font-size:11px;font-weight:850;letter-spacing:2px;color:#5ad8ec;text-transform:uppercase}
+.dm-hero-trophy,.dm-calendar-art{width:145px;height:145px;display:grid;place-items:center;flex:0 0 auto;color:#b1e0f8;background:#ffffff14;border:1px solid #ffffff24;border-radius:50%;transform:rotate(-12deg)}
+.dm-hero-trophy .icon,.dm-calendar-art .icon{width:86px;height:86px}.dm-hero-trophy svg,.dm-calendar-art svg{stroke-width:1.2}
+.dm-hero-buttons,.dm-dialog-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.dm-spotlight-hero .dm-hero-buttons .btn-outline{color:white;border-color:#91bed9}
+.dm-simple-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 28px}
+.dm-simple-stats>div{padding:19px 22px;border:1px solid var(--border);border-radius:16px;background:white;box-shadow:0 5px 14px #174d7607}
+.dm-simple-stats strong{font-size:28px;font-weight:850;display:block;color:var(--navy);line-height:1.2}
+.dm-simple-stats span{display:block;font-size:12px;color:#627589;margin-top:5px}
+.dm-section-line{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:24px 0 17px}
+.dm-section-line h2{font-size:20px;line-height:1.2;letter-spacing:-.3px;margin:0;color:var(--navy)}
+.dm-player-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.dm-player-card{min-width:0;background:white;border:1px solid #d9e4ef;border-radius:20px;overflow:hidden;box-shadow:0 10px 25px #0f365011;transition:transform .18s ease,box-shadow .18s ease}
+.dm-player-card:hover{transform:translateY(-3px);box-shadow:0 17px 35px #0f365021}
+.dm-card-top{height:54px;display:flex;align-items:center;justify-content:space-between;background:#103351;color:white;padding:0 20px;gap:8px}
+.dm-card-eyebrow{font-size:9px;font-weight:850;letter-spacing:1.2px;color:#b8d5e9}
+.dm-card-no{font-size:23px;font-weight:850;color:#e0eef8;font-variant-numeric:tabular-nums}
+.dm-portrait{position:relative;height:185px;display:flex;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(140deg,#e7f7ff,#91bde6);isolation:isolate}
+.dm-portrait:before{content:"";position:absolute;width:225px;height:225px;left:-85px;top:-95px;border-radius:50%;border:38px solid #ffffff34}
+.dm-portrait:after{content:"";position:absolute;bottom:-75px;right:-30px;width:200px;height:160px;border:27px solid #ffffff2e;border-radius:50%}
+.dm-portrait-2{background:linear-gradient(130deg,#e6e0fa,#aaa4d9)}
+.dm-portrait-3{background:linear-gradient(140deg,#d6faed,#75bcb9)}
+.dm-portrait-4{background:linear-gradient(130deg,#ffeadb,#e7a6ac)}
+.dm-dance-silhouette{display:flex;transform:rotate(-11deg);opacity:.62;color:#144e79;filter:drop-shadow(0 12px 14px #0a315c33)}
+.dm-dance-silhouette .icon{width:113px;height:113px}
+.dm-dance-silhouette svg{stroke-width:.9}
+.dm-monogram{position:absolute;bottom:14px;right:18px;color:#0c4268cc;font-weight:900;font-size:35px;letter-spacing:-2px;z-index:1}
+.dm-card-info{padding:20px;display:flex;flex-direction:column;min-height:270px}
+.dm-card-sub{font-size:10px;letter-spacing:1.6px;color:#1972b0;font-weight:800}
+.dm-card-info h3{font-size:23px;line-height:1.1;letter-spacing:-.8px;color:var(--navy);margin:7px 0 9px}
+.dm-short-bio{font-size:12px;color:#62778a;min-height:55px;line-height:1.55;margin:0}
+.dm-discipline{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 15px}
+.dm-discipline span{font-size:10px;padding:4px 8px;border-radius:20px;background:#e9f4fb;color:#285674;font-weight:700}
+.dm-card-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #e4ecf2;padding:14px 0;margin-top:auto}
+.dm-card-metrics>div{display:flex;flex-direction:column}.dm-card-metrics strong{font-size:21px;color:#153d5e;line-height:1.15}.dm-card-metrics small{font-size:10px;color:#678094}
+.dm-card-button{width:100%;font-size:12px;min-height:39px;margin-top:1px}
+.dm-privacy{margin-top:24px;font-size:12px;line-height:1.6}
+.dm-event-intro{min-height:190px;background:radial-gradient(circle at 80% 35%,#5cb9d447,transparent 32%),linear-gradient(120deg,#0a2947,#15517e);margin-bottom:21px}
+.dm-event-list{display:grid;gap:12px}
+.dm-event-card{display:grid;grid-template-columns:78px minmax(0,1fr) auto;align-items:center;gap:19px;padding:17px 20px;background:#fff;border:1px solid #dfe9f1;border-radius:18px;box-shadow:0 4px 14px #21486707;min-width:0}
+.dm-event-date{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#eaf4fb;border:1px solid #d6ebf8;color:#145889;border-radius:12px;min-height:88px}
+.dm-event-date strong{text-transform:uppercase;font-size:11px;letter-spacing:1.5px;line-height:1.3}
+.dm-event-date b{font-size:32px;line-height:1.15;color:#0d3858}
+.dm-event-date small{font-size:10px;color:#627f92}
+.dm-event-copy{min-width:0}
+.dm-event-copy h3{font-size:17px;line-height:1.35;color:#0e3452;margin:7px 0 6px}
+.dm-event-copy p{margin:4px 0;color:#5b7083;font-size:12px;display:flex;align-items:center;gap:5px}
+.dm-event-copy .icon{width:14px;height:14px}
+.dm-event-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:#7b8e9f;font-weight:700}
+.dm-event-fine{font-size:11px!important}
+.dm-event-button{white-space:nowrap;font-size:12px}
+.dm-past-title{margin-top:37px}
+.dm-dialog-summary{display:flex;align-items:center;gap:20px;background:#f0f7fb;border-radius:14px;padding:14px;margin-bottom:16px}
+.dm-dialog-summary .dm-portrait{height:100px;width:107px;border-radius:12px;flex-shrink:0}
+.dm-dialog-summary .dm-portrait .dm-dance-silhouette .icon{height:75px;width:75px}
+.dm-dialog-summary .dm-monogram{font-size:18px;bottom:6px;right:9px}
+.dm-dialog-summary h3{font-size:22px;color:#0f3858;margin:6px 0}
+.dm-dialog-summary p{margin:0;color:#537185}
+.dm-modal-h3{display:flex;align-items:center;gap:8px;font-size:16px;margin:24px 0 10px;color:#123a59}
+.dm-modal-h3 .icon{color:#1b76ae}
+.dm-award-row{display:flex;align-items:center;gap:12px;border:1px solid #e5edf3;border-radius:12px;padding:12px;margin-bottom:8px}
+.dm-award-row>.icon,.dm-award-row>span:first-child{color:#247eae;flex-shrink:0}
+.dm-award-row strong{font-size:13px;display:block;color:#23415a;line-height:1.35}
+.dm-award-row small{display:block;font-size:11px;color:#71889b;margin-top:3px}
+.dm-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.dm-info-grid>div{background:#f1f7fc;border:1px solid #e3eef8;border-radius:11px;padding:12px 10px;min-width:0}
+.dm-info-grid strong{font-size:14px;display:block;color:#133c59}.dm-info-grid small{display:block;font-size:10px;color:#688297;margin-top:5px}
+.dm-event-dialog-header{font-weight:850;color:#0f456e;display:flex;align-items:center;gap:8px}
+.dm-roster-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+.dm-roster-choice{display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid #e4eaf1;border-radius:10px;cursor:pointer;font-size:12px;font-weight:740;color:#284b68}
+.dm-roster-choice input{width:17px;height:17px;accent-color:#1971b7}
+.dm-roster-choice .student-avatar{width:29px;height:29px;font-size:10px}
+.dm-check-label{display:flex;align-items:center;gap:10px;margin:13px 0;padding:12px;background:#f1f7fb;border-radius:10px;font-size:12px;color:#234a68}
+.dm-check-label input{width:20px;height:20px;flex-shrink:0;accent-color:#1971b7}
+.dm-marketing-teaser{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:center;gap:35px;background:#fff;border:1px solid #e3ebf1;border-radius:24px;padding:26px;box-shadow:var(--shadow)}
+.dm-teaser-art{min-height:245px;background:linear-gradient(142deg,#0b2b4a,#256fab);border-radius:16px;color:#e4c782;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:65px;font-weight:900;box-shadow:inset 0 0 0 10px #fff1}
+.dm-teaser-art span{color:white;font-size:15px;letter-spacing:3px;text-align:center}
+.dm-marketing-teaser h3{font-size:26px;color:#103554;line-height:1.2;margin:0 0 12px}
+.dm-marketing-teaser p{color:#60768b;margin:8px 0 15px}
+.dm-marketing-teaser .fineprint{font-size:11px}
+@media(max-width:1100px){.dm-player-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dm-event-card{grid-template-columns:66px minmax(0,1fr) auto;gap:12px;padding:14px}.dm-event-date{min-height:80px}}
+@media(max-width:780px){.dm-spotlight-hero,.dm-event-intro{padding:26px 24px;min-height:190px}.dm-hero-trophy,.dm-calendar-art{width:90px;height:90px}.dm-hero-trophy .icon,.dm-calendar-art .icon{width:55px;height:55px}.dm-simple-stats{gap:8px}.dm-simple-stats>div{padding:13px}.dm-simple-stats strong{font-size:25px}.dm-simple-stats span{font-size:10px}.dm-player-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dm-marketing-teaser{grid-template-columns:1fr}.dm-teaser-art{min-height:160px}.chat-trigger{font-size:0!important;padding:13px!important;width:52px;height:52px;justify-content:center;right:12px!important;bottom:76px!important}.chat-trigger .icon{width:22px;height:22px}}
+@media(max-width:570px){.dm-player-grid{grid-template-columns:1fr}.dm-portrait{height:185px}.dm-card-info{min-height:unset}.dm-card-top{height:44px}.dm-spotlight-hero,.dm-event-intro{padding:25px 21px}.dm-spotlight-hero h2,.dm-event-intro h2{font-size:26px}.dm-hero-trophy,.dm-calendar-art{display:none}.dm-simple-stats span{font-size:10px}.dm-event-card{grid-template-columns:64px minmax(0,1fr);gap:11px;padding:11px}.dm-event-date{min-height:76px}.dm-event-date b{font-size:27px}.dm-event-copy h3{font-size:15px}.dm-event-button{grid-column:2;width:100%;min-height:36px}.dm-roster-choices{grid-template-columns:1fr}.dm-section-line h2{font-size:18px}.dm-section-line .pill{font-size:10px}.dm-dialog-summary .dm-portrait{width:89px;height:89px}.dm-dialog-summary{gap:10px;padding:10px}.dm-dialog-summary h3{font-size:19px}.dm-dialog-actions .btn{flex:1}.dm-info-grid{gap:5px}.dm-info-grid>div{padding:8px 7px}.dm-info-grid strong{font-size:12px}.dm-marketing-teaser{padding:15px}.dm-marketing-teaser h3{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.dm-player-card{transition:none}}
+
+</style>
+<style id="dance-v4-inline">
+/* Dance Manager Next V3: premium marketing design and sample competition art */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
+.n3-site{background:#080a11;color:#f7f3f8;font-family:'DM Sans',system-ui,sans-serif;line-height:1.45;overflow:hidden}
+.n3-site button{font-family:inherit}.n3-site em{font-family:'Playfair Display',Georgia,serif;font-weight:500;color:#e698df}
+.n3-site a{text-decoration:none}.n3-site button:focus-visible,.n3-site a:focus-visible,.n3-categories button:focus-visible{outline:2px solid #f0a6ed;outline-offset:4px}
+.n3-header{background:#080911;border-bottom:1px solid #ffffff1c;position:relative;z-index:15}
+.n3-bar{min-height:78px;max-width:1510px;margin:auto;padding:13px 4%;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.n3-logo{flex-shrink:0}.n3-brand{color:#fff;font:600 23px/1.05 Georgia,serif;letter-spacing:-.6px;white-space:nowrap}.n3-brand em{font-size:30px;font-style:italic}
+.n3-brand small{display:block;font:500 9px/1.9 'DM Sans',system-ui,sans-serif;letter-spacing:1.5px;color:#b8afc2;margin-top:3px}
+.n3-desktop{display:flex;align-items:center;gap:24px;white-space:nowrap}
+.n3-desktop a,.n3-nav-btn{color:#f0edf4;font-size:12px;font-weight:700;border:0;background:transparent;padding:10px 1px}
+.n3-desktop a:hover,.n3-nav-btn:hover{color:#eaa2e7}.n3-top-actions{display:flex;align-items:center;gap:12px}
+.n3-button{background:#e7a0eb;border:1px solid #f9b5fa;color:#160f20;border-radius:12px;padding:13px 23px;min-height:44px;font-size:13px;font-weight:800;box-shadow:0 10px 24px #b760d629;transition:transform .15s,filter .15s;cursor:pointer}
+.n3-button:hover{filter:brightness(1.08);transform:translateY(-2px)}.n3-sm{padding:10px 18px;min-height:39px;white-space:nowrap}
+.n3-signin,.n3-ghost,.n3-outline{background:#09080dc7;color:#fff;border:1px solid #eca4e9;border-radius:12px;padding:11px 19px;font-size:13px;font-weight:700;min-height:42px;transition:background .15s;cursor:pointer}
+.n3-signin:hover,.n3-ghost:hover,.n3-outline:hover{background:#70326988}
+.n3-menu-btn{display:none;background:transparent;border:1px solid #e8a3ed77;color:#fff;border-radius:11px;width:44px;height:42px;align-items:center;justify-content:center}
+.n3-mobile{display:none}
+.n3-hero{position:relative;min-height:600px;display:flex;align-items:center;background:radial-gradient(circle at 73% 40%,#602350 0,transparent 54%),#090b13;isolation:isolate}
+.n3-hero-visual{position:absolute;inset:0 0 0 39%;overflow:hidden;z-index:-2}
+.n3-hero-photo{width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.94;filter:saturate(1.08) contrast(1.08)}
+.n3-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#080a11 1%,#080a11cc 12%,#080a1133 40%,#080a1120 73%),linear-gradient(0deg,#080a1199,transparent 35%)}
+.n3-hero-glow{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#090a11 0%,#090a11ed 27%,#090a1140 52%,transparent 76%)}
+.n3-hero-copy{position:relative;padding:58px 5% 58px;max-width:1500px;width:100%;margin:auto}
+.n3-eyebrow,.n3-kicker{letter-spacing:2.6px;color:#ec9ae6;font-weight:800;font-size:10px}
+.n3-hero h1{font:600 clamp(64px,7vw,112px)/.99 'Playfair Display',Georgia,serif;letter-spacing:-3.4px;margin:20px 0 20px;max-width:850px;text-shadow:0 3px 20px #0005}
+.n3-hero h1 em{font-weight:500}.n3-subtitle{font:400 clamp(18px,2vw,23px)/1.52 'Playfair Display',Georgia,serif;color:#f5e9f7;max-width:475px;margin:0 0 26px}
+.n3-highlights{display:flex;align-items:center;flex-wrap:wrap;gap:16px 25px;margin:10px 0 27px}
+.n3-highlights span{font-size:13px;font-weight:750;display:flex;align-items:center;gap:8px;color:#e9e4ee}
+.n3-highlights .icon{color:#e799e5}.n3-hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.n3-demo-detail{font-size:11px;color:#b5a7bd;margin-top:25px}
+.n3-benefits{display:grid;grid-template-columns:repeat(4,1fr);max-width:100%;background:#171520;border-top:1px solid #ffffff2a;border-bottom:1px solid #ffffff27}
+.n3-benefits span{display:flex;align-items:center;justify-content:center;gap:13px;min-height:76px;padding:14px;color:#f1e7f3;font-size:13px;font-weight:700;border-right:1px solid #ffffff19}.n3-benefits .icon{color:#d68ada;width:24px;height:24px}
+.n3-feature-section{max-width:1500px;margin:0 auto;padding:70px 2.5% 82px}
+.n3-section-header{display:flex;align-items:end;justify-content:space-between;gap:25px;padding:0 14px 29px}
+.n3-section-header h2{font:600 clamp(28px,3vw,48px)/1.15 'Playfair Display',Georgia,serif;margin:5px 0 0}
+.n3-section-header>p{max-width:330px;color:#b7afc1;font-size:14px}
+.n3-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.n3-tile{position:relative;min-height:395px;border:1px solid #e8b8e449;border-radius:17px;overflow:hidden;background:#15121c;isolation:isolate}
+.n3-tile>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 32%;z-index:-2;filter:saturate(.9) contrast(1.07);transition:transform .4s}
+.n3-tile:nth-child(2)>img{object-position:45% 40%}.n3-tile:nth-child(4)>img{object-position:50% 30%}
+.n3-tile:hover>img{transform:scale(1.05)}
+.n3-tile-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#06070bf5 0%,#06070bc4 28%,#08070c20 70%)}
+.n3-tile-info{position:absolute;bottom:0;left:0;right:0;padding:26px 21px 22px}
+.n3-tile-tag{font-size:9px;color:#ecabe9;letter-spacing:2px;font-weight:800}
+.n3-tile h3{font:600 27px/1.13 'Playfair Display',Georgia,serif;letter-spacing:-.5px;margin:7px 0 5px}
+.n3-tile p{font-size:12px;color:#e2dbe3;line-height:1.5;min-height:57px;margin:0 0 16px}
+.n3-outline{font-size:12px;padding:8px 13px;min-height:38px;background:#07080ac0}
+.n3-preview-section{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:7%;padding:75px max(5%,calc((100vw - 1360px)/2));background:radial-gradient(ellipse at 80% 24%,#51234f90,transparent 58%),#19101c}
+.n3-preview-copy h2{font:600 clamp(32px,4vw,56px)/1.2 'Playfair Display',Georgia,serif;margin:13px 0 19px}
+.n3-preview-copy>p:not(.n3-kicker){font-size:15px;line-height:1.7;color:#cfc4d2;max-width:460px}
+.n3-pill-row{display:flex;gap:7px;flex-wrap:wrap;margin:25px 0 28px}.n3-pill-row span{font-size:11px;color:#f9d3f8;border:1px solid #c788bc5e;border-radius:50px;padding:9px 11px}
+.n3-preview-panel{border-radius:22px;padding:22px;background:#f6f1f9;box-shadow:0 30px 80px #0008;color:#1c1427;max-width:550px;width:100%;margin:auto}
+.n3-preview-panel-top{display:flex;justify-content:space-between;font-size:17px;align-items:center}.n3-preview-panel-top span{font-size:9px;letter-spacing:1px;background:#eadbef;border-radius:20px;padding:5px 8px}
+.n3-preview-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:20px}
+.n3-preview-metrics>div{padding:15px 10px;background:white;border-radius:11px;border:1px solid #e3d9e5}
+.n3-preview-metrics small{font-size:10px;color:#77697b;display:block}.n3-preview-metrics strong{font-size:27px;color:#532654;display:block}
+.n3-preview-bars{height:160px;padding:18px 18px 0;display:flex;align-items:end;gap:13px;justify-content:center;background:#fff;border-radius:12px;margin-top:16px}
+.n3-preview-bars i{display:block;width:8%;border-radius:6px 6px 0 0;background:linear-gradient(0deg,#a756a7,#e4a1dc)}
+.n3-preview-panel>p{font-size:10px;text-align:center;color:#88768a;margin:11px 0 0}
+.n3-spotlight-banner{position:relative;min-height:430px;isolation:isolate;display:flex;align-items:center;justify-content:flex-end;padding:55px 8%;background:#0b0a11}
+.n3-spotlight-banner>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 30%;z-index:-2;opacity:.66}
+.n3-spotlight-banner:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#090a1040,#08090cef 66%)}
+.n3-spotlight-banner>div{max-width:580px}
+.n3-spotlight-banner h2{font:600 clamp(36px,4.5vw,58px)/1.15 'Playfair Display',Georgia,serif;margin:15px 0}
+.n3-spotlight-banner p:not(.n3-kicker){color:#e9ddec;font-size:15px;line-height:1.7;margin-bottom:22px}
+.n3-final-cta{text-align:center;padding:83px 20px 95px;background:radial-gradient(circle at 50% 0%,#562350,#0c0a12 70%)}
+.n3-final-cta h2{font:600 clamp(33px,4vw,54px)/1.13 'Playfair Display',Georgia,serif;margin:10px auto 15px}.n3-final-cta p:not(.n3-kicker){margin:0 auto 23px;max-width:500px;color:#d2c6d4}
+.n3-footer{padding:35px 5%;display:flex;justify-content:space-between;gap:25px;border-top:1px solid #ffffff24;align-items:center}.n3-footer p,.n3-footer small{font-size:10px;color:#9992a4}
+.n3-site ~ .chat-trigger{background:#d488df}
+.demo-banner{background:#261629;color:#f3c6ed;border-bottom-color:#9c538a;letter-spacing:.4px}
+.dm-player-card{border-color:#ebdbea}.dm-card-top{background:#191221}.dm-card-eyebrow{color:#e7c4e9}.dm-card-no{color:#f2b5ee}
+.dm-portrait{background-color:#241b32!important;background-image:url('https://images.unsplash.com/photo-1771528471837-573223e7a6b0?auto=format&fit=crop&w=550&q=85')!important;background-position:center 45%!important;background-size:cover!important;height:215px}
+.dm-portrait-2{background-image:url('https://images.unsplash.com/photo-1769694513443-c7292e174d48?auto=format&fit=crop&w=550&q=85')!important}
+.dm-portrait-3{background-image:url('https://images.unsplash.com/photo-1760543320214-9a578e5c5b73?auto=format&fit=crop&w=550&q=85')!important}
+.dm-portrait-4{background-image:url('https://images.unsplash.com/photo-1741846895501-4c79409bc570?auto=format&fit=crop&w=550&q=85')!important}
+.dm-portrait:before{width:100%;height:100%;inset:0;border:0;border-radius:0;background:linear-gradient(0deg,#090714a3,transparent 50%)}.dm-portrait:after{display:none}
+.dm-portrait .dm-dance-silhouette{display:none}.dm-portrait .dm-monogram{color:#fff;opacity:.88;text-shadow:0 2px 9px #000b;font-size:27px}
+.dm-spotlight-hero{background:linear-gradient(90deg,#140f25,#281639a9),url('https://images.unsplash.com/photo-1769694513443-c7292e174d48?auto=format&fit=crop&w=1100&q=80') right 40%/cover}
+.dm-event-intro{background:linear-gradient(90deg,#140f25ee,#1e132a99),url('https://images.unsplash.com/photo-1741846895501-4c79409bc570?auto=format&fit=crop&w=1100&q=80') center/cover}
+.dm-spotlight-hero h2,.dm-event-intro h2{font-family:'Playfair Display',Georgia,serif;font-weight:600}
+.dm-spotlight-hero .dm-mini-label,.dm-event-intro .dm-mini-label{color:#efa6e8}
+.dm-spotlight-hero .btn-primary,.dm-card-button{background:#8d458f;border-color:#8d458f}
+.n3-categories{margin:0 0 28px;background:#fff;border-radius:18px;padding:18px;border:1px solid #ebdceb;box-shadow:0 9px 30px #3c1e460d}
+.n3-category-banner{position:relative;background:linear-gradient(110deg,#1e112deb,#1e112dab),#31173c;border-radius:13px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:26px;min-height:155px;color:white}
+.n3-category-banner>div{z-index:1;max-width:500px}.n3-category-banner span{font-size:10px;font-weight:850;letter-spacing:2px;color:#e8a7e5}
+.n3-category-banner h2{font:600 clamp(27px,3vw,39px)/1.1 'Playfair Display',Georgia,serif;margin:8px 0}.n3-category-banner p{font-size:12px;line-height:1.5;color:#e7d8ed;margin:0}
+.n3-category-banner>img{width:36%;max-height:175px;align-self:stretch;object-fit:cover;border-radius:12px;opacity:.85}
+.n3-filter-label{font-size:11px;letter-spacing:1.5px;font-weight:850;color:#6c4b74;margin:24px 0 10px}
+.n3-format-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.n3-format-btn{min-height:64px;padding:9px 4px;font-weight:800;font-size:11px;color:#5b426b;background:#f6eff9;border:1px solid #e7dbe9;border-radius:13px;cursor:pointer}
+.n3-format-btn.active{background:#8d458f;color:#fff;border-color:#8d458f;box-shadow:0 5px 15px #8d458f48}
+.n3-style-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:22px 0 14px}.n3-style-row>span{font-size:12px;font-weight:800;color:#5a4763;margin-right:5px}
+.n3-style-btn{background:#fff;border:1px solid #dbcee1;border-radius:50px;font-weight:750;padding:7px 10px;color:#624e65;font-size:11px;cursor:pointer}
+.n3-style-btn.active{background:#291a34;color:#fff}
+.n3-routines-head{display:flex;align-items:baseline;justify-content:space-between;margin:21px 0 12px}.n3-routines-head h3{font-size:22px;font-weight:800;color:#26172b;margin:0}.n3-routines-head span{font-size:10px;color:#8c7692}
+.n3-routines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.n3-routine{border-radius:14px;overflow:hidden;border:1px solid #eadcea;background:#fff;min-width:0}
+.n3-routine-img{position:relative;height:150px;overflow:hidden;background:#1d1226}.n3-routine-img>img{width:100%;height:100%;object-fit:cover;object-position:50% 36%}.n3-routine-img>span{position:absolute;top:10px;right:8px;border-radius:7px;background:#ffda85;color:#4a2e1c;font-size:10px;padding:6px;font-weight:900}
+.n3-routine-info{padding:14px}.n3-routine-info small{font-size:10px;color:#9359a1;font-weight:800;letter-spacing:.6px}.n3-routine-info h4{font-size:18px;margin:5px 0 3px;color:#24182a}.n3-routine-info p{font-size:12px;color:#53405d;margin:0 0 9px}.n3-routine-info>span{font-size:10px;color:#8b7b94}
+.n3-no-results{padding:22px;background:#f7f0f7;border-radius:12px;color:#634a6e;grid-column:1/-1;font-size:12px}
+@media(max-width:1200px){.n3-bar{gap:15px}.n3-desktop{gap:15px}.n3-brand{font-size:20px}.n3-brand em{font-size:25px}.n3-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.n3-tile{min-height:355px}.n3-preview-section{padding:70px 5%}}
+@media(max-width:920px){.n3-desktop,.n3-signin,.n3-top-actions .n3-sm{display:none}.n3-menu-btn{display:flex}.n3-bar{min-height:70px}.n3-mobile{display:grid;padding:11px 5% 20px;gap:3px;background:#120f19;border-top:1px solid #ffffff22}.n3-mobile>a,.n3-mobile>.n3-nav-btn{display:block;text-align:left;width:100%;color:#fff;border:0;background:transparent;font-size:15px;padding:13px 7px;min-height:44px}.n3-hero{min-height:550px}.n3-hero-visual{left:25%}.n3-hero-glow{background:linear-gradient(90deg,#090a11 0%,#090a11db 36%,#090a1136 86%)}.n3-benefits{grid-template-columns:repeat(2,1fr)}.n3-benefits span{justify-content:flex-start;padding-left:15%}.n3-preview-section{gap:4%}}
+@media(max-width:620px){.n3-bar{padding:14px 17px;min-height:65px}.n3-brand{font-size:20px}.n3-brand em{font-size:24px}.n3-brand small{font-size:7px;letter-spacing:1px}
+.n3-hero{min-height:690px;align-items:flex-end}.n3-hero-visual{inset:0 0 0 0;height:460px}.n3-hero-photo{object-position:64% 15%}.n3-hero-visual:after{background:linear-gradient(0deg,#080a11 2%,#080a1150 50%,#080a1133 100%)}
+.n3-hero-glow{background:linear-gradient(0deg,#080a11 18%,#080a11eb 28%,#080a1100 75%)}.n3-hero-copy{padding:245px 23px 40px}.n3-eyebrow{font-size:9px;letter-spacing:2px}
+.n3-hero h1{font-size:clamp(56px,12vw,75px);letter-spacing:-2.7px;margin:12px 0}.n3-subtitle{font-size:17px;max-width:350px;margin-bottom:19px}.n3-highlights{gap:9px 15px;margin:14px 0 23px}.n3-highlights span{font-size:11px}.n3-hero-actions{flex-direction:column;align-items:stretch}.n3-hero-actions button{width:100%}.n3-demo-detail{font-size:10px;margin-top:15px}
+.n3-benefits span{min-height:64px;padding:10px 12px;gap:7px;font-size:10px}.n3-benefits .icon{height:19px;width:19px}.n3-feature-section{padding:45px 15px 54px}.n3-section-header{display:block;padding:0 5px 25px}.n3-section-header h2{font-size:32px}.n3-section-header>p{font-size:12px;margin:14px 0 0}
+.n3-tiles{grid-template-columns:1fr;gap:14px}.n3-tile{min-height:390px}.n3-tile>img{object-position:50% 35%}.n3-tile-info{padding:21px}.n3-tile h3{font-size:29px}
+.n3-preview-section{grid-template-columns:1fr;gap:30px;padding:52px 18px}.n3-preview-copy h2{font-size:37px}.n3-preview-copy>p:not(.n3-kicker){font-size:13px}.n3-preview-panel{padding:17px}.n3-preview-metrics strong{font-size:22px}.n3-preview-metrics small{font-size:9px}.n3-preview-metrics>div{padding:10px 7px}
+.n3-spotlight-banner{justify-content:flex-start;min-height:440px;padding:155px 20px 35px;align-items:end}.n3-spotlight-banner>img{object-position:45% 22%}.n3-spotlight-banner:after{background:linear-gradient(0deg,#090a11 0%,#090a11e5 35%,#090a1145 87%)}.n3-spotlight-banner h2{font-size:36px}.n3-spotlight-banner p:not(.n3-kicker){font-size:12px}.n3-final-cta{padding:65px 22px}.n3-footer{padding:30px 20px;flex-direction:column;align-items:flex-start}
+.n3-categories{padding:10px}.n3-category-banner{padding:19px;min-height:190px}.n3-category-banner>img{position:absolute;inset:0;width:100%;height:100%;opacity:.22;max-height:none;z-index:0}.n3-category-banner>div{z-index:1}.n3-format-row{grid-template-columns:repeat(3,1fr);gap:6px}.n3-format-btn{min-height:60px}.n3-routines{grid-template-columns:1fr 1fr;gap:8px}.n3-routine-img{height:135px}.n3-routine-info{padding:10px}.n3-routine-info h4{font-size:15px}.n3-routine-img>span{font-size:8px}.n3-spotlight-banner .n3-button{width:100%}
+.dm-portrait{height:200px!important}
+}
+@media(max-width:380px){.n3-routines{grid-template-columns:1fr}.n3-format-btn{font-size:10px}.n3-hero h1{font-size:51px}}
+
+
+/* V3.1 mobile visual refinements after real iPhone screenshot */
+@media(max-width:620px){
+ .demo-banner{height:30px;min-height:30px;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px;line-height:18px;letter-spacing:.1px}
+ .demo-banner .icon{display:none}
+ .n3-bar{min-height:62px;padding:10px 16px}
+ .n3-brand{font-size:18.5px}
+ .n3-brand em{font-size:23px}
+ .n3-brand small{font-size:6.5px;letter-spacing:.9px}
+ .n3-menu-btn{height:41px;width:41px}
+ .n3-hero{min-height:655px}
+ .n3-hero-visual{height:440px}
+ .n3-hero-photo{filter:brightness(1.43) contrast(1.03) saturate(1.15);object-position:62% 24%}
+ .n3-hero-visual:after{background:linear-gradient(0deg,#080a11 0%,#080a11a0 8%,#080a1100 54%,#080a1100 100%)}
+ .n3-hero-glow{background:linear-gradient(0deg,#080a11 9%,#080a11c9 26%,#080a1100 62%)}
+ .n3-hero-copy{padding:190px 22px 26px}
+ .n3-hero h1{font-size:clamp(47px,12vw,55px);line-height:1.025;letter-spacing:-2px;margin:12px 0 12px}
+ .n3-subtitle{font-size:15px;line-height:1.46;margin:0 0 14px;max-width:330px}
+ .n3-highlights{margin:12px 0 15px;gap:7px 12px}
+ .n3-highlights span{font-size:10px}
+ .n3-hero-actions{gap:9px}
+ .n3-hero-actions button{min-height:44px;padding:11px 14px;font-size:12px}
+ .n3-demo-detail{margin:13px 0 0}
+ .n3-site ~ .chat-trigger{width:44px;height:44px;min-width:44px;min-height:44px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:0;font-size:0;justify-content:center;background:#bd6dcc;box-shadow:0 7px 20px #37113c50}
+ .n3-site ~ .chat-trigger .icon{width:21px;height:21px}
+ .n3-site ~ .chat-pane{right:10px;bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:380px){
+ .n3-hero h1{font-size:46px}
+ .n3-brand{font-size:17px}
+ .n3-hero-copy{padding-top:183px}
+}
+
+</style>
+<style id="dance-v5-chat-styles">
+/* Dance Manager Next V5 - visitor assistant */
+.dm5-invite{position:fixed;right:15px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:flex-start;gap:9px;max-width:min(300px,calc(100vw - 34px));padding:13px 13px 13px 16px;border-radius:17px 17px 4px 17px;border:1px solid #eccbea;background:#fff;color:#321e35;box-shadow:0 11px 38px #170a2480;animation:dm5-appear .4s ease both}
+.dm5-invite-text{font-family:system-ui,sans-serif;font-size:13px;text-align:left;line-height:1.47;cursor:pointer;background:none;border:0;color:#321e35;padding:0}.dm5-invite-text b{display:block;font-size:14px}.dm5-invite-close{color:#735476;border:0;background:#f4edf6;border-radius:50%;min-width:25px;min-height:25px;font-size:18px;line-height:22px;cursor:pointer}
+.dm5-chat-dot{position:absolute;width:10px;height:10px;background:#57d0a1;border:2px solid #fff;right:5px;top:5px;border-radius:50%}
+.dm5-chat-pane{font-family:system-ui,-apple-system,sans-serif;overflow:hidden;max-width:390px;width:min(390px,calc(100vw - 24px));height:min(620px,calc(100dvh - 145px));bottom:calc(77px + env(safe-area-inset-bottom,0px));right:12px;border:1px solid #b98cba;box-shadow:0 20px 60px #1a0c2480;z-index:95;display:flex;flex-direction:column;background:#fff}
+.dm5-chat-pane .chat-head{background:linear-gradient(120deg,#29122e,#532853);display:flex;align-items:center;gap:11px;padding:16px 15px;min-height:72px;color:#fff}
+.dm5-chat-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:37px;height:37px;border:1px solid #f5c2ef69;border-radius:12px;background:#ae62b0;font-size:22px}
+.dm5-chat-pane .chat-head>div:nth-child(2){flex:1;min-width:0}.dm5-chat-pane .chat-head b{font-size:14px}.dm5-chat-pane .chat-head small{display:block;font-size:10px;color:#f5d9f4;margin-top:3px}
+.dm5-chat-close{display:flex;align-items:center;justify-content:center;background:#ffffff1d;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:34px;height:34px;font-size:20px;cursor:pointer;flex-shrink:0}
+.dm5-automated{font-size:10px;color:#61476c;padding:9px 13px;background:#faf3fa;border-bottom:1px solid #f0e6f0;text-align:center}
+.dm5-chat-pane .dm5-history{background:#f9f7fb;padding:16px 13px 10px;display:flex;flex:1;min-height:0;overflow-y:auto;flex-direction:column;gap:11px}
+.dm5-msg{font-size:13px;line-height:1.5;max-width:91%;padding:12px 14px;border-radius:15px;white-space:pre-wrap;overflow-wrap:anywhere}
+.dm5-msg.bot{align-self:flex-start;background:#fff;color:#2d2431;border:1px solid #eee4ed;border-bottom-left-radius:4px;box-shadow:0 3px 9px #28102e0a}
+.dm5-msg.mine{align-self:flex-end;background:#602c69;color:#fff;border-bottom-right-radius:4px}
+.dm5-choices{padding:10px 12px 12px;display:grid;grid-template-columns:1fr 1fr;gap:7px;background:#fff;border-top:1px solid #f1eaf2}
+.dm5-choices button{min-height:41px;text-align:left;border:1px solid #dfc1df;border-radius:10px;background:#fbf5fb;color:#47284d;font-size:11px;font-weight:750;cursor:pointer;padding:9px 10px}
+.dm5-choices button:hover{background:#f4e5f5}.dm5-choices .dm5-full{grid-column:1/-1;background:#713774;color:#fff;text-align:center;font-size:12px}
+.dm5-chat-pane .chat-input{padding:10px;display:flex;gap:8px;background:#fff;border-top:1px solid #f4ebf5}
+.dm5-chat-pane .chat-input input{min-width:0;flex:1;font-size:13px;border-radius:10px;border:1px solid #ddd0e1;padding:9px 11px;outline-color:#ae70b6}
+.dm5-chat-pane .chat-input button{background:#793a7c;border:0;border-radius:9px;width:40px;min-width:40px;display:flex;align-items:center;justify-content:center;color:white}
+.dm5-lead{padding:11px 13px 16px;background:#fff;border-top:1px solid #ecdfeb;overflow-y:auto;max-height:52%}
+.dm5-lead h3{font-size:14px;color:#42274b;margin:0 0 6px}.dm5-lead p{font-size:11px;color:#715b79;line-height:1.45;margin:0 0 10px}
+.dm5-lead-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.dm5-lead label{display:block;color:#433449;font-size:10px;font-weight:700;margin:7px 0 3px}
+.dm5-lead input,.dm5-lead select,.dm5-lead textarea{width:100%;border-radius:8px;border:1px solid #d9cadc;padding:9px;font-size:12px;min-height:37px;background:#fff;color:#241629}
+.dm5-lead textarea{min-height:57px;resize:vertical}.dm5-lead-actions{display:flex;gap:8px;margin-top:11px}
+.dm5-lead-actions button{font-weight:750;padding:10px 9px;border-radius:9px;font-size:11px;cursor:pointer}
+.dm5-send-demo{background:#713774;border:1px solid #713774;color:white;flex:1}.dm5-back{border:1px solid #d4bbd8;background:#fff;color:#56385e}
+.dm5-consent{display:flex!important;align-items:flex-start;gap:7px;font-weight:500!important;line-height:1.38;margin:10px 0 4px!important}.dm5-consent input{width:15px;min-width:15px;min-height:15px;accent-color:#713774;margin-top:0}
+.n3-site ~ .chat-trigger{background:#a35cae!important;box-shadow:0 7px 25px #8d398b66!important}
+@keyframes dm5-appear{from{opacity:0;transform:translateY(9px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:620px){
+ .dm5-chat-pane{position:fixed;top:auto;right:8px;bottom:calc(70px + env(safe-area-inset-bottom,0px));width:calc(100vw - 16px);height:min(590px,calc(100dvh - 158px));max-height:calc(100dvh - 158px)}
+ .dm5-invite{right:12px;bottom:calc(78px + env(safe-area-inset-bottom,0px));max-width:270px}
+ .n3-site ~ .chat-trigger{z-index:91}
+}
+@media(max-height:610px){.dm5-chat-pane{height:calc(100dvh - 100px);max-height:calc(100dvh - 100px);bottom:65px}.dm5-lead{max-height:66%}}
+@media(prefers-reduced-motion:reduce){.dm5-invite{animation:none}}
+</style>
+<style id="dance-v6-mobile-lead">
+/* V6: focused demo request mobile experience */
+.dm5-chat-pane.dm6-lead-mode{display:flex;flex-direction:column}
+.dm6-lead-mode .dm5-history{display:none}
+.dm6-lead-mode .dm5-lead{display:block;flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:18px 19px 26px}
+.dm6-lead-mode .dm5-lead h3{font-size:20px;line-height:1.25;margin:0 0 7px;color:#442746;font-weight:800}
+.dm6-lead-mode .dm5-lead>p{margin-bottom:17px;font-size:12px;line-height:1.55}
+.dm6-lead-mode .dm5-lead label{font-size:12px;margin-top:13px;margin-bottom:6px}
+.dm6-lead-mode .dm5-lead input:not([type=checkbox]),.dm6-lead-mode .dm5-lead select,.dm6-lead-mode .dm5-lead textarea{font-size:16px;min-height:46px;line-height:1.2}
+.dm6-lead-mode .dm5-lead textarea{min-height:70px;line-height:1.4}
+.dm6-lead-mode .dm5-lead-actions{position:sticky;bottom:-26px;z-index:2;display:flex;gap:9px;margin:16px -19px -26px;padding:12px 19px 14px;background:#fff;box-shadow:0 -8px 20px #ffffffed;border-top:1px solid #eee2ef}
+.dm6-lead-mode .dm5-lead-actions button{min-height:48px;font-size:13px}
+.dm6-lead-mode .dm5-back{min-width:75px}
+.dm6-lead-mode .dm5-send-demo{color:#fff;background:#713774;border-color:#713774}
+.dm5-choices .dm5-full{color:#fff;background:#713774;border-color:#713774;font-weight:800}
+.dm5-choices .dm5-full:hover{background:#612d69}
+@media(max-width:620px){
+ .dm5-chat-pane.dm6-lead-mode{position:fixed!important;top:9px!important;right:8px!important;bottom:9px!important;left:8px!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;border-radius:17px;z-index:110}
+ .dm6-lead-mode .chat-head{min-height:62px;padding:12px 14px}
+ .dm6-lead-mode .dm5-chat-avatar{width:32px;height:32px;font-size:18px}
+ .dm6-lead-mode .dm5-automated{padding:8px;font-size:10px}
+ .dm6-lead-mode .dm5-lead-grid{grid-template-columns:1fr;gap:0}
+ .dm6-lead-mode .dm5-lead{padding:15px 18px 23px}
+ .dm6-lead-mode .dm5-lead-actions{bottom:-23px;margin:16px -18px -23px;padding:12px 18px 14px}
+ .dm6-lead-mode .dm5-consent{padding:7px 0}
+ .dm6-lead-mode .dm5-consent input{min-height:18px!important;width:18px!important;min-width:18px!important}
+}
+</style>
+<style id="dm-v7-css">
+/* V7 integrated AI and lead delivery states */
+.dm7-status{display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;padding:9px 12px;background:#f6eef7;color:#5a3b62;border-bottom:1px solid #e5d5e5;text-align:center}
+.dm7-status.live{background:#eaf8f1;color:#17634e}.dm7-status.offline{background:#fff5eb;color:#865a27}
+.dm7-status .dm7-dot{height:7px;width:7px;background:currentColor;border-radius:50%;display:inline-block}
+.dm7-lead-alert{padding:10px 12px;border:1px solid #d7b7d7;border-radius:10px;font-size:12px;color:#62436a;background:#fbf3fb;margin:11px 0 4px}
+.dm7-lead-alert.error{background:#fff0ee;border-color:#efb4ab;color:#8d302d}
+.dm7-lead-alert.success{background:#eaf8ef;border-color:#a5dbba;color:#206644}
+.dm7-lead-form-loading{opacity:.73;pointer-events:none}
+.dm7-chat-privacy{font-size:10px;color:#745a79;line-height:1.4;padding:6px 15px;background:#fcf9fd;text-align:center}
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="modal-root"></div>
+  <div id="toast-root" role="status" aria-live="polite"></div>
+  <script>
+/* Dance Manager Next V1: independently built fictional-data prototype. No production integrations. */
+'use strict';
+const KEY='dance-manager-next-v1-demo-only';
+const ICONS={
+ spark:'<path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6z"/><path d="m19 17 .7 2.3L22 20l-2.3.7L19 23l-.7-2.3L16 20l2.3-.7z"/>',
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+ users:'<path d="M16 20v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+ calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+ credit:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h3"/>',
+ chart:'<path d="M3 3v18h18M7 16l4-5 3 2 5-7"/>',
+ chat:'<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.6 0-3.2-.4-4.5-1.2L3 20l1.2-5A8.5 8.5 0 1 1 21 11.5Z"/>',
+ shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+ check:'<path d="m5 12 4 4L19 6"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+ menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',
+ info:'<circle cx="12" cy="12" r="10"/><path d="M12 11v5M12 8h.01"/>',
+ bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/>',
+ book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>',
+ dollar:'<circle cx="12" cy="12" r="10"/><path d="M12 5v14M16 8c-2.5-2-8-1.5-8 1.4 0 3.4 8 1 8 4.5 0 3-5.5 3.8-8 1.8"/>',
+ dance:'<circle cx="15" cy="4" r="2"/><path d="m14 7-3 5-5 2m5-2 7 1 3 5M11 12l-1 7-4 3m7-15 5 3"/>',
+ home:'<path d="m3 11 9-8 9 8v9H3z"/><path d="M9 20v-6h6v6"/>',
+ save:'<path d="M5 3h13l3 3v15H3V3h2zM7 3v7h10V3M7 21v-8h10v8"/>',
+ alert:'<path d="m12 3 10 18H2L12 3zM12 9v5m0 3h.01"/>',
+ download:'<path d="M12 2v13m-4-4 4 4 4-4M4 17v4h16v-4"/>',
+ log:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .4 1.9l.1.1-2 2-.1-.1a1.7 1.7 0 0 0-1.9-.4 1.7 1.7 0 0 0-1 1.5V21h-3v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.4l-.1.1-2-2 .1-.1a1.7 1.7 0 0 0 .4-1.9 1.7 1.7 0 0 0-1.5-1H5v-3h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.4-1.9L6.1 8l2-2 .1.1a1.7 1.7 0 0 0 1.9.4A1.7 1.7 0 0 0 11.2 5V4h3v1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.4l.1-.1 2 2-.1.1a1.7 1.7 0 0 0-.4 1.9 1.7 1.7 0 0 0 1.5 1H21v3h-.1a1.7 1.7 0 0 0-1.5 1Z"/>',
+ filter:'<path d="M4 5h16M7 12h10M10 19h4"/>',
+ chevron:'<path d="m9 18 6-6-6-6"/>',
+ external:'<path d="M13 4h7v7M20 4l-9 9M19 14v6H4V5h6"/>',
+ phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+ eye:'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.5"/>',
+ rotate:'<path d="M3 12a9 9 0 1 1 2 5M3 17v-5h5"/>',
+ lightning:'<path d="m13 2-9 12h7l-1 8 10-13h-7z"/>'
+};
+function icon(name){return `<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONS[name]||ICONS.grid}</svg></span>`}
+function esc(str){return String(str??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
+const USD=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(n)||0);
+const initials=s=>String(s||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+const prettyDate=s=>{if(!s)return '—'; const t=new Date(s+'T12:00:00');return Number.isNaN(+t)?esc(s):t.toLocaleDateString('en-US',{month:'short',day:'numeric'});};
+const sample=()=>({
+ students:[
+  {id:'s1',name:'Avery Brooks',age:9,level:'Ballet I',guardian:'Morgan Brooks',email:'family1@example.test',status:'Active'},
+  {id:'s2',name:'Maya Chen',age:11,level:'Jazz II',guardian:'Taylor Chen',email:'family2@example.test',status:'Active'},
+  {id:'s3',name:'Sophia Rivera',age:8,level:'Ballet I',guardian:'Alex Rivera',email:'family3@example.test',status:'Active'},
+  {id:'s4',name:'Jordan Patel',age:13,level:'Hip-Hop',guardian:'Jamie Patel',email:'family4@example.test',status:'Active'},
+  {id:'s5',name:'Emma Wilson',age:10,level:'Tap I',guardian:'Casey Wilson',email:'family5@example.test',status:'Active'},
+  {id:'s6',name:'Liam Parker',age:12,level:'Contemporary',guardian:'Robin Parker',email:'family6@example.test',status:'Active'},
+  {id:'s7',name:'Chloe Bennett',age:7,level:'Ballet I',guardian:'Sam Bennett',email:'family7@example.test',status:'Active'},
+  {id:'s8',name:'Olivia Murphy',age:14,level:'Jazz II',guardian:'Quinn Murphy',email:'family8@example.test',status:'Active'},
+  {id:'s9',name:'Noah Davis',age:11,level:'Hip-Hop',guardian:'Drew Davis',email:'family9@example.test',status:'Active'},
+  {id:'s10',name:'Ella Martin',age:9,level:'Tap I',guardian:'Alex Martin',email:'family10@example.test',status:'Trial'},
+  {id:'s11',name:'Riley Foster',age:12,level:'Contemporary',guardian:'Cameron Foster',email:'family11@example.test',status:'Active'},
+  {id:'s12',name:'Isabella Lee',age:8,level:'Ballet I',guardian:'Skylar Lee',email:'family12@example.test',status:'Active'}
+ ],
+ classes:[
+  {id:'c1',name:'Ballet I',day:'Monday',start:'16:00',duration:60,instructor:'Olivia Hart',room:'Studio A',capacity:12,enrolled:['s1','s3','s7','s12']},
+  {id:'c2',name:'Jazz II',day:'Tuesday',start:'17:00',duration:60,instructor:'Marcus Reed',room:'Studio B',capacity:10,enrolled:['s2','s8']},
+  {id:'c3',name:'Hip-Hop',day:'Wednesday',start:'18:00',duration:60,instructor:'Marcus Reed',room:'Studio A',capacity:14,enrolled:['s4','s9']},
+  {id:'c4',name:'Tap I',day:'Thursday',start:'16:30',duration:45,instructor:'Olivia Hart',room:'Studio B',capacity:10,enrolled:['s5','s10']},
+  {id:'c5',name:'Contemporary',day:'Friday',start:'17:30',duration:60,instructor:'Dana Wells',room:'Studio A',capacity:12,enrolled:['s6','s11']},
+  {id:'c6',name:'Creative Movement',day:'Saturday',start:'10:00',duration:45,instructor:'Dana Wells',room:'Studio C',capacity:15,enrolled:[]}
+ ],
+ invoices:[
+  {id:'i1',studentId:'s1',amount:95,due:'2026-10-25',status:'Open',label:'October tuition'},
+  {id:'i2',studentId:'s2',amount:120,due:'2026-10-25',status:'Paid',label:'October tuition'},
+  {id:'i3',studentId:'s3',amount:95,due:'2026-10-25',status:'Paid',label:'October tuition'},
+  {id:'i4',studentId:'s4',amount:110,due:'2026-10-10',status:'Open',label:'October tuition'},
+  {id:'i5',studentId:'s5',amount:95,due:'2026-10-25',status:'Open',label:'October tuition'},
+  {id:'i6',studentId:'s6',amount:115,due:'2026-10-25',status:'Paid',label:'October tuition'},
+  {id:'i7',studentId:'s7',amount:95,due:'2026-10-25',status:'Open',label:'October tuition'}
+ ],
+ attendance:{c1:{s1:'present',s3:'present',s7:'absent'}},
+ announcements:[{id:'a1',title:'Fall recital rehearsal',body:'Our next group rehearsal is scheduled for Saturday at 10:00 AM. Please bring dance shoes and water.',date:'Oct 18',kind:'Studio update'},{id:'a2',title:'October tuition reminder',body:'October balances are visible in the parent portal. Thank you for staying up to date.',date:'Oct 15',kind:'Billing'}],
+ leads:[],enrollmentRequests:[],activity:[{id:'t1',text:'October tuition invoices prepared',stamp:'Demo activity'},{id:'t2',text:'Fall recital update shared',stamp:'Demo activity'}]
+});
+let db=load(); let role='marketing',route='home',mobileMenu=false,chatOpen=false,modal='',chatMessages=[{from:'bot',text:'Hi! I can answer general questions about the Dance Manager prototype. Would you like to explore classes, billing, or the demo?'}];
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.students)&&Array.isArray(d.classes)&&Array.isArray(d.invoices))return d;}catch(e){}return sample();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){toast('Local storage unavailable; changes may not persist.')}}
+function track(text){db.activity.unshift({id:Date.now()+Math.random()+'',text,stamp:'Just now (demo)'});db.activity=db.activity.slice(0,8);save()}
+function classEnrollCount(c){return Array.isArray(c.enrolled)?c.enrolled.length:0}
+function studentName(id){return db.students.find(s=>s.id===id)?.name||'Unknown student'}
+function summary(){const paid=db.invoices.filter(i=>i.status==='Paid').reduce((a,i)=>a+Number(i.amount),0),open=db.invoices.filter(i=>i.status==='Open').reduce((a,i)=>a+Number(i.amount),0),enrolled=db.classes.reduce((a,c)=>a+classEnrollCount(c),0),spots=db.classes.reduce((a,c)=>a+Number(c.capacity),0);return {paid,open,enrolled,spots,active:db.students.filter(s=>s.status==='Active').length}}
+function badge(s){const cls=s==='Paid'||s==='Active'||s==='Present'?'green':s==='Open'||s==='Trial'?'amber':s==='Absent'?'red':'blue';return `<span class="pill ${cls}">${esc(s)}</span>`}
+function button(label,action,style='btn-primary',additional=''){return `<button type="button" class="btn ${style}" data-action="${esc(action)}" ${additional}>${label}</button>`}
+function brand(){return `<div class="brand"><span class="brand-mark">${icon('dance')}</span><span class="brand-name">Dance Manager<small>NEXT · PRIVATE V1</small></span></div>`}
+function metaNote(){return `<div class="app-footer-note">${icon('shield')} Fictional demonstration data only. No live systems or payments connected.</div>`}
+function marketing(){return `<div class="marketing-body"><header class="site-header"><div class="marketing-nav">${brand()}<nav class="nav-links" aria-label="Marketing navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#pricing">Pricing</a><a href="#contact">Contact</a></nav><div class="site-actions">${button('Explore demo '+icon('arrow'),'owner','btn-light')}<button type="button" class="menu-toggle" data-action="toggle-menu" aria-label="Open menu">${icon('menu')}</button></div></div><div class="marketing-mobile ${mobileMenu?'open':''}"><a href="#features" data-action="close-menu">Features</a><a href="#how-it-works" data-action="close-menu">How it works</a><a href="#pricing" data-action="close-menu">Pricing</a><a href="#contact" data-action="close-menu">Contact</a>${button('Explore working demo','owner','btn-light')}</div></header>
+ <section class="hero"><div class="hero-inner"><div class="hero-text"><div class="eyebrow">A better way to run your dance studio</div><h1>More time to teach. <span>Less time on admin.</span></h1><p class="hero-copy">Imagine classes, students, tuition, attendance, and parent communications working together in a beautifully simple studio management system.</p><div class="hero-cta">${button('Try interactive demo '+icon('arrow'),'owner') }<a href="#features" class="btn btn-outline">Explore capabilities</a></div><div class="hero-proof"><span>${icon('check')} Student management</span><span>${icon('check')} Classes & billing</span><span>${icon('check')} Parent access</span></div></div><div class="mock-window" aria-label="Illustrative dashboard preview"><div class="mock-top"><span class="dots"><i></i><i></i><i></i></span><small>DANCE MANAGER NEXT — CONCEPT</small></div><div class="mock-content"><div class="mock-sidebar"><div class="mock-mini-logo">${icon('dance')} Studio</div>${[['grid','Overview'],['users','Students'],['calendar','Classes'],['credit','Billing'],['chart','Reports']].map(([i,t],a)=>`<div class="mock-nav ${a===0?'active':''}">${icon(i)}${t}</div>`).join('')}</div><div class="mock-main"><div class="mock-main-title">Studio overview <span class="pill green">Demo</span></div><div class="mock-stats"><div class="mock-stat"><small>Students</small><b>128</b></div><div class="mock-stat"><small>Classes</small><b>24</b></div><div class="mock-stat"><small>Collected</small><b>$8.4k</b></div></div><div class="mock-chart"><div class="mock-chart-head">Enrollment trend <span>Last 7 months</span></div><div class="mock-bars">${[41,52,47,69,73,63,85].map(h=>`<i style="height:${h}%"></i>`).join('')}</div></div><div class="mock-table"><div></div><div></div><div></div></div></div></div></div></div></section>
+ <div class="benefit-strip"><span>${icon('users')} Student & family records</span><span>${icon('calendar')} Class scheduling</span><span>${icon('credit')} Tuition management</span><span>${icon('phone')} Mobile-friendly tools</span></div>
+ <section id="features" class="section"><div class="section-inner"><div class="section-head"><div class="eyebrow">Made for the way studios work</div><h2>Everything organized. Everyone in sync.</h2><p>Explore the workflows we're developing for a modern all-in-one dance studio experience.</p></div><div class="features-grid">${[
+ ['users','Students & families','Keep studio records, contacts, class enrollment, and family information organized.'],['calendar','Classes & scheduling','Plan weekly classes, manage capacities, track instructors, and view rosters.'],['credit','Tuition & invoices','Manage balances and simulated tuition workflows from a clear billing dashboard.'],['check','Attendance tracking','Give instructors a fast mobile-friendly way to check students into class.'],['bell','Updates & announcements','Prepare studio messages and keep parents aware of important news.'],['chart','Useful reporting','See enrollment, class capacity, and payment snapshots in one place.']
+ ].map(([ic,t,d])=>`<article class="feature-card"><div class="feature-icon">${icon(ic)}</div><h3>${t}</h3><p>${d}</p></article>`).join('')}</div></div></section>
+ <section id="how-it-works" class="section alt-section"><div class="section-inner"><div class="section-head"><div class="eyebrow">A clear workflow</div><h2>Simple for owners, teachers, and parents.</h2><p>One coordinated experience with different tools for each role.</p></div><div class="steps"><article class="step"><div class="step-count">01</div><h3>Studio owner</h3><p>Understand your studio, maintain records, oversee classes and billing, and review reports.</p><div style="margin-top:20px">${button('Owner demo '+icon('arrow'),'owner','btn-soft btn-small')}</div></article><article class="step"><div class="step-count">02</div><h3>Instructors</h3><p>Open class rosters, mark attendance and access teaching schedules from a phone.</p><div style="margin-top:20px">${button('Instructor demo '+icon('arrow'),'instructor','btn-soft btn-small')}</div></article><article class="step"><div class="step-count">03</div><h3>Parents</h3><p>Find class information, see studio updates, and review fictional tuition balances.</p><div style="margin-top:20px">${button('Parent demo '+icon('arrow'),'parent','btn-soft btn-small')}</div></article></div></div></section>
+ <section id="pricing" class="section"><div class="section-inner"><div class="section-head"><div class="eyebrow">Straightforward pricing</div><h2>Built around what studios need.</h2></div><div class="price-card"><span class="pill blue">Pricing to be confirmed by product owner</span><h3>Request a personalized quote</h3><p>Official product pricing, included features, onboarding, and payment fees must be confirmed before publication. This prototype does not advertise an unverified subscription price.</p><a class="btn btn-primary" href="#contact">Request information ${icon('arrow')}</a></div></div></section>
+ <section class="cta-section"><div class="section-inner"><div><h2>See the studio experience for yourself.</h2><p>Explore a working front-end demo with fictional students and classes.</p></div>${button('Launch interactive demo '+icon('arrow'),'owner','btn-light')}</div></section>
+ <section class="section alt-section" id="faq"><div class="section-inner"><div class="section-head"><div class="eyebrow">Frequently asked questions</div><h2>Answers, without the runaround.</h2></div><div class="faq-list"><details class="faq-item"><summary>Does this prototype process real tuition payments?</summary><p>No. It contains a purely simulated billing workflow. Real payment processing will require secure provider integration, appropriate safeguards, and authorization.</p></details><details class="faq-item"><summary>Can I install this on my phone?</summary><p>Once hosted on a separate secure HTTPS staging address, the progressive web app can be added to an iPhone or Android home screen. Publishing native app-store versions is a later development stage.</p></details><details class="faq-item"><summary>Does this connect to the existing Dance Manager software?</summary><p>No. The prototype is completely separate from the original product and uses fictional sample records.</p></details></div></div></section>
+ <section class="section" id="contact"><div class="section-inner"><div class="section-head"><div class="eyebrow">Stay in touch</div><h2>Request a demonstration.</h2><p>This contact form is for the local prototype only and does not send email to the actual software company.</p></div><div class="contact-form"><div class="contact-card"><div class="safe-notice">Private prototype: please use fictional details only. Submissions are saved in this browser, not sent.</div><form id="lead-form"><div class="form-grid"><div class="form-field"><label class="label" for="lead-name">Your name</label><input id="lead-name" name="name" required maxlength="60" placeholder="Sample Owner" /></div><div class="form-field"><label class="label" for="lead-studio">Studio name</label><input id="lead-studio" name="studio" required maxlength="70" placeholder="Sample Dance Academy" /></div></div><div class="form-field"><label class="label" for="lead-message">What would you like to see?</label><textarea id="lead-message" name="message" maxlength="500" placeholder="I'm interested in class scheduling and parent payments..."></textarea></div><button class="btn btn-primary btn-block" type="submit">Save mock demo inquiry ${icon('arrow')}</button></form></div></div></div></section>
+ <footer class="footer"><div class="footer-inner">${brand()}<small>Independent, private concept — not connected to the live Dance Manager product.<br/>All screenshots, statistics and identities are illustrative.</small></div></footer></div>`;}
+const NAV={owner:[['overview','grid','Overview'],['students','users','Students'],['classes','calendar','Classes'],['attendance','check','Attendance'],['billing','credit','Billing'],['messages','mail','Messages'],['insights','chart','Insights'],['settings','gear','Settings']],instructor:[['today','calendar','My classes'],['roll','check','Attendance'],['roster','users','Student roster']],parent:[['family','home','Family home'],['schedule','calendar','Class schedule'],['payments','credit','Tuition'],['updates','bell','Studio updates']]};
+const MOBILE={owner:['overview','students','classes','billing'],instructor:['today','roll','roster'],parent:['family','schedule','payments','updates']};
+function pageTitle(){return NAV[role]?.find(([key])=>key===route)?.[2]||'Overview';}
+function layout(){const nav=NAV[role]||NAV.owner;return `<div class="platform"><aside class="sidebar">${brand()}<div class="side-category">${role==='owner'?'Studio management':role==='parent'?'Family portal':'Instructor workspace'}</div><nav aria-label="Workspace navigation">${nav.map(([id,ic,title])=>`<button type="button" class="side-item ${route===id?'active':''}" data-route="${id}">${icon(ic)} ${title}</button>`).join('')}</nav><div class="side-bottom"><button class="side-item" data-action="marketing">${icon('home')} Public website</button><button class="side-item" data-action="reset">${icon('rotate')} Reset demo data</button><div class="side-footer">Independent V1 preview<br/>No production connectivity</div></div></aside><div class="workspace"><header class="workspace-top"><div><div class="crumbs">Dance Manager Next / ${esc(role)} </div><div class="crumbs"><b>${esc(pageTitle())}</b></div></div><div class="top-actions"><select class="role-switch" id="role-select" aria-label="Switch demonstration role"><option value="owner" ${role==='owner'?'selected':''}>Studio owner</option><option value="instructor" ${role==='instructor'?'selected':''}>Instructor</option><option value="parent" ${role==='parent'?'selected':''}>Parent</option><option value="marketing">Public website</option></select><span class="avatar">DM</span></div></header><main class="main">${content()}${metaNote()}</main></div><nav class="mobile-tabs" aria-label="Mobile navigation">${nav.filter(([id])=>MOBILE[role].includes(id)).map(([id,ic,title])=>`<button class="mobile-tab ${route===id?'active':''}" data-route="${id}">${icon(ic)}<span>${title}</span></button>`).join('')}${role==='owner'?`<button type="button" class="mobile-tab" data-action="mobile-more">${icon('menu')}<span>More</span></button>`:''}</nav></div>`}
+function head(title,desc,action){return `<div class="page-title-row"><div><h1>${title}</h1><p>${desc}</p></div>${action||''}</div>`}
+function stat(title,value,ic,desc){return `<div class="stat-card"><div class="stat-line"><span>${title}</span><span class="stat-icon">${icon(ic)}</span></div><div class="stat-value">${value}</div><div class="stat-foot">${desc}</div></div>`}
+function panel(title,subtitle,body,action=''){return `<section class="panel"><div class="panel-head"><div><h2>${title}</h2>${subtitle?`<p>${subtitle}</p>`:''}</div>${action}</div><div class="panel-body">${body}</div></section>`}
+function classRow(c){return `<div class="class-row"><div class="time-chip">${esc(to12(c.start))}<br><span style="font-weight:500">${esc(c.day.slice(0,3))}</span></div><div class="class-info"><strong>${esc(c.name)}</strong><small>${esc(c.instructor)} · ${esc(c.room)}</small></div><div class="class-count">${classEnrollCount(c)}/${esc(c.capacity)}</div></div>`}
+function to12(t){const [h,m]=(t||'16:00').split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
+function ownerOverview(){const s=summary();return `${head('Good afternoon, Studio Team','Here’s what’s happening across your fictional studio today.',button(`${icon('plus')} Add student`,'add-student'))}<div class="stats-grid">${stat('Active students',s.active, 'users','Current sample roster')}${stat('Scheduled classes',db.classes.length,'calendar','Weekly classes')}${stat('Collected invoices',USD(s.paid),'credit','Fictional transactions')}${stat('Open balances',USD(s.open),'dollar','Not real receivables')}</div><div class="dashboard-grid"><div style="display:grid;gap:18px">${panel('Weekly class schedule','Your recurring class lineup',db.classes.slice(0,5).map(classRow).join(''),button('All classes '+icon('arrow'),'show-classes','btn-quiet btn-small'))}${panel('Tuition summary','Sample billing data',`<div class="revenue-chart">${[42,54,50,66,78,70,90].map((n,i)=>`<div class="revenue-month"><span class="bar" style="height:${n}%"></span><small>${['Apr','May','Jun','Jul','Aug','Sep','Oct'][i]}</small></div>`).join('')}</div><p class="fineprint" style="margin-top:23px">Illustrative chart only; not connected to any studio financials.</p>`)}</div><div style="display:grid;align-content:start;gap:18px">${panel('Quick actions','Common tasks',`<div class="quick-links"><button class="quick-link" data-action="add-student">${icon('plus')} New student</button><button class="quick-link" data-action="add-class">${icon('calendar')} Add class</button><button class="quick-link" data-action="add-invoice">${icon('credit')} New invoice</button></div>`)}${panel('Recent activity','Local demo actions',`<ul class="activity-list">${db.activity.map(a=>`<li><span class="activity-dot"></span><div><b>${esc(a.text)}</b><small>${esc(a.stamp)}</small></div></li>`).join('')}</ul>`)}${panel('Important reminder','This is a concept only',`<div class="highlight">${icon('info')} Role switching is a preview, not secure login. No information goes to the live Dance Manager system.</div>`)}</div></div>`}
+function students(){return `${head('Students & families','Manage fictional student records and enrollment status.',button(`${icon('plus')} Add student`,'add-student'))}<section class="panel"><div class="table-controls"><label class="search-wrap">${icon('search')}<input id="student-search" aria-label="Search students" placeholder="Search students or guardians" autocomplete="off"/></label><span class="pill blue" id="student-count">${db.students.length} students</span></div><div class="scroll-x"><table><thead><tr><th>Student</th><th>Level</th><th>Guardian</th><th>Status</th><th>Age</th></tr></thead><tbody id="student-list">${db.students.map((s,i)=>`<tr data-student-search="${esc((s.name+' '+s.guardian+' '+s.level).toLowerCase())}"><td><div class="student-profile"><span class="student-avatar v${i%4+1}">${esc(initials(s.name))}</span><div><strong>${esc(s.name)}</strong><div class="fineprint">#${esc(s.id)}</div></div></div></td><td>${esc(s.level)}</td><td>${esc(s.guardian)}</td><td>${badge(s.status)}</td><td>${esc(s.age)}</td></tr>`).join('')}</tbody></table></div></section>`}
+function classes(){return `${head('Class schedule','Organize studios, teachers, capacity, and class details.',button(`${icon('plus')} New class`,'add-class'))}<div class="class-card-grid">${db.classes.map(c=>`<article class="class-card"><div class="class-card-top"><span class="pill blue">${esc(c.day)}</span><span class="pill ${classEnrollCount(c)>=c.capacity?'amber':'green'}">${classEnrollCount(c)>=c.capacity?'Full':'Open'}</span></div><h3>${esc(c.name)}</h3><p>${icon('clock')} ${esc(to12(c.start))} · ${esc(c.duration)} min</p><p>${icon('users')} ${esc(c.instructor)} · ${esc(c.room)}</p><div class="tagline">${icon('users')} ${classEnrollCount(c)} / ${esc(c.capacity)} enrolled</div><div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,classEnrollCount(c)/Math.max(1,c.capacity)*100)}%"></div></div><div class="class-card-footer"><span class="fineprint">${Math.max(0,c.capacity-classEnrollCount(c))} seats available</span>${button('View roster '+icon('arrow'),'roster-'+c.id,'btn-soft btn-small')}</div></article>`).join('')}</div>`}
+function attendance(){const id=db.classes[0]?.id;return `${head('Attendance','Mark fictional students present or absent; changes save locally.',button('Switch to instructor view','instructor','btn-outline'))}<div class="split-2">${panel('Choose a class','Select a class to review attendance.',`<div class="form-field"><label class="label" for="attendance-class">Class</label><select id="attendance-class">${db.classes.map(c=>`<option value="${esc(c.id)}" ${c.id===id?'selected':''}>${esc(c.name)} · ${esc(c.day)}</option>`).join('')}</select></div><div id="attendance-block">${attendanceBody(id)}</div>`)}${panel('How attendance works','A quick instructor workflow',`<div class="highlight">${icon('info')} Choose a class, then tap Present or Absent. This demo only changes local example records.</div><p class="small muted">A production version would also need historical records, absence notifications, permissions, and audit logging.</p>`)}</div>`}
+function attendanceBody(id){const c=db.classes.find(c=>c.id===id);if(!c)return '<div class="empty">No class selected.</div>';if(!c.enrolled.length)return '<div class="empty">No enrolled students in this sample class.</div>';return `<div class="attendance-list">${c.enrolled.map((s,i)=>{const st=db.students.find(x=>x.id===s);if(!st)return '';const status=db.attendance[id]?.[s]||'';return `<div class="attendance-person"><div class="student-profile"><span class="student-avatar v${i%4+1}">${esc(initials(st.name))}</span><strong>${esc(st.name)}</strong></div><div class="attendance-buttons"><button data-action="mark:${id}:${s}:present" class="${status==='present'?'present':''}" aria-label="Mark ${esc(st.name)} present">✓</button><button data-action="mark:${id}:${s}:absent" class="${status==='absent'?'absent':''}" aria-label="Mark ${esc(st.name)} absent">✕</button></div></div>`}).join('')}</div><div class="fineprint">${esc(c.name)} · ${classEnrollCount(c)} enrolled. Attendance saved in this browser only.</div>`}
+function billing(){const s=summary();return `${head('Tuition & invoices','Track sample balances and simulate payment status.',button(`${icon('plus')} Create invoice`,'add-invoice'))}<div class="stats-grid" style="grid-template-columns:repeat(2,1fr)">${stat('Recorded as paid',USD(s.paid),'check','Demo status only')}${stat('Outstanding',USD(s.open),'dollar','Demo status only')}</div><section class="panel"><div class="panel-head"><div><h2>Recent invoices</h2><p>No money moves in this prototype</p></div><span class="pill amber">Simulation</span></div><div class="scroll-x"><table><thead><tr><th>Invoice</th><th>Student</th><th>Amount</th><th>Due</th><th>Status</th><th>Action</th></tr></thead><tbody>${db.invoices.map(i=>`<tr><td><strong>${esc(i.label)}</strong><div class="fineprint">${esc(i.id)}</div></td><td>${esc(studentName(i.studentId))}</td><td><strong>${USD(i.amount)}</strong></td><td>${prettyDate(i.due)}</td><td>${badge(i.status)}</td><td>${i.status==='Open'?button('Mark paid (demo)','pay-'+i.id,'btn-soft btn-small'):'—'}</td></tr>`).join('')}</tbody></table></div></section>`}
+function messages(){return `${head('Studio communications','Draft updates for families and staff.',button(`${icon('plus')} New announcement`,'new-message'))}<div class="split-2">${panel('Recent announcements','Fictional internal message previews',`<div>${db.announcements.map(a=>`<div class="message-entry">${icon('mail')}<div><strong>${esc(a.title)}</strong> <span class="pill blue">${esc(a.kind||'Update')}</span><p>${esc(a.body)}</p><span class="fineprint">${esc(a.date)}</span></div></div>`).join('')}</div>`)}${panel('Communication status','Not connected to real delivery',`<div class="highlight">${icon('info')} Announcements are displayed only in this private browser demo. No email, SMS, or push notifications are sent.</div><p class="small muted">Production integrations would require opt-in/opt-out handling, event triggers, delivery logs, and studio administration controls.</p>`)}</div>`}
+function insights(){const s=summary();const max=Math.max(1,...db.classes.map(c=>c.capacity));return `${head('Studio insights','Simple snapshots from the fictional sample data.',button('Reset demo','reset','btn-outline'))}<div class="stats-grid">${stat('Student records',db.students.length,'users','Including trial students')}${stat('Class occupancy',Math.round(s.enrolled/Math.max(1,s.spots)*100)+'%','chart','Across weekly classes')}${stat('Fictional receipts',USD(s.paid),'credit','Invoices marked paid')}${stat('Open invoices',db.invoices.filter(i=>i.status==='Open').length,'bell','Awaiting demo payment')}</div><div class="split-2">${panel('Enrollment by class','Class seats vs. enrollment',db.classes.map(c=>`<div style="padding:13px 0"><div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:720"><span>${esc(c.name)}</span><span>${classEnrollCount(c)} / ${esc(c.capacity)}</span></div><div class="progress-track"><div class="progress-fill" style="width:${Math.round(classEnrollCount(c)/Math.max(1,c.capacity)*100)}%"></div></div></div>`).join(''))}${panel('Revenue trend','Illustrative artwork, not accounting history',`<div class="revenue-chart">${[40,49,63,59,77,85,73].map((n,i)=>`<div class="revenue-month"><span class="bar" style="height:${n}%"></span><small>${['Apr','May','Jun','Jul','Aug','Sep','Oct'][i]}</small></div>`).join('')}</div><p class="fineprint" style="margin-top:26px">Chart bars are placeholder values. Build a real reporting engine only after a verified data model exists.</p>`)}</div>`}
+function settings(){return `${head('Demo settings','Inspect what is real and what is still conceptual.',button(`${icon('rotate')} Reset demo`,'reset','btn-outline'))}<div class="split-2">${panel('Prototype configuration','V1 limitations',`<div class="message-entry">${icon('check')}<div><strong>Local sample data</strong><p>Forms, lists, and status changes are stored in this browser only.</p></div></div><div class="message-entry">${icon('alert')}<div><strong>No user authentication</strong><p>Role selection is for demos; anyone using this preview can switch roles.</p></div></div><div class="message-entry">${icon('alert')}<div><strong>No real financial services</strong><p>Invoice statuses are simulated. There is no checkout, payout, or card collection.</p></div></div><div class="message-entry">${icon('alert')}<div><strong>Not connected to Dance Manager</strong><p>Original hosting, accounts, and customer records remain untouched.</p></div></div>`)}${panel('Install to home screen','For future private HTTPS staging',`<p class="small muted">Once hosted on a separate HTTPS address, you can use iPhone Safari → Share → Add to Home Screen. This is a PWA prototype, not a published App Store application.</p><p class="small muted">A native iPhone/Android application requires further engineering and eventual store registration.</p>${button('Back to website','marketing','btn-soft')}`)}</div>`}
+function instructorToday(){const cs=db.classes.filter(c=>c.instructor==='Olivia Hart');return `${head('Hello, Olivia','Your fictional class schedule and attendance shortcuts.',button('Open attendance','show-roll'))}<div class="parent-greeting"><h2>Ready for class?</h2><p>Here’s what’s coming up for you this week.</p></div>${panel('My class schedule','Sample instructor: Olivia Hart',cs.map(c=>`<div class="class-row"><div class="time-chip">${esc(to12(c.start))}<br>${esc(c.day.slice(0,3))}</div><div class="class-info"><strong>${esc(c.name)}</strong><small>${esc(c.room)} · ${classEnrollCount(c)} students</small></div>${button('Take roll','roster-'+c.id,'btn-soft btn-small')}</div>`).join(''))}`}
+function instructorRoster(){const cs=db.classes.filter(c=>c.instructor==='Olivia Hart');return `${head('My student rosters','View your fictional classes and students.')}${cs.map(c=>panel(`${esc(c.name)}`,`${esc(c.day)} · ${esc(c.room)}`,c.enrolled.length?c.enrolled.map(s=>`<div class="class-row"><div class="student-profile"><span class="student-avatar">${esc(initials(studentName(s)))}</span><strong>${esc(studentName(s))}</strong></div></div>`).join(''):'<div class="empty">No students enrolled</div>')).join('<div style="height:16px"></div>')}`}
+function family(){const parentStud=db.students[0];const s=db.invoices.filter(i=>i.studentId===parentStud.id);const open=s.filter(i=>i.status==='Open').reduce((n,i)=>n+i.amount,0);return `${head('Welcome, Morgan','Your sample family portal.',button('Explore class schedule','show-schedule'))}<div class="parent-greeting"><h2>Everything for your dance family.</h2><p>Classes, studio messages, and account information in one place.</p><span class="watermark">${icon('dance')}</span></div><div class="stats-grid" style="grid-template-columns:repeat(2,1fr)">${stat('Your dancer',esc(parentStud.name.split(' ')[0]),'users','Sample family')}${stat('Tuition balance',USD(open),'credit','Fictional balance')}</div><div class="split-2">${panel('Upcoming classes','For Avery Brooks',db.classes.filter(c=>c.enrolled.includes('s1')).map(classRow).join('')||'<p class="muted">No class assigned.</p>')}${panel('Latest studio update','Illustrative announcements',`<strong>${esc(db.announcements[0]?.title||'No updates')}</strong><p class="small muted">${esc(db.announcements[0]?.body||'')}</p>${button('See all updates','show-updates','btn-soft btn-small')}`)}</div>`}
+function parentSchedule(){const mine=db.classes.filter(c=>c.enrolled.includes('s1'));const open=db.classes.filter(c=>!c.enrolled.includes('s1')&&classEnrollCount(c)<c.capacity);return `${head('Class schedule','View your family’s schedule and explore available classes.')}${panel('Current enrollment','Avery Brooks',mine.length?mine.map(classRow).join(''):'<div class="empty">No current classes.</div>')}<div style="height:18px"></div>${panel('Explore classes','Requests are simulated and not sent to the studio.',open.map(c=>`<div class="enroll-card"><div><strong>${esc(c.name)}</strong><div class="note">${esc(c.day)} · ${esc(to12(c.start))} · ${esc(c.instructor)}</div></div>${button('Request trial','request-'+c.id,'btn-soft btn-small')}</div>`).join('')||'<div class="empty">No other sample classes available.</div>')}`}
+function parentPayments(){const invoices=db.invoices.filter(i=>i.studentId==='s1');return `${head('Tuition & payments','Your fictional family balance.')}${panel('Family invoices','No real money can be paid from this demo.',invoices.map(i=>`<div class="enroll-card"><div><strong>${esc(i.label)}</strong><div class="note">Due ${prettyDate(i.due)} · ${esc(i.id)}</div></div><div style="text-align:right"><strong>${USD(i.amount)}</strong><div style="margin:5px 0">${badge(i.status)}</div></div></div>`).join('')+`<div class="safe-notice">This preview has no payment processor. The “Pay” functionality will be developed only after secure integration and approval.</div>`)}`}
+function parentUpdates(){return `${head('Studio announcements','Updates from the fictional dance studio.')}${panel('Latest news','Preview only',db.announcements.map(a=>`<div class="message-entry">${icon('bell')}<div><strong>${esc(a.title)}</strong> <span class="pill blue">${esc(a.kind)}</span><p>${esc(a.body)}</p><span class="fineprint">${esc(a.date)}</span></div></div>`).join(''))}`}
+function content(){if(role==='owner')return ({overview:ownerOverview,students,classes,attendance,billing,messages,insights,settings}[route]||ownerOverview)();if(role==='instructor')return ({today:instructorToday,roll:attendance,roster:instructorRoster}[route]||instructorToday)();return ({family,parent:family,schedule:parentSchedule,payments:parentPayments,updates:parentUpdates}[route]||family)()}
+function demoBanner(){return `<div class="demo-banner">${icon('shield')} PRIVATE INDEPENDENT PROTOTYPE · Fictional data · Original Dance Manager website untouched</div>`}
+function render(){document.querySelector('#app').innerHTML=demoBanner()+(role==='marketing'?marketing():layout())+`<button class="chat-trigger" data-action="chat-toggle">${icon('chat')} ${chatOpen?'Close assistant':'Ask a question'}</button>`+(chatOpen?chatPanel():'');renderModal();}
+function navigate(r,p){role=r;route=p||({marketing:'home',owner:'overview',instructor:'today',parent:'family'}[r]);mobileMenu=false;chatOpen=false;modal='';render();window.scrollTo({top:0,behavior:'instant'});}
+function toast(msg){const root=document.querySelector('#toast-root');root.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>{if(root)root.innerHTML='';},3200)}
+function modalForm(title,body,kind){modal={title,body,kind};renderModal();}
+function renderModal(){const root=document.querySelector('#modal-root');if(!modal){root.innerHTML='';return;}root.innerHTML=`<div class="modal-scrim" data-action="close-modal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-header"><h2 id="modal-title">${esc(modal.title)}</h2><button type="button" class="icon-button" aria-label="Close dialog" data-action="close-modal">${icon('x')}</button></div><div class="modal-body">${modal.body}</div></section></div>`;}
+const field=(id,label,placeholder='',type='text',req='required',value='')=>`<div class="form-field"><label class="label" for="${id}">${label}</label><input id="${id}" name="${id}" type="${type}" ${req} placeholder="${esc(placeholder)}" value="${esc(value)}" /></div>`;
+const footer=(submit='Save example')=>`<div class="modal-footer"><button type="button" class="btn btn-outline" data-action="close-modal">Cancel</button><button type="submit" class="btn btn-primary">${submit}</button></div>`;
+function openStudent(){modalForm('Add a fictional student',`<div class="safe-notice">Use sample details only. This is not a secure storage system.</div><form id="student-form"><div class="form-grid">${field('student-name','Student name','e.g. Demo Student')}${field('student-age','Age','9','number','required min="2" max="99"')}</div><div class="form-grid">${field('student-guardian','Guardian name','e.g. Demo Guardian')}${field('student-level','Dance level','e.g. Ballet I')}</div>${footer('Add to demo roster')}</form>`,'student');}
+function openClass(){modalForm('Create a fictional class',`<form id="class-form">${field('class-name','Class name','e.g. Beginner Ballet')}<div class="form-grid"><div class="form-field"><label class="label" for="class-day">Day</label><select id="class-day" name="class-day">${['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(d=>`<option>${d}</option>`).join('')}</select></div>${field('class-start','Start time','','time','required','16:00')}</div><div class="form-grid">${field('class-instructor','Instructor','e.g. Demo Teacher')}${field('class-room','Room','e.g. Studio A')}</div><div class="form-grid">${field('class-capacity','Capacity','12','number','required min="1" max="300"','12')}${field('class-duration','Duration (minutes)','60','number','required min="15" max="240"','60')}</div>${footer('Add demo class')}</form>`,'class');}
+function openInvoice(){modalForm('Create a fictional invoice',`<div class="safe-notice">A real payment cannot be collected in this prototype.</div><form id="invoice-form"><div class="form-field"><label class="label" for="invoice-student">Student</label><select id="invoice-student" name="invoice-student">${db.students.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}</select></div><div class="form-grid">${field('invoice-amount','Amount (USD)','95','number','required min="1" max="100000"')}${field('invoice-due','Due date','','date','required','2026-10-31')}</div>${field('invoice-label','Description','November tuition')}${footer('Save demo invoice')}</form>`,'invoice');}
+function openMessage(){modalForm('Compose a studio announcement',`<div class="safe-notice">This only adds an announcement to the local demo; it does not send a message.</div><form id="message-form">${field('message-title','Announcement title','e.g. Saturday rehearsal')}<div class="form-field"><label class="label" for="message-body">Message</label><textarea id="message-body" name="message-body" required maxlength="1000" placeholder="Write a studio announcement..."></textarea></div>${footer('Save mock announcement')}</form>`,'message');}
+function openRoster(id){const c=db.classes.find(c=>c.id===id);if(!c)return;modalForm(`${c.name} — roster`,`<p class="small muted">${esc(c.day)} · ${esc(to12(c.start))} · ${esc(c.instructor)} · ${esc(c.room)}</p><div style="margin:15px 0">${c.enrolled.length?c.enrolled.map((sid,i)=>`<div class="class-row"><span class="student-avatar v${i%4+1}">${esc(initials(studentName(sid)))}</span><div class="class-info"><strong>${esc(studentName(sid))}</strong></div></div>`).join(''):'<div class="empty">No students currently assigned.</div>'}</div><div class="safe-notice">All rosters contain fictional students. Editing enrollment will come in a later version.</div><div class="modal-footer">${button('Close','close-modal','btn-outline')}</div>`,'roster')}
+function chatPanel(){return `<section class="chat-pane" aria-label="Demo help chat"><header class="chat-head"><div><b>Dance Manager Assistant</b><small>Scripted demo · Not live AI</small></div><button class="icon-button" data-action="chat-toggle" aria-label="Close chat" style="background:#ffffff20;color:white;border:0">${icon('x')}</button></header><div class="chat-messages" id="chat-messages">${chatMessages.map(m=>`<div class="bubble ${m.from==='you'?'mine':''}">${esc(m.text)}</div>`).join('')}</div><div class="chat-quick">${['Features','Parent portal','Pricing','Mobile app'].map(q=>`<button type="button" data-chat-quick="${esc(q)}">${q}</button>`).join('')}</div><form id="chat-form" class="chat-input"><label class="screen-reader" for="chat-question">Ask a question</label><input id="chat-question" name="question" placeholder="Ask about Dance Manager..." maxlength="240" required autocomplete="off"/><button type="submit" aria-label="Send question">${icon('arrow')}</button></form></section>`}
+function chatReply(q){const s=q.toLowerCase();if(/cost|price|pricing|fee|month|trial/.test(s))return 'Official pricing and fees must be confirmed by the product owner. This independent V1 prototype intentionally does not publish an unverified plan or price.';if(/parent|family|guardian|portal|register/.test(s))return 'The intended family experience includes classes, invoices, updates, and enrollment requests. Switch to the Parent view to try fictional workflows.';if(/app|iphone|android|phone|mobile|install/.test(s))return 'This is a mobile-friendly progressive web app prototype. Once hosted on a separate HTTPS site, it can be added to a phone home screen. Native app-store releases remain future work.';if(/bill|payment|tuition|invoice|credit/.test(s))return 'The prototype lets studio owners create fictional invoices and mark them paid as a simulation. No charges, cards, or real payments are processed.';if(/class|attendance|teacher|instructor|schedule/.test(s))return 'You can browse sample classes, view rosters, and mark attendance. Switch between Studio owner and Instructor using the role menu.';if(/demo|feature|software|works/.test(s))return 'Try the Studio owner, Instructor, and Parent demo views. Students, classes, messages and sample billing all operate locally in your browser.';if(/contact|support|sales|email|schedule a demo/.test(s))return 'The public page includes a local demo-inquiry form. It does not send email. A production version will need a verified booking and support workflow.';return 'I can explain the sample class schedule, student records, tuition simulation, parent portal, mobile app plans, or pricing status. This is a scripted demo, not a live AI service.'}
+function askChat(q){q=(q||'').trim().slice(0,240);if(!q)return;chatMessages.push({from:'you',text:q},{from:'bot',text:chatReply(q)});const c=document.querySelector('.chat-pane');if(c){c.outerHTML=chatPanel();document.querySelector('#chat-messages')?.scrollTo(0,999999);}else render();}
+function doAction(action){if(action==='mobile-more'){modalForm('More studio tools',`<div class="more-menu">${NAV.owner.filter(([id])=>!MOBILE.owner.includes(id)).map(([id,ic,title])=>`<button type="button" class="more-link" data-route="${id}">${icon(ic)} <span>${title}</span> ${icon('chevron')}</button>`).join('')}<button type="button" class="more-link" data-action="marketing">${icon('home')} <span>Public website</span> ${icon('chevron')}</button><button type="button" class="more-link" data-action="reset">${icon('rotate')} <span>Reset demo data</span> ${icon('chevron')}</button></div>`, 'more');return}if(action==='toggle-menu'){mobileMenu=!mobileMenu;render();return}if(action==='close-menu'){mobileMenu=false;return}if(action==='owner'||action==='instructor'||action==='parent'||action==='marketing'){navigate(action);return}if(action==='reset'){if(window.confirm('Reset only this prototype’s fictional sample data?')){db=sample();save();render();toast('Fictional demo data restored.')}return}if(action==='chat-toggle'){chatOpen=!chatOpen;render();return}if(action==='add-student'){openStudent();return}if(action==='add-class'){openClass();return}if(action==='add-invoice'){openInvoice();return}if(action==='new-message'){openMessage();return}if(action==='close-modal'){modal='';renderModal();return}if(action==='show-classes'){role='owner';route='classes';render();return}if(action==='show-roll'){role='instructor';route='roll';render();return}if(action==='show-schedule'){role='parent';route='schedule';render();return}if(action==='show-updates'){role='parent';route='updates';render();return}if(action.startsWith('roster-')){openRoster(action.substring(7));return}if(action.startsWith('mark:')){const [,cid,sid,status]=action.split(':');if(db.classes.find(c=>c.id===cid)?.enrolled.includes(sid)){db.attendance[cid]??={};db.attendance[cid][sid]=status;save();const sel=document.querySelector('#attendance-class');if(sel?.value===cid){const b=document.querySelector('#attendance-block');if(b)b.innerHTML=attendanceBody(cid)}toast(`Marked ${studentName(sid)} ${status} (demo).`)}return}if(action.startsWith('pay-')){const inv=db.invoices.find(i=>i.id===action.slice(4));if(inv&&inv.status==='Open'){inv.status='Paid';track(`Marked ${inv.label} paid — simulated`);render();toast('Invoice marked paid in demo. No money transferred.')}return}if(action.startsWith('request-')){const c=db.classes.find(x=>x.id===action.slice(8));if(c){db.enrollmentRequests.push({classId:c.id,studentId:'s1'});track(`Sample enrollment request for ${c.name}`);toast(`Mock request recorded for ${c.name}. Not sent.`)}return}}
+document.addEventListener('click',e=>{const quick=e.target.closest('[data-chat-quick]');if(quick){askChat(quick.dataset.chatQuick);return}const r=e.target.closest('[data-route]');if(r){route=r.dataset.route;modal='';render();window.scrollTo({top:0,behavior:'instant'});return}const a=e.target.closest('[data-action]');if(a){if(a.classList.contains('modal-scrim')&&e.target!==a)return;if(a.tagName==='A'){mobileMenu=false;return}doAction(a.dataset.action)}});
+document.addEventListener('change',e=>{if(e.target.id==='role-select'){navigate(e.target.value);return}if(e.target.id==='attendance-class'){const b=document.querySelector('#attendance-block');if(b)b.innerHTML=attendanceBody(e.target.value)}});
+document.addEventListener('input',e=>{if(e.target.id==='student-search'){const q=e.target.value.toLowerCase().trim();let shown=0;document.querySelectorAll('#student-list tr').forEach(row=>{const visible=row.dataset.studentSearch.includes(q);row.hidden=!visible;if(visible)shown++});const label=document.querySelector('#student-count');if(label)label.textContent=`${shown} students`}});
+document.addEventListener('submit',e=>{const form=e.target;if(!['student-form','class-form','invoice-form','message-form','lead-form','chat-form'].includes(form.id))return;e.preventDefault();const data=Object.fromEntries(new FormData(form).entries());if(form.id==='chat-form'){askChat(data.question);return}if(form.id==='student-form'){const name=(data['student-name']||'').trim(),age=Number(data['student-age']);if(!name||!Number.isFinite(age)||age<2||age>99)return toast('Please check the student name and age.');db.students.push({id:'s'+Date.now(),name,age,level:(data['student-level']||'').trim(),guardian:(data['student-guardian']||'').trim(),email:'demo@example.test',status:'Active'});track(`Added fictional student: ${name}`);modal='';render();toast('Student added to demo roster.');return}if(form.id==='class-form'){const name=(data['class-name']||'').trim(),capacity=Number(data['class-capacity']),duration=Number(data['class-duration']);if(!name||!(capacity>=1&&capacity<=300)||!(duration>=15&&duration<=240))return toast('Check class details.');db.classes.push({id:'c'+Date.now(),name,day:data['class-day'],start:data['class-start'],duration,instructor:(data['class-instructor']||'').trim()||'Demo Teacher',room:(data['class-room']||'').trim()||'Studio A',capacity,enrolled:[]});track(`Added demo class: ${name}`);modal='';render();toast('Class added to demo schedule.');return}if(form.id==='invoice-form'){const amount=Number(data['invoice-amount']);if(!(amount>0&&amount<=100000)||!data['invoice-due'])return toast('Please enter a valid amount and due date.');db.invoices.unshift({id:'i'+Date.now(),studentId:data['invoice-student'],amount,due:data['invoice-due'],status:'Open',label:(data['invoice-label']||'Tuition').trim()});track('Created a fictional tuition invoice');modal='';render();toast('Demo invoice created.');return}if(form.id==='message-form'){if(!data['message-title']?.trim()||!data['message-body']?.trim())return;db.announcements.unshift({id:'a'+Date.now(),title:data['message-title'].trim(),body:data['message-body'].trim(),date:'Just now',kind:'Studio update'});track('Saved a mock studio announcement');modal='';render();toast('Announcement preview saved. Nothing sent.');return}if(form.id==='lead-form'){if(!data.name?.trim()||!data.studio?.trim())return;db.leads.push({name:data.name.trim(),studio:data.studio.trim(),message:(data.message||'').trim()});track(`Mock inquiry from ${data.studio}`);render();toast('Inquiry saved locally. No email was sent.');return}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal){modal='';renderModal()}});
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+if(new URLSearchParams(location.search).get('app')==='1'){role='owner';route='overview'}
+render();
+
+  </script>
+  <script id="dance-v2-inline">
+/* Dance Manager Next V2: fictional dancer cards and competition planner.
+   Independent extension; local-only demo. Never enter actual minor/student data. */
+(function(){
+'use strict';
+ICONS.trophy='<path d="M8 3h8v8a4 4 0 0 1-8 0V3Z"/><path d="M8 5H4v3a4 4 0 0 0 4 4M16 5h4v3a4 4 0 0 1-4 4M12 15v4m-5 2h10"/>';
+ICONS.medal='<circle cx="12" cy="16" r="5"/><path d="M8 12 4 3h5l3 6 3-6h5l-4 9"/><path d="m12 13 1 2 2 .3-1.5 1.5.4 2.2L12 18l-1.9 1 .4-2.2L9 15.3l2-.3Z"/>';
+ICONS.pin='<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>';
+ICONS.camera='<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 7 9 4h6l2 3"/><circle cx="12" cy="14" r="3"/>';
+ICONS.flag='<path d="M5 22V4m0 1c4-4 8 3 14-1v12c-6 4-10-3-14 1"/>';
+const initialProfiles=[
+ ['s1','Ballet · Contemporary','Graceful storytelling and classical technique. Exploring choreography and ensemble performance.',true],
+ ['s2','Jazz · Lyrical','An energetic performer with a love for musicality, sharp lines, and group routines.',true],
+ ['s3','Ballet · Musical Theatre','Focused on balance, expression, and creative performance.',true],
+ ['s4','Hip-Hop · Freestyle','Loves rhythm, improvisation, and high-energy choreography.',true],
+ ['s5','Tap · Musical Theatre','Enjoys musical timing and intricate tap combinations.',true],
+ ['s6','Contemporary · Modern','Brings expressive movement and strong floor work to every routine.',true],
+ ['s7','Ballet','Building a foundation in technique, confidence, and stage presence.',false],
+ ['s8','Jazz · Contemporary','Enjoys dance team performances, lyrical pieces, and creative choreography.',true]
+];
+const sampleCompetitions=[
+ {id:'dc1',title:'Autumn Spotlight Invitational',date:'2026-09-12',city:'Pensacola, FL',venue:'Example Performing Arts Center',deadline:'2026-08-15',status:'Completed',fee:75,participants:['s1','s2','s4']},
+ {id:'dc2',title:'Coastal Dance Classic',date:'2026-10-03',city:'Mobile, AL',venue:'Example Civic Theatre',deadline:'2026-09-02',status:'Completed',fee:85,participants:['s2','s5','s8']},
+ {id:'dc3',title:'Winter Stage Challenge',date:'2026-12-05',city:'Pensacola, FL',venue:'Demo Convention Center',deadline:'2026-11-12',status:'Upcoming',fee:90,participants:['s1','s3','s6']},
+ {id:'dc4',title:'Spring Dance Showcase',date:'2027-03-20',city:'New Orleans, LA',venue:'Example Arts Hall',deadline:'2027-02-18',status:'Upcoming',fee:95,participants:['s2','s4','s8']}
+];
+const sampleAwards=[
+ {id:'da1',studentId:'s1',competitionId:'dc1',title:'1st Place — Ballet Solo',placement:'Gold'},
+ {id:'da2',studentId:'s2',competitionId:'dc1',title:'Judges’ Excellence — Jazz',placement:'Special Award'},
+ {id:'da3',studentId:'s4',competitionId:'dc1',title:'2nd Place — Hip-Hop',placement:'Silver'},
+ {id:'da4',studentId:'s2',competitionId:'dc2',title:'1st Place — Jazz Group',placement:'Gold'},
+ {id:'da5',studentId:'s5',competitionId:'dc2',title:'3rd Place — Tap',placement:'Bronze'},
+ {id:'da6',studentId:'s8',competitionId:'dc2',title:'Choreography Recognition',placement:'Special Award'}
+];
+function ensureV2(){
+ if(!Array.isArray(db.dancerProfiles))db.dancerProfiles=initialProfiles.map(([studentId,specialties,bio,listed])=>({studentId,specialties,bio,listed}));
+ if(!Array.isArray(db.competitions))db.competitions=sampleCompetitions.map(x=>({...x,participants:[...x.participants]}));
+ if(!Array.isArray(db.awards))db.awards=sampleAwards.map(x=>({...x}));
+ save();
+}
+ensureV2();
+NAV.owner.splice(2,0,['dancers','medal','Dancer cards'],['competitions','trophy','Competitions']);
+MOBILE.owner=['overview','dancers','competitions'];
+const v1Content=content;
+content=function(){if(role==='owner'&&route==='dancers')return dancerCards();if(role==='owner'&&route==='competitions')return competitionPlanner();return v1Content();};
+const v1Marketing=marketing;
+marketing=function(){
+ const teaser='<section id="spotlight-preview" class="section alt-section"><div class="section-inner"><div class="section-head"><div class="eyebrow">Celebrate every milestone</div><h2>Every dancer has a story worth telling.</h2><p>Player-card inspired dancer profiles, achievements, past competitions and a dedicated planner for what comes next.</p></div><div class="dm-marketing-teaser"><div class="dm-teaser-art">★ <span>DANCER SPOTLIGHT</span> ★</div><div><h3>Profiles meet performance history.</h3><p>Discover specialties, personal bios, award records, and event entries, all linked in one studio workspace.</p><div class="dm-hero-buttons">'+button('Explore dancer cards '+icon('arrow'),'show-dancers','btn-primary')+button('Competition planner','show-competitions','btn-outline')+'</div><p class="fineprint">All displayed profiles and competitions are fictional. No public profiles of children are published from this demo.</p></div></div></div></section>';
+ return v1Marketing().replace('<section id="how-it-works"',teaser+'<section id="how-it-works"').replace('NEXT · PRIVATE V1','NEXT · DEMO V2');
+};
+const v1Brand=brand;
+brand=function(){return v1Brand().replace('NEXT · PRIVATE V1','NEXT · DEMO V2');};
+demoBanner=function(){return `<div class="demo-banner">${icon('shield')} PUBLIC TEST PREVIEW · Fictional data only · No real dancer information · Original site untouched</div>`;};
+function profile(studentId){return db.dancerProfiles.find(p=>p.studentId===studentId)||{studentId,specialties:db.students.find(s=>s.id===studentId)?.level||'Dance',bio:'Add a short dancer biography from the profile editor.',listed:false};}
+function competitionsFor(id){return db.competitions.filter(e=>Array.isArray(e.participants)&&e.participants.includes(id));}
+function awardsFor(id){return db.awards.filter(a=>a.studentId===id);}
+function avatar(student,idx=0){return '<div class="dm-portrait dm-portrait-'+(idx%4+1)+'"><span class="dm-dance-silhouette">'+icon('dance')+'</span><span class="dm-monogram">'+esc(initials(student.name))+'</span></div>';}
+function dancerCard(s,idx){
+ const p=profile(s.id),awards=awardsFor(s.id),events=competitionsFor(s.id);
+ return '<article class="dm-player-card"><div class="dm-card-top"><span class="dm-card-eyebrow">DANCE MANAGER · STUDIO ROSTER</span><span class="dm-card-no">'+String(idx+1).padStart(2,'0')+'</span></div>'+avatar(s,idx)+'<div class="dm-card-info"><span class="dm-card-sub">'+esc((p.specialties||s.level).split('·')[0].trim().toUpperCase())+' SPECIALIST</span><h3>'+esc(s.name)+'</h3><p class="dm-short-bio">'+esc(p.bio)+'</p><div class="dm-discipline">'+(p.specialties||s.level||'Dance').split('·').slice(0,3).map(x=>'<span>'+esc(x.trim())+'</span>').join('')+'</div><div class="dm-card-metrics"><div><strong>'+events.length+'</strong><small>Competitions</small></div><div><strong>'+awards.length+'</strong><small>Awards</small></div></div><button class="btn btn-primary dm-card-button" data-action="dancer-'+esc(s.id)+'">View player card '+icon('arrow')+'</button></div></article>';
+}
+function dancerCards(){
+ const listed=db.students.filter(s=>profile(s.id).listed),all=db.students.length;
+ return head('Dancer spotlight','NFL-style player cards for your studio. Cards are visible only inside this fictional demo.',button(icon('plus')+' Edit profiles','manage-roster','btn-outline'))+
+ '<div class="dm-spotlight-hero"><div><span class="dm-mini-label">DANCER HALL OF FAME</span><h2>The talent behind every performance.</h2><p>Celebrate specialties, personal stories, competition history and trophies without losing the practical student record behind the scenes.</p><div class="dm-hero-buttons">'+button('Manage listed dancers','manage-roster','btn-light')+button('Plan competitions','show-competitions','btn-outline')+'</div></div><div class="dm-hero-trophy">'+icon('trophy')+'</div></div>'+
+ '<div class="dm-simple-stats"><div><strong>'+listed.length+'</strong><span>Featured dancer cards</span></div><div><strong>'+db.awards.length+'</strong><span>Recorded achievements</span></div><div><strong>'+db.competitions.length+'</strong><span>Tracked competitions</span></div></div>'+
+ '<div class="dm-section-line"><h2>Our studio roster</h2><span class="pill blue">'+listed.length+' of '+all+' featured</span></div>'+
+ '<div class="dm-player-grid">'+(listed.length?listed.map((s,i)=>dancerCard(s,i)).join(''):'<div class="empty">No dancer cards are currently listed. Choose “Manage listed dancers” to turn some on.</div>')+'</div>'+
+ '<div class="safe-notice dm-privacy">'+icon('shield')+' Privacy first: “featured” controls this private demo roster, not a public directory. In production, public child profiles and images must require verified guardian permission and limited, revocable sharing. Do not enter real children’s details here.</div>';
+}
+function eventFormat(e){return prettyDate(e.date)+' · '+esc(e.city);}
+function competitionPlanner(){
+ const upcoming=[...db.competitions].filter(x=>x.status!=='Completed').sort((a,b)=>a.date.localeCompare(b.date));
+ const past=[...db.competitions].filter(x=>x.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date));
+ return head('Competition center','Plan the season, manage entries, and celebrate results — fictional data only.',button(icon('plus')+' Add competition','new-competition'))+
+ '<div class="dm-event-intro"><div><span class="dm-mini-label">COMPETITION COMMAND CENTER</span><h2>From first entry to final trophy.</h2><p>Keep your dancers, deadlines, locations, performances, and results in one place.</p></div><div class="dm-calendar-art">'+icon('calendar')+'</div></div>'+
+ '<div class="dm-simple-stats"><div><strong>'+upcoming.length+'</strong><span>Upcoming events</span></div><div><strong>'+past.length+'</strong><span>Past events</span></div><div><strong>'+db.awards.length+'</strong><span>Awards recorded</span></div></div>'+
+ '<div class="dm-section-line"><h2>Upcoming competitions</h2><span class="pill blue">Manage registrations</span></div>'+
+ (upcoming.length?'<div class="dm-event-list">'+upcoming.map(eventCard).join('')+'</div>':'<div class="empty">No upcoming events yet.</div>')+
+ '<div class="dm-section-line dm-past-title"><h2>Past competitions & results</h2><span class="pill green">Performance history</span></div>'+
+ (past.length?'<div class="dm-event-list">'+past.map(eventCard).join('')+'</div>':'<div class="empty">No completed events recorded.</div>')+
+ '<div class="safe-notice dm-privacy">'+icon('shield')+' All event names, cities, dates, venues, fees, participants and results are demonstration examples — not real bookings or competition results.</div>';
+}
+function eventCard(e){
+ const date=new Date(e.date+'T12:00:00');const mon=Number.isNaN(+date)?'—':date.toLocaleDateString('en-US',{month:'short'}),day=Number.isNaN(+date)?'—':date.getDate();
+ const completed=e.status==='Completed',awards=db.awards.filter(a=>a.competitionId===e.id).length;
+ return '<article class="dm-event-card"><div class="dm-event-date"><strong>'+mon+'</strong><b>'+day+'</b><small>'+esc(e.date.slice(0,4))+'</small></div><div class="dm-event-copy"><div class="dm-event-tags"><span class="pill '+(completed?'green':'blue')+'">'+esc(e.status)+'</span> <span>'+esc(e.city)+'</span></div><h3>'+esc(e.title)+'</h3><p>'+icon('pin')+' '+esc(e.venue)+'</p><p class="dm-event-fine">'+(completed?icon('medal')+' '+awards+' recorded awards':icon('clock')+' Entry deadline '+prettyDate(e.deadline))+' · '+(e.participants||[]).length+' dancers</p></div><button class="btn btn-soft dm-event-button" data-action="event-'+esc(e.id)+'">Manage '+icon('arrow')+'</button></article>';
+}
+function selector(name,items,selected){return '<div class="form-field"><label class="label" for="'+name+'">Dancer</label><select name="'+name+'" id="'+name+'">'+items.map(s=>'<option value="'+esc(s.id)+'" '+(s.id===selected?'selected':'')+'>'+esc(s.name)+'</option>').join('')+'</select></div>';}
+function profileDialog(id){
+ const s=db.students.find(x=>x.id===id);if(!s)return;
+ const p=profile(id),aw=awardsFor(id),events=competitionsFor(id);
+ modalForm(s.name+' — dancer card',
+ '<div class="dm-dialog-summary">'+avatar(s,1)+'<div><span class="dm-mini-label">STUDIO DANCER PROFILE</span><h3>'+esc(s.name)+'</h3><p>'+esc(p.specialties||s.level)+'</p></div></div>'+
+ '<p class="small">'+esc(p.bio)+'</p><h3 class="dm-modal-h3">'+icon('trophy')+' Awards & achievements</h3>'+
+ (aw.length?aw.map(a=>'<div class="dm-award-row"><span>'+icon('medal')+'</span><div><strong>'+esc(a.title)+'</strong><small>'+esc(db.competitions.find(e=>e.id===a.competitionId)?.title||'Competition')+' · '+esc(a.placement||'Award')+'</small></div></div>').join(''):'<p class="muted small">No achievements recorded for this dancer.</p>')+
+ '<h3 class="dm-modal-h3">'+icon('calendar')+' Competitions attended</h3>'+
+ (events.length?events.map(e=>'<div class="dm-award-row"><span>'+icon('flag')+'</span><div><strong>'+esc(e.title)+'</strong><small>'+eventFormat(e)+'</small></div></div>').join(''):'<p class="muted small">No competitions recorded.</p>')+
+ '<div class="modal-footer">'+button('Edit card','edit-dancer-'+s.id,'btn-primary')+button('Close','close-modal','btn-outline')+'</div>','dancer');
+}
+function editProfileDialog(id){
+ const s=db.students.find(x=>x.id===id);if(!s)return;const p=profile(id);
+ modalForm('Edit dancer card — '+s.name,
+ '<div class="safe-notice">Use fictional sample information only. This prototype has no secure profiles, uploads, or permissions.</div>'+
+ '<form id="dm-profile-form"><input type="hidden" name="studentId" value="'+esc(s.id)+'">'+
+ field('dm-specialties','Specialties / dance styles','e.g. Ballet · Jazz','text','required maxlength="140"',p.specialties||s.level)+
+ '<div class="form-field"><label class="label" for="dm-biography">Background & biography</label><textarea id="dm-biography" name="biography" maxlength="500" rows="4" required>'+esc(p.bio||'')+'</textarea></div>'+
+ '<label class="dm-check-label"><input type="checkbox" name="listed" '+(p.listed?'checked':'')+'> Display this fictional dancer card on the studio demo roster</label>'+
+ '<p class="fineprint">An actual portrait uploader requires secure storage and parent/guardian authorization. The demo currently shows an illustrated placeholder.</p>'+footer('Save dancer card')+'</form>','edit-profile');
+}
+function rosterDialog(){
+ modalForm('Choose featured dancers','<p class="small muted">Choose which fictional dancer cards appear in your studio’s internal showcase. This does not publish any student to the internet.</p>'+
+ '<form id="dm-roster-form"><div class="dm-roster-choices">'+db.students.map(s=>'<label class="dm-roster-choice"><input type="checkbox" name="featured" value="'+esc(s.id)+'" '+(profile(s.id).listed?'checked':'')+'><span class="student-avatar">'+esc(initials(s.name))+'</span><span>'+esc(s.name)+'</span></label>').join('')+'</div>'+footer('Update featured roster')+'</form>','roster-toggle');
+}
+function eventDialog(id){
+ const e=db.competitions.find(c=>c.id===id);if(!e)return;
+ const registered=db.students.filter(s=>e.participants.includes(s.id));
+ modalForm(e.title+' — event manager',
+ '<div class="dm-event-dialog-header">'+icon('calendar')+' '+eventFormat(e)+'</div><p class="small muted">'+icon('pin')+' '+esc(e.venue)+'</p>'+
+ '<div class="dm-info-grid"><div><strong>'+prettyDate(e.deadline)+'</strong><small>Entry deadline</small></div><div><strong>'+USD(e.fee)+'</strong><small>Illustrative entry fee</small></div><div><strong>'+esc(e.status)+'</strong><small>Status</small></div></div>'+
+ '<h3 class="dm-modal-h3">Registered dancers</h3>'+
+ (registered.length?registered.map(s=>'<div class="dm-award-row"><span class="student-avatar">'+esc(initials(s.name))+'</span><div><strong>'+esc(s.name)+'</strong><small>'+esc(profile(s.id).specialties||s.level)+'</small></div></div>').join(''):'<p class="muted small">No dancers currently entered.</p>')+
+ '<div class="dm-dialog-actions">'+button('Add dancer','enter-'+e.id,'btn-soft btn-small')+button('Record result','award-'+e.id,'btn-soft btn-small')+(e.status!=='Completed'?button('Mark completed','finish-'+e.id,'btn-outline btn-small'):'')+'</div>'+
+ '<p class="fineprint">This screen manages fictional entries and results locally. It does not register dancers with an organizer or send notifications.</p>','event');
+}
+function newEventDialog(){
+ modalForm('Add a sample competition',
+ '<div class="safe-notice">Demo only — use invented event information. No external registration occurs.</div><form id="dm-event-form">'+
+ field('dm-event-title','Competition title','e.g. Summer Showcase')+
+ '<div class="form-grid">'+field('dm-event-date','Competition date','','date')+field('dm-event-deadline','Entry deadline','','date')+'</div>'+
+ '<div class="form-grid">'+field('dm-event-city','City, state','e.g. Pensacola, FL')+field('dm-event-venue','Venue','e.g. Demo Arts Hall')+'</div>'+
+ field('dm-event-fee','Entry fee estimate in USD','75','number','required min="0" max="10000"')+footer('Add competition')+'</form>','new-event');
+}
+function entryDialog(id){
+ const e=db.competitions.find(c=>c.id===id);if(!e)return;
+ const available=db.students.filter(s=>!e.participants.includes(s.id));
+ modalForm('Add dancer — '+e.title,available.length?'<form id="dm-entry-form"><input type="hidden" name="eventId" value="'+esc(id)+'">'+selector('studentId',available)+footer('Add to competition')+'</form>':'<div class="empty">All fictional dancers are already entered.</div>','entry');
+}
+function awardDialog(id){
+ const e=db.competitions.find(c=>c.id===id);if(!e)return;
+ const participants=db.students.filter(s=>e.participants.includes(s.id));
+ modalForm('Record award — '+e.title,participants.length?
+ '<form id="dm-award-form"><input type="hidden" name="eventId" value="'+esc(id)+'">'+selector('studentId',participants)+
+ field('dm-award-title','Result / award','e.g. 1st Place — Contemporary Solo')+
+ '<div class="form-field"><label class="label" for="dm-placement">Recognition</label><select id="dm-placement" name="placement"><option>Gold</option><option>Silver</option><option>Bronze</option><option>Special Award</option><option>Participation</option></select></div>'+footer('Record achievement')+'</form>':'<p class="muted">Add a dancer to this event before recording a result.</p>','award');
+}
+const prevDoAction=doAction;
+doAction=function(action){
+ if(action==='show-dancers'){navigate('owner','dancers');return;}
+ if(action==='show-competitions'){navigate('owner','competitions');return;}
+ if(action==='manage-roster'){rosterDialog();return;}
+ if(action==='new-competition'){newEventDialog();return;}
+ if(action.startsWith('dancer-')){profileDialog(action.slice(7));return;}
+ if(action.startsWith('edit-dancer-')){editProfileDialog(action.slice(12));return;}
+ if(action.startsWith('event-')){eventDialog(action.slice(6));return;}
+ if(action.startsWith('enter-')){entryDialog(action.slice(6));return;}
+ if(action.startsWith('award-')){awardDialog(action.slice(6));return;}
+ if(action.startsWith('finish-')){const c=db.competitions.find(x=>x.id===action.slice(7));if(c){c.status='Completed';save();modal='';render();toast('Competition marked completed (demo).')}return;}
+ if(action==='reset'){if(window.confirm('Reset all fictional demo data, including dancer cards and competitions?')){db=sample();ensureV2();render();toast('All fictional demo data restored.')}return;}
+ prevDoAction(action);
+};
+document.addEventListener('submit',function(e){
+ const ids=['dm-profile-form','dm-roster-form','dm-event-form','dm-entry-form','dm-award-form'];
+ if(!ids.includes(e.target.id))return;
+ e.preventDefault();
+ const form=e.target,d=new FormData(form),str=k=>String(d.get(k)||'').trim();
+ if(form.id==='dm-profile-form'){
+  const s=db.students.find(x=>x.id===str('studentId'));if(!s)return;
+  const spec=str('dm-specialties').slice(0,140),bio=str('biography').slice(0,500);
+  if(!spec||!bio)return toast('Add specialties and a short biography.');
+  const p=profile(s.id);p.studentId=s.id;p.specialties=spec;p.bio=bio;p.listed=d.has('listed');
+  const existing=db.dancerProfiles.findIndex(x=>x.studentId===s.id);
+  if(existing>=0)db.dancerProfiles[existing]=p;else db.dancerProfiles.push(p);
+ }else if(form.id==='dm-roster-form'){
+  const keep=new Set(d.getAll('featured'));
+  for(const s of db.students){let p=profile(s.id);p.studentId=s.id;p.listed=keep.has(s.id);if(!db.dancerProfiles.some(x=>x.studentId===s.id))db.dancerProfiles.push(p);}
+ }else if(form.id==='dm-event-form'){
+  const title=str('dm-event-title').slice(0,120),date=str('dm-event-date'),deadline=str('dm-event-deadline'),city=str('dm-event-city').slice(0,120),venue=str('dm-event-venue').slice(0,120),fee=Number(str('dm-event-fee'));
+  if(!title||!date||!deadline||!city||!venue||!Number.isFinite(fee)||fee<0||fee>10000)return toast('Please complete each event field.');
+  db.competitions.push({id:'dc'+Date.now(),title,date,deadline,city,venue,fee,status:'Upcoming',participants:[]});
+ }else if(form.id==='dm-entry-form'){
+  const event=db.competitions.find(x=>x.id===str('eventId')),sid=str('studentId');
+  if(!event||!db.students.some(s=>s.id===sid)||event.participants.includes(sid))return toast('Choose an available dancer.');
+  event.participants.push(sid);
+ }else if(form.id==='dm-award-form'){
+  const event=db.competitions.find(x=>x.id===str('eventId')),sid=str('studentId'),title=str('dm-award-title').slice(0,150);
+  if(!event||!event.participants.includes(sid)||!title)return toast('Choose an entered dancer and result.');
+  db.awards.push({id:'da'+Date.now(),studentId:sid,competitionId:event.id,title,placement:str('placement')});
+ }
+ save();modal='';render();toast('Fictional record saved on this device.');
+});
+
+render();
+})();
+</script>
+  <script id="dance-v4-inline">
+/* Dance Manager Next V3 - visual redesign and fictional category browser. */
+(function(){
+'use strict';
+const src={
+  hero:'https://images.unsplash.com/photo-1769694513443-c7292e174d48?auto=format&fit=crop&w=1800&q=85',
+  studio:'https://images.unsplash.com/photo-1558905566-ddbeb2fc2c2f?auto=format&fit=crop&w=900&q=83',
+  dancer:'https://images.unsplash.com/photo-1771528471837-573223e7a6b0?auto=format&fit=crop&w=900&q=83',
+  stage:'https://images.unsplash.com/photo-1741846895501-4c79409bc570?auto=format&fit=crop&w=1100&q=83',
+  parent:'https://images.unsplash.com/photo-1752652012592-8f618322a63c?auto=format&fit=crop&w=900&q=83',
+  ballerina:'https://images.unsplash.com/photo-1760543320214-9a578e5c5b73?auto=format&fit=crop&w=900&q=83',
+  purple:'https://images.unsplash.com/photo-1769694513443-c7292e174d48?auto=format&fit=crop&w=800&q=80'
+};
+const n3Brand='<span class="n3-brand">DANCE MANAGER <em>Next</em><small>STUDIOS · DANCERS · COMPETITIONS · ALL TOGETHER</small></span>';
+function btn(text,action,cls){return '<button type="button" class="'+(cls||'n3-button')+'" data-action="'+action+'">'+text+'</button>';}
+function navItems(){return [
+  '<a href="#top" data-n3-scroll>Home</a>',
+  btn('Studio','owner','n3-nav-btn'),
+  btn('Dancers','show-dancers','n3-nav-btn'),
+  btn('Competitions','show-competitions','n3-nav-btn'),
+  btn('Parents','parent','n3-nav-btn'),
+  '<a href="#resources" data-n3-scroll>Resources</a>',
+  '<a href="#pricing" data-n3-scroll>Pricing</a>'
+].join('');}
+function tile(title,desc,tag,img,action){
+ return '<article class="n3-tile"><img alt="" loading="lazy" src="'+img+'"><div class="n3-tile-shade"></div><div class="n3-tile-info"><span class="n3-tile-tag">'+tag+'</span><h3>'+title+'</h3><p>'+desc+'</p>'+btn('Explore '+title+' →',action,'n3-outline')+'</div></article>';
+}
+marketing=function(){
+ return '<div class="n3-site" id="top">'+
+ '<header class="n3-header"><div class="n3-bar"><a href="#top" class="n3-logo">'+n3Brand+'</a><nav class="n3-desktop" aria-label="Main navigation">'+navItems()+'</nav>'+
+ '<div class="n3-top-actions">'+btn('Sign in','owner','n3-signin')+btn('Get started →','owner','n3-button n3-sm')+
+ '<button type="button" aria-label="Open navigation" aria-expanded="'+(mobileMenu?'true':'false')+'" class="n3-menu-btn" data-action="toggle-menu">'+icon('menu')+'</button></div></div>'+
+ (mobileMenu?'<nav class="n3-mobile" aria-label="Mobile navigation">'+navItems()+'</nav>':'')+
+ '</header>'+
+ '<main>'+
+ '<section class="n3-hero"><div class="n3-hero-visual"><img class="n3-hero-photo" src="'+src.hero+'" alt="Dance performer under theatrical purple stage lighting"></div><div class="n3-hero-glow"></div>'+
+ '<div class="n3-hero-copy"><p class="n3-eyebrow">A BETTER STAGE FOR YOUR STUDIO</p><h1>More Than<br>A <em>Dance</em><br>Website.</h1>'+
+ '<p class="n3-subtitle">The complete studio management platform for dancers, teachers, competition directors and families.</p>'+
+ '<div class="n3-highlights"><span>'+icon('calendar')+' Manage</span><span>'+icon('users')+' Connect</span><span>'+icon('trophy')+' Celebrate</span></div>'+
+ '<div class="n3-hero-actions">'+btn('See the platform →','owner','n3-button')+btn('Explore competitions ↗','show-competitions','n3-ghost')+'</div>'+
+ '<p class="n3-demo-detail">Independent V3 preview · All records are fictional</p></div></section>'+
+ '<div class="n3-benefits"><span>'+icon('grid')+' All-in-one management</span><span>'+icon('phone')+' Mobile-friendly experience</span><span>'+icon('trophy')+' Competition ready</span><span>'+icon('chart')+' Built for studio growth</span></div>'+
+ '<section id="features" class="n3-feature-section"><div class="n3-section-header"><div><p class="n3-kicker">ONE BEAUTIFUL PLATFORM</p><h2>Everything your dance world needs.</h2></div><p>Studio essentials and the excitement of competition, seamlessly connected.</p></div>'+
+ '<div class="n3-tiles">'+
+ tile('Studio Management','Organize classes, dancers, staff, schedules and communication in one place.','RUN YOUR STUDIO',src.studio,'owner')+
+ tile('Dancer Profiles','Showcase dancer cards with bios, specialties, results and achievements.','MEET THE TALENT',src.dancer,'show-dancers')+
+ tile('Competitions','Manage routines, entry categories, schedules and placements.','OWN THE STAGE',src.stage,'show-competitions')+
+ tile('Parent Portal','Help families stay connected with schedules, invoices and updates.','STAY CONNECTED',src.parent,'parent')+
+ '</div></section>'+
+ '<section class="n3-preview-section" id="resources"><div class="n3-preview-copy"><p class="n3-kicker">THE POWER BEHIND THE PERFORMANCE</p><h2>Beautiful on the outside.<br><em>Practical every day.</em></h2><p>Jump into the interactive owner workspace: class rosters, attendance, simulated tuition, studio communications and reporting.</p><div class="n3-pill-row"><span>Class scheduling</span><span>Attendance</span><span>Billing preview</span><span>Instructor tools</span></div>'+btn('Open studio dashboard →','owner','n3-button')+'</div><div class="n3-preview-panel"><div class="n3-preview-panel-top"><b>Studio overview</b><span>LIVE DEMO VIEW</span></div><div class="n3-preview-metrics"><div><small>Student records</small><strong>128</strong></div><div><small>Weekly classes</small><strong>24</strong></div><div><small>Sample revenue</small><strong>$8.4k</strong></div></div><div class="n3-preview-bars"><i style="height:34%"></i><i style="height:57%"></i><i style="height:49%"></i><i style="height:72%"></i><i style="height:69%"></i><i style="height:84%"></i><i style="height:93%"></i></div><p>Illustrative dashboard figures · Not real studio records</p></div></section>'+
+ '<section class="n3-spotlight-banner"><img src="'+src.ballerina+'" alt="" loading="lazy"><div><p class="n3-kicker">EVERY DANCER HAS A STORY</p><h2>Give every performance<br>the recognition it deserves.</h2><p>A profile card for specialties, routines, competition entries and memorable achievements.</p>'+btn('View dancer cards →','show-dancers','n3-button')+'</div></section>'+
+ '<section id="pricing" class="n3-final-cta"><p class="n3-kicker">DISCOVER THE POSSIBILITIES</p><h2>Give your studio room to shine.</h2><p>Explore the working demonstration. Official pricing and production availability have not been announced.</p>'+btn('Try the studio demo →','owner','n3-button')+'</section>'+
+ '</main><footer class="n3-footer"><div>'+n3Brand+'<p>Independent design prototype — not the existing Dance Manager service.</p></div><small>Fictional examples only · No actual student profiles or payments · Concept photography from Unsplash</small></footer></div>';
+};
+const beforeContent=content;
+let chosenFormat='Solo',chosenStyle='All styles';
+const formats=[['Solo','Solo'],['Duo / Trio','Duo/Trio'],['Small Group','Small Group'],['Large Group','Large Group'],['Production','Production'],['Team','Team']];
+const styles=['All styles','Ballet','Jazz','Contemporary','Lyrical','Hip-Hop','Tap'];
+const routines=[
+ {title:'Reflections',format:'Solo',style:'Lyrical',who:'Avery Johnson',tag:'1st Place',photo:src.dancer},
+ {title:'Unstoppable',format:'Solo',style:'Contemporary',who:'Chloe Mitchell',tag:'Judges’ Choice',photo:src.hero},
+ {title:'Rise',format:'Solo',style:'Jazz',who:'Ethan Carter',tag:'National Finalist',photo:src.purple},
+ {title:'Stronger Together',format:'Large Group',style:'Contemporary',who:'Elevate Dance Company',tag:'Choreography Award',photo:src.stage},
+ {title:'Midnight Rhythm',format:'Duo / Trio',style:'Jazz',who:'The Studio Duo',tag:'Top 10',photo:src.ballerina},
+ {title:'Beyond the Lights',format:'Small Group',style:'Ballet',who:'The En Pointe Ensemble',tag:'Gold',photo:src.studio},
+ {title:'Encore',format:'Production',style:'Tap',who:'Studio Collective',tag:'Special Award',photo:src.stage},
+ {title:'Electric Motion',format:'Team',style:'Hip-Hop',who:'Urban Motion Crew',tag:'Finalist',photo:src.stage}
+];
+function filterControls(){
+ return '<section class="n3-categories"><div class="n3-category-banner"><div><span>EXPLORE THE COMPETITION FLOOR</span><h2>Competition categories</h2><p>Find routines and dancer groups by entry type and dance style. Each item is a fictional demonstration.</p></div><img src="'+src.hero+'" loading="lazy" alt="Stage performer in dramatic pose"></div>'+
+ '<div class="n3-filter-label">ENTRY FORMAT</div><div class="n3-format-row">'+formats.map(function(f){return '<button type="button" data-action="n3-format-'+f[0]+'" class="n3-format-btn '+(chosenFormat===f[0]?'active':'')+'">'+f[1]+'</button>';}).join('')+'</div>'+
+ '<div class="n3-style-row"><span>Dance style:</span>'+styles.map(function(s){return '<button type="button" class="n3-style-btn '+(chosenStyle===s?'active':'')+'" data-action="n3-style-'+s+'">'+s+'</button>';}).join('')+'</div>'+
+ '<div class="n3-routines-head"><h3>'+chosenFormat+' spotlight</h3><span>Illustrative examples</span></div>'+
+ '<div class="n3-routines">'+routines.filter(function(r){return r.format===chosenFormat&&(chosenStyle==='All styles'||chosenStyle===r.style);}).map(function(r){return '<article class="n3-routine"><div class="n3-routine-img"><img src="'+r.photo+'" alt="Illustrative stage photography" loading="lazy"><span>★ '+r.tag+'</span></div><div class="n3-routine-info"><small>'+r.style+' · '+r.format+'</small><h4>'+r.title+'</h4><p>'+r.who+'</p><span>Sample routine · Demo only</span></div></article>';}).join('')+
+ (routines.some(function(r){return r.format===chosenFormat&&(chosenStyle==='All styles'||chosenStyle===r.style);})?'':'<div class="n3-no-results">No sample routine in this combination. Choose another dance style.</div>')+'</div></section>';
+}
+content=function(){
+ const result=beforeContent();
+ if(role==='owner'&&route==='competitions') return result.replace('<div class="dm-simple-stats">',filterControls()+'<div class="dm-simple-stats">');
+ return result;
+};
+const prevAction=doAction;
+doAction=function(a){
+ if(a.indexOf('n3-format-')===0){chosenFormat=a.slice(10);chosenStyle='All styles';render();return;}
+ if(a.indexOf('n3-style-')===0){chosenStyle=a.slice(9);render();return;}
+ prevAction(a);
+};
+demoBanner=function(){return '<div class="demo-banner">V7 AI READY PREVIEW · Fictional demo data · Original site unchanged</div>';};
+
+render();
+})();
+</script>
+<script id="dance-v5-chat">
+(function(){
+'use strict';
+let dm5Lead=false,dm5Type='Studio owner',dm5InvitationShown=false;
+const options={
+ start:[['🏫 I run a studio','studio'],['🏆 I host competitions','director'],['👪 I’m a parent','parent'],['✨ I’m a dancer','dancer'],['📅 Request a demo','demo']],
+ studio:[['Explore studio tools →','studio-tour'],['See dancer profiles →','dancer-tour'],['📅 Request a demo','demo'],['← Other questions','start']],
+ director:[['Explore competitions →','competition-tour'],['See dancer profiles →','dancer-tour'],['📅 Request a demo','demo'],['← Other questions','start']],
+ parent:[['Explore family portal →','parent-tour'],['See dancer profiles →','dancer-tour'],['← Other questions','start'],['📅 Request a demo','demo']],
+ dancer:[['See dancer cards →','dancer-tour'],['Explore competitions →','competition-tour'],['← Other questions','start'],['📅 Request a demo','demo']]
+};
+let dm5Stage='start';
+chatMessages.length=0;
+chatMessages.push({from:'bot',text:'Hi there! 👋 Welcome to Dance Manager Next. Whether you run a studio, organize competitions, or support a dancer, I can help you find your way. What brings you here today?'});
+const oldRender=render, oldChatReply=chatReply;
+const noticeKey='dance-manager-v5-greeting-shown';
+function dm5Safe(t){return esc(String(t??''));}
+function dm5InviteRemove(){document.querySelectorAll('.dm5-invite').forEach(x=>x.remove());}
+function dm5Open(){chatOpen=true;dm5Lead=false;dm5InviteRemove();try{sessionStorage.setItem(noticeKey,'yes')}catch(e){} render();dm5Bottom();}
+function dm5Bottom(){const area=document.querySelector('#chat-messages');if(area)area.scrollTop=area.scrollHeight;}
+function dm5Say(user,reply,stage){if(user)chatMessages.push({from:'you',text:user});if(reply)chatMessages.push({from:'bot',text:reply});if(stage)dm5Stage=stage;dm5Lead=false;render();dm5Bottom();}
+function dm5LeadForm(){
+ return '<form id="dm5-lead-form" class="dm5-lead">'+
+ '<h3>Preview your demo request</h3><p>Try the form using sample information. No booking or email is sent; anything saved stays on this device.</p>'+
+ '<div class="dm5-lead-grid"><div><label for="dm5-name">Your name</label><input id="dm5-name" name="name" maxlength="70" required placeholder="Sample Visitor" autocomplete="off"></div>'+
+ '<div><label for="dm5-email">Email</label><input id="dm5-email" name="email" type="email" maxlength="120" required placeholder="sample@example.test" autocomplete="off"></div></div>'+
+ '<label for="dm5-organization">Studio or organization</label><input id="dm5-organization" name="studio" maxlength="90" required placeholder="Example Dance Academy" autocomplete="off">'+
+ '<label for="dm5-role">I’m interested as a</label><select id="dm5-role" name="visitorType">'+
+ ['Studio owner','Competition director','Parent / family','Dancer','Other'].map(x=>'<option'+(x===dm5Type?' selected':'')+'>'+x+'</option>').join('')+'</select>'+
+ '<label for="dm5-notes">What would you like to explore? (optional)</label><textarea id="dm5-notes" name="message" maxlength="400" placeholder="Competition entries, studio billing, class scheduling..."></textarea>'+
+ '<label class="dm5-consent"><input type="checkbox" name="understand" required><span>I understand this is a demonstration stored on this device, and no request will actually be sent.</span></label>'+
+ '<div class="dm5-lead-actions"><button class="dm5-back" data-dm5-action="back" type="button">Back</button><button class="dm5-send-demo" type="submit">Save sample request</button></div>'+
+ '</form>';
+}
+chatPanel=function(){
+ const messages=chatMessages.slice(-20).map(m=>'<div class="dm5-msg '+(m.from==='you'?'mine':'bot')+'">'+dm5Safe(m.text)+'</div>').join('');
+ const choices=(options[dm5Stage]||options.start).map(([label,a])=>'<button type="button" data-dm5-action="'+a+'"'+(a==='demo'?' class="dm5-full"':'')+'>'+dm5Safe(label)+'</button>').join('');
+ return '<section class="chat-pane dm5-chat-pane '+(dm5Lead?'dm6-lead-mode':'')+'" aria-label="Dance Manager interactive visitor guide">'+
+ '<header class="chat-head"><div class="dm5-chat-avatar" aria-hidden="true">✦</div><div><b>'+(dm5Lead?'Demo request':'Dance Manager Guide')+'</b><small>'+(dm5Lead?'Tell us what interests you':'Welcome! How can I help?')+'</small></div>'+
+ '<button class="dm5-chat-close" type="button" data-dm5-action="close" aria-label="Close chat">×</button></header>'+
+ (dm5Lead?'<div class="dm5-automated">Sample request only · Nothing is sent or booked</div>':'<div class="dm5-automated">Interactive demo assistant · Automated replies, not a live agent</div>')+
+ (dm5Lead?'':'<div id="chat-messages" class="dm5-history" role="log" aria-live="polite">'+messages+'</div>')+
+ (dm5Lead?dm5LeadForm():'<div class="dm5-choices">'+choices+'</div><form id="chat-form" class="chat-input"><label class="screen-reader" for="chat-question">Ask a question</label><input id="chat-question" name="question" maxlength="240" placeholder="Or type your question…" required autocomplete="off"><button type="submit" aria-label="Ask question">'+icon('arrow')+'</button></form>')+
+ '</section>';
+};
+askChat=function(q){
+ q=String(q||'').trim().slice(0,240);if(!q)return;
+ const lower=q.toLowerCase();
+ const answer=/demo|contact|reach out|book|schedule a call|talk to a person/.test(lower)
+ ?'You can preview a demo request below. This test site does not send your details or connect you with a real person yet.'
+ :oldChatReply(q);
+ dm5Say(q,answer);
+ if(/demo|contact|reach out|book|schedule a call|talk to a person/.test(lower)){dm5Lead=true;render();dm5Bottom();}
+};
+function dm5Decorate(){
+ const b=document.querySelector('.chat-trigger');
+ if(b){
+ b.setAttribute('aria-label','Open Dance Manager welcome guide');b.setAttribute('title','Questions? Start here');
+ b.innerHTML=icon('chat')+'<span class="dm5-chat-dot" aria-hidden="true"></span>';
+ }
+ if(!chatOpen && role==='marketing' && !dm5InvitationShown){
+  dm5InvitationShown=true;
+  setTimeout(function(){
+    if(chatOpen||role!=='marketing'||document.querySelector('.dm5-invite'))return;
+    try{if(sessionStorage.getItem(noticeKey))return;sessionStorage.setItem(noticeKey,'yes')}catch(e){}
+    const d=document.createElement('div');d.className='dm5-invite';
+    d.innerHTML='<button type="button" class="dm5-invite-text" data-dm5-action="open"><b>Hi there! 👋</b> Running a studio or planning a dance competition? I can help you explore.</button>'+
+    '<button type="button" class="dm5-invite-close" data-dm5-action="dismiss" aria-label="Dismiss welcome message">×</button>';
+    document.body.appendChild(d);
+    setTimeout(function(){if(d.isConnected)d.remove();},11000);
+  },1800);
+ }
+}
+render=function(){oldRender();dm5Decorate();};
+function dm5Route(roleName,routeName){dm5InviteRemove();navigate(roleName,routeName);}
+document.addEventListener('click',function(e){
+ const button=e.target.closest('[data-dm5-action]');if(!button)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const a=button.dataset.dm5Action;
+ if(a==='dismiss'){dm5InviteRemove();return;}
+ if(a==='open'){dm5Open();return;}
+ if(a==='close'){chatOpen=false;dm5Lead=false;render();return;}
+ if(a==='back'){dm5Lead=false;render();dm5Bottom();return;}
+ if(a==='start'){dm5Say('Other questions','Which part of Dance Manager Next would you like to explore?','start');return;}
+ if(a==='demo'){dm5Lead=true;render();dm5Bottom();return;}
+ if(a==='studio'){dm5Type='Studio owner';dm5Say('I run a studio','Great! This prototype lets you explore class schedules, rosters, attendance, invoicing and messages. Where would you like to start?','studio');return;}
+ if(a==='director'){dm5Type='Competition director';dm5Say('I host competitions','Welcome! Explore our example competition formats, dancer entries, schedules and awards. These are sample features, not actual event registrations.','director');return;}
+ if(a==='parent'){dm5Type='Parent / family';dm5Say('I’m a parent','You can preview a family portal with sample class schedules, tuition summaries and studio announcements.','parent');return;}
+ if(a==='dancer'){dm5Type='Dancer';dm5Say('I’m a dancer','Explore dancer spotlight cards, styles and achievements in our fictional showcase.','dancer');return;}
+ if(a==='studio-tour'){dm5Route('owner','overview');return;}
+ if(a==='competition-tour'){dm5Route('owner','competitions');return;}
+ if(a==='dancer-tour'){dm5Route('owner','dancers');return;}
+ if(a==='parent-tour'){dm5Route('parent','family');return;}
+},true);
+document.addEventListener('submit',function(e){
+ if(e.target.id!=='dm5-lead-form')return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const f=e.target;
+ if(!f.reportValidity())return;
+ const d=new FormData(f), name=String(d.get('name')||'').trim(),email=String(d.get('email')||'').trim(),studio=String(d.get('studio')||'').trim(),type=String(d.get('visitorType')||'').trim(),note=String(d.get('message')||'').trim();
+ if(!name||!email||!studio||!d.has('understand'))return;
+ // Prototype only: no outbound request, email, CRM or production data storage.
+ if(!Array.isArray(db.leads))db.leads=[];
+ db.leads.push({name,studio,email,type,message:note,source:'Visitor guide V6 (local demo)'});
+ save();
+ dm5Say('Save sample request','Thank you for trying the demo! Your sample request was saved in this browser only. Nobody has been contacted. Once secure lead capture is configured, this flow can send real requests to the studio.','start');
+},true);
+render();
+})();
+</script>
+<script id="dm-v7-js">
+(function(){
+'use strict';
+// The public site contains NO AI or email API key.
+// Activate through v7-config.json only after deploying the separate secure backend.
+let apiBase='',aiReady=false,leadsReady=false,waiting=false;
+const savedAsk=askChat;
+const savedPanel=chatPanel;
+function normalizeUrl(raw){
+  try {
+    const u=new URL(raw);
+    if (u.protocol!=='https:' || u.username || u.password || u.search || u.hash) return '';
+    return u.origin;
+  } catch(e) {return '';}
+}
+function clearWelcome(){const node=document.querySelector('.dm5-invite');if(node)node.remove();}
+function panelStatus(){
+  if(!apiBase) return '<span class="dm7-dot"></span> Guided demo · Live AI setup pending';
+  if(aiReady)return '<span class="dm7-dot"></span> Live AI guide · Responses generated dynamically';
+  return '<span class="dm7-dot"></span> Guided demo · AI service not ready';
+}
+chatPanel=function(){
+  let html=savedPanel();
+  html=html.replace(
+    '<div class="dm5-automated">Interactive demo assistant · Automated replies, not a live agent</div>',
+    '<div class="dm7-status '+(aiReady?'live':apiBase?'offline':'')+'">'+panelStatus()+'</div>'
+  );
+  if(leadsReady) {
+    html=html.replace('Sample request only · Nothing is sent or booked','Secure demo inquiry · No appointment booked yet');
+    html=html.replace('Preview your demo request','Request a demonstration');
+    html=html.replace('Try the form using sample information. No booking or email is sent; anything saved stays on this device.',
+      'Send an inquiry to the Dance Manager team. They can respond using the email address you provide. Please do not enter student information.');
+    html=html.replace('Save sample request','Send demo request');
+    html=html.replace('I understand this is a demonstration stored on this device, and no request will actually be sent.',
+      'I agree to send these details to the Dance Manager team for follow-up about my inquiry.');
+    html=html.replace('class="dm5-lead"', 'class="dm5-lead"');
+    html=html.replace('<div class="dm5-lead-actions">','<div class="dm7-lead-alert" id="dm7-lead-alert" role="status" aria-live="polite" hidden></div><div class="dm5-lead-actions">');
+    html=html.replace('</form>', '<input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px" value=""></form>');
+  }
+  return html;
+};
+askChat=async function(query){
+  const q=String(query||'').trim().slice(0,1800);
+  if (!q) return;
+  if (!aiReady) return savedAsk(q);
+  if (waiting) return;
+  waiting=true;
+  const history=chatMessages.filter(m=>m.from==='you'||m.from==='bot').slice(-10)
+    .map(m=>({role:m.from==='you'?'user':'assistant',text:String(m.text||'').slice(0,1000)}));
+  chatMessages.push({from:'you',text:q},{from:'bot',text:'Thinking through your question…'});
+  const marker=chatMessages.length-1;
+  render();
+  try {
+    const r=await fetch(apiBase+'/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:q,history}),
+      signal:AbortSignal.timeout(20000)
+    });
+    const data=await r.json();
+    chatMessages[marker].text= r.ok && data.reply ?
+      String(data.reply).slice(0,2400) :
+      (data.error||'The AI guide is temporarily unavailable. Please try again.');
+  }catch(e){
+    chatMessages[marker].text='I’m unable to connect to the live assistant right now. Please try again later.';
+  }finally{
+    waiting=false;
+    render();
+    const historyElement=document.querySelector('#chat-messages');
+    if(historyElement)historyElement.scrollTop=historyElement.scrollHeight;
+  }
+};
+function showError(message){
+  const el=document.querySelector('#dm7-lead-alert');
+  if(el){el.hidden=false;el.className='dm7-lead-alert error';el.textContent=message;}
+}
+window.addEventListener('submit',async function(e){
+  if(e.target?.id!=='dm5-lead-form'||!leadsReady)return;
+  // Capture before the old local-only demo handler; real leads must never be saved locally.
+  e.preventDefault();e.stopImmediatePropagation();
+  const form=e.target;
+  if(!form.reportValidity())return;
+  const d=new FormData(form), payload={
+    name:String(d.get('name')||'').trim(),
+    email:String(d.get('email')||'').trim(),
+    studio:String(d.get('studio')||'').trim(),
+    visitorType:String(d.get('visitorType')||'').trim(),
+    message:String(d.get('message')||'').trim(),
+    website:String(d.get('website')||'').trim(),
+    consent:d.has('understand')
+  };
+  if(!payload.consent)return showError('Please confirm your consent to be contacted.');
+  form.classList.add('dm7-lead-form-loading');
+  const submit=form.querySelector('button[type="submit"]');
+  if(submit){submit.disabled=true;submit.textContent='Sending…';}
+  try{
+    const r=await fetch(apiBase+'/api/lead',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),signal:AbortSignal.timeout(18000)
+    });
+    const result=await r.json();
+    if(!r.ok||!result.ok)throw new Error(result.error||'Could not send the request.');
+    const back=form.querySelector('[data-dm5-action="back"]');
+    if(back)back.click();
+    chatMessages.push({from:'bot',text:'Thanks! Your demo inquiry has been delivered to the team for follow-up. This is not a confirmed appointment.'});
+    render();
+  }catch(error){
+    showError(error.message||'We could not send your request. Please try again later.');
+  }finally{
+    if(form.isConnected){
+      form.classList.remove('dm7-lead-form-loading');
+      if(submit){submit.disabled=false;submit.textContent='Send demo request';}
+    }
+  }
+},true);
+async function init(){
+  try{
+    const r=await fetch('./v7-config.json',{cache:'no-store'});
+    if(!r.ok)throw Error('configuration missing');
+    const data=await r.json(); apiBase=normalizeUrl(data.apiBase||'');
+    if(!apiBase){render();return;}
+    const s=await fetch(apiBase+'/health',{cache:'no-store',signal:AbortSignal.timeout(6000)});
+    if(!s.ok)throw Error('backend unavailable');
+    const status=await s.json();
+    aiReady=Boolean(status.aiConfigured);
+    leadsReady=Boolean(status.leadsConfigured);
+  }catch(error){aiReady=false;leadsReady=false;}
+  render();
+}
+init();
+})();
+</script>
+</body>
+</html>

@@ -99,3 +99,43 @@ The existing separate Render API can now call Cloudflare Workers AI **directly v
 When both Cloudflare variables are configured, the server prefers Workers AI even if an OpenAI key exists. The response is still an AI-generated answer. A 429 free-tier limit error is shown as a temporary unavailable message.
 
 Real inquiry emails remain separate and disabled until email delivery is configured. No IP-based ad tracking is installed. Only adults may submit inquiries, and consent for promotional marketing is separate.
+
+
+## V9 Communication Concierge (2026-10-19)
+
+The **separate Render staging website** now serves Dance Manager Next V9 at \`https://dance-manager-next-v2.onrender.com\`; it uses the \`dance-manager-next-preview\` GitHub branch, with \`index.html\` loading V4 student progress and V9 response-center assets. **It does not update the existing Dance Manager website.** The API uses \`main\` and \`node dance-manager-next/backend/server.cjs\`.
+
+V9 adds \`backend/operations.cjs\`. Its endpoints:
+
+- \`POST /api/lead\`: adult-authorized inquiries, **required message**, optional chat excerpt, optional one-time text opt-in, owner notification and visitor acknowledgment. No provider acceptance means **no success confirmation**. Externally accepted messages can still fail after provider acceptance; configure delivery monitoring in production.
+- \`POST /api/handoff\`: same as \`/api/lead\` with handoff source recorded; must be triggered only with explicit consent.
+- \`POST /webhooks/resend/inbound\`: verifies signed \`email.received\` events, fetches the received email by ID, sends staff notification, optionally replies with short AI-assisted information and an automated receipt.
+- \`POST /webhooks/twilio/sms\`: validates the Twilio signature, notifies staff, optionally sends a brief AI-assisted text via TwiML within a bounded timeout, then awaits human follow-up. Handles STOP/HELP.
+- \`GET /api/owner/inquiries\` and \`POST /api/owner/resolve\`: bearer-authenticated API-only access to the last 50 tickets and a basic human-takeover flag; only available with durable storage. This is **not** yet a secure staff login/UI.
+- \`GET /health\`: non-secret booleans \`aiConfigured\`, \`leadsConfigured\`, \`smsConfigured\`, \`inboxConfigured\`, \`inboundEmailConfigured\`, \`inboundSmsConfigured\`, \`ownerAlertsConfigured\`.
+
+**Live observation at implementation:** Latest Render boot logs on October 19, 2026 printed \`AI off, leads off\`. Website and backend deployments succeeding **does not** mean real AI answers, emails, or SMS have been activated. Need actual account-owner credentials, domain ownership, sender/recipient authorization, and a test end-to-end. Never enter credentials into website content, GitHub, or chat.
+
+### Private Render service configuration (only required for enabled features)
+
+| Variable(s) | Function |
+| --- | --- |
+| \`CLOUDFLARE_ACCOUNT_ID\`, \`CLOUDFLARE_AI_TOKEN\` OR \`OPENAI_API_KEY\` | Server-only live AI; Cloudflare option uses Workers AI REST and has a free daily allocation. |
+| \`RESEND_API_KEY\`, \`LEAD_FROM_EMAIL\`, \`LEAD_TO_EMAIL\` | A verified business-owned sender and authorized owner inbox; owner lead alerts plus acknowledgment emails. |
+| \`RESEND_WEBHOOK_SECRET\`, \`RESEND_INBOUND_ADDRESS\` | Signed inbound email processing. Configure Resend \`email.received\` webhook to \`https://dance-manager-next-ai-v7.onrender.com/webhooks/resend/inbound\`. |
+| \`TWILIO_ACCOUNT_SID\`, \`TWILIO_AUTH_TOKEN\`, \`TWILIO_FROM_NUMBER\`, \`OWNER_MOBILE\` | Optional SMS owner notification and customer one-time acknowledgment. Configure a registered/approved sender and texting rules. |
+| \`PUBLIC_API_BASE\` | Exactly \`https://dance-manager-next-ai-v7.onrender.com\` for Twilio signature validation. Configure the inbound SMS webhook on the owned Twilio number at \`.../webhooks/twilio/sms\`. |
+| \`UPSTASH_REDIS_REST_URL\`, \`UPSTASH_REDIS_REST_TOKEN\` | Optional private ticket persistence (30-day records). If not configured, **no durable queue**. |
+| \`CONVERSATION_HMAC_SECRET\` | Private random secret; enables short email/phone-matched conversation context with the Upstash credentials. |
+| \`ADMIN_API_TOKEN\` | Strong private bearer token needed to list or resolve tickets via backend API; not to be placed in the browser demo. |
+| \`ALLOWED_ORIGINS\` | Comma-separated exact origins. Include approved Render staging origins and/or GitHub Pages. |
+
+The role selector on the studio demonstration is **not authorization**. No real student records belong in that preview. A production site needs authenticated studio staff, guardian privacy controls, verified domain, production legal notices, audit logs, queue retry handling, provider delivery status, escalation routing and message consent. Do not assume 24/7 service availability or any guaranteed human response time from a staging server. Inbound emails and SMS must be tested end-to-end and monitored before launch.
+
+### Test plan
+
+1. Verify \`/health\` shows the expected channel booleans after credential setup; inspect Render boot logs.
+2. Test short general questions in the website AI widget, with strict source-grounded navigation.
+3. Submit an adult opt-in inquiry with an owner-authorized test email; confirm receipt in the owner inbox and the visitor inbox before announcing email capture is live.
+4. For texting, first use a provider-approved test number. Verify owner alert, STOP, HELP, consent, inbound webhook validation and the default fallback if AI is slow.
+5. For inbox memory, use a private ticket test, then mark it resolved through an authenticated admin API call and verify automated responses stop. Do not expose the admin bearer token on a public website.

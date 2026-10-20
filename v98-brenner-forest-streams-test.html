@@ -36,9 +36,9 @@ button.active{background:#b89a65;color:#152329;border-color:#f3c98b}
 <div id="legend"><strong id="levelName">1 / 3 · Alpine overview</strong><span id="levelDetail">Mountains and major valleys</span></div>
 <div id="badge">MEASURED RELIEF</div>
 <div id="inspect">Tap terrain to inspect the approximate elevation.</div></div>
-<footer><div id="levels"><button data-level="0" class="active">1 · Overview</button><button data-level="1">2 · Regional</button><button data-level="2">3 · Mountains</button><button data-level="3">4 · Trees & streams</button></div>
+<footer><div id="levels"><button data-level="0" class="active">1 · Overview</button><button data-level="1">2 · Regional</button><button data-level="2">3 · Mountains</button><button data-level="3">4 · Trees & water</button></div>
 <div id="readout">Overview: identify the Alpine barrier and the Brenner corridor.</div>
-<div id="note">V98: Copernicus elevation; ESA WorldCover 2021 mapped woodland with illustrative canopy texture (individual trees not surveyed); local waterways mapped by OpenStreetMap © OpenStreetMap contributors (ODbL). Modern woods and rivers are not verified for 1780. Visual prototype, not yet an army movement engine. V94 campaigns unchanged.</div></footer></div>
+<div id="note">V98: Copernicus elevation; ESA WorldCover 2021 mapped woodland with illustrative canopy texture (individual trees not surveyed); Waterways come from OpenStreetMap where available, or Natural Earth major rivers if local streams are unavailable. Modern woods and rivers are not verified for 1780. Visual prototype, not yet an army movement engine. V94 campaigns unchanged.</div></footer></div>
 <script>
 (function(){
 'use strict';
@@ -46,7 +46,7 @@ const $=id=>document.getElementById(id), svg=$('map'),NS='http://www.w3.org/2000
 const ext={lon0:-14,lon1:49,lat0:26,lat1:75},rw=1448,rh=1086;
 const pt=(lon,lat)=>({x:(lon-ext.lon0)/(ext.lon1-ext.lon0)*rw,y:(ext.lat1-lat)/(ext.lat1-ext.lat0)*rh});
 const inv=(x,y)=>({lon:ext.lon0+x/rw*(ext.lon1-ext.lon0),lat:ext.lat1-y/rh*(ext.lat1-ext.lat0)});
-const names=['1 / 4 · Alpine overview','2 / 4 · Brenner corridor','3 / 4 · Mountain relief','4 / 4 · Forest and stream close-up'];
+const names=['1 / 4 · Alpine overview','2 / 4 · Brenner corridor','3 / 4 · Mountain relief','4 / 4 · Forest and watercourses'];
 const details=['Mountain chain and valley geography','Regional shaded mountain relief','Copernicus measured ridges and valleys','WorldCover woodland texture + actual mapped streams'];
 const views=[{lon:11.5,lat:47.2,w:220},{lon:11.50,lat:47.16,w:70},{lon:11.52,lat:47.13,w:10.3},{lon:11.52,lat:47.13,w:2.15}];
 let level=0,center=pt(views[0].lon,views[0].lat),width=220,height=220,terrain=null,down=null,contoursMade=false,forestLoaded=false,highTerrain=null,osmStreams=null;
@@ -208,7 +208,7 @@ function routeCost(coords){
 function report(){
  const note=$('readout');
  if(level===0){note.textContent='Overview: identify the Alpine barrier and the Brenner corridor.';return}
- if(level>=2){note.textContent=(osmStreams?osmStreams.ways.length+' mapped waterway segments; ':'Loading mapped streams… ')+(highTerrain?'measured mountain and woodland relief. Tap terrain for elevation.':'loading elevation…');return}
+ if(level>=2){const waterways=osmStreams?(osmStreams.coverage==='major rivers only'?'Major mapped rivers only; smaller streams unavailable. ':osmStreams.ways.length+' mapped river and stream segments. '):'Loading mapped waterways… ';note.textContent=waterways+(highTerrain?'Measured mountains with approximate modern tree cover. Tap for elevation.':'Loading elevation…');return}
  if(!terrain){note.textContent='Loading sampled elevation data…';return}
  const a=routeCost(valley),b=routeCost(ridges);
  note.textContent='Brenner corridor (gold): '+a.distance.toFixed(1)+' km, sampled ascent '+Math.round(a.ascent)+' m. Ridge alternative (red dashed): '+b.distance.toFixed(1)+' km, ascent '+Math.round(b.ascent)+' m. Routes illustrative, not historical army roads.';
@@ -253,7 +253,7 @@ function drawLocalStreams(d){
  }
 }
 fetch('./terrain-v98/streams.json').then(r=>{if(!r.ok)throw Error('local stream data missing');return r.json()}).then(d=>{
- if(!Array.isArray(d.ways)||d.ways.length<60||!Array.isArray(d.focusLonLat))throw Error('invalid local stream network');
+ if(!Array.isArray(d.ways)||d.ways.length<1||!Array.isArray(d.focusLonLat))throw Error('invalid local stream network');
  osmStreams=d;drawLocalStreams(d);
  views[3]={lon:d.focusLonLat[0],lat:d.focusLonLat[1],w:2.15};
  if(level===3)setLevel(3);

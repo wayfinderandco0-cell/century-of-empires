@@ -1,5 +1,6 @@
 """Actual mobile viewport renders and geographic/interaction checks. Not physical iPhone QA."""
-import json, os, pathlib, threading, http.server, socketserver, time
+import json, os, pathlib, threading, http.server, socketserver, time, base64, io
+from PIL import Image
 from playwright.sync_api import sync_playwright
 ROOT=pathlib.Path(__file__).resolve().parents[1]; OUT=ROOT/'terrain-v102';os.chdir(ROOT)
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -68,5 +69,14 @@ try:
    result['passed']=bool(result['checks']) and all(result['checks'].values()) and not result['errors']
 finally:
  server.shutdown();report['passed']=all(b.get('passed',False) for b in report['browsers'].values())
+ # Emit small inspectable text-encoded visual thumbnails, not merely unreviewable test assertions.
+ for shot in ['chromium-portrait.png','chromium-landscape.png','chromium-detail.png','webkit-portrait.png','webkit-landscape.png']:
+  image_path=OUT/shot
+  if image_path.exists():
+   with Image.open(image_path) as im:
+    im.thumbnail((400,760))
+    b=io.BytesIO()
+    im.convert('RGB').save(b,format='JPEG',quality=72,optimize=True)
+    (OUT/(shot+'.jpeg.base64.txt')).write_text(base64.b64encode(b.getvalue()).decode('ascii'))
  (OUT/'qa-report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
  if not report['passed']:raise SystemExit(1)

@@ -1127,7 +1127,24 @@ $('startBtn').onclick=()=>{if(load()&&!confirm('Start a new campaign? This repla
 $('continueBtn').onclick=()=>{game=load();if(!game){toast('No compatible save found');return}const idle=Date.now()-game.lastSeen;game.caretaker=idle>=72*3600e3;catchUp();if(game.caretaker)line('Defensive caretaker stood in during your 72+ hour absence.');enter()};
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>showPanel(b.dataset.tab));
 $('sheetClose').onclick=()=>showPanel('map');$('returnMap').onclick=()=>showPanel('map');
-$('zoomIn').onclick=()=>zoom(.56);$('zoomOut').onclick=()=>zoom(1/.56);$('zoomHome').onclick=()=>{if(view.overview&&view.cy<780){fitAfrica();toast('Europe and Africa')}else{fitTheater();toast('European theater — tap center again for Africa')}};
+$('zoomIn').onclick=()=>zoom(.56);$('zoomOut').onclick=()=>zoom(1/.56);$('zoomHome').onclick=()=>{
+ // A 63-degree-wide continental atlas cannot fill a tall phone without
+ // either cropping or extreme letterboxing. Portrait recenter focuses the
+ // player's region; a pinch-out reveals the entire geographic theater.
+ if(stageAspect()<.98){
+  const capital=bases.find(b=>game&&b.owner===game.player&&b.capital)||
+    bases.find(b=>game&&b.owner===game.player)||null;
+  view.cx=capital?.x??724;view.cy=capital?.y??543;
+  view.w=Math.max(435,Math.min(690,stageAspect()*1080));
+  view.overview=false;setView();
+  if(game)renderAll();
+  toast('Regional view · pinch out to see all Europe');
+ }else if(view.overview&&view.cy<780){
+  fitAfrica();toast('Europe and Africa');
+ }else{
+  fitTheater();toast('European theater');
+ }
+};
 $('cancelOrder').onclick=()=>{orderArmy=null;siteArmy=null;groupOrderIds=[];updateOrderBanner();toast('Order cancelled')};
 $('sheetBody').addEventListener('click',handleAction);
 // All stock indicators are shortcuts to the Market; gold and manpower open the market overview.

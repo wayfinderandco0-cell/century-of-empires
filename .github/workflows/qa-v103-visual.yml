@@ -2,7 +2,7 @@ name: V103 Brenner conifer and water refinement
 on:
   push:
     branches: [terrain-v103-visual-repair]
-    paths: ['v103-brenner-visual-pilot.html', 'terrain-v103/pilot.js', 'terrain-v103/pilot.css', 'terrain-v103/pilot.css', 'scripts/qa_v103_mobile.py', '.github/workflows/qa-v103-visual.yml']
+    paths: ['v103-brenner-visual-pilot.html', 'terrain-v103/pilot.js', 'terrain-v103/pilot.css', 'scripts/qa_v103_mobile.py', '.github/workflows/qa-v103-visual.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -24,7 +24,6 @@ jobs:
         run: |
           pip install numpy scipy pillow playwright
           python -m playwright install --with-deps chromium webkit
-          python terrain-v103/pilot.css
           node --check terrain-v103/pilot.js
       - name: Render and test both phone orientations
         run: python scripts/qa_v103_mobile.py
@@ -33,7 +32,7 @@ jobs:
         with:
           name: v103-visual-evidence-${{ github.run_id }}
           path: terrain-v103/
-      - name: Save assets and evidence only to V102
+      - name: Save visual evidence only to V103
         if: always()
         env:
           SOURCE_SHA: ${{ github.sha }}

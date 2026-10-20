@@ -27,6 +27,9 @@ button.active{background:#b89a65;color:#152329;border-color:#f3c98b}
 
 
 /* V100 military vertical slice (isolated from V94 saves) */
+#sources{margin-top:5px;color:#b2c1b9;font-size:10px}#sources summary{cursor:pointer;font-weight:600}#sources[open] #note{margin-top:7px}
+#legend{max-width:62%;padding:6px 7px;font-size:10px}#legend strong{font-size:11px}#badge{font-size:9px;padding:4px}
+#v100Units .map-label{font-size:10px}
 #v100Command{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 1.3fr;gap:5px;margin-top:6px}
 #v100Command button{padding:8px 2px;font-size:11px}
 .alliedSight{display:flex;align-items:center;justify-content:center;gap:4px;border:1px solid #6d857f;border-radius:6px;font-size:10px;background:#2c4444;color:#ecf4dc;padding:3px}
@@ -60,7 +63,7 @@ button.active{background:#b89a65;color:#152329;border-color:#f3c98b}
 <footer><div id="levels"><button data-level="0" class="active">1 · Overview</button><button data-level="1">2 · Regional</button><button data-level="2">3 · Mountains</button><button data-level="3">4 · Trees & streams</button></div>
 <div id="v100Command" role="group" aria-label="Military prototype controls"><button id="v100Go">▶ March</button><button id="v100Pause">Ⅱ Pause</button><button id="v100Reset">↺ Reset</button><label class="alliedSight"><input id="v100Ally" type="checkbox"> Allied scouts</label></div><div id="v100Status" role="status" aria-live="polite">Austrian force · enemy position unknown · paused</div>
 <div id="readout">Overview: identify the Alpine barrier and the Brenner corridor.</div>
-<div id="note">V100 experimental isolated military demonstration, not the full V94 campaign. Measured Copernicus GLO-30 mountain relief is preserved from V97. The closest view uses official Austrian orthophotography from basemap.at (CC BY 4.0) for recognizable real tree crowns, with real local streams from OpenStreetMap (ODbL). These are modern observations, not reconstructed 1780 forests, and no military-pathfinding integration has been done. V94 and campaign saves remain unchanged.</div></footer></div>
+<details id="sources"><summary>Map sources and prototype limitations</summary><div id="note">V100 experimental isolated military demonstration, not the full V94 campaign. Measured Copernicus GLO-30 mountain relief is preserved from V97. The closest view uses official Austrian orthophotography from basemap.at (CC BY 4.0) for recognizable real tree crowns, with real local streams from OpenStreetMap (ODbL). These are modern observations, not reconstructed 1780 forests, and no military-pathfinding integration has been done. V94 and campaign saves remain unchanged.</div></details></footer></div>
 <script>
 (function(){
 'use strict';
@@ -382,7 +385,7 @@ function drawTroops(){
   if(a.side==='PR'&&!visible)continue;
   const c=positionOnRoute(a.p),v=pt(c[0],c[1]);
   if(Math.abs(v.x-center.x)>width*.65||Math.abs(v.y-center.y)>height*.65)continue;
-  const displaced=met?(a.side==='AT'?-13:13):0;
+  const displaced=met?(a.side==='AT'?-30:30):0;
   const group=element('g',{transform:'translate('+(v.x+displaced*pxWorld)+' '+v.y+')'});
   if(level===1){
    group.appendChild(element('circle',{r:Math.max(4.4*pxWorld,1),fill:a.side==='AT'?'#f8d69c':'#83a6e4',stroke:'#192c31','stroke-width':1.8*pxWorld}));
@@ -396,6 +399,7 @@ function drawTroops(){
   const images=[['inf-'+a.side,-18,-43,23,36],['cav-PR',0,-41,22,31],['art',12,-24,23,17]];
   for(const [key,x,y,iw,ih] of images){
    const q=element('image',{x,y,width:iw,height:ih,href:V100_ART[key],preserveAspectRatio:'xMidYMid meet'});
+   if(key==='cav-PR'||key==='art')q.setAttribute('style','mix-blend-mode:screen;opacity:.92');
    base.appendChild(q);
   }
   base.appendChild(element('rect',{x:-21,y:7,width:42,height:5,rx:2,fill:'#17252a',stroke:'#bca880','stroke-width':.6}));
@@ -424,7 +428,9 @@ function renderPhotoUnits(){
   const root=element('g',{transform:'translate('+x+' '+y+')'});
   root.appendChild(element('circle',{r:29,fill:'#102329a8',stroke:a.side==='AT'?'#f5ce86':'#91b9ef','stroke-width':2}));
   for(const [key,xx,yy,ww,hh] of [['inf-'+a.side,-24,-33,29,39],['cav-PR',3,-28,25,35],['art',12,-14,25,17]]){
-   root.appendChild(element('image',{href:V100_ART[key],x:xx,y:yy,width:ww,height:hh}));
+   const pic=element('image',{href:V100_ART[key],x:xx,y:yy,width:ww,height:hh});
+   if(key==='cav-PR'||key==='art')pic.setAttribute('style','mix-blend-mode:screen;opacity:.92');
+   root.appendChild(pic);
   }
   root.appendChild(element('rect',{x:-23,y:31,width:46,height:5,rx:1,fill:'#12272b'}));
   root.appendChild(element('rect',{x:-22,y:32,width:44*a.health/100,height:3,fill:'#dc9c65'}));

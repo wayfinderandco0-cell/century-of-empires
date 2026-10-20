@@ -1,0 +1,23 @@
+name = "dance-manager-next-concierge"
+main = "src/worker.mjs"
+compatibility_date = "2026-10-15"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[ai]
+binding = "AI"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dance-manager-next-inquiries"
+database_id = "REPLACE_WITH_NEW_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+[vars]
+ALLOWED_ORIGINS = "https://dance-manager-next-preview.onrender.com,https://dance-manager-next-v2.onrender.com"
+AI_MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8"
+# No real contact data until the studio owner approves and configures a secure inbox.
+# Secrets (set via `npx wrangler secret put NAME`):
+# RESEND_API_KEY, LEAD_FROM_EMAIL, LEAD_TO_EMAIL, OWNER_API_TOKEN,
+# RATE_SALT, TWILIO_AUTH_TOKEN (optional), TWILIO_ACCOUNT_SID (optional),
+# TWILIO_FROM_NUMBER (optional), OWNER_MOBILE (optional)

@@ -1,0 +1,14 @@
+{
+  "name": "dance-manager-next-cloudflare-concierge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/worker.mjs && node --check src/helpers.mjs && node --test tests/*.test.mjs",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply dance-manager-next-inquiries --local",
+    "db:remote": "wrangler d1 migrations apply dance-manager-next-inquiries --remote"
+  },
+  "dependencies": {"postal-mime":"^2.7.0"},
+  "devDependencies": {"wrangler":"^4.0.0"}
+}

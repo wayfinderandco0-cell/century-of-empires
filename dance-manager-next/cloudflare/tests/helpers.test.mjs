@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {normalizePhone,validateLead,allowedOrigin,isHumanMail,sanitizeHistory,xmlEscape} from '../src/helpers.mjs';
+const base={name:'Demo Owner',email:'owner@example.test',studio:'Sample Studio',message:'Please contact me',consent:true,adultConfirmed:true};
+test('phone normalization',()=>{assert.equal(normalizePhone('(850) 555-0100'),'+18505550100');assert.equal(normalizePhone('invalid'),'');});
+test('email inquiry needs no phone',()=>{assert.ok(validateLead(base).value);});
+test('sms requires explicit permission and phone',()=>{assert.ok(validateLead({...base,contactMethod:'sms',phone:'8505550100'}).error);assert.ok(validateLead({...base,contactMethod:'sms',smsReplyConsent:true}).error);assert.equal(validateLead({...base,contactMethod:'sms',phone:'8505550100',smsReplyConsent:true}).value.phone,'+18505550100');});
+test('call permission separate',()=>{assert.ok(validateLead({...base,contactMethod:'call',phone:'+18505550100'}).error);assert.ok(validateLead({...base,contactMethod:'call',phone:'+18505550100',callReplyConsent:true}).value);});
+test('honeypot and adult gate',()=>{assert.ok(validateLead({...base,website:'spam'}).error);assert.ok(validateLead({...base,adultConfirmed:false}).error)});
+test('origin allowlist exact',()=>{assert.ok(allowedOrigin('https://dance-manager-next-preview.onrender.com','https://dance-manager-next-preview.onrender.com'));assert.equal(allowedOrigin('https://dance-manager-next-preview.onrender.com.attacker.invalid','https://dance-manager-next-preview.onrender.com'),false);});
+test('mail autoresponder filtered',()=>{assert.equal(isHumanMail('noreply@example.test',new Headers()),false);assert.equal(isHumanMail('person@example.test',new Headers({'Auto-Submitted':'auto-replied'})),false);assert.equal(isHumanMail('person@example.test',new Headers()),true)});
+test('AI history bounded and XML escaped',()=>{assert.equal(sanitizeHistory(Array(20).fill({role:'user',text:'Hi'})).length,8);assert.equal(xmlEscape('< &'), '&lt; &amp;')});

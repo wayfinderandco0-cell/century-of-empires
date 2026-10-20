@@ -13,11 +13,16 @@
     "allied observation sees opposing formation": true,
     "two medium dots after detection": true,
     "fog restores hidden enemy": true,
-    "close level uses existing sprites": false
+    "close level draws infantry plus vector cavalry and artillery": true,
+    "painted view visible": true,
+    "generated canvas exists": true,
+    "no modern road imagery": true,
+    "painted trees status": true,
+    "period terrain draws all troop types": false
   },
   "errors": [
-    "close level uses existing sprites"
+    "period terrain draws all troop types"
   ],
-  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 42, in <module>\n    test(\"close level uses existing sprites\",page.locator(\"#v100Units image\").count()>=3)\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 18, in test\n    if not condition: raise AssertionError(name)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: close level uses existing sprites\n",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 50, in <module>\n    test(\"period terrain draws all troop types\",page.locator(\"#photoUnits image\").count()>=1 and page.locator(\"#photoUnits g\").count()>=4)\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 18, in test\n    if not condition: raise AssertionError(name)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: period terrain draws all troop types\n",
   "passed": false
 }

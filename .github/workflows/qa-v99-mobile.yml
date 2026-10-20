@@ -1,0 +1,39 @@
+name: V99 mobile browser visual QA
+on:
+  push:
+    branches: [terrain-v99-verified-geography]
+    paths: ['scripts/qa_v99_mobile.py','.github/workflows/qa-v99-mobile.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install mobile browser
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Screenshot and validate forests and streams
+        run: python scripts/qa_v99_mobile.py
+      - name: Save visual QA screenshot on preview branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v99/phone-preview.jpg terrain-v99/phone-qa.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "V99: captured iPhone-format forest and streams QA"
+            for retry in 1 2 3; do
+              git fetch origin terrain-v99-verified-geography
+              git rebase origin/terrain-v99-verified-geography
+              if git push origin HEAD:terrain-v99-verified-geography; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

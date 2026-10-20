@@ -1,0 +1,12 @@
+{
+  "streamSource": "OpenStreetMap API (not fallback or speculative geometry)",
+  "streamSegments": 88,
+  "focusLonLat": [
+    11.5219506,
+    47.1298267
+  ],
+  "aerialSource": "basemap.at government orthophoto WMTS, CC BY 4.0",
+  "aerialNote": "Live tiles, not copied or stored in the game repository",
+  "elevationSource": "Copernicus GLO-30 from V97",
+  "historicNote": "Modern geographic sources, not verified 1780 river and forest distribution"
+}

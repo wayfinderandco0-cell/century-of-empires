@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 675" width="960" height="675">
+<rect width="960" height="675" fill="#182c29"/>
+<text x="35" y="47" font-family="Georgia,serif" font-size="28" fill="#f3e7cd">CENTURY of EMPIRES</text>
+<text x="35" y="73" font-family="sans-serif" font-size="13" letter-spacing="2" fill="#becdbd">INVISIBLE ATLAS PUZZLE — ENGINEERING SCHEMATIC / NOT GAME ART</text>
+<polygon points="390,367.27922061357856 442.72077938642144,420 390,472.72077938642144 337.27922061357856,420" fill="#71908b" fill-opacity=".60" stroke="#a3c2b8" stroke-width="1.5"/>
+<polygon points="390,187.27922061357856 442.72077938642144,240 390,292.72077938642144 337.27922061357856,240" fill="#71908b" fill-opacity=".60" stroke="#a3c2b8" stroke-width="1.5"/>
+<polygon points="570,367.27922061357856 622.7207793864214,420 570,472.72077938642144 517.2792206135786,420" fill="#71908b" fill-opacity=".60" stroke="#a3c2b8" stroke-width="1.5"/>
+<polygon points="570,187.27922061357856 622.7207793864214,240 570,292.72077938642144 517.2792206135786,240" fill="#71908b" fill-opacity=".60" stroke="#a3c2b8" stroke-width="1.5"/>
+<polygon points="262.720779,600 337.279221,600 390,547.279221 390,472.720779 337.279221,420 262.720779,420 210,472.720779 210,547.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="262.720779,420 337.279221,420 390,367.279221 390,292.720779 337.279221,240 262.720779,240 210,292.720779 210,367.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="262.720779,240 337.279221,240 390,187.279221 390,112.720779 337.279221,60 262.720779,60 210,112.720779 210,187.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="442.720779,600 517.279221,600 570,547.279221 570,472.720779 517.279221,420 442.720779,420 390,472.720779 390,547.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="442.720779,420 517.279221,420 570,367.279221 570,292.720779 517.279221,240 442.720779,240 390,292.720779 390,367.279221" fill="#bba873" fill-opacity=".92" stroke="#f5db93" stroke-width="3"/>
+<text x="480" y="322" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#172a26">BNR:O:0:0</text><text x="480" y="346" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#172a26">first art piece</text>
+<polygon points="442.720779,240 517.279221,240 570,187.279221 570,112.720779 517.279221,60 442.720779,60 390,112.720779 390,187.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="622.720779,600 697.279221,600 750,547.279221 750,472.720779 697.279221,420 622.720779,420 570,472.720779 570,547.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="622.720779,420 697.279221,420 750,367.279221 750,292.720779 697.279221,240 622.720779,240 570,292.720779 570,367.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<polygon points="622.720779,240 697.279221,240 750,187.279221 750,112.720779 697.279221,60 622.720779,60 570,112.720779 570,187.279221" fill="#6a796d" fill-opacity=".34" stroke="#9db6a6" stroke-width="1.5"/>
+<circle cx="480" cy="420" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="543.63961038" cy="393.6396102" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="570" cy="330" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="543.63961038" cy="266.36038962" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="480" cy="240" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="416.3603898" cy="266.36038962" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="390" cy="330" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<circle cx="416.3603898" cy="393.6396102" r="5" fill="#17332e" stroke="#efe1ae" stroke-width="2"/>
+<rect x="28" y="594" width="904" height="56" rx="9" fill="#213a35" stroke="#789386"/>
+<circle cx="53" cy="622" r="6" fill="#bba873"/><text x="70" y="627" font-family="sans-serif" font-size="15" fill="#f1e9cf">Octagon: authored visual region</text>
+<rect x="366" y="616" width="13" height="13" transform="rotate(45 372 622)" fill="#71908b"/><text x="391" y="627" font-family="sans-serif" font-size="15" fill="#f1e9cf">Square: auto seam</text>
+<circle cx="656" cy="622" r="6" fill="#17332e" stroke="#efe1ae" stroke-width="2"/><text x="671" y="627" font-family="sans-serif" font-size="15" fill="#f1e9cf">Hidden route portal</text>
+</svg>

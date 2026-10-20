@@ -1,0 +1,21 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Century of Empires pilot octagon cell",
+  "type":"object","required":["schema_version","cell_id","kind","geometry","edge_portals","art"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "cell_id":{"type":"string","pattern":"^BNR:O:-?[0-9]+:-?[0-9]+$"},
+    "kind":{"const":"regular_octagon"},
+    "geometry":{"type":"object","required":["grid_ij","center_xy_m","pitch_m","vertices_xy_m","bleed_m"],"properties":{
+      "grid_ij":{"type":"array","items":{"type":"integer"},"minItems":2,"maxItems":2},
+      "center_xy_m":{"type":"array","items":{"type":"number"},"minItems":2,"maxItems":2},
+      "pitch_m":{"type":"number","exclusiveMinimum":0},
+      "vertices_xy_m":{"type":"array","minItems":8,"maxItems":8,"items":{"type":"array","items":{"type":"number"},"minItems":2,"maxItems":2}},
+      "bleed_m":{"type":"number","minimum":0}
+    }},
+    "edge_portals":{"type":"array","minItems":8,"maxItems":8,"items":{"type":"object","required":["id","edge","xy_m","neighbor_cell","enabled"],"properties":{
+      "id":{"type":"string"},"edge":{"enum":["S","SE","E","NE","N","NW","W","SW"]},"xy_m":{"type":"array","items":{"type":"number"},"minItems":2,"maxItems":2},"neighbor_cell":{"type":"string"},"enabled":{"enum":["candidate_only","open","closed"]}
+    }}},
+    "art":{"type":"object","required":["state","source_of_truth"],"properties":{"state":{"type":"string"},"source_of_truth":{"type":"string"}}}
+  }
+}

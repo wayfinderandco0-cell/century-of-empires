@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0",
+  "cell_id": "BNR:O:0:0",
+  "kind": "regular_octagon",
+  "status": "GEOMETRY_ONLY_NOT_APPROVED_ART",
+  "atlas_id": "CENTURY-EUROPE-HISTORIC-v1",
+  "atlas_time_reference": 1800,
+  "atlas_time_policy": "Political/cultural overlays are year-specific; landforms persistent; no modern roads drawn",
+  "pilot_projection": {
+    "name": "Local metric plane anchored at V102 origin, NOT final Europe-wide projection",
+    "origin_lonlat": [
+      11.52,
+      47.13
+    ],
+    "axis": "x east and y north, metres",
+    "meters_per_degree_lon": 75735.13900755216,
+    "meters_per_degree_lat": 111320,
+    "global_target": "ETRS89 / LAEA Europe EPSG:3035; validate conversion before multi-region expansion"
+  },
+  "geometry": {
+    "grid_ij": [
+      0,
+      0
+    ],
+    "center_xy_m": [
+      0,
+      0
+    ],
+    "pitch_m": 1000,
+    "corner_cut_m": 292.893219,
+    "half_flat_section_m": 207.106781,
+    "vertices_xy_m": [
+      [
+        -207.106781,
+        -500
+      ],
+      [
+        207.106781,
+        -500
+      ],
+      [
+        500,
+        -207.106781
+      ],
+      [
+        500,
+        207.106781
+      ],
+      [
+        207.106781,
+        500
+      ],
+      [
+        -207.106781,
+        500
+      ],
+      [
+        -500,
+        207.106781
+      ],
+      [
+        -500,
+        -207.106781
+      ]
+    ],
+    "bleed_m": 60,
+    "shared_edge_resolution": "canonical registry, not hand-fitted",
+    "connectors": "regular square diamonds generated at the four cut corners"
+  },
+  "edge_portals": [
+    {
+      "id": "BNR:O:0:0:S",
+      "edge": "S",
+      "xy_m": [
+        0,
+        -500
+      ],
+      "neighbor_cell": "BNR:O:0:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:SE",
+      "edge": "SE",
+      "xy_m": [
+        353.553391,
+        -353.55339
+      ],
+      "neighbor_cell": "BNR:S:0:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:E",
+      "edge": "E",
+      "xy_m": [
+        500,
+        0
+      ],
+      "neighbor_cell": "BNR:O:1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:NE",
+      "edge": "NE",
+      "xy_m": [
+        353.553391,
+        353.553391
+      ],
+      "neighbor_cell": "BNR:S:0:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:N",
+      "edge": "N",
+      "xy_m": [
+        0,
+        500
+      ],
+      "neighbor_cell": "BNR:O:0:1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:NW",
+      "edge": "NW",
+      "xy_m": [
+        -353.55339,
+        353.553391
+      ],
+      "neighbor_cell": "BNR:S:-1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:W",
+      "edge": "W",
+      "xy_m": [
+        -500,
+        0
+      ],
+      "neighbor_cell": "BNR:O:-1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    },
+    {
+      "id": "BNR:O:0:0:SW",
+      "edge": "SW",
+      "xy_m": [
+        -353.55339,
+        -353.55339
+      ],
+      "neighbor_cell": "BNR:S:-1:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null
+    }
+  ],
+  "interior_route_nodes": [
+    {
+      "id": "BNR:O:0:0:C",
+      "xy_m": [
+        0,
+        0
+      ],
+      "role": "candidate_center",
+      "enabled": "candidate_only",
+      "validated_passage": false
+    }
+  ],
+  "routing_rules": {
+    "visibility": "developer_overlay_only",
+    "travel_graph": "connected only after geographic slope, water and terrain checks",
+    "additional_nodes": "Add validated trail junctions, mountain passes, bridges/fords and settlement entry points after georeferencing",
+    "straight_line_teleport": false
+  },
+  "terrain_tags": {
+    "major": "alpine_valley_study",
+    "elevation": "pending_measured_sampling",
+    "woodland": "pending_georeferenced_proxy_and_art",
+    "river_intersections": "pending_clipping_to_true source lines",
+    "historical_roads": "illustrative_only_if_used",
+    "mountain_pass": "not_assumed"
+  },
+  "art": {
+    "state": "NOT_STARTED",
+    "source_of_truth": "atlas coordinate footprint and canonical neighboring edges",
+    "target_style": "convincing 1780-1880 atlas geography / premium historic strategy terrain",
+    "atlas_relief_ref": "terrain-v97/brenner-data.json; terrain-v97/brenner-relief.webp",
+    "water_guides_ref": "terrain-v99/brenner-streams.json",
+    "modern_woodland_proxy": "V97 WorldCover-derived; not a historical survey",
+    "microdetail": "Illustrative: canopy, rocks, tracks, soil and buildings require art direction",
+    "assets": [],
+    "review_required": true
+  },
+  "acceptance": {
+    "hidden_octagons_in_game": true,
+    "no_visible_seams": true,
+    "roads_period_appropriate": true,
+    "water_crossings_registered": true,
+    "neighbor_edges_exact": true,
+    "portrait_and_landscape_iphone_review": true
+  }
+}

@@ -3590,13 +3590,24 @@ function v94CreateCanopy(){
  const ctx=canvas.getContext('2d');
  let seed=0x94ee91e2;
  const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
- const colors=['41,76,52','58,90,64','74,102,68','90,112,80','46,72,59','106,124,94'];
- for(let i=0;i<2750;i++){
-  const x=rnd()*256,y=rnd()*256,r=.65+rnd()*1.35,c=colors[Math.floor(rnd()*colors.length)];
-  ctx.beginPath();ctx.ellipse(x+1,y+1,r*1.1,r*.85,0,0,6.283);
-  ctx.fillStyle='rgba(25,47,35,'+(.075+rnd()*.12).toFixed(3)+')';ctx.fill();
-  ctx.beginPath();ctx.ellipse(x,y,r,r*(.75+rnd()*.32),rnd()*3,0,6.283);
-  ctx.fillStyle='rgba('+c+','+(.17+rnd()*.36).toFixed(3)+')';ctx.fill();
+ // A continuous, restrained forest-floor tint makes the mapped woodland
+ // visible without treating isolated random dots as geographic data.
+ ctx.fillStyle='rgba(39,83,52,.14)';ctx.fillRect(0,0,256,256);
+ // Screen-sized leaf crowns with shaded south-east edges and north-west light.
+ // Geographic distribution comes exclusively from the woodland/land mask.
+ const colors=['32,78,48','41,92,55','54,102,63','64,106,62',
+               '37,76,55','83,114,71','46,92,69'];
+ for(let i=0;i<1150;i++){
+  const x=rnd()*256,y=rnd()*256;
+  const rx=1.4+rnd()*2.1,ry=rx*(.78+rnd()*.3);
+  const c=colors[Math.floor(rnd()*colors.length)];
+  const angle=(rnd()-.5)*.7;
+  ctx.beginPath();ctx.ellipse(x+.65,y+.72,rx*1.06,ry*1.04,angle,0,Math.PI*2);
+  ctx.fillStyle='rgba(18,46,35,'+(.16+rnd()*.15).toFixed(3)+')';ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,y,rx,ry,angle,0,Math.PI*2);
+  ctx.fillStyle='rgba('+c+','+(.37+rnd()*.31).toFixed(3)+')';ctx.fill();
+  ctx.beginPath();ctx.ellipse(x-rx*.3,y-ry*.32,rx*.36,ry*.29,angle,0,Math.PI*2);
+  ctx.fillStyle='rgba(185,191,139,'+(.09+rnd()*.13).toFixed(3)+')';ctx.fill();
  }
  const pat=node('pattern',{id:'v94CanopyPattern',patternUnits:'userSpaceOnUse',
   x:0,y:0,width:100,height:100});
@@ -3614,7 +3625,7 @@ function v94UpdateCanopy(){
  const w=view.w,active=w<370;
  group.style.display=active?'':'none';
  if(!active)return;
- group.style.opacity=w<95?'.79':w<200?'.46':'.19';
+ group.style.opacity=w<95?'.95':w<200?'.76':'.42';
  const screenW=$('map').getBoundingClientRect().width||390;
  const val=256*w/screenW;
  if(Math.abs(val/V94_CANOPY_LAST-1)>.02){
@@ -3736,7 +3747,6 @@ async function v94FetchAll(){
   V89_HEIGHT=heights;
   V94_FOREST=woods;
   V94_MANIFEST=manifest;
-  v94CreateCanopy();
   V87_LAND_POLYGONS.splice(0,V87_LAND_POLYGONS.length,...land.polygons);
   const c=v87LandCanvas();
   const mask=node('mask',{id:'atlasLandMask',maskUnits:'userSpaceOnUse',
@@ -3746,6 +3756,8 @@ async function v94FetchAll(){
   $('map').querySelector('defs').appendChild(mask);
   const ctx=c.getContext('2d',{willReadFrequently:true});
   atlasLandData={w:1448,h:1086,alpha:ctx.getImageData(0,0,1448,1086).data};
+  // Generate forest clipping only after the definitive coast mask exists.
+  v94CreateCanopy();
   for(const id of ['territories','nationFrontiers','weatherLayer','terrainDetail','atlasRivers'])
    $(id).setAttribute('mask','url(#atlasLandMask)');
   drawV87Coastlines();

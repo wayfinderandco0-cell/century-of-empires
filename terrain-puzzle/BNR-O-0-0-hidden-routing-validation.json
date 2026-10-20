@@ -1,0 +1,13 @@
+{
+  "nodes": 25,
+  "edges": 23,
+  "real_path_boundary_candidates": 3,
+  "blocked_water": 1,
+  "blocked_grade": 9,
+  "candidate_foot": 13,
+  "all_inside": true,
+  "all_links_disabled": true,
+  "crossings_always_blocked": true,
+  "min_elevation": 1263.1,
+  "max_elevation": 1603.5
+}

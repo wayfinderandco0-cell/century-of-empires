@@ -1,0 +1,849 @@
+{
+  "schema_version": 1,
+  "cell_id": "BNR:O:0:0",
+  "status": "PROVISIONAL_NOT_PLAYABLE",
+  "visible_in_game": false,
+  "approved_for_gameplay": false,
+  "dem_source": "V97 retained elevation, grid spacing roughly 160-230m",
+  "hydrology": "V99 OSM modern watercourse guide",
+  "historical_accuracy": "No physical ford, bridge, or period trail independently authenticated",
+  "note": "Samples follow candidate corridors, not evenly spaced across arbitrary terrain. All river crossings and steep grades blocked. Candidate paths may remain unconnected.",
+  "bank_options": [
+    {
+      "side": 1,
+      "screening_score": 0.3423
+    },
+    {
+      "side": -1,
+      "screening_score": 0.3547
+    }
+  ],
+  "midpoint_octagon_portals": [
+    {
+      "id": "BNR:O:0:0:S",
+      "edge": "S",
+      "xy_m": [
+        0,
+        -500
+      ],
+      "neighbor_cell": "BNR:O:0:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:SE",
+      "edge": "SE",
+      "xy_m": [
+        353.553391,
+        -353.55339
+      ],
+      "neighbor_cell": "BNR:S:0:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:E",
+      "edge": "E",
+      "xy_m": [
+        500,
+        0
+      ],
+      "neighbor_cell": "BNR:O:1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:NE",
+      "edge": "NE",
+      "xy_m": [
+        353.553391,
+        353.553391
+      ],
+      "neighbor_cell": "BNR:S:0:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:N",
+      "edge": "N",
+      "xy_m": [
+        0,
+        500
+      ],
+      "neighbor_cell": "BNR:O:0:1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:NW",
+      "edge": "NW",
+      "xy_m": [
+        -353.55339,
+        353.553391
+      ],
+      "neighbor_cell": "BNR:S:-1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:W",
+      "edge": "W",
+      "xy_m": [
+        -500,
+        0
+      ],
+      "neighbor_cell": "BNR:O:-1:0",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    },
+    {
+      "id": "BNR:O:0:0:SW",
+      "edge": "SW",
+      "xy_m": [
+        -353.55339,
+        -353.55339
+      ],
+      "neighbor_cell": "BNR:S:-1:-1",
+      "enabled": "candidate_only",
+      "crossing_type": "unverified",
+      "travel_cost": null,
+      "route_status": "STRUCTURAL_ONLY_NO_PATH_APPROVED"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "BNR:O:0:0:N001",
+      "xy_m": [
+        203.137565,
+        500
+      ],
+      "elevation_m": 1603.5,
+      "edge_portal_candidate": "N",
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N002",
+      "xy_m": [
+        204.458101,
+        435.32494
+      ],
+      "elevation_m": 1577,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N003",
+      "xy_m": [
+        190.154793,
+        372.568747
+      ],
+      "elevation_m": 1552.8,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N004",
+      "xy_m": [
+        201.854456,
+        326.825527
+      ],
+      "elevation_m": 1531.4,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N005",
+      "xy_m": [
+        209.603028,
+        262.875133
+      ],
+      "elevation_m": 1504.2,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N006",
+      "xy_m": [
+        200.879678,
+        198.670762
+      ],
+      "elevation_m": 1477,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N007",
+      "xy_m": [
+        193.990863,
+        134.372304
+      ],
+      "elevation_m": 1457.5,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N008",
+      "xy_m": [
+        185.242593,
+        70.326541
+      ],
+      "elevation_m": 1438,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N009",
+      "xy_m": [
+        182.268153,
+        6.114095
+      ],
+      "elevation_m": 1417.7,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N010",
+      "xy_m": [
+        178.421557,
+        -58.217323
+      ],
+      "elevation_m": 1395.9,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N011",
+      "xy_m": [
+        169.611807,
+        -121.412562
+      ],
+      "elevation_m": 1372.5,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N012",
+      "xy_m": [
+        141.156994,
+        -178.16143
+      ],
+      "elevation_m": 1352.1,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N013",
+      "xy_m": [
+        135.486316,
+        -242.640386
+      ],
+      "elevation_m": 1328.6,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N014",
+      "xy_m": [
+        129.320629,
+        -306.888147
+      ],
+      "elevation_m": 1312.2,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N015",
+      "xy_m": [
+        140.161326,
+        -370.490215
+      ],
+      "elevation_m": 1299.8,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N016",
+      "xy_m": [
+        138.91368,
+        -434.313597
+      ],
+      "elevation_m": 1287.3,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N017",
+      "xy_m": [
+        120.580804,
+        -496.307336
+      ],
+      "elevation_m": 1273.2,
+      "edge_portal_candidate": null,
+      "corridor": "Fidlerbach_bank_candidate",
+      "provenance": "32m inferred bank offset from modern mapped Fidlerbach (NOT historic road)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N018",
+      "xy_m": [
+        -41.050894,
+        -500
+      ],
+      "elevation_m": 1263.1,
+      "edge_portal_candidate": "S",
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N019",
+      "xy_m": [
+        -4.08172,
+        -455.66278
+      ],
+      "elevation_m": 1274.4,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N020",
+      "xy_m": [
+        42.179757,
+        -425.6342
+      ],
+      "elevation_m": 1280.9,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N021",
+      "xy_m": [
+        98.695951,
+        -420.006257
+      ],
+      "elevation_m": 1286.6,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N022",
+      "xy_m": [
+        154.749894,
+        -415.77157
+      ],
+      "elevation_m": 1292.2,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N023",
+      "xy_m": [
+        208.174076,
+        -394.687441
+      ],
+      "elevation_m": 1299.5,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N024",
+      "xy_m": [
+        265.865401,
+        -392.633211
+      ],
+      "elevation_m": 1302.4,
+      "edge_portal_candidate": null,
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:0:0:N025",
+      "xy_m": [
+        322.823751,
+        -384.28303
+      ],
+      "elevation_m": 1305.4,
+      "edge_portal_candidate": "SE",
+      "corridor": "illustrative_pack_trail_candidate",
+      "provenance": "V102 illustrative pack trail (NOT historically verified)",
+      "hidden": true,
+      "approved": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "BNR:O:0:0:E001",
+      "from": "BNR:O:0:0:N001",
+      "to": "BNR:O:0:0:N002",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.7,
+      "max_grade_pct": 41.1,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E002",
+      "from": "BNR:O:0:0:N002",
+      "to": "BNR:O:0:0:N003",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.4,
+      "max_grade_pct": 38,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E003",
+      "from": "BNR:O:0:0:N003",
+      "to": "BNR:O:0:0:N004",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 47.2,
+      "max_grade_pct": 45.6,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E004",
+      "from": "BNR:O:0:0:N004",
+      "to": "BNR:O:0:0:N005",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.4,
+      "max_grade_pct": 44,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E005",
+      "from": "BNR:O:0:0:N005",
+      "to": "BNR:O:0:0:N006",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.8,
+      "max_grade_pct": 43.3,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E006",
+      "from": "BNR:O:0:0:N006",
+      "to": "BNR:O:0:0:N007",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.7,
+      "max_grade_pct": 31,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E007",
+      "from": "BNR:O:0:0:N007",
+      "to": "BNR:O:0:0:N008",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.6,
+      "max_grade_pct": 30.6,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E008",
+      "from": "BNR:O:0:0:N008",
+      "to": "BNR:O:0:0:N009",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.3,
+      "max_grade_pct": 31.6,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E009",
+      "from": "BNR:O:0:0:N009",
+      "to": "BNR:O:0:0:N010",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.4,
+      "max_grade_pct": 37.2,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E010",
+      "from": "BNR:O:0:0:N010",
+      "to": "BNR:O:0:0:N011",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 63.8,
+      "max_grade_pct": 36.8,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E011",
+      "from": "BNR:O:0:0:N011",
+      "to": "BNR:O:0:0:N012",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 63.5,
+      "max_grade_pct": 32.4,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E012",
+      "from": "BNR:O:0:0:N012",
+      "to": "BNR:O:0:0:N013",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.7,
+      "max_grade_pct": 36.4,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E013",
+      "from": "BNR:O:0:0:N013",
+      "to": "BNR:O:0:0:N014",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.5,
+      "max_grade_pct": 36.2,
+      "crossing_names": [],
+      "status": "blocked_steep",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E014",
+      "from": "BNR:O:0:0:N014",
+      "to": "BNR:O:0:0:N015",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.5,
+      "max_grade_pct": 19.9,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E015",
+      "from": "BNR:O:0:0:N015",
+      "to": "BNR:O:0:0:N016",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 63.8,
+      "max_grade_pct": 19.7,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E016",
+      "from": "BNR:O:0:0:N016",
+      "to": "BNR:O:0:0:N017",
+      "corridor": "Fidlerbach_bank_candidate",
+      "distance_m": 64.6,
+      "max_grade_pct": 23.6,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E017",
+      "from": "BNR:O:0:0:N018",
+      "to": "BNR:O:0:0:N019",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 57.7,
+      "max_grade_pct": 24,
+      "crossing_names": [],
+      "status": "foot_only_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E018",
+      "from": "BNR:O:0:0:N019",
+      "to": "BNR:O:0:0:N020",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 55.2,
+      "max_grade_pct": 13.3,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": true,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E019",
+      "from": "BNR:O:0:0:N020",
+      "to": "BNR:O:0:0:N021",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 56.8,
+      "max_grade_pct": 11.4,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": true,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E020",
+      "from": "BNR:O:0:0:N021",
+      "to": "BNR:O:0:0:N022",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 56.2,
+      "max_grade_pct": 10.2,
+      "crossing_names": [
+        "Fidlerbach"
+      ],
+      "status": "blocked_no_verified_crossing",
+      "infantry_candidate": false,
+      "cavalry_candidate": false,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E021",
+      "from": "BNR:O:0:0:N022",
+      "to": "BNR:O:0:0:N023",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 57.4,
+      "max_grade_pct": 14.1,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": true,
+      "artillery_candidate": false,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E022",
+      "from": "BNR:O:0:0:N023",
+      "to": "BNR:O:0:0:N024",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 57.7,
+      "max_grade_pct": 5.1,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": true,
+      "artillery_candidate": true,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:0:0:E023",
+      "from": "BNR:O:0:0:N024",
+      "to": "BNR:O:0:0:N025",
+      "corridor": "illustrative_pack_trail_candidate",
+      "distance_m": 57.6,
+      "max_grade_pct": 5.7,
+      "crossing_names": [],
+      "status": "terrain_screened_candidate",
+      "infantry_candidate": true,
+      "cavalry_candidate": true,
+      "artillery_candidate": true,
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historic_path_verified": false,
+      "hidden": true
+    }
+  ]
+}

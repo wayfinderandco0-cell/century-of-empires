@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101f26">
+<title>Century of Empires — V98 Alpine Forest and Waterway Test</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#101e27;color:#f5e8c7;font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app{height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{padding:10px 12px;background:#15262e;border-bottom:1px solid #64716b;flex:0 0 auto}
+h1{font:700 19px Georgia,serif;margin:0}small{display:block;color:#b1bcb1;font-size:11px;margin-top:2px}
+#stage{position:relative;flex:1;min-height:0;background:#375969;overflow:hidden}
+svg{height:100%;width:100%;display:block;touch-action:none;user-select:none}
+#shade{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 65px #13252a88}
+#legend{position:absolute;left:9px;top:10px;background:#10212adf;border:1px solid #87928a70;border-radius:6px;padding:7px 10px;font-size:11px;pointer-events:none;max-width:70%}
+#legend strong{font-size:13px}#legend span{display:block;color:#e0d9c4}
+#badge{position:absolute;right:8px;top:9px;font-size:10px;padding:5px 7px;background:#112a30ed;border-radius:4px;border:1px solid #91a19c75;pointer-events:none}
+#inspect{position:absolute;left:10px;bottom:10px;padding:7px 10px;background:#10212ae5;border:1px solid #71888280;font-size:11px;border-radius:5px;max-width:95%;pointer-events:none}
+footer{flex:0 0 auto;background:#14262e;border-top:1px solid #607066;padding:8px 10px max(10px,env(safe-area-inset-bottom))}
+#levels{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+button{min-width:0;color:#f5eac9;border-radius:7px;border:1px solid #71837c;padding:10px 4px;background:#2a3b43;font-size:11px;font-weight:700;cursor:pointer}
+button.active{background:#b89a65;color:#152329;border-color:#f3c98b}
+#readout{margin:8px 2px 0;color:#d5dfd6;font-size:12px;min-height:33px}
+#note{color:#aebdb7;font-size:10px;line-height:1.4;margin-top:5px}
+.map-label{font-family:Georgia,serif;font-weight:700;paint-order:stroke;stroke:#132a2d;stroke-linejoin:round;stroke-width:2px;vector-effect:non-scaling-stroke;fill:#fff6db}
+.map-label.pass{fill:#ffe2a2}.map-dot{fill:#f9dba0;stroke:#10252b;stroke-width:1.8px;vector-effect:non-scaling-stroke}
+#naturalCanopy{image-rendering:auto}#localStreams{pointer-events:none}#localStreams path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}#localStreams .bed{stroke:#e0e5d2;stroke-opacity:.58;stroke-width:3px}#localStreams .channel{stroke:#2e7697;stroke-opacity:.95;stroke-width:1.65px}#localStreams .small.bed{stroke-width:2.3px;stroke-opacity:.35}#localStreams .small.channel{stroke-width:1.15px;stroke-opacity:.87}#contours path{display:none}#geographicRivers .bank{stroke:#c1d2c3;stroke-opacity:.43;stroke-width:2.6px}#geographicRivers .water{stroke:#366b81;stroke-opacity:.88;stroke-width:1.25px}#geographicRivers path{fill:none;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}#geographicRivers .minor.bank{stroke-width:1.7px;stroke-opacity:.29}#geographicRivers .minor.water{stroke-width:.85px;stroke-opacity:.66}
+#routes path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+@media (orientation:landscape) and (max-height:480px){header{padding:4px 9px}h1{font-size:14px}small{font-size:9px}footer{padding:4px 9px}button{padding:5px}#readout{margin-top:3px;min-height:0}#note{display:none}}
+</style></head>
+<body><div id="app"><header><h1>Century of Empires · V98 Forests and Rivers</h1><small>Innsbruck → Brenner Pass · measured mountains, visible forests and mapped streams</small></header>
+<div id="stage">
+<svg id="map" viewBox="0 0 220 220" role="img" aria-label="Interactive terrain map with four levels of zoom">
+<rect width="1448" height="1086" fill="#244d59"/>
+<image x="0" y="0" width="1448" height="1086" href="./terrain-v94/overview.webp" preserveAspectRatio="none"/>
+<image id="regional" x="482.666667" y="398.938776" width="275.809524" height="288.122449" href="./terrain-detail/central-europe-v90.webp" preserveAspectRatio="none" style="display:none"/>
+<image id="v97Detail" x="580.579048" y="611.262857" width="12.411429" height="13.741224" href="./terrain-v97/brenner-relief.webp" preserveAspectRatio="none" style="display:none" pointer-events="none"/><image id="naturalCanopy" x="580.579048" y="611.262857" width="12.411429" height="13.741224" href="./terrain-v98/brenner-canopy.webp" preserveAspectRatio="none" pointer-events="none" style="display:none"/><image id="woodland" x="550" y="571" width="75" height="99" preserveAspectRatio="none" pointer-events="none" style="display:none;mix-blend-mode:multiply;opacity:.4"/><g id="geographicRivers" pointer-events="none" style="display:none"></g><g id="localStreams" pointer-events="none" style="display:none"></g><g id="contours" style="display:none"></g><g id="routes"></g><g id="pins"></g>
+</svg><div id="shade"></div>
+<div id="legend"><strong id="levelName">1 / 3 · Alpine overview</strong><span id="levelDetail">Mountains and major valleys</span></div>
+<div id="badge">MEASURED RELIEF</div>
+<div id="inspect">Tap terrain to inspect the approximate elevation.</div></div>
+<footer><div id="levels"><button data-level="0" class="active">1 · Overview</button><button data-level="1">2 · Regional</button><button data-level="2">3 · Mountains</button><button data-level="3">4 · Trees & streams</button></div>
+<div id="readout">Overview: identify the Alpine barrier and the Brenner corridor.</div>
+<div id="note">V98: Copernicus elevation; ESA WorldCover 2021 mapped woodland with illustrative canopy texture (individual trees not surveyed); local waterways mapped by OpenStreetMap © OpenStreetMap contributors (ODbL). Modern woods and rivers are not verified for 1780. Visual prototype, not yet an army movement engine. V94 campaigns unchanged.</div></footer></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id), svg=$('map'),NS='http://www.w3.org/2000/svg';
+const ext={lon0:-14,lon1:49,lat0:26,lat1:75},rw=1448,rh=1086;
+const pt=(lon,lat)=>({x:(lon-ext.lon0)/(ext.lon1-ext.lon0)*rw,y:(ext.lat1-lat)/(ext.lat1-ext.lat0)*rh});
+const inv=(x,y)=>({lon:ext.lon0+x/rw*(ext.lon1-ext.lon0),lat:ext.lat1-y/rh*(ext.lat1-ext.lat0)});
+const names=['1 / 4 · Alpine overview','2 / 4 · Brenner corridor','3 / 4 · Mountain relief','4 / 4 · Forest and stream close-up'];
+const details=['Mountain chain and valley geography','Regional shaded mountain relief','Copernicus measured ridges and valleys','WorldCover woodland texture + actual mapped streams'];
+const views=[{lon:11.5,lat:47.2,w:220},{lon:11.50,lat:47.16,w:70},{lon:11.52,lat:47.13,w:10.3},{lon:11.52,lat:47.13,w:2.15}];
+let level=0,center=pt(views[0].lon,views[0].lat),width=220,height=220,terrain=null,down=null,contoursMade=false,forestLoaded=false,highTerrain=null,osmStreams=null;
+const measuredRivers=[{"name":"Inn","rank":8,"d":"M551.86 628.59L553.82 627.08L553.68 626.16L554.04 625.71L558.5 624.85L560.62 624.1L562.21 623.01L563.44 621.46L566.64 619.2L566.8 618.82L566.3 617.99L564.77 617.5L564.72 617.06L565.14 616.71L567.78 615.71L570.69 615.33L571.76 614.61L575.21 613.68L583.09 614.48L586.93 613.89L590.16 612.91L595.39 610.11L598.31 609.34"},{"name":"Inn","rank":8,"d":"M598.31 609.34L602.31 606.46L602.29 605.67L601.01 604.51L600.56 602.9L601.18 601.98L600.91 600.38L601.34 598.7L603.08 596.92L602.61 596.75L603.3 595.81L603.71 595.69L603.4 595.23L604.97 594.62L605.28 594.79L605.28 594.42L606.86 594.48L607.84 593.87L608.12 594.01L608.92 593.57L608.45 593.09L614.02 592.5L615.45 592.67L616.39 592.31L617.97 592.8L618.99 593.71L621.31 592.56L626.86 591.6L630.2 589.71L631.12 586.96L630.67 585.97L631.75 585.51"},{"name":"Adige","rank":8,"d":"M567.96 624.4L566.44 624.01L564.01 624.7L563.8 626.95L565.76 628.31"},{"name":"Adige","rank":8,"d":"M565.76 628.31L568.02 628.72L572.52 628.74L577.32 627.5L578.66 628.79L579.27 630.14L581.66 632L581.77 633L580.12 636.53L577.96 637.84L576.48 639.26L577.25 640.92L577.4 642.12L576.77 643.9L575.83 644.29"},{"name":"Adige","rank":8,"d":"M575.83 644.29L574.49 645.86L575.04 647.34L574.81 647.76L572.04 649.91L572.21 650.07L570.5 651.95L570.06 653.48L570.62 654.01L571.74 654.32L573.31 654.25L574.74 655.08L574.56 655.37L575.35 655.23L575.51 656.01L576.3 656.44L576.3 656.14L580.39 657.2L580.56 657.97L580.87 657.97L580.4 658.71L581.04 659.03L581.33 659.91L584.21 661.97L585.83 662.43L587.63 662.03L591.93 662.71L593.91 661.82L599.45 661.63L602.84 662.49L604.04 662.06L604.98 661.24"},{"name":"Donau","rank":2,"d":"M516.91 599.94L517.85 599.54L518.58 600.04L519.77 600.25L523.22 599.78L523.21 599.34L526.22 597.51L526.96 597.74L526.67 598.13L527.31 598L527.79 597.74L527.88 597.29L529.79 596.39L537.3 596.79L539.27 595.26L541.34 592.97L544.65 593.1L546.06 592.19L547.47 592.05L549.68 591.14L552.68 588.7L555.66 588.4L560.13 587.37L561.49 585.77L564.74 585.09L570.13 582.54L571.94 582.16L583.34 581.84L584.73 581.25L588.52 581.26L590.31 580.81"},{"name":"Drau","rank":7,"d":"M604.36 626.5L608.56 626.2L612.3 625.46"},{"name":"Adige","rank":10,"d":"M601.73 618.85L596.16 621.09L596.03 621.51L596.54 622.24L596.4 623.74L595.46 625.06L592.07 624.58L590.17 624.78L590.33 625.86L589.8 626.67L587.11 628.76L586.01 630.74L584.95 631.43L582.64 631.69L581.64 632.15"},{"name":"Oglio","rank":10,"d":"M561.81 635.15L562.97 635.72L563.25 636.56L560.5 637.45L559.51 638.2L558.95 640.33L559.58 641.15L559.21 642.84L553.67 646.66"},{"name":"Piave","rank":10,"d":"M614.14 629.34L613.59 629.97L611.66 629.89L608.29 631.33L605.88 633.76L605 635.56L604.25 638.45L602.12 639.93L597.64 641.62L595.93 643.82L596.72 645.16L597.28 645.44L599.78 646.11L601.15 645.85L603.05 646.45L608.62 649.21L610.14 650.69L613.8 652.27L614.61 652.93"},{"name":"Isar","rank":10,"d":"M584.11 612.27L580.84 612.03L580.48 611.03L581.27 609.2L581.95 608.73L586.76 607.72L588.01 606.64L588.12 606.23L586.73 601.86L585.29 600.56L584.82 599.61L587.52 595.72L589.96 592.99L591.24 590.28L592.05 589.36L595.45 588.66L596.91 587.24L599.93 586.75L603.38 585.1L615.53 582.85L616.42 582.61L618.07 581.09L620.53 580.65"}];
+const forestRegion={x:550,y:571,w:75,h:99};
+const places=[
+ {name:'Innsbruck',lon:11.404,lat:47.269},
+ {name:'Brenner Pass',lon:11.507,lat:47.005},
+ {name:'Vipiteno',lon:11.430,lat:46.894}
+];
+const valley=[[11.404,47.269],[11.432,47.205],[11.449,47.155],[11.467,47.100],[11.490,47.055],[11.507,47.005]];
+const ridges=[[11.404,47.269],[11.620,47.230],[11.660,47.120],[11.585,47.058],[11.507,47.005]];
+function element(tag,attrs){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,String(v));return e}
+function moveView(){
+ const rect=svg.getBoundingClientRect();
+ height=width*Math.max(1,rect.height)/Math.max(1,rect.width);
+ const x=Math.max(width/2,Math.min(rw-width/2,center.x));
+ const y=Math.max(height/2,Math.min(rh-height/2,center.y));
+ // The high zoom view stays centered over the Alps, not the full continent.
+ center={x,y};
+ svg.setAttribute('viewBox',[x-width/2,y-height/2,width,height].map(v=>v.toFixed(4)).join(' '));
+}
+
+function buildMappedRivers(){
+ const group=$('geographicRivers');group.replaceChildren();
+ for(const river of measuredRivers){
+  const type=river.rank>=9?' minor':'';
+  group.appendChild(element('path',{d:river.d,class:'bank'+type}));
+  group.appendChild(element('path',{d:river.d,class:'water'+type}));
+ }
+}
+function forestSample(mask,x,y){
+ const xx=Math.max(0,Math.min(mask.width-1.001,x/1448*(mask.width-1)));
+ const yy=Math.max(0,Math.min(mask.height-1.001,y/1086*(mask.height-1)));
+ const i=Math.floor(xx),j=Math.floor(yy),u=xx-i,v=yy-j,w=mask.width,k=j*w+i,a=mask.forest;
+ return a[k]*(1-u)*(1-v)+a[k+1]*u*(1-v)+a[k+w]*(1-u)*v+a[k+w+1]*u*v;
+}
+function makeWoodland(mask){
+ if(mask.width!==512||mask.height!==384||mask.forest.length!==512*384)throw Error('Woodland grid dimension mismatch');
+ const c=document.createElement('canvas');c.width=780;c.height=1030;
+ const cx=c.getContext('2d'),img=cx.createImageData(c.width,c.height),f=forestRegion;
+ for(let row=0;row<c.height;row++){
+  const y=f.y+(row+.5)*f.h/c.height;
+  for(let col=0;col<c.width;col++){
+   const x=f.x+(col+.5)*f.w/c.width;
+   const cover=forestSample(mask,x,y),maskAlpha=Math.max(0,Math.min(1,(cover-.16)/.72));
+   const n=Math.sin(col*.127+Math.sin(row*.049))*Math.cos(row*.118+Math.sin(col*.036));
+   const wave=Math.sin(col*.027+row*.013)*Math.cos(row*.023-col*.011);
+   const grain=n*.56+wave*.44,i=(row*c.width+col)*4;
+   img.data[i]=46+grain*17;img.data[i+1]=92+grain*21;img.data[i+2]=63+grain*12;
+   img.data[i+3]=Math.round(maskAlpha*(105+grain*27));
+  }
+ }
+ cx.putImageData(img,0,0);
+ $('woodland').setAttribute('href',c.toDataURL('image/png'));forestLoaded=true;
+ setPhysicalLayers();
+}
+function setPhysicalLayers(){
+ $('geographicRivers').style.display=level===1?'':'none';
+ $('localStreams').style.display=level>=2?'':'none';
+ $('localStreams').style.opacity=level===2?'.75':'1';
+ $('naturalCanopy').style.display=level>=2?'':'none';
+ $('naturalCanopy').style.opacity=level===2?'.80':'.98';
+ $('geographicRivers').style.opacity=level===1?'.64':'1';
+ $('woodland').style.display=(level===1&&forestLoaded)?'':'none';
+ $('v97Detail').style.display=level>=2?'':'none';
+ $('woodland').style.opacity=level===1?'.32':'.68';
+ $('contours').style.display='none';
+}
+
+function drawPins(){
+ const group=$('pins');group.replaceChildren();
+ const scale=width/Math.max(1,svg.getBoundingClientRect().width);const radius=scale*2.8,labelSize=scale*11.5;
+ for(const p of places){
+  const q=pt(p.lon,p.lat);
+  if(level===0&&p.name!=='Brenner Pass')continue;
+  if(Math.abs(q.x-center.x)>width*.47||Math.abs(q.y-center.y)>height*.47)continue;
+  group.appendChild(element('circle',{cx:q.x,cy:q.y,r:radius*1.3,class:'map-dot'}));
+  const txt=element('text',{x:q.x+radius*2,y:q.y-radius*1.8,'font-size':labelSize,class:'map-label'+(p.name==='Brenner Pass'?' pass':'')});
+  txt.textContent=p.name;group.appendChild(txt);
+ }
+}
+function drawRoutes(){
+ const group=$('routes');group.replaceChildren();if(level!==1)return;
+ const line=(coords,color,dash)=>{
+  const points=coords.map(q=>pt(q[0],q[1])),d=points.map((q,i)=>(i?'L':'M')+q.x.toFixed(3)+' '+q.y.toFixed(3)).join('');
+  const attr={d,stroke:color,'stroke-width':level===2?2.5:2.1,'stroke-opacity':'.97'};
+  if(dash)attr['stroke-dasharray']='5 4';
+  group.appendChild(element('path',attr));
+ };
+ line(ridges,'#f9ac91',true);line(valley,'#ffe4a3',false);
+}
+function interpolate(a,b,ha,hb,target){
+ const t=(target-ha)/((hb-ha)||.00000001);
+ return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+}
+function buildContours(){
+ if(!terrain||contoursMade)return;
+ contoursMade=true;
+ const group=$('contours'),w=terrain.width,h=terrain.height,vals=terrain.heights;
+ const xr=275.809524/(w-1),yr=288.122449/(h-1),ox=482.666667,oy=398.938776;
+ const around=pt(11.50,47.15);
+ const mini=around.x-25,maxi=around.x+25,minj=around.y-30,maxj=around.y+30;
+ const i0=Math.max(0,Math.floor((mini-ox)/xr)),i1=Math.min(w-2,Math.ceil((maxi-ox)/xr));
+ const j0=Math.max(0,Math.floor((minj-oy)/yr)),j1=Math.min(h-2,Math.ceil((maxj-oy)/yr));
+ let paths=[];
+ for(let elevation=400;elevation<=3200;elevation+=200){
+  let str='';
+  for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){
+   const k=j*w+i,x=ox+i*xr,y=oy+j*yr;
+   const corners=[[x,y],[x+xr,y],[x+xr,y+yr],[x,y+yr]];
+   const hs=[vals[k],vals[k+1],vals[k+w+1],vals[k+w]];
+   const edges=[[0,1],[1,2],[2,3],[3,0]],cross=[];
+   for(const [a,b] of edges){
+    if((hs[a]<elevation&&hs[b]>=elevation)||(hs[b]<elevation&&hs[a]>=elevation)){
+     cross.push(interpolate(corners[a],corners[b],hs[a],hs[b],elevation));
+    }
+   }
+   for(let n=0;n+1<cross.length;n+=2){
+    let a=cross[n],b=cross[n+1];
+    str+='M'+a[0].toFixed(2)+' '+a[1].toFixed(2)+'L'+b[0].toFixed(2)+' '+b[1].toFixed(2);
+   }
+  }
+  if(str)paths.push(element('path',{d:str,'data-height':elevation}));
+ }
+ group.replaceChildren(...paths);
+}
+function sampleElevation(lon,lat){
+ if(level>=2&&highTerrain&&lon>=11.26&&lon<=11.80&&lat>=46.80&&lat<=47.42){
+  const d=highTerrain,u=Math.max(0,Math.min(d.width-1.001,(lon-11.26)/.54*(d.width-1)));
+  const v=Math.max(0,Math.min(d.height-1.001,(47.42-lat)/.62*(d.height-1)));
+  const i=Math.floor(u),j=Math.floor(v),a=u-i,b=v-j,k=j*d.width+i,w=d.width,s=d.heights;
+  return s[k]*(1-a)*(1-b)+s[k+1]*a*(1-b)+s[k+w]*(1-a)*b+s[k+w+1]*a*b;
+ }
+ if(!terrain)return null;
+ const u=Math.max(0,Math.min(terrain.width-1.001,(lon-7)/12*(terrain.width-1)));
+ const v=Math.max(0,Math.min(terrain.height-1.001,(57-lat)/13*(terrain.height-1)));
+ const i=Math.floor(u),j=Math.floor(v),a=u-i,b=v-j,d=terrain.heights,w=terrain.width;
+ return d[j*w+i]*(1-a)*(1-b)+d[j*w+i+1]*a*(1-b)+d[(j+1)*w+i]*(1-a)*b+d[(j+1)*w+i+1]*a*b;
+}
+function distKm(a,b){
+ const rad=Math.PI/180,dx=(b[0]-a[0])*rad*Math.cos((a[1]+b[1])*.5*rad)*6371;
+ const dy=(b[1]-a[1])*rad*6371;return Math.hypot(dx,dy);
+}
+function routeCost(coords){
+ if(!terrain)return null;
+ let dist=0,up=0,maxGrade=0;
+ for(let k=1;k<coords.length;k++){
+  const a=coords[k-1],b=coords[k],km=distKm(a,b),steps=Math.max(1,Math.ceil(km/.8));
+  for(let n=1;n<=steps;n++){
+   const interp=t=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+   const e0=sampleElevation(...interp((n-1)/steps)),e1=sampleElevation(...interp(n/steps));
+   if(e0!==null&&e1!==null){const change=e1-e0;up+=Math.max(0,change);maxGrade=Math.max(maxGrade,Math.abs(change)/Math.max(1,km*1000/steps));}
+  }
+  dist+=km;
+ }
+ return {distance:dist,ascent:up,grade:maxGrade,cost:dist+up/100+maxGrade*35};
+}
+function report(){
+ const note=$('readout');
+ if(level===0){note.textContent='Overview: identify the Alpine barrier and the Brenner corridor.';return}
+ if(level>=2){note.textContent=(osmStreams?osmStreams.ways.length+' mapped waterway segments; ':'Loading mapped streams… ')+(highTerrain?'measured mountain and woodland relief. Tap terrain for elevation.':'loading elevation…');return}
+ if(!terrain){note.textContent='Loading sampled elevation data…';return}
+ const a=routeCost(valley),b=routeCost(ridges);
+ note.textContent='Brenner corridor (gold): '+a.distance.toFixed(1)+' km, sampled ascent '+Math.round(a.ascent)+' m. Ridge alternative (red dashed): '+b.distance.toFixed(1)+' km, ascent '+Math.round(b.ascent)+' m. Routes illustrative, not historical army roads.';
+}
+function setLevel(n){
+ level=n;const d=views[n];center=pt(d.lon,d.lat);width=d.w;
+ $('regional').style.display=n>0?'':'none';setPhysicalLayers();
+ $('levelName').textContent=names[n];$('levelDetail').textContent=details[n];
+ for(const btn of document.querySelectorAll('[data-level]'))btn.classList.toggle('active',Number(btn.dataset.level)===n);
+ moveView();drawRoutes();drawPins();report();
+}
+for(const btn of document.querySelectorAll('[data-level]'))btn.addEventListener('click',()=>setLevel(Number(btn.dataset.level)));
+svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;down={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y,moved:false};svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointermove',e=>{if(!down)return;let dx=e.clientX-down.x,dy=e.clientY-down.y;if(Math.hypot(dx,dy)>5)down.moved=true;const rect=svg.getBoundingClientRect();center={x:down.cx-dx*width/Math.max(1,rect.width),y:down.cy-dy*width/Math.max(1,rect.width)};moveView()});
+svg.addEventListener('pointerup',e=>{
+ if(!down)return;
+ const moved=down.moved;down=null;if(moved)return;
+ const rect=svg.getBoundingClientRect(),nx=(e.clientX-rect.left)/Math.max(1,rect.width),ny=(e.clientY-rect.top)/Math.max(1,rect.height),coords=inv(center.x+(nx-.5)*width,center.y+(ny-.5)*height);
+ const m=sampleElevation(coords.lon,coords.lat);
+ $('inspect').textContent='Location '+coords.lat.toFixed(3)+'°N, '+coords.lon.toFixed(3)+'°E'+(m===null?' · Elevation data loading':' · Elevation approximately '+Math.round(m)+' m');
+});
+svg.addEventListener('pointercancel',()=>{down=null});
+window.addEventListener('resize',moveView);
+fetch('./terrain-detail/central-europe-v90-elevation.json').then(r=>{if(!r.ok)throw Error('elevation missing');return r.json()}).then(data=>{
+ if(data.width!==256||data.height!==267||data.heights.length!==256*267)throw Error('invalid regional elevation');
+ terrain=data;report();$('badge').textContent='MEASURED Z9 RELIEF';
+}).catch(e=>{$('badge').textContent='IMAGE-ONLY TEST';$('readout').textContent='Terrain image visible; measured elevation data could not load ('+e.message+').'});
+fetch('./terrain-v97/brenner-data.json').then(r=>{if(!r.ok)throw Error('V97 elevation grid unavailable');return r.json()}).then(d=>{
+ if(d.heightGrid[0]!==260||d.heightGrid[1]!==300||d.elevationM.length!==260*300)throw Error('Invalid V97 elevation data');
+ highTerrain={width:260,height:300,heights:d.elevationM};if(level>=2)report();$('badge').textContent='COPERNICUS + ESA';
+}).catch(e=>{$('badge').textContent='V97 DATA ERROR';$('readout').textContent='High-resolution elevation unavailable: '+e.message});
+$('v97Detail').addEventListener('error',()=>{$('badge').textContent='V97 IMAGE ERROR';});
+
+function drawLocalStreams(d){
+ const group=$('localStreams');group.replaceChildren();
+ for(const line of d.ways){
+  if(!line.coordinates||line.coordinates.length<2)continue;
+  const path=line.coordinates.map((ll,i)=>{const p=pt(ll[0],ll[1]);return(i?'L':'M')+p.x.toFixed(4)+' '+p.y.toFixed(4)}).join('');
+  const cls=line.type==='river'?'':' small';
+  group.appendChild(element('path',{d:path,class:'bed'+cls}));
+  group.appendChild(element('path',{d:path,class:'channel'+cls}));
+ }
+}
+fetch('./terrain-v98/streams.json').then(r=>{if(!r.ok)throw Error('local stream data missing');return r.json()}).then(d=>{
+ if(!Array.isArray(d.ways)||d.ways.length<60||!Array.isArray(d.focusLonLat))throw Error('invalid local stream network');
+ osmStreams=d;drawLocalStreams(d);
+ views[3]={lon:d.focusLonLat[0],lat:d.focusLonLat[1],w:2.15};
+ if(level===3)setLevel(3);
+ report();
+}).catch(error=>{$('badge').textContent='LOCAL STREAMS MISSING';$('readout').textContent='Local waterways did not load: '+error.message});
+$('naturalCanopy').addEventListener('error',()=>{$('badge').textContent='FOREST IMAGE MISSING';});
+buildMappedRivers();
+fetch('./terrain-v94/woods.json').then(r=>{if(!r.ok)throw Error('Woodland geographic asset unavailable');return r.json()}).then(makeWoodland).catch(error=>{console.warn('Woodland display unavailable',error);$('note').textContent='Forest layer unavailable; relief and measured rivers remain. '+$('note').textContent;});
+setLevel(0);
+})();
+</script></body></html>

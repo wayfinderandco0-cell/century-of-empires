@@ -13,19 +13,11 @@
     "allied observation sees opposing formation": true,
     "two medium dots after detection": true,
     "fog restores hidden enemy": true,
-    "close level uses existing sprites": true,
-    "painted view visible": true,
-    "generated canvas exists": true,
-    "no modern road imagery": true,
-    "painted trees status": true,
-    "aerial troop sprites drawn": true,
-    "aerial retains mapped water canvas": true,
-    "march starts": true,
-    "pause works": true,
-    "reset stays paused": true,
-    "opposing armies meet": true,
-    "no JavaScript errors": true
+    "close level uses existing sprites": false
   },
-  "errors": [],
-  "passed": true
+  "errors": [
+    "close level uses existing sprites"
+  ],
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 42, in <module>\n    test(\"close level uses existing sprites\",page.locator(\"#v100Units image\").count()>=3)\n  File \"/home/runner/work/century-of-empires/century-of-empires/scripts/qa_v101_mobile.py\", line 18, in test\n    if not condition: raise AssertionError(name)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: close level uses existing sprites\n",
+  "passed": false
 }

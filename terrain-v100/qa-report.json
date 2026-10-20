@@ -1,0 +1,28 @@
+{
+  "url": "local GitHub Actions Chromium HTTP server",
+  "browser": "Chromium iPhone-sized (390x844)",
+  "checks": {
+    "HTML served": true,
+    "V100 controls": true,
+    "far zoom hides town pins": true,
+    "far zoom hides units": true,
+    "initial enemy hidden": true,
+    "medium town names": true,
+    "medium uses one friendly dot": true,
+    "medium never displays enemy troop count": true,
+    "allied observation sees opposing formation": true,
+    "two medium dots after detection": true,
+    "fog restores hidden enemy": true,
+    "close level uses existing sprites": true,
+    "aerial visible": true,
+    "aerial troop sprites drawn": true,
+    "aerial retains mapped water canvas": true,
+    "march starts": true,
+    "pause works": true,
+    "reset stays paused": true,
+    "opposing armies meet": true,
+    "no JavaScript errors": true
+  },
+  "errors": [],
+  "passed": true
+}

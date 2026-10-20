@@ -66,7 +66,8 @@ jobs:
                 page.evaluate('([x,y,w])=>window.__v94Camera(x,y,w)',[x,y,w])
                 page.wait_for_timeout(600)
                 state=page.evaluate("""() => {
-                  let m=document.querySelector('#map'),layer=document.querySelector('#v94DetailedRelief');
+                  let m=document.querySelector('#map'),layer=document.querySelector('#v94DetailedRelief'),
+                  canopy=document.querySelector('#v94Canopy'),pat=document.querySelector('#v94CanopyPattern');
                   let items=[...layer.querySelectorAll('image')];
                   let rect=m.viewBox.baseVal;
                   return {zoom:rect.width,scale:m.dataset.zoomLod,tileCount:items.length,
@@ -74,11 +75,16 @@ jobs:
                     displayed:getComputedStyle(layer).display,
                     riverPaths:document.querySelectorAll('#atlasRivers .river-channel').length,
                     oldWoodland:!!document.querySelector('#v93Woodland'),
+                    canopyVisible:getComputedStyle(canopy).display!=='none',
+                    canopyMask:canopy.getAttribute('mask'),
+                    canopyPixels:Number(pat.getAttribute('width'))*m.getBoundingClientRect().width/rect.width,
                     terrainClass:m.classList.contains('v94-terrain'),
                     coastPaths:document.querySelectorAll('#continentCoasts path').length};
                 }""")
                 assert state['terrainClass'] and state['displayed']!='none',state
                 assert state['tileCount']>=1 and not state['oldWoodland'],state
+                assert state['canopyVisible'] and state['canopyMask']=='url(#v94ForestMask)',state
+                assert 245<state['canopyPixels']<268,state
                 assert state['riverPaths']>1000 and state['coastPaths']>=2,state
                 shot='qa/v94-'+key+'-iphone.jpg'
                 page.screenshot(path=shot,type='jpeg',quality=87,animations='disabled')

@@ -33,6 +33,10 @@ jobs:
           m=json.load(open('terrain-detail/central-europe-v90.json'))
           assert a.size==(m['imageWidth'],m['imageHeight'])
           assert a.width>=3000 and a.height>=3000
+          g=json.load(open('terrain-detail/central-europe-v90-elevation.json'))
+          assert g['width']==256 and g['height']>250
+          assert len(g['heights'])==g['width']*g['height']
+          assert max(g['heights'])>1000
           assert m['bboxLonLat']==[7.0,44.0,19.0,57.0]
           assert m['x']>450 and m['y']>350
           print('REGIONAL DEM VERIFIED',a.size,m['bboxLonLat'])
@@ -41,7 +45,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add terrain-detail/central-europe-v90.webp terrain-detail/central-europe-v90.json
+          git add terrain-detail/central-europe-v90.webp terrain-detail/central-europe-v90.json terrain-detail/central-europe-v90-elevation.json
           if ! git diff --cached --quiet; then
             git commit -m "Build measured high-detail central Europe tile for tactical zoom"
             for retry in 1 2 3 4; do

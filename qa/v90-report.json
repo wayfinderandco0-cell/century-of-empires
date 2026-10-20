@@ -14,8 +14,16 @@
       275.809524,
       288.122449
     ],
+    "heightGrid": [
+      256,
+      267
+    ],
     "source": "Mapzen/AWS elevation-tiles-prod Terrarium z9"
   },
+  "tacticalElevationReadout": [
+    256,
+    267
+  ],
   "closeZoomWidth": 108.87999725341797,
   "overlayVisible": true,
   "v90Screenshot": "qa/v90-dresden-zoom.jpg",

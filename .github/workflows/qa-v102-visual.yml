@@ -1,0 +1,52 @@
+name: V102 Brenner visual pilot
+on:
+  push:
+    branches: [terrain-v102-visual-pilot]
+    paths: ['v102-brenner-visual-pilot.html', 'terrain-v102/pilot.js', 'terrain-v102/pilot.css', 'terrain-v102/build_assets.py', 'scripts/qa_v102_mobile.py', '.github/workflows/qa-v102-visual.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v102-visual-pilot
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare original assets and test browsers
+        run: |
+          pip install numpy scipy pillow playwright
+          python -m playwright install --with-deps chromium webkit
+          python terrain-v102/build_assets.py
+          node --check terrain-v102/pilot.js
+      - name: Render and test both phone orientations
+        run: python scripts/qa_v102_mobile.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v102-visual-evidence-${{ github.run_id }}
+          path: terrain-v102/
+      - name: Save assets and evidence only to V102
+        if: always()
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-v102-visual-pilot
+          if [ "$(git rev-parse origin/terrain-v102-visual-pilot)" != "$SOURCE_SHA" ]; then
+            echo 'Source advanced; evidence retained in uniquely named artifact. Do not overwrite newer source.'
+            exit 1
+          fi
+          git add terrain-v102/
+          if ! git diff --cached --quiet; then
+            git commit -m 'V102: persist deterministic terrain assets and actual mobile browser evidence'
+            git push origin HEAD:terrain-v102-visual-pilot
+          fi

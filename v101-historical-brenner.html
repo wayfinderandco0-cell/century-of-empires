@@ -257,7 +257,7 @@ svg.addEventListener('pointerup',e=>{
 svg.addEventListener('pointercancel',()=>{down=null});
 
 const photo=$('photoStage'),landscape=$('generatedLandscape'),riverSvg=$('streamLayer');
-let osmData=null,photoCenter={lon:11.5219506,lat:47.1298267},photoZoom=15,photoOk=0,photoBroken=0,photoDown=null;
+let osmData=null,photoCenter={lon:11.5219506,lat:47.1298267},photoZoom=14,photoOk=0,photoBroken=0,photoDown=null;
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 function mercPX(lon,lat,z){
  const n=256*Math.pow(2,z),r=lat*Math.PI/180;
@@ -274,9 +274,12 @@ let artisticWoodland=null;
 function hashTree(a,b){let k=Math.imul(a|0,73856093)^Math.imul(b|0,19349663);k=Math.imul(k^(k>>>13),83492791);return((k^(k>>>16))>>>0)/4294967295;}
 function woodsAt(lon,lat){
  if(!artisticWoodland)return .30;
- const x=Math.max(0,Math.min(259,Math.round((lon-11.26)/.54*259)));
- const y=Math.max(0,Math.min(299,Math.round((47.42-lat)/.62*299)));
- return artisticWoodland[y*260+x]===1?.78:.07;
+ const x=Math.max(0,Math.min(258.999,(lon-11.26)/.54*259)),y=Math.max(0,Math.min(298.999,(47.42-lat)/.62*299));
+ const i=Math.floor(x),j=Math.floor(y),u=x-i,v=y-j,k=j*260+i;
+ const a=artisticWoodland[k],b=artisticWoodland[k+1],c=artisticWoodland[k+260],d=artisticWoodland[k+261];
+ const smooth=(a*(1-u)+b*u)*(1-v)+(c*(1-u)+d*u)*v;
+ const breakUp=Math.sin(lon*1193+Math.sin(lat*71)*2)*Math.cos(lat*1641+lon*357)*.20;
+ return Math.max(.02,Math.min(.82,.045+smooth*.67+breakUp));
 }
 function paintLandscape(){
  const rect=photo.getBoundingClientRect(),W=Math.max(200,rect.width),H=Math.max(220,rect.height);
@@ -312,11 +315,11 @@ function paintLandscape(){
  let trees=0;
  for(let iy=ymin;iy<=ymax;iy++)for(let ix=xmin;ix<=xmax;ix++){
   const r=hashTree(ix,iy),lon=(ix+.19+r*.64)*dx,lat=(iy+.2+hashTree(iy,ix)*.6)*dy;
-  if(hashTree(ix+107,iy+19)>woodsAt(lon,lat))continue;
+  if(hashTree(ix+107,iy+19)>woodsAt(lon,lat)*.52)continue;
   const z=elev(lon,lat);if(z>2450||z<550)continue;
   const p=mercPX(lon,lat,photoZoom),x=p.x-cen.x+W/2,y=p.y-cen.y+H/2;
   if(x< -12||x>W+12||y< -12||y>H+12)continue;
-  const sz=Math.max(1.5,Math.min(7,3.5*Math.pow(2,(photoZoom-15)*.4)))*(.7+hashTree(ix+71,iy+32));
+  const sz=Math.max(1.4,Math.min(6,3.0*Math.pow(2,(photoZoom-15)*.4)))*(.7+hashTree(ix+71,iy+32));
   ctx.fillStyle='#32483955';ctx.beginPath();ctx.ellipse(x+1,y+sz*.4,sz,sz*.46,0,0,Math.PI*2);ctx.fill();
   ctx.fillStyle=r>.5?'#425e42':'#35543e';
   ctx.beginPath();ctx.moveTo(x,y-sz*1.35);ctx.lineTo(x-sz*.92,y+sz*.55);ctx.lineTo(x+sz*.92,y+sz*.55);ctx.closePath();ctx.fill();
@@ -430,6 +433,35 @@ function speedModifier(f){
 function svgText(g,x,y,str,size,fill){
  const e=element('text',{x,y,'font-size':size,'text-anchor':'middle',fill});e.textContent=str;g.appendChild(e);return e;
 }
+
+function periodUnitArt(parent,key,x,y,w,h,side){
+ // Draw recognizable handcrafted military silhouettes: no dark photo cutouts.
+ const g=element('g',{transform:'translate('+x+' '+y+') scale('+(w/30)+' '+(h/30)+')'});
+ parent.appendChild(g);
+ const color=side==='AT'?'#ddc6a0':'#a5b9ca';
+ if(key==='art'){
+  g.appendChild(element('ellipse',{cx:16,cy:25,rx:14,ry:2.5,fill:'#1c251e',opacity:'.35'}));
+  g.appendChild(element('rect',{x:6,y:16,width:19,height:5,rx:1,fill:'#805b34',stroke:'#231b16','stroke-width':1}));
+  g.appendChild(element('path',{d:'M10 16 L22 6 L26 6 L25 11 L16 20 Z',fill:'#b78b46',stroke:'#332c23','stroke-width':1}));
+  for(const cx of [8,24]){
+   g.appendChild(element('circle',{cx,cy:23,r:5,fill:'#352b24',stroke:'#bca477','stroke-width':2}));
+   g.appendChild(element('circle',{cx,cy:23,r:1.1,fill:'#dac798'}));
+  }
+ }else{
+  // Horse with rider, musketeer-era hat and saddle.
+  g.appendChild(element('ellipse',{cx:15,cy:25,rx:12,ry:3,fill:'#1c251e',opacity:'.25'}));
+  g.appendChild(element('ellipse',{cx:13,cy:17,rx:10,ry:5,fill:'#6b4833',stroke:'#30281f','stroke-width':1}));
+  g.appendChild(element('path',{d:'M19 15 L24 7 L28 8 L25 13 L23 19 Z',fill:'#75523a',stroke:'#30281f','stroke-width':1}));
+  for(const x of [7,12,19,23])g.appendChild(element('path',{d:'M'+x+' 20 l-1 8',stroke:'#3b2b23','stroke-width':2.2,fill:'none'}));
+  g.appendChild(element('path',{d:'M6 15 Q1 17 3 24',stroke:'#2d2b25','stroke-width':2,fill:'none'}));
+  g.appendChild(element('rect',{x:10,y:6,width:7,height:10,rx:1,fill:color,stroke:'#2b3030','stroke-width':.8}));
+  g.appendChild(element('circle',{cx:13.5,cy:4,r:3,fill:'#d5ae82'}));
+  g.appendChild(element('path',{d:'M9 2 L18 2 L16 -1 L11 -1 Z',fill:'#25333b',stroke:'#dabd75','stroke-width':.7}));
+  g.appendChild(element('path',{d:'M17 11 L26 2',stroke:'#a28b65','stroke-width':1.5}));
+ }
+ return g;
+}
+
 function drawTroops(){
  const g=$('v100Units');g.replaceChildren();
  if(level===0||level===3)return;
@@ -451,9 +483,8 @@ function drawTroops(){
   base.appendChild(element('circle',{cx:0,cy:-20,r:20,fill:'none',stroke:a.side==='AT'?'#f6c878':'#9cbde6','stroke-width':1,opacity:'.7'}));
   const images=[['inf-'+a.side,-18,-43,23,36],['cav-PR',0,-41,22,31],['art',12,-24,23,17]];
   for(const [key,x,y,iw,ih] of images){
-   const q=element('image',{x,y,width:iw,height:ih,href:V100_ART[key],preserveAspectRatio:'xMidYMid meet'});
-   if(key==='cav-PR'||key==='art')q.setAttribute('style','mix-blend-mode:screen;opacity:.92');
-   base.appendChild(q);
+   if(key==='cav-PR'||key==='art'){periodUnitArt(base,key,x,y,iw,ih,a.side);continue;}
+   base.appendChild(element('image',{x,y,width:iw,height:ih,href:V100_ART[key],preserveAspectRatio:'xMidYMid meet'}));
   }
   base.appendChild(element('rect',{x:-21,y:7,width:42,height:5,rx:2,fill:'#17252a',stroke:'#bca880','stroke-width':.6}));
   base.appendChild(element('rect',{x:-20,y:8,width:40*a.health/100,height:3,rx:1,fill:'#d7955b'}));
@@ -481,9 +512,8 @@ function renderPhotoUnits(){
   const root=element('g',{transform:'translate('+x+' '+y+')'});
   root.appendChild(element('circle',{r:29,fill:'#102329a8',stroke:a.side==='AT'?'#f5ce86':'#91b9ef','stroke-width':2}));
   for(const [key,xx,yy,ww,hh] of [['inf-'+a.side,-24,-33,29,39],['cav-PR',3,-28,25,35],['art',12,-14,25,17]]){
-   const pic=element('image',{href:V100_ART[key],x:xx,y:yy,width:ww,height:hh});
-   if(key==='cav-PR'||key==='art')pic.setAttribute('style','mix-blend-mode:screen;opacity:.92');
-   root.appendChild(pic);
+   if(key==='cav-PR'||key==='art'){periodUnitArt(root,key,xx,yy,ww,hh,a.side);continue;}
+   root.appendChild(element('image',{href:V100_ART[key],x:xx,y:yy,width:ww,height:hh}));
   }
   root.appendChild(element('rect',{x:-23,y:31,width:46,height:5,rx:1,fill:'#12272b'}));
   root.appendChild(element('rect',{x:-22,y:32,width:44*a.health/100,height:3,fill:'#dc9c65'}));

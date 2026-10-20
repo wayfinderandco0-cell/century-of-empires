@@ -1,0 +1,105 @@
+name: QA V93 natural forest at three zoom levels
+on:
+  push:
+    paths:
+      - 'v93.html'
+      - '.github/workflows/qa-v93-terrain.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install mobile browser and screenshots
+        run: |
+          python -m pip install playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Validate realistic woodland map at normal tactical and extreme zoom
+        run: |
+          python - <<'PY'
+          import json, subprocess, time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          from PIL import Image
+          Path('qa').mkdir(exist_ok=True)
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          out={'version':'v93','views':{}}
+          try:
+            time.sleep(2)
+            with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto('http://127.0.0.1:8765/v93.html',wait_until='domcontentloaded',timeout=60000)
+              page.wait_for_function("window.__terrainQA?.mode === 'measured-elevation'",timeout=60000)
+              page.wait_for_function("window.__v93TerrainQA?.status === 'ready'",timeout=60000)
+              qa=page.evaluate('window.__v93TerrainQA')
+              assert qa['forestZones']==26 and qa['woodlandPatches']>300,qa
+              assert qa['canopyMode']=='fixed-screen-aerial',qa
+              page.locator('#startBtn').click()
+              page.wait_for_function("document.querySelectorAll('.army-token').length >= 40",timeout=30000)
+              out['armyMarkers']=page.locator('.army-token').count()
+              for i in range(5):
+                page.locator('#zoomIn').click()
+                page.wait_for_timeout(190)
+                if i not in [1,2,4]:continue
+                if i==1:page.wait_for_function("window.__v90QA?.status === 'ready'",timeout=60000)
+                step={1:'standard',2:'tactical',4:'extreme'}[i]
+                state=page.evaluate("""() => {
+                  const svg=document.querySelector('#map'),forest=document.querySelector('#v93Woodland'),
+                  river=document.querySelector('#atlasRivers'),pattern=document.querySelector('#v93ForestPattern');
+                  const width=svg.viewBox.baseVal.width, cssW=svg.getBoundingClientRect().width;
+                  return {mapWidth:width,lod:svg.dataset.zoomLod,forestDisplay:getComputedStyle(forest).display,
+                    forestOpacity:getComputedStyle(forest).opacity,forestMask:forest.getAttribute('mask'),
+                    forestLayers:forest.querySelectorAll('path').length,
+                    softEdgeMask:forest.querySelector('g').getAttribute('mask'),
+                    texturePresent:pattern.querySelector('image').getAttribute('href').startsWith('data:image/png;base64,'),
+                    patternWorldWidth:Number(pattern.getAttribute('width')),
+                    patternScreenPx:Number(pattern.getAttribute('width'))*cssW/width,
+                    riverDisplay:getComputedStyle(river).display,
+                    riverSegments:river.querySelectorAll('.river-channel').length,
+                    oldTreeSymbols:document.querySelectorAll('.v91-tree-dark,.v91-tree-light').length,
+                    legacyDetailHidden:getComputedStyle(document.querySelector('#terrainDetail')).display==='none'};
+                }""")
+                assert 235<state['patternScreenPx']<280,state
+                assert state['forestLayers']==2 and state['forestMask']=='url(#atlasLandMask)' and state['softEdgeMask']=='url(#v93ForestFeatherMask)',state
+                assert state['forestDisplay']!='none' and state['riverDisplay']!='none',state
+                assert state['riverSegments']==15 and state['oldTreeSymbols']==0 and state['legacyDetailHidden'],state
+                filename='qa/v93-'+step+'-iphone.jpg'
+                page.wait_for_timeout(450)
+                page.screenshot(path=filename,type='jpeg',quality=90,animations='disabled')
+                assert Image.open(filename).size==(780,1688)
+                out['views'][step]={'state':state,'screenshot':filename}
+              old=page.locator('#map').evaluate('(el)=>el.viewBox.baseVal.width')
+              page.locator('#zoomOut').click()
+              assert page.locator('#map').evaluate('(el)=>el.viewBox.baseVal.width')>old
+              out['qa']=qa
+              out['jsErrors']=errors
+              assert not errors,errors
+              browser.close()
+          finally:
+            server.terminate()
+          Path('qa/v93-report.json').write_text(json.dumps(out,indent=2)+'\n')
+          print('V93 THREE-ZOOM VISUAL QA PASSED',json.dumps(out))
+          PY
+      - name: Publish V93 mobile screenshot proof
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/v93-*-iphone.jpg qa/v93-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m "QA V93: prove canopy scale and water visibility through extreme iPhone zoom"
+            for i in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

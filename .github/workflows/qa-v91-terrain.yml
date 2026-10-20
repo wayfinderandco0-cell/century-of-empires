@@ -1,0 +1,103 @@
+name: QA V91 tactical forest and river map
+on:
+  push:
+    paths:
+      - 'v91.html'
+      - '.github/workflows/qa-v91-terrain.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser test tools
+        run: |
+          python -m pip install playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Verify forests, river styling, map interaction, and capture screenshot
+        run: |
+          python - <<'PY'
+          import json, subprocess, time
+          from pathlib import Path
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          Path('qa').mkdir(exist_ok=True)
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          report={'version':'v91'}
+          try:
+            time.sleep(2)
+            with sync_playwright() as pw:
+              browser=pw.chromium.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto('http://127.0.0.1:8765/v91.html',wait_until='domcontentloaded',timeout=60000)
+              page.wait_for_function("window.__terrainQA && window.__terrainQA.mode !== 'loading'",timeout=60000)
+              page.wait_for_function("window.__v91TerrainQA && window.__v91TerrainQA.status === 'ready'",timeout=60000)
+              t=page.evaluate('window.__v91TerrainQA')
+              assert t['forestZones']==26,t
+              assert t['renderedTrees']>1800,t
+              assert t['forestPatches']>150,t
+              assert t['riverCount']>=15,t
+              assert t['usesGameplayForests'] and t['usesGameplayRivers'],t
+              page.locator('#startBtn').click()
+              page.wait_for_function("document.querySelectorAll('.army-token').length>=40",timeout=30000)
+              report['armyMarkers']=page.locator('.army-token').count()
+              for i in range(3):
+                page.locator('#zoomIn').click()
+                page.wait_for_timeout(200)
+              page.wait_for_function("window.__v90QA && window.__v90QA.status==='ready'",timeout=60000)
+              width=page.locator('#map').evaluate("(el)=>el.viewBox.baseVal.width")
+              assert 70<width<140,width
+              v=page.evaluate('''() => {
+                let map=document.querySelector('#map'),wood=document.querySelector('#v91Woodland'),river=document.querySelector('#atlasRivers');
+                return {zoom:map.dataset.zoomLod,woodDisplay:getComputedStyle(wood).display,
+                  woodMask:wood.getAttribute('mask'),treePathCount:wood.querySelectorAll('.v91-woodland-trees path').length,
+                  woodOpacity:getComputedStyle(wood).opacity,
+                  riverDisplay:getComputedStyle(river).display,riverOpacity:getComputedStyle(river).opacity,
+                  riverLines:river.querySelectorAll('.river-channel').length,
+                  riverGlow:river.querySelectorAll('.v91-river-light').length,
+                  source:document.title};
+              }''')
+              assert v['zoom']=='3',v
+              assert v['woodDisplay']!='none' and v['riverDisplay']!='none',v
+              assert v['treePathCount']==4,v
+              assert v['woodMask']=='url(#atlasLandMask)',v
+              assert v['riverLines']>=15 and v['riverGlow']>=8,v
+              pic='qa/v91-berlin-zoom.jpg'
+              page.wait_for_timeout(600)
+              page.screenshot(path=pic,type='jpeg',quality=90,animations='disabled')
+              assert Image.open(pic).size==(780,1688)
+              assert not errors,errors
+              report.update({'terrain':t,'zoomWidth':width,'layers':v,'jsErrors':errors,'screenshot':pic})
+              # Verify pan/tap controls didn't become blocked by new noninteractive vectors.
+              assert page.locator('#v91Woodland').get_attribute('pointer-events')=='none'
+              page.locator('#zoomOut').click()
+              report['zoomOutWidth']=page.locator('#map').evaluate('(el)=>el.viewBox.baseVal.width')
+              assert report['zoomOutWidth']>width
+              browser.close()
+          finally:
+            server.terminate()
+          Path('qa/v91-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('V91 TERRAIN BROWSER QA PASSED',json.dumps(report))
+          PY
+      - name: Publish visual QA evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/v91-berlin-zoom.jpg qa/v91-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m "QA V91: measured trees and restored rivers in iPhone-size browser"
+            for i in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

@@ -516,15 +516,15 @@
 #map #v91Woodland[data-zoom-lod="1"] .v91-woodland-trees{display:none}
 #map #v91Woodland[data-zoom-lod="2"]{opacity:.73}
 #map #v91Woodland[data-zoom-lod="3"]{opacity:.96}
-#map #v91Woodland .v91-stand-soil{fill:#4f6b4b;fill-opacity:.27;stroke:#486a4c;stroke-opacity:.13;stroke-width:1.4}
+#map #v91Woodland .v91-stand-soil{fill:#4f6b4b;fill-opacity:.22;stroke:#486a4c;stroke-opacity:.13;stroke-width:1.4}
 #map #v91Woodland .v91-stand-clearings{fill:#b9b99b;fill-opacity:.34}
 #map #v91Woodland .v91-tree-shadow{fill:none;stroke:#252e24;stroke-opacity:.25;stroke-width:1.15;stroke-linecap:round}
 #map #v91Woodland .v91-tree-trunks{fill:none;stroke:#343d30;stroke-opacity:.65;stroke-width:.47;stroke-linecap:round}
-#map #v91Woodland .v91-tree-dark{fill:#375840;fill-opacity:.91;stroke:#284538;stroke-opacity:.56;stroke-width:.16}
-#map #v91Woodland .v91-tree-light{fill:#718568;fill-opacity:.92;stroke:#405842;stroke-opacity:.48;stroke-width:.16}
-#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-stand-soil{fill-opacity:.23}
-#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-dark{fill-opacity:1}
-#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-light{fill-opacity:.98}
+#map #v91Woodland .v91-tree-dark{fill:#375840;fill-opacity:.83;stroke:#284538;stroke-opacity:.56;stroke-width:.16}
+#map #v91Woodland .v91-tree-light{fill:#718568;fill-opacity:.81;stroke:#405842;stroke-opacity:.48;stroke-width:.16}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-stand-soil{fill-opacity:.19}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-dark{fill-opacity:.89}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-light{fill-opacity:.86}
 /* V83 accidentally suppressed water vectors; restore ONLY actual gameplay rivers. */
 #map.v89-terrain #atlasRivers{display:inline!important;opacity:.94!important}
 #map.v89-terrain #atlasRivers[data-zoom-lod="0"]{opacity:.24!important}
@@ -3564,7 +3564,7 @@ function v91BuildWoodland(){
    if(!land(x,y)||!clearOfCity(x,y)||!clearOfRiver(x,y)){skipped++;continue;}
    const height=v89ElevationAt(x,y);
    if(height>1650||v89SlopeAt(x,y)>49){skipped++;continue;}
-   const px=fix(x),py=fix(y),scale=.9+rand()*1.02;
+   const px=fix(x),py=fix(y),scale=.23+rand()*.23;
    const shade=rand()>.45,conifer=height>500||cy<480||rand()<.30;
    if(conifer){
     const top=fix(y-3.4*scale),lower=fix(y+1.65*scale);

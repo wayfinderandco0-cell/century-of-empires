@@ -71,7 +71,7 @@ jobs:
                           assert isVisible,'Regional panel not visible at close zoom'
                           assert page.locator('#v90RegionalRelief image').count()==1
                           report['regionalTile']=detail
-                          report['tacticalElevationReadout']=page.evaluate("() => ({berlin:Math.round(v89ElevationAt(V87_CITIES.berlin[0],V87_CITIES.berlin[1]))})") if False else detail['heightGrid']
+                          report['tacticalHeightGrid']=detail['heightGrid']
                           report['closeZoomWidth']=width
                           report['overlayVisible']=isVisible
                       page.wait_for_timeout(600)

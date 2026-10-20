@@ -26,6 +26,70 @@ function v94TileUpdate(){
    href:'./terrain-v94/tiles/'+id+'.webp',preserveAspectRatio:'none','pointer-events':'none'}));
  }
 }
+
+/* V94 close zoom vegetation: visually detailed canopy, but only where the
+   Natural Earth II geographic woodland proxy marks forest. No arbitrary
+   hand-placed ellipses, and texture size remains stable on iPhone zoom. */
+let V94_CANOPY_PATTERN=null,V94_CANOPY_LAST=0;
+function v94CreateCanopy(){
+ const target=$('v94Canopy');if(!target||!V94_FOREST)return;
+ const defs=$('map').querySelector('defs');
+ defs.querySelector('#v94ForestMask')?.remove();
+ defs.querySelector('#v94CanopyPattern')?.remove();
+ const data=V94_FOREST,maskCanvas=document.createElement('canvas');
+ maskCanvas.width=data.width;maskCanvas.height=data.height;
+ const mctx=maskCanvas.getContext('2d'),image=mctx.createImageData(data.width,data.height);
+ for(let i=0;i<data.forest.length;i++){
+  let val=data.forest[i]?235:0;
+  image.data[i*4]=255;image.data[i*4+1]=255;
+  image.data[i*4+2]=255;image.data[i*4+3]=val;
+ }
+ mctx.putImageData(image,0,0);
+ const mask=node('mask',{id:'v94ForestMask',maskUnits:'userSpaceOnUse',
+  maskContentUnits:'userSpaceOnUse',x:0,y:0,width:1448,height:1086,style:'mask-type:alpha'});
+ mask.appendChild(node('image',{x:0,y:0,width:1448,height:1086,
+  href:maskCanvas.toDataURL('image/png'),preserveAspectRatio:'none'}));
+ defs.appendChild(mask);
+ const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
+ const ctx=canvas.getContext('2d');
+ let seed=0x94ee91e2;
+ const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+ const colors=['41,76,52','58,90,64','74,102,68','90,112,80','46,72,59','106,124,94'];
+ for(let i=0;i<2750;i++){
+  const x=rnd()*256,y=rnd()*256,r=.65+rnd()*1.35,c=colors[Math.floor(rnd()*colors.length)];
+  ctx.beginPath();ctx.ellipse(x+1,y+1,r*1.1,r*.85,0,0,6.283);
+  ctx.fillStyle='rgba(25,47,35,'+(.075+rnd()*.12).toFixed(3)+')';ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,y,r,r*(.75+rnd()*.32),rnd()*3,0,6.283);
+  ctx.fillStyle='rgba('+c+','+(.17+rnd()*.36).toFixed(3)+')';ctx.fill();
+ }
+ const pat=node('pattern',{id:'v94CanopyPattern',patternUnits:'userSpaceOnUse',
+  x:0,y:0,width:100,height:100});
+ pat.appendChild(node('image',{x:0,y:0,width:100,height:100,
+  href:canvas.toDataURL('image/png'),preserveAspectRatio:'none'}));
+ defs.appendChild(pat);V94_CANOPY_PATTERN=pat;V94_CANOPY_LAST=0;
+ target.replaceChildren(node('rect',{x:0,y:0,width:1448,height:1086,
+  fill:'url(#v94CanopyPattern)','pointer-events':'none'}));
+ target.setAttribute('mask','url(#v94ForestMask)');
+ v94UpdateCanopy();
+}
+function v94UpdateCanopy(){
+ const group=$('v94Canopy');
+ if(!group||!V94_READY||!V94_CANOPY_PATTERN)return;
+ const w=view.w,active=w<370;
+ group.style.display=active?'':'none';
+ if(!active)return;
+ group.style.opacity=w<95?'.79':w<200?'.46':'.19';
+ const screenW=$('map').getBoundingClientRect().width||390;
+ const val=256*w/screenW;
+ if(Math.abs(val/V94_CANOPY_LAST-1)>.02){
+  V94_CANOPY_LAST=val;
+  V94_CANOPY_PATTERN.setAttribute('width',val.toFixed(3));
+  V94_CANOPY_PATTERN.setAttribute('height',val.toFixed(3));
+  const img=V94_CANOPY_PATTERN.querySelector('image');
+  img.setAttribute('width',val.toFixed(3));img.setAttribute('height',val.toFixed(3));
+ }
+}
+
 function v94GridKey(x,y){
  return Math.floor(x/V94_RIVER_SIZE)+','+Math.floor(y/V94_RIVER_SIZE);
 }
@@ -125,6 +189,7 @@ async function v94FetchAll(){
   V89_HEIGHT=heights;
   V94_FOREST=woods;
   V94_MANIFEST=manifest;
+  v94CreateCanopy();
   V87_LAND_POLYGONS.splice(0,V87_LAND_POLYGONS.length,...land.polygons);
   const c=v87LandCanvas();
   const mask=node('mask',{id:'atlasLandMask',maskUnits:'userSpaceOnUse',
@@ -150,6 +215,7 @@ async function v94FetchAll(){
   }
   $('atlasBaseImage').setAttribute('href',base.src);
   V94_READY=true;
+  v94UpdateCanopy();
   window.__v94Camera=(x,y,w)=>{view.cx=x;view.cy=y;view.w=w;view.overview=false;setView();if(game)renderAll();};
   $('map').classList.add('v94-terrain');
   v94UpdateGameplay();

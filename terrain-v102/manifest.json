@@ -1,0 +1,45 @@
+{
+  "version": 102,
+  "originLonLat": [
+    11.52,
+    47.13
+  ],
+  "metersPerDegree": [
+    75735.13900755216,
+    111320
+  ],
+  "boundsLonLat": [
+    11.43,
+    47.075,
+    11.625,
+    47.19
+  ],
+  "grid": [
+    257,
+    257
+  ],
+  "broadBoundsLonLat": [
+    11.26,
+    46.8,
+    11.8,
+    47.42
+  ],
+  "broadGrid": [
+    260,
+    300
+  ],
+  "treeCount": 57159,
+  "treeStride": 5,
+  "seed": 102,
+  "sources": {
+    "elevation": "Reused V97 Copernicus GLO-30-derived 260\u00d7300 numeric grid; retained spacing about 160\u00d7230 m",
+    "relief": "Reused V97 shaded relief (1552\u00d71782), not aerial photography",
+    "waterways": "Reused V99 OpenStreetMap natural streams; modern geographic guides, not certified historical courses",
+    "woodland": "V97 ESA WorldCover 2021 proxy, smoothed and artistically reconstructed; not a historical survey",
+    "path": "Illustrative unpaved pack trail offset from Navisbach; no assertion of an authenticated 1780 alignment",
+    "art": "Original deterministic material, tree crowns and shading; no external image tiles"
+  },
+  "sourceSha256": "549fff43aa1d9e154b117ee81faa2b020889fb21908cfbb74d229b51f3816d86",
+  "rendering": "EPSG:4326 inputs; local east/north metric frame at 11.52 E, 47.13 N; elevation metres; no vertical exaggeration",
+  "locationNote": "Navis valley, northern Brenner region. The actual Brenner Pass summit is about 14 km south and is not this close-up scene."
+}

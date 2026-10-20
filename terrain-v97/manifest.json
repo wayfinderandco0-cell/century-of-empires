@@ -1,0 +1,26 @@
+{
+  "boundsLonLat": [
+    11.26,
+    46.8,
+    11.8,
+    47.42
+  ],
+  "image": "terrain-v97/brenner-relief.webp",
+  "imageSize": [
+    1552,
+    1782
+  ],
+  "heightGrid": [
+    260,
+    300
+  ],
+  "elevationSource": "Copernicus DEM GLO-30 Public 2021",
+  "landCoverSource": "ESA WorldCover 2021 v200",
+  "note": "Modern woodland proxy, not verified 1780 forest distribution",
+  "coverage": {
+    "elevation": 1.0,
+    "landCover": 1.0
+  },
+  "minElevation": 522.5,
+  "maxElevation": 3478.3
+}

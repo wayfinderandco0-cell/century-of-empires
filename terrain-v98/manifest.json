@@ -1,0 +1,15 @@
+{
+  "sourceForest": "ESA WorldCover 2021 v200, class 10 tree cover, 10m",
+  "sourceWaterways": "Natural Earth 10m major rivers only (OSM small streams unavailable)",
+  "note": "Canopy texture is illustrative and not a survey of individual trees; modern streams/woods are not verified for 1780",
+  "imageSize": [
+    2400,
+    2760
+  ],
+  "forestFraction": 0.4616,
+  "waterwayWays": 3,
+  "streamFocus": [
+    11.536319,
+    47.301464
+  ]
+}

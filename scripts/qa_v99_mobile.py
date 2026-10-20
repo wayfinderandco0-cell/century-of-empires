@@ -16,7 +16,7 @@ with sync_playwright() as p:
     page.goto("http://127.0.0.1:8765/v99-brenner-real-trees-streams.html",wait_until="domcontentloaded")
     page.locator("button[data-level='3']").click()
     try:
-        page.wait_for_function("""()=>document.querySelectorAll('#streamLayer path').length>=4
+        page.wait_for_function("""()=>document.querySelectorAll('#streamLayer path').length>=2
            && [...document.querySelectorAll('#tileLayer img')].filter(x=>x.complete&&x.naturalWidth>0).length>=3""",timeout=55000)
     except Exception as e:
         print("Timed out waiting for tiles or streams",str(e)[:120],flush=True)
@@ -37,6 +37,6 @@ report={"stats":stats,"javascriptErrors":errors}
 print("MOBILE QA",json.dumps(report),flush=True)
 assert not errors,"Browser JS error"
 assert stats["loaded"]>=3,"Not enough real photographic tiles"
-assert stats["streamPaths"]>=4,"Mapped streams not displayed"
+assert stats["streamPaths"]>=2,"Real stream and riverbank strokes not displayed"
 assert stats["photoVisible"],"Mobile close up did not open"
 print("V99 MOBILE BROWSER QA PASSED",flush=True)

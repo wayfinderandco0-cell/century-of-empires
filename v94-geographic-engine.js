@@ -160,6 +160,12 @@ function v94TerrainAt(x,y){
 function v94UpdateGameplay(){
  // Update province terrain and marching map from physical ground, not art.
  for(const b of bases)b.terrain=v94TerrainAt(b.x,b.y);
+ // Existing saved campaigns must inherit the new geographic terrain too.
+ if(game?.provinces)for(const province of game.provinces){
+  const location=byId[province.id]||province;
+  if(Number.isFinite(location.x)&&Number.isFinite(location.y))
+   province.terrain=v94TerrainAt(location.x,location.y);
+ }
  V88_RIVER_SEGMENTS.length=0; // guard against obsolete hand-drawn crossings
 }
 async function v94FetchAll(){

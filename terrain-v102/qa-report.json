@@ -1,0 +1,122 @@
+{
+  "sourceCommit": "23fc75481a8f725ff6276d0bdb2d6621445d94fb",
+  "browsers": {
+    "chromium": {
+      "checks": {
+        "assetsReady": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "zoomInWorks": true,
+        "overheadWorks": false,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 1.4000000000087311,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "loadMs": 594,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "ready": true,
+        "frames": 161,
+        "maxFrameMs": 2.3000000000029104,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "loadMs": 594,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": false
+    },
+    "webkit": {
+      "checks": {
+        "assetsReady": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "zoomInWorks": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 257,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "features.json",
+          "trees.f32"
+        ],
+        "errors": [],
+        "loadMs": 3208,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "ready": true,
+        "frames": 148,
+        "maxFrameMs": 257,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "features.json",
+          "trees.f32"
+        ],
+        "errors": [],
+        "loadMs": 3208,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    }
+  },
+  "physicalIPhoneTested": false,
+  "visualApproval": "Screenshots require human inspection; browser tests do not establish commercial quality.",
+  "passed": false
+}

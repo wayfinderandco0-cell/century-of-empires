@@ -1,0 +1,13 @@
+{
+  "name": "Century of Empires",
+  "short_name": "Empires",
+  "description": "Historical Europe strategy game with measured all-theater elevation and geographic rivers/coastlines",
+  "id": "./century-of-empires",
+  "start_url": "./v94.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101d25",
+  "theme_color": "#101d25",
+  "orientation": "any",
+  "lang": "en"
+}

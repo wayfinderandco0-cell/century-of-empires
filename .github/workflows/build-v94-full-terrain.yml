@@ -1,0 +1,57 @@
+name: Build V94 complete historical theater terrain
+on:
+  push:
+    paths:
+      - 'scripts/build_v94_full_theater.py'
+      - '.github/workflows/build-v94-full-terrain.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install GIS terrain dependencies
+        run: python -m pip install --disable-pip-version-check "numpy<3" Pillow requests pyshp shapely
+      - name: Build one integrated full-European geographic atlas
+        run: python -u scripts/build_v94_full_theater.py
+      - name: Audit generated geographic sources and registered raster tiles
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          root=Path('terrain-v94')
+          m=json.loads((root/'manifest.json').read_text())
+          assert m['extent']==[-14.,26.,49.,75.]
+          assert m['atlasSize']==[8192,6144] and m['tiles']==[4,3]
+          assert Image.open(root/'overview.webp').size==(4096,3072)
+          assert all(Image.open(root/'tiles'/f'{x}-{y}.webp').size==(2048,2048) for x in range(4) for y in range(3))
+          h=json.loads((root/'heights.json').read_text())
+          f=json.loads((root/'woods.json').read_text())
+          r=json.loads((root/'rivers.json').read_text())
+          l=json.loads((root/'land.json').read_text())
+          assert len(h['heights'])==512*384 and max(h['heights'])>1800
+          assert len(f['forest'])==512*384 and sum(f['forest'])>10000
+          assert len(r['rivers'])>120 and len(l['polygons'])>25
+          print('V94 COMPLETE THEATER GEOGRAPHY VALIDATED',len(r['rivers']),'rivers',len(l['polygons']),'coast polygons')
+          PY
+      - name: Publish all geographic data together, not partial pieces
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add terrain-v94/
+          if ! git diff --cached --quiet; then
+            git commit -m "V94: full theater geographic atlas and integrated terrain assets"
+            for retry in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 4
+            done
+            exit 1
+          fi

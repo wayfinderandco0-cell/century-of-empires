@@ -1,0 +1,28 @@
+/* V91 measured-map environmental detail: unobtrusive overview; readable battlefield zoom. */
+#map #v91Woodland{pointer-events:none;opacity:1}
+#map #v91Woodland[data-zoom-lod="0"]{display:none}
+#map #v91Woodland[data-zoom-lod="1"]{opacity:.42}
+#map #v91Woodland[data-zoom-lod="1"] .v91-woodland-trees{display:none}
+#map #v91Woodland[data-zoom-lod="2"]{opacity:.73}
+#map #v91Woodland[data-zoom-lod="3"]{opacity:.96}
+#map #v91Woodland .v91-stand-soil{fill:#4f6b4b;fill-opacity:.27;stroke:#486a4c;stroke-opacity:.13;stroke-width:1.4}
+#map #v91Woodland .v91-stand-clearings{fill:#b9b99b;fill-opacity:.34}
+#map #v91Woodland .v91-tree-shadow{fill:none;stroke:#252e24;stroke-opacity:.25;stroke-width:1.15;stroke-linecap:round}
+#map #v91Woodland .v91-tree-trunks{fill:none;stroke:#343d30;stroke-opacity:.65;stroke-width:.47;stroke-linecap:round}
+#map #v91Woodland .v91-tree-dark{fill:#375840;fill-opacity:.91;stroke:#284538;stroke-opacity:.56;stroke-width:.16}
+#map #v91Woodland .v91-tree-light{fill:#718568;fill-opacity:.92;stroke:#405842;stroke-opacity:.48;stroke-width:.16}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-stand-soil{fill-opacity:.23}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-dark{fill-opacity:1}
+#map.v89-terrain #v91Woodland[data-zoom-lod="3"] .v91-tree-light{fill-opacity:.98}
+/* V83 accidentally suppressed water vectors; restore ONLY actual gameplay rivers. */
+#map.v89-terrain #atlasRivers{display:inline!important;opacity:.94!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="0"]{opacity:.24!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="1"]{opacity:.48!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="2"]{opacity:.85!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="3"]{opacity:1!important}
+#map.v89-terrain #atlasRivers .river-bank{stroke:#d7dacb;stroke-width:4.2;stroke-opacity:.82}
+#map.v89-terrain #atlasRivers .river-channel{stroke:#32758b;stroke-width:2.15;stroke-opacity:1}
+#map.v89-terrain #atlasRivers .river-minor.river-bank{stroke-width:2.6;stroke-opacity:.69}
+#map.v89-terrain #atlasRivers .river-minor.river-channel{stroke-width:1.3;stroke-opacity:.91}
+#map.v89-terrain #atlasRivers .v91-river-light{stroke:#91c5c6;stroke-width:.55;stroke-opacity:.83}
+#map.v89-terrain #atlasRivers[data-zoom-lod="0"] .v91-river-light{display:none}

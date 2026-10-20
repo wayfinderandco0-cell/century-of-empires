@@ -1,0 +1,256 @@
+{
+  "version": "v94",
+  "regions": {
+    "britain": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 9,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-britain-iphone.jpg"
+    },
+    "iberia": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 9,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-iberia-iphone.jpg"
+    },
+    "scandinavia": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 9,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-scandinavia-iphone.jpg"
+    },
+    "alps": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 9,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-alps-iphone.jpg"
+    },
+    "balkans": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 9,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-balkans-iphone.jpg"
+    },
+    "eastern": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 11,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp",
+          "./terrain-v94/tiles/3-0.webp",
+          "./terrain-v94/tiles/3-1.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-eastern-iphone.jpg"
+    },
+    "africa": {
+      "state": {
+        "zoom": 190,
+        "scale": "3",
+        "tileCount": 11,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp",
+          "./terrain-v94/tiles/3-0.webp",
+          "./terrain-v94/tiles/3-1.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-africa-iphone.jpg"
+    },
+    "dresden-close": {
+      "state": {
+        "zoom": 34,
+        "scale": "3",
+        "tileCount": 11,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp",
+          "./terrain-v94/tiles/3-0.webp",
+          "./terrain-v94/tiles/3-1.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-dresden-close-iphone.jpg"
+    },
+    "madrid-close": {
+      "state": {
+        "zoom": 34,
+        "scale": "3",
+        "tileCount": 11,
+        "loadedImages": [
+          "./terrain-v94/tiles/0-0.webp",
+          "./terrain-v94/tiles/1-0.webp",
+          "./terrain-v94/tiles/2-0.webp",
+          "./terrain-v94/tiles/0-1.webp",
+          "./terrain-v94/tiles/1-1.webp",
+          "./terrain-v94/tiles/2-1.webp",
+          "./terrain-v94/tiles/0-2.webp",
+          "./terrain-v94/tiles/1-2.webp",
+          "./terrain-v94/tiles/2-2.webp",
+          "./terrain-v94/tiles/3-0.webp",
+          "./terrain-v94/tiles/3-1.webp"
+        ],
+        "displayed": "inline",
+        "riverPaths": 2132,
+        "oldWoodland": false,
+        "terrainClass": true,
+        "coastPaths": 2
+      },
+      "screenshot": "qa/v94-madrid-close-iphone.jpg"
+    }
+  },
+  "geography": {
+    "status": "ready",
+    "atlas": [
+      8192,
+      6144
+    ],
+    "tiles": [
+      4,
+      3
+    ],
+    "riverPaths": 2132,
+    "coastPolygons": 1176,
+    "measuredElevation": [
+      512,
+      384
+    ],
+    "woodlandGrid": [
+      512,
+      384
+    ],
+    "indexedGameplayRiverSegments": 4825,
+    "source": "Natural Earth II idealized pre-modern landcover; NOT verified 1780 forest survey",
+    "consistentGeography": true
+  },
+  "armies": 41,
+  "zoomOutWorks": true,
+  "jsErrors": []
+}

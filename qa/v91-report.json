@@ -1,0 +1,30 @@
+{
+  "version": "v91",
+  "armyMarkers": 41,
+  "terrain": {
+    "status": "ready",
+    "forestZones": 26,
+    "renderedTrees": 4143,
+    "skippedTrees": 1105,
+    "forestPatches": 329,
+    "riverCount": 15,
+    "usesGameplayForests": true,
+    "usesGameplayRivers": true
+  },
+  "zoomWidth": 108.87999725341797,
+  "layers": {
+    "zoom": "3",
+    "woodDisplay": "inline",
+    "woodMask": "url(#atlasLandMask)",
+    "treePathCount": 4,
+    "woodOpacity": "0.96",
+    "riverDisplay": "inline",
+    "riverOpacity": "1",
+    "riverLines": 15,
+    "riverGlow": 10,
+    "source": "Century of Empires \u00b7 V91 Living Tactical Terrain"
+  },
+  "jsErrors": [],
+  "screenshot": "qa/v91-berlin-zoom.jpg",
+  "zoomOutWidth": 194.42999267578125
+}

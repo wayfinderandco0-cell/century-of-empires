@@ -26,3 +26,8 @@
 .dm9-missing{font-size:12px;padding:20px 7px;color:#8d6a44;display:flex;gap:6px}
 @media(max-width:850px){.dm9-two{grid-template-columns:1fr}.dm9-owner-hero{padding:23px}.dm9-symbol{display:none}}
 @media(max-width:500px){.dm9-metrics{gap:6px}.dm9-metrics>div{padding:12px 9px}.dm9-metrics b{font-size:15px;letter-spacing:0}.dm9-metrics span{font-size:9px}.dm9-owner-panel{padding:16px 13px}.dm9-owner-panel>header{align-items:flex-start;flex-direction:column}.dm9-channel{gap:8px}.dm9-channel-icon{width:29px;height:29px}.dm9-indicator{font-size:9px;padding:5px 7px}.dm9-owner-hero h2{font-size:25px}}
+
+/* V10 contact options — keep checkboxes compact and thumb-friendly on mobile. */
+#lead-form .dm10-permission{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.55;color:#52677b;cursor:pointer}
+#lead-form .dm10-permission input[type="checkbox"]{flex:0 0 19px;width:19px;height:19px;min-height:19px;margin:2px 0 0;padding:0;accent-color:#73518d}
+#lead-form input[type="tel"],#lead-form select{font-size:16px}

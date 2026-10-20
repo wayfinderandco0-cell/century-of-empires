@@ -230,7 +230,7 @@ function report(){
  const note=$('readout');
  if(level===0){note.textContent='Strategic overview: mountains and national geography. Towns and armies intentionally hidden.';return}
  if(level===3){note.textContent='Original generated 1780s-style terrain. Mountains follow measured elevation; forests, local appearance and footpaths are illustrative, not proven 1780 conditions.';return}
- if(level===2){note.textContent=highTerrain?'Measured mountains and ESA forest cover loaded. Tap the terrain for elevation.':'Loading high-resolution elevation…';return}
+ if(level===2){note.textContent=highTerrain?'Measured mountains and approximate forests. Tap a mountain to focus the closest zoom.':'Loading high-resolution elevation…';return}
  if(!terrain){note.textContent='Loading sampled elevation data…';return}
  const a=routeCost(TRACK);
  note.textContent='Brenner corridor: '+a.distance.toFixed(1)+' km and sampled climb '+Math.round(a.ascent)+' m. One illustrative historical-pass corridor, not a verified 1780 road.';
@@ -238,7 +238,7 @@ function report(){
 function setLevel(n){
  level=n;const d=views[n];center=pt(d.lon,d.lat);width=d.w;
  $('photoStage').style.display=n===3?'':'none';svg.style.visibility=n===3?'hidden':'visible';
- if(n===3){photoCenter={lon:positionOnRoute(forces[0].p)[0],lat:positionOnRoute(forces[0].p)[1]};renderPhoto();}
+ if(n===3){const current=positionOnRoute(forces[0].p);photoCenter=selectedMountainFocus||{lon:current[0],lat:current[1]};renderPhoto();}
  $('regional').style.display=n>0?'':'none';setPhysicalLayers();
  $('levelName').textContent=names[n];$('levelDetail').textContent=details[n];
  for(const btn of document.querySelectorAll('[data-level]'))btn.classList.toggle('active',Number(btn.dataset.level)===n);
@@ -252,12 +252,14 @@ svg.addEventListener('pointerup',e=>{
  const moved=down.moved;down=null;if(moved)return;
  const rect=svg.getBoundingClientRect(),nx=(e.clientX-rect.left)/Math.max(1,rect.width),ny=(e.clientY-rect.top)/Math.max(1,rect.height),coords=inv(center.x+(nx-.5)*width,center.y+(ny-.5)*height);
  const m=sampleElevation(coords.lon,coords.lat);
- $('inspect').textContent='Location '+coords.lat.toFixed(3)+'°N, '+coords.lon.toFixed(3)+'°E'+(m===null?' · Elevation data loading':' · Elevation approximately '+Math.round(m)+' m');
+ const focusAllowed=coords.lon>=11.26&&coords.lon<=11.8&&coords.lat>=46.8&&coords.lat<=47.42;
+ if(focusAllowed)selectedMountainFocus={lon:coords.lon,lat:coords.lat};
+ $('inspect').textContent='Location '+coords.lat.toFixed(3)+'°N, '+coords.lon.toFixed(3)+'°E'+(m===null?' · Elevation data loading':' · Elevation approximately '+Math.round(m)+' m')+(focusAllowed?' · Selected for detailed zoom':'');
 });
 svg.addEventListener('pointercancel',()=>{down=null});
 
 const photo=$('photoStage'),landscape=$('generatedLandscape'),riverSvg=$('streamLayer');
-let osmData=null,photoCenter={lon:11.5219506,lat:47.1298267},photoZoom=14,photoOk=0,photoBroken=0,photoDown=null;
+let osmData=null,photoCenter={lon:11.5219506,lat:47.1298267},photoZoom=14,photoOk=0,photoBroken=0,photoDown=null,selectedMountainFocus=null;
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 function mercPX(lon,lat,z){
  const n=256*Math.pow(2,z),r=lat*Math.PI/180;
@@ -363,7 +365,7 @@ photo.addEventListener('pointerup',e=>{
  if(!photoDown||photoDown.id!==e.pointerId)return;
  const dx=e.clientX-photoDown.px,dy=e.clientY-photoDown.py;
  photoCenter=inverseMerc(photoDown.center.x-dx,photoDown.center.y-dy,photoZoom);
- photoDown=null;renderPhoto();
+ selectedMountainFocus={lon:photoCenter.lon,lat:photoCenter.lat};photoDown=null;renderPhoto();
 });
 photo.addEventListener('pointercancel',()=>{photoDown=null});
 $('photoPlus').addEventListener('click',()=>{photoZoom=clamp(photoZoom+1,13,17);renderPhoto()});
@@ -549,7 +551,7 @@ function warFrame(t){
   drawTroops();
   if(level===3){
    renderPhotoUnits();
-   if(t-photoFollow>850){
+   if(!selectedMountainFocus&&t-photoFollow>850){
     const here=positionOnRoute(a.p);
     const old=mercPX(photoCenter.lon,photoCenter.lat,photoZoom),next=mercPX(here[0],here[1],photoZoom);
     if(Math.hypot(old.x-next.x,old.y-next.y)>65){photoCenter={lon:here[0],lat:here[1]};renderPhoto()}
@@ -565,7 +567,7 @@ $('v100Pause').addEventListener('click',()=>{marching=false;updateWarHud()});
 $('v100Reset').addEventListener('click',()=>{
  forces[0].p=.075;forces[1].p=.925;forces[0].morale=86;forces[1].morale=80;
  marching=false;met=false;previousTime=0;warTime=0;
- if(level===3){const c=positionOnRoute(forces[0].p);photoCenter={lon:c[0],lat:c[1]};renderPhoto()}
+ if(level===3){const c=positionOnRoute(forces[0].p);photoCenter=selectedMountainFocus||{lon:c[0],lat:c[1]};renderPhoto()}
  drawTroops();renderPhotoUnits();updateWarHud();
 });
 $('v100Ally').addEventListener('change',e=>{allyShared=e.target.checked;drawTroops();renderPhotoUnits();updateWarHud()});

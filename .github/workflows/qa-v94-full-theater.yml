@@ -100,6 +100,14 @@ jobs:
               page.screenshot(path='qa/v94-overview-iphone.jpg',type='jpeg',quality=87,animations='disabled')
               assert Image.open('qa/v94-overview-iphone.jpg').size==(780,1688)
               report['overviewScreenshot']='qa/v94-overview-iphone.jpg'
+              # Portrait home is deliberately regional to prevent the large
+              # empty ocean letterbox. Full-theater still available by zoom-out.
+              page.locator('#zoomHome').click()
+              homeWidth=page.locator('#map').evaluate('(el)=>el.viewBox.baseVal.width')
+              assert 400<homeWidth<700,homeWidth
+              page.screenshot(path='qa/v94-portrait-home-iphone.jpg',type='jpeg',quality=87,animations='disabled')
+              report['portraitHomeWidth']=homeWidth
+              report['portraitHomeScreenshot']='qa/v94-portrait-home-iphone.jpg'
               # Zoom and province click must remain functional.
               original=page.locator('#map').evaluate('(m)=>m.viewBox.baseVal.width')
               page.locator('#zoomOut').click()

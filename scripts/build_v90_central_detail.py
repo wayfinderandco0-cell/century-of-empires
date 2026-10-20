@@ -74,6 +74,23 @@ for r in range(OUTPUT_H):
     dem[r]=a*(1-fy[r])+b*fy[r]
 del mosaic
 
+# Keep a geographically registered measured-height grid for tactical battles.
+# This grid is separate from the visible picture, not inferred from colors.
+GRID_W=256
+GRID_H=round(GRID_W*H/W)
+coarse=Image.fromarray(dem,mode="F").resize((GRID_W,GRID_H),Image.Resampling.BILINEAR)
+height_values=np.round(np.asarray(coarse)).astype(np.int16)
+height_path=OUT/"central-europe-v90-elevation.json"
+height_path.write_text(json.dumps({
+ "source":"Mapzen/AWS Terrarium z9 (measured metres)",
+ "projection":"equirectangular",
+ "width":GRID_W,"height":GRID_H,
+ "bboxLonLat":[WEST,SOUTH,EAST,NORTH],
+ "x":round(X,6),"y":round(Y,6),"mapWidth":round(W,6),"mapHeight":round(H,6),
+ "heights":height_values.ravel().tolist()
+},separators=(",",":")))
+assert height_values.max()>1100 and height_values.size==GRID_W*GRID_H
+
 # Measured terrain derivatives in metres/metre at each pixel.
 dx=(EAST-WEST)/(OUTPUT_W-1)*111320*np.maximum(.3,np.cos(np.radians(lats)))
 dy=(NORTH-SOUTH)/(OUTPUT_H-1)*111320
@@ -114,6 +131,8 @@ manifest={
  "projection":"equirectangular",
  "bboxLonLat":[WEST,SOUTH,EAST,NORTH],
  "image":"terrain-detail/central-europe-v90.webp",
+ "elevationFile":"terrain-detail/central-europe-v90-elevation.json",
+ "elevationGrid":[GRID_W,GRID_H],
  "imageWidth":OUTPUT_W,"imageHeight":OUTPUT_H,
  "x":round(X,6),"y":round(Y,6),"width":round(W,6),"height":round(H,6),
  "gameWidth":FULL_W,"gameHeight":FULL_H,

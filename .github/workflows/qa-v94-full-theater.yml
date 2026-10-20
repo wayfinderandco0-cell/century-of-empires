@@ -1,0 +1,114 @@
+name: QA V94 complete European geographic theater
+on:
+  push:
+    paths:
+      - 'v94.html'
+      - 'terrain-v94/**'
+      - '.github/workflows/qa-v94-full-theater.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser QA and image analysis
+        run: |
+          python -m pip install playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Check all-theater measured terrain, gameplay and five region screenshots
+        run: |
+          python - <<'PY'
+          import json,subprocess,time
+          from pathlib import Path
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          Path('qa').mkdir(exist_ok=True)
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          report={'version':'v94','regions':{}}
+          try:
+            time.sleep(2)
+            with sync_playwright() as pw:
+              browser=pw.chromium.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              errors=[]; console=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.on('console',lambda x:console.append(x.text) if x.type=='error' else None)
+              page.goto('http://127.0.0.1:8765/v94.html',wait_until='domcontentloaded',timeout=60000)
+              page.wait_for_function("window.__v94TerrainQA && ['ready','unavailable'].includes(window.__v94TerrainQA.status)",timeout=120000)
+              qa=page.evaluate('window.__v94TerrainQA')
+              assert qa['status']=='ready',qa
+              assert qa['atlas']==[8192,6144],qa
+              assert qa['measuredElevation']==[512,384],qa
+              assert qa['coastPolygons']>600,qa
+              assert qa['riverPaths']>1000,qa
+              assert qa['indexedGameplayRiverSegments']>300,qa
+              report['geography']=qa
+              assert page.locator('#v94DetailedRelief').count()==1
+              assert page.locator('#v93Woodland').count()==0
+              assert page.locator('#atlasRivers .river-channel').count()>1000
+              page.locator('#startBtn').click()
+              page.wait_for_function("document.querySelectorAll('.army-token').length>=40",timeout=30000)
+              report['armies']=page.locator('.army-token').count()
+              # Verify registration and actual textures across the WHOLE continent,
+              # not just Dresden, including north/south/west/east and extreme zoom.
+              places={'britain':(290,505,190),'iberia':(255,760,190),
+                      'scandinavia':(700,360,190),'alps':(625,680,190),
+                      'balkans':(910,750,190),'eastern':(1170,460,190),
+                      'africa':(550,910,190),'dresden-close':(640,537,34),
+                      'madrid-close':(250,760,34)}
+              for key,(x,y,w) in places.items():
+                page.evaluate('([x,y,w])=>window.__v94Camera(x,y,w)',[x,y,w])
+                page.wait_for_timeout(600)
+                state=page.evaluate("""() => {
+                  let m=document.querySelector('#map'),layer=document.querySelector('#v94DetailedRelief');
+                  let items=[...layer.querySelectorAll('image')];
+                  let rect=m.viewBox.baseVal;
+                  return {zoom:rect.width,scale:m.dataset.zoomLod,tileCount:items.length,
+                    loadedImages:items.map(q=>q.getAttribute('href')),
+                    displayed:getComputedStyle(layer).display,
+                    riverPaths:document.querySelectorAll('#atlasRivers .river-channel').length,
+                    oldWoodland:!!document.querySelector('#v93Woodland'),
+                    terrainClass:m.classList.contains('v94-terrain'),
+                    coastPaths:document.querySelectorAll('#continentCoasts path').length};
+                }""")
+                assert state['terrainClass'] and state['displayed']!='none',state
+                assert state['tileCount']>=1 and not state['oldWoodland'],state
+                assert state['riverPaths']>1000 and state['coastPaths']>=2,state
+                shot='qa/v94-'+key+'-iphone.jpg'
+                page.screenshot(path=shot,type='jpeg',quality=87,animations='disabled')
+                assert Image.open(shot).size==(780,1688)
+                report['regions'][key]={'state':state,'screenshot':shot}
+              # Zoom and province click must remain functional.
+              original=page.locator('#map').evaluate('(m)=>m.viewBox.baseVal.width')
+              page.locator('#zoomOut').click()
+              after=page.locator('#map').evaluate('(m)=>m.viewBox.baseVal.width')
+              assert after>original,(original,after)
+              report['zoomOutWorks']=True
+              report['jsErrors']=errors
+              assert not errors,errors
+              browser.close()
+          finally:
+            server.terminate()
+          Path('qa/v94-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('V94 FULL THEATER QA PASSED',json.dumps({'regions':list(report['regions']), 'geo':report['geography'], 'errors':report['jsErrors']}))
+          PY
+      - name: Publish all-region QA evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/v94-report.json qa/v94-*-iphone.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m "QA V94 full geographic theater across nine iPhone viewport regions"
+            for retry in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 4
+            done
+            exit 1
+          fi

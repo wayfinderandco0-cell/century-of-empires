@@ -42,3 +42,28 @@
  .dm3-explore-card{min-height:355px}
  .dm3-explore-card .dm3-card-photo{background-size:100% 100%,auto 72%}
 }
+
+/* ACTUAL N3 marketing shell (built in the older inline module).
+   V10 replaces its five stock sources; these rules tune the approved crops. */
+.n3-site{background:#080910}
+.n3-hero{background:radial-gradient(circle at 82% 45%,#43263f 0,transparent 50%),#07080e}
+.n3-hero-visual{inset:0 0 0 39%}
+.n3-hero-photo{object-position:48% 44%;filter:saturate(1.04) contrast(1.05)}
+.n3-hero-visual:after{background:linear-gradient(90deg,#070810 0%,#070810cc 9%,#07081033 45%,#0708100c 100%),linear-gradient(0deg,#07081099,transparent 45%)}
+.n3-hero-glow{background:linear-gradient(90deg,#070810 0%,#070810f0 28%,#07081082 49%,transparent 79%)}
+.n3-hero h1{text-shadow:0 5px 25px rgba(0,0,0,.5)}
+.n3-tile>img{filter:saturate(1.04) contrast(1.08);object-position:50% 29%}
+.n3-tile:nth-child(1)>img{object-position:53% 24%}
+.n3-tile:nth-child(2)>img{object-position:52% 22%}
+.n3-tile:nth-child(3)>img{object-position:50% 27%}
+.n3-tile:nth-child(4)>img{object-position:54% 23%}
+.n3-tile-shade{background:linear-gradient(0deg,#06070bf7 0%,#06070bdf 27%,#08070c08 77%)}
+@media(max-width:900px){
+ .n3-hero-photo{object-position:47% 40%}
+ .n3-hero-visual:after{background:linear-gradient(90deg,#07081099 0%,#07081077 42%,#07081022 90%),linear-gradient(0deg,#070810c2,transparent 60%)}
+}
+@media(max-width:600px){
+ .n3-hero-photo{object-position:48% 22%}
+ .n3-hero-glow{background:linear-gradient(0deg,#090911 0%,#090911a3 35%,transparent 78%)}
+ .n3-tile>img{object-position:center 22%}
+}

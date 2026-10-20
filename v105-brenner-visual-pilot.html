@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#182722"><title>Brenner V105 · Century of Empires</title>
+<link rel="stylesheet" href="terrain-v105/pilot.css">
+</head>
+<body>
+<main id="app">
+ <canvas id="terrain" aria-label="Interactive three-dimensional relief of Navis valley in the Brenner region. Drag to pan, pinch to zoom, tap to inspect." tabindex="0"></canvas>
+ <div id="wash" aria-hidden="true"></div>
+ <header><div class="brand">CENTURY <i>of</i> EMPIRES</div><div class="edition">TERRAIN STUDY <span>105</span></div></header>
+ <section class="title"><p>THE TYROLEAN ALPS</p><h1>Brenner</h1><div>Navis valley · northern approach</div></section>
+ <div id="compass" aria-label="North direction"><span>N</span><svg viewBox="0 0 40 48" aria-hidden="true"><path d="M20 3L29 37L20 31L11 37Z" fill="#e8dfbd"/><path d="M20 3L20 31L11 37Z" fill="#718379"/></svg></div>
+ <div id="labels" aria-hidden="true"></div>
+ <div class="side-controls"><button id="zoomIn" aria-label="Zoom in">+</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="home" aria-label="Return to the valley">⌖</button><button id="tilt" aria-label="Switch between relief and overhead view">◈</button></div>
+ <div id="loading" role="status"><span></span>Preparing the Alpine landscape…</div>
+ <aside id="inspect" hidden><button id="closeInspect" aria-label="Close terrain inspection">×</button><small>TERRAIN AT THIS POINT</small><strong id="elevation"></strong><span id="coordinates"></span></aside>
+ <footer>
+  <div class="map-meta"><span id="scale"><i></i><b>1 km</b></span><span class="season">LATE SUMMER <em>·</em> c. 1800</span><button id="info" aria-label="Terrain sources and limitations">i</button></div>
+  <nav aria-label="Terrain scale"><button data-level="0"><span>01</span>Atlas</button><button data-level="1"><span>02</span>Region</button><button data-level="2"><span>03</span>Local</button><button data-level="3" class="active"><span>04</span>Terrain</button></nav>
+  <div class="key"><span><i class="rock"></i>Rock</span><span><i class="wood"></i>Woodland</span><span><i class="river"></i>Water</span><span><i class="trail"></i>Pack trail*</span></div>
+  <div class="footnote">*Illustrative vegetation & trail · measured landforms</div>
+ </footer>
+ <dialog id="sources"><button id="closeInfo" aria-label="Close sources">×</button><p class="eyebrow">ABOUT THIS LANDSCAPE</p><h2>Geography beneath the art.</h2><p>This isolated visual pilot shows Navis valley in the northern Brenner region. The pass summit itself lies farther south.</p><dl><dt>Mountains</dt><dd>The existing V97 Copernicus elevation and relief. The retained numeric grid is roughly 160–230 m between samples. Fine rock textures are illustrative, not new survey detail.</dd><dt>Water</dt><dd>Existing V99 OpenStreetMap natural streams. Modern mapped courses are geographic guides, not a verified 1800 survey. Artificial ditches are omitted.</dd><dt>Woodland & trail</dt><dd>Reconstructed vegetation using an ESA woodland proxy, slope and elevation. The unpaved valley trail is illustrative; its historical alignment is not authenticated.</dd><dt>Four scales</dt><dd>The camera moves continuously through the same coordinates. Atlas and regional views cover the retained Alpine data only. A full continental transition and military integration remain future work.</dd></dl><p class="credit">Elevation: Copernicus GLO-30 via V97 · Woodland proxy: ESA WorldCover 2021 · Water © OpenStreetMap contributors, ODbL. Original V105 canopy artwork with V97-derived measured geography; no aerial photographs or modern transport layers.</p><a href="v101-historical-brenner.html">Open the preserved V101 prototype ↗</a></dialog>
+</main>
+<script src="terrain-v105/pilot.js" defer></script>
+</body></html>

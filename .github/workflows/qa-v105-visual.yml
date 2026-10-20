@@ -1,0 +1,52 @@
+name: V105 Brenner canopy material pilot
+on:
+  push:
+    branches: [terrain-v105-canopy-bake]
+    paths: ['v105-brenner-visual-pilot.html', 'terrain-v105/pilot.js', 'terrain-v105/pilot.css', 'terrain-v105/build_canopy.py', 'scripts/qa_v105_mobile.py', '.github/workflows/qa-v105-visual.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v105-canopy-bake
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare original assets and test browsers
+        run: |
+          pip install numpy scipy pillow playwright
+          python -m playwright install --with-deps chromium webkit
+          python terrain-v105/build_canopy.py
+          node --check terrain-v105/pilot.js
+      - name: Render and test both phone orientations
+        run: python scripts/qa_v105_mobile.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v105-visual-evidence-${{ github.run_id }}
+          path: terrain-v105/
+      - name: Save visual evidence only to V105
+        if: always()
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-v105-canopy-bake
+          if [ "$(git rev-parse origin/terrain-v105-canopy-bake)" != "$SOURCE_SHA" ]; then
+            echo 'Source advanced; evidence retained in uniquely named artifact. Do not overwrite newer source.'
+            exit 1
+          fi
+          git add terrain-v105/
+          if ! git diff --cached --quiet; then
+            git commit -m 'V105: persist mobile browser screenshots and QA evidence'
+            git push origin HEAD:terrain-v105-canopy-bake
+          fi

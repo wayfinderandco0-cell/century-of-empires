@@ -47,48 +47,60 @@ Image.fromarray(rgba,'RGBA').save(image,'WEBP',quality=86,method=5)
 if image.stat().st_size<75000:raise RuntimeError("Unexpectedly small woodland image")
 print("Canopy layer:",image.stat().st_size,"bytes",flush=True)
 
-query='[out:json][timeout:90];way["waterway"~"^(stream|river|canal|brook|ditch)$"](46.80,11.26,47.42,11.80);out geom;'
-endpoints=["https://overpass.private.coffee/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass-api.de/api/interpreter"]
-data=None;errors=[]
-for url in endpoints:
-    try:
-        print("Reading geographically mapped waterways:",url,flush=True)
-        response=requests.post(url,data={'data':query},headers={'User-Agent':'CenturyOfEmpiresTerrainTest/0.98 (educational game cartography)'},timeout=125)
-        response.raise_for_status()
-        data=response.json()
-        if not isinstance(data.get('elements'),list):raise ValueError("No features list")
-        break
-    except Exception as exc:
-        errors.append(str(exc)[:250]);time.sleep(2)
-if data is None:raise RuntimeError("Could not retrieve real stream geometry "+str(errors))
-seen=set();lines=[]
-for item in data['elements']:
-    if item.get('type')!='way' or item.get('id') in seen:continue
-    seen.add(item.get('id'))
-    pts=item.get('geometry') or []
-    if len(pts)<2:continue
-    lonlat=[[round(float(p['lon']),6),round(float(p['lat']),6)] for p in pts]
-    if len(lonlat)>1200:lonlat=lonlat[::2]+[lonlat[-1]]
-    lines.append({'id':item['id'],'name':item.get('tags',{}).get('name',''),
-        'type':item.get('tags',{}).get('waterway','stream'),'coordinates':lonlat})
-if len(lines)<60:raise RuntimeError("Local stream network incomplete: "+str(len(lines))+" ways")
-# Pick a local wooded, stream-side reference in mountainous stretch near Brenner.
-candidate=None;best=-1e10
+
+# Use a focused request instead of a broad Alpine extract. If Overpass is down,
+# fall back to EXISTING measured named Natural Earth rivers, never invented streams.
+query='[out:json][timeout:20];way["waterway"~"^(stream|river|brook)$"](46.99,11.40,47.16,11.64);out geom;'
+data=None
+try:
+    url="https://overpass.private.coffee/api/interpreter"
+    response=requests.post(url,data={"data":query},timeout=27)
+    response.raise_for_status()
+    parsed=response.json()
+    if len(parsed.get("elements",[]))>=2:data=parsed
+except Exception as exc:
+    print("Overpass unavailable; limited major-river fallback:",str(exc)[:250],flush=True)
+lines=[]
+if data is not None:
+    seen=set()
+    for item in data["elements"]:
+        if item.get("type")!="way" or item.get("id") in seen:continue
+        seen.add(item.get("id"))
+        pts=item.get("geometry") or []
+        if len(pts)<2:continue
+        coords=[[round(p["lon"],6),round(p["lat"],6)] for p in pts]
+        lines.append({"id":item["id"],"name":item.get("tags",{}).get("name",""),
+                      "type":item.get("tags",{}).get("waterway","stream"),"coordinates":coords})
+    source="OpenStreetMap local waterways via Overpass"
+else:
+    import re
+    ne=json.loads((ROOT/"terrain-v94"/"rivers.json").read_text())
+    for n,item in enumerate(ne["rivers"]):
+        if item.get("name") not in ("Inn","Adige","Drau","Isar","Salzach"):continue
+        nums=[float(k) for k in re.findall(r'-?\\d+(?:\\.\\d+)?',item["d"])]
+        coords=[[-14.+nums[i]/1448*63,75.-nums[i+1]/1086*49] for i in range(0,len(nums)-1,2)]
+        if not any(WEST<lon<EAST and SOUTH<lat<NORTH for lon,lat in coords):continue
+        lines.append({"id":"ne-"+str(n),"name":item["name"],"type":"river",
+                      "coordinates":[[round(lon,6),round(lat,6)] for lon,lat in coords]})
+    source="Natural Earth 10m major rivers only (OSM small streams unavailable)"
+if not lines:raise RuntimeError("Neither local OSM waterways nor Natural Earth mapped rivers available")
+candidate=None
+best=-1e10
 for line in lines:
-    if line['type'] not in ('stream','brook'):continue
-    for lon,lat in line['coordinates'][::max(1,len(line['coordinates'])//18)]:
-        if not (11.30<lon<11.77 and 46.93<lat<47.31):continue
+    for lon,lat in line["coordinates"][::max(1,len(line["coordinates"])//20)]:
+        if not(WEST<lon<EAST and SOUTH<lat<NORTH):continue
         x=min(W-1,max(0,int((lon-WEST)/(EAST-WEST)*W)))
         y=min(H-1,max(0,int((NORTH-lat)/(NORTH-SOUTH)*H)))
-        local=forest[max(0,y-12):min(H,y+13),max(0,x-12):min(W,x+13)].mean()
-        score=3*local-abs(lon-11.51)*2-abs(lat-47.13)*2
+        coverage=float(forest[max(0,y-12):min(H,y+13),max(0,x-12):min(W,x+13)].mean())
+        score=3*coverage-abs(lon-11.51)*2-abs(lat-47.13)*2
         if score>best:best=score;candidate=[lon,lat]
-if candidate is None:raise RuntimeError("Could not find forested stream sample to inspect")
-dataout={'source':'OpenStreetMap waterway ways via Overpass','licence':'Open Database License; © OpenStreetMap contributors',
- 'bboxLonLat':[WEST,SOUTH,EAST,NORTH],'focusLonLat':candidate,'ways':lines}
+if candidate is None:candidate=[11.51,47.13]
+dataout={"source":source,"licence":"Natural Earth public domain" if data is None else "© OpenStreetMap contributors, ODbL",
+         "coverage":"major rivers only" if data is None else "local waterways","bboxLonLat":[WEST,SOUTH,EAST,NORTH],
+         "focusLonLat":candidate,"ways":lines}
 (OUT/'streams.json').write_text(json.dumps(dataout,separators=(',',':')))
 manifest={'sourceForest':'ESA WorldCover 2021 v200, class 10 tree cover, 10m',
- 'sourceWaterways':'OpenStreetMap waterway stream/river ways from Overpass',
+ 'sourceWaterways':source,
  'note':'Canopy texture is illustrative and not a survey of individual trees; modern streams/woods are not verified for 1780',
  'imageSize':[W,H],'forestFraction':round(float(forest.mean()),4),
  'waterwayWays':len(lines),'streamFocus':candidate}

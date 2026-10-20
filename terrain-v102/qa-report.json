@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "23fc75481a8f725ff6276d0bdb2d6621445d94fb",
+  "sourceCommit": "6a435a04412249b5400e6d36e1fa468ac77ed990",
   "browsers": {
     "chromium": {
       "checks": {
@@ -9,63 +9,7 @@
         "portraitFits": true,
         "coordinateRoundTrip": true,
         "zoomInWorks": true,
-        "overheadWorks": false,
-        "tapInspectsGeography": true,
-        "dragPans": true,
-        "level1Finite": true,
-        "level2Finite": true,
-        "level3Finite": true,
-        "level4Finite": true,
-        "sourcesAccessible": true,
-        "rotationKeepsFocus": true,
-        "landscapeFits": true,
-        "noJavaScriptErrors": true,
-        "noFailedRequests": true
-      },
-      "errors": [],
-      "failedRequests": [],
-      "metrics": {
-        "ready": true,
-        "frames": 1,
-        "maxFrameMs": 1.4000000000087311,
-        "loads": [
-          "manifest.json",
-          "alpine-height.f32",
-          "trees.f32",
-          "features.json"
-        ],
-        "errors": [],
-        "loadMs": 594,
-        "treeCount": 57159,
-        "triangles": 307200,
-        "waterways": 74
-      },
-      "finalMetrics": {
-        "ready": true,
-        "frames": 161,
-        "maxFrameMs": 2.3000000000029104,
-        "loads": [
-          "manifest.json",
-          "alpine-height.f32",
-          "trees.f32",
-          "features.json"
-        ],
-        "errors": [],
-        "loadMs": 594,
-        "treeCount": 57159,
-        "triangles": 307200,
-        "waterways": 74
-      },
-      "passed": false
-    },
-    "webkit": {
-      "checks": {
-        "assetsReady": true,
-        "noCampaignStorage": true,
-        "naturalWaterways": true,
-        "portraitFits": true,
-        "coordinateRoundTrip": true,
-        "zoomInWorks": true,
+        "tiltTargetSet": true,
         "overheadWorks": true,
         "tapInspectsGeography": true,
         "dragPans": true,
@@ -84,31 +28,89 @@
       "metrics": {
         "ready": true,
         "frames": 1,
-        "maxFrameMs": 257,
+        "maxFrameMs": 1.1999999999970896,
         "loads": [
           "manifest.json",
+          "trees.f32",
           "alpine-height.f32",
-          "features.json",
-          "trees.f32"
+          "features.json"
         ],
         "errors": [],
-        "loadMs": 3208,
+        "loadMs": 604,
         "treeCount": 57159,
         "triangles": 307200,
         "waterways": 74
       },
       "finalMetrics": {
         "ready": true,
-        "frames": 148,
-        "maxFrameMs": 257,
+        "frames": 150,
+        "maxFrameMs": 1.6000000000058208,
+        "loads": [
+          "manifest.json",
+          "trees.f32",
+          "alpine-height.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "loadMs": 604,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    },
+    "webkit": {
+      "checks": {
+        "assetsReady": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "zoomInWorks": true,
+        "tiltTargetSet": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 282,
         "loads": [
           "manifest.json",
           "alpine-height.f32",
-          "features.json",
-          "trees.f32"
+          "trees.f32",
+          "features.json"
         ],
         "errors": [],
-        "loadMs": 3208,
+        "loadMs": 4125,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "ready": true,
+        "frames": 142,
+        "maxFrameMs": 282,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "loadMs": 4125,
         "treeCount": 57159,
         "triangles": 307200,
         "waterways": 74
@@ -118,5 +120,5 @@
   },
   "physicalIPhoneTested": false,
   "visualApproval": "Screenshots require human inspection; browser tests do not establish commercial quality.",
-  "passed": false
+  "passed": true
 }

@@ -8,6 +8,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: v94-full-theater-visual-qa
+  cancel-in-progress: true
 jobs:
   mobile:
     runs-on: ubuntu-latest

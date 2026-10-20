@@ -1,0 +1,101 @@
+name: QA V90 real close-zoom relief
+
+on:
+  push:
+    paths:
+      - 'v90.html'
+      - 'terrain-detail/central-europe-v90.webp'
+      - 'terrain-detail/central-europe-v90.json'
+      - '.github/workflows/qa-v90-detail.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mobile-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install visual test dependencies
+        run: |
+          python -m pip install playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Verify mobile gameplay and terrain close-zoom tile
+        run: |
+          python - <<'PY'
+          import json, subprocess, time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          from PIL import Image
+          Path('qa').mkdir(exist_ok=True)
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                                  stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          report={}
+          try:
+              time.sleep(2)
+              with sync_playwright() as pw:
+                  browser=pw.chromium.launch(headless=True)
+                  for name in ['v89','v90']:
+                      page=browser.new_page(viewport={'width':390,'height':844},
+                             device_scale_factor=2,is_mobile=True,has_touch=True)
+                      errors=[]
+                      page.on('pageerror',lambda e: errors.append(str(e)))
+                      page.goto('http://127.0.0.1:8765/'+name+'.html',wait_until='domcontentloaded',timeout=60000)
+                      page.wait_for_function("window.__terrainQA && window.__terrainQA.mode!=='loading'",timeout=60000)
+                      status=page.evaluate('window.__terrainQA')
+                      assert status['mode']=='measured-elevation',status
+                      page.locator('#startBtn').click()
+                      page.wait_for_function("document.querySelectorAll('.army-token').length>=40",timeout=25000)
+                      # Zoom twice for tactical overview and once more for local geography.
+                      for step in range(3):
+                          page.locator('#zoomIn').click()
+                          page.wait_for_timeout(180)
+                      width=page.locator('#map').evaluate('(el)=>el.viewBox.baseVal.width')
+                      assert 70<width<140,width
+                      if name=='v90':
+                          page.wait_for_function("window.__v90QA && ['ready','unavailable'].includes(window.__v90QA.status)",timeout=60000)
+                          detail=page.evaluate('window.__v90QA')
+                          assert detail['status']=='ready',detail
+                          actual=page.locator('#v90RegionalRelief image').get_attribute('href')
+                          assert actual.endswith('central-europe-v90.webp'),actual
+                          isVisible=page.locator('#v90RegionalRelief').evaluate(
+                            "(el)=>getComputedStyle(el).display!=='none'")
+                          assert isVisible,'Regional panel not visible at close zoom'
+                          assert page.locator('#v90RegionalRelief image').count()==1
+                          report['regionalTile']=detail
+                          report['closeZoomWidth']=width
+                          report['overlayVisible']=isVisible
+                      page.wait_for_timeout(600)
+                      pic='qa/'+name+'-dresden-zoom.jpg'
+                      page.screenshot(path=pic,type='jpeg',quality=86,animations='disabled')
+                      img=Image.open(pic)
+                      assert img.size==(780,1688),img.size
+                      report[name+'Screenshot']=pic
+                      report[name+'JsErrors']=errors
+                      assert not errors,errors
+                      page.close()
+                  browser.close()
+          finally:
+              server.terminate()
+          Path('qa/v90-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('V90 CLOSE ZOOM BROWSER QA PASSED',json.dumps(report))
+          PY
+      - name: Publish screenshots and QA proof
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/v89-dresden-zoom.jpg qa/v90-dresden-zoom.jpg qa/v90-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m "QA V90: compare measured local terrain to old blurry continent texture at same zoom"
+            for i in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

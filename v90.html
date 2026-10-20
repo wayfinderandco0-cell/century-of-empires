@@ -2898,7 +2898,7 @@ let V89_TERRAIN_MODE='loading';
    coordinates. Other regions retain V89, rather than stretching a fake tile.
    The DEM-derived game mechanics remain unchanged. */
 const V90_REGION={x:482.666667,y:398.938776,width:275.809524,height:288.122449};
-let v90RegionalStatus='idle',v90RegionalMeta=null;
+let v90RegionalStatus='idle',v90RegionalMeta=null,V90_DETAIL_ELEVATION=null;
 async function v90FetchRegional(){
  if(v90RegionalStatus!=='idle')return;
  v90RegionalStatus='loading';
@@ -2916,6 +2916,14 @@ async function v90FetchRegional(){
   await photo.decode();
   if(photo.naturalWidth!==meta.imageWidth||photo.naturalHeight!==meta.imageHeight)
     throw Error('Regional DEM image dimension mismatch');
+  const heightResponse=await fetch('./terrain-detail/central-europe-v90-elevation.json',{cache:'force-cache'});
+  if(!heightResponse.ok)throw Error('Regional tactical elevation grid missing');
+  const grid=await heightResponse.json();
+  if(grid.width!==256||grid.height<250||grid.height>350||
+    grid.heights?.length!==grid.width*grid.height||
+    Math.abs(grid.x-meta.x)>.1||Math.abs(grid.y-meta.y)>.1)
+    throw Error('Regional tactical elevation geometry mismatch');
+  V90_DETAIL_ELEVATION=grid;
   const layer=$('v90RegionalRelief');
   layer.replaceChildren(node('image',{
    x:meta.x,y:meta.y,width:meta.width,height:meta.height,
@@ -2924,7 +2932,9 @@ async function v90FetchRegional(){
   v90RegionalMeta=meta;
   v90RegionalStatus='ready';
   window.__v90QA={status:'ready',region:'Central Europe',image:[photo.naturalWidth,photo.naturalHeight],
-    mapRect:[meta.x,meta.y,meta.width,meta.height],source:meta.source};
+    mapRect:[meta.x,meta.y,meta.width,meta.height],heightGrid:[grid.width,grid.height],source:meta.source};
+  v88MapTerrain();
+  if(game)renderAll();
   v90Refresh();
  }catch(error){
   v90RegionalStatus='unavailable';
@@ -2944,18 +2954,40 @@ function v90Refresh(){
  if(visible&&v90RegionalStatus==='idle')v90FetchRegional();
 }
 
+
+function v90ElevationSample(x,y){
+ const g=V90_DETAIL_ELEVATION;
+ if(!g)return null;
+ const {width:w,height:h,heights:d}=g;
+ if(x<V90_REGION.x||x>V90_REGION.x+V90_REGION.width||
+    y<V90_REGION.y||y>V90_REGION.y+V90_REGION.height)return null;
+ const a=Math.max(0,Math.min(w-1.001,(x-V90_REGION.x)/V90_REGION.width*(w-1)));
+ const b=Math.max(0,Math.min(h-1.001,(y-V90_REGION.y)/V90_REGION.height*(h-1)));
+ const i=Math.floor(a),j=Math.floor(b),fx=a-i,fy=b-j,n=j*w+i;
+ return {
+  value:(d[n]*(1-fx)+d[n+1]*fx)*(1-fy)+(d[n+w]*(1-fx)+d[n+w+1]*fx)*fy,
+  edge:Math.min(x-V90_REGION.x,V90_REGION.x+V90_REGION.width-x,
+    y-V90_REGION.y,V90_REGION.y+V90_REGION.height-y)
+ };
+}
 function v89ElevationAt(x,y){
  if(!V89_HEIGHT||!V89_HEIGHT.heights)return 0;
+ const local=v90ElevationSample(x,y);
  const w=V89_HEIGHT.width,h=V89_HEIGHT.height,d=V89_HEIGHT.heights;
  const a=Math.max(0,Math.min(w-1.001,x/1448*(w-1)));
  const b=Math.max(0,Math.min(h-1.001,y/1086*(h-1)));
  const i=Math.floor(a),j=Math.floor(b),fx=a-i,fy=b-j,n=j*w+i;
- return (d[n]*(1-fx)+d[n+1]*fx)*(1-fy)+(d[n+w]*(1-fx)+d[n+w+1]*fx)*fy;
+ const coarse=(d[n]*(1-fx)+d[n+1]*fx)*(1-fy)+(d[n+w]*(1-fx)+d[n+w+1]*fx)*fy;
+ if(!local)return coarse;
+ const blend=Math.max(0,Math.min(1,local.edge/8));
+ return coarse*(1-blend)+local.value*blend;
 }
 function v89SlopeAt(x,y){
  if(!V89_HEIGHT)return 0;
  const here=v89ElevationAt(x,y);
- const w=1448/V89_HEIGHT.width,h=1086/V89_HEIGHT.height;
+ const local=!!v90ElevationSample(x,y);
+ const w=local?V90_REGION.width/V90_DETAIL_ELEVATION.width:1448/V89_HEIGHT.width;
+ const h=local?V90_REGION.height/V90_DETAIL_ELEVATION.height:1086/V89_HEIGHT.height;
  const around=[
   v89ElevationAt(x+2*w,y),v89ElevationAt(x-2*w,y),
   v89ElevationAt(x,y+2*h),v89ElevationAt(x,y-2*h)

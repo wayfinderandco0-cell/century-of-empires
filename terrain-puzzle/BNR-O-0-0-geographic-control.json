@@ -1,0 +1,109 @@
+{
+  "cell_id": "BNR:O:0:0",
+  "source_waterways": "terrain-v102/features.json, from V99 OpenStreetMap mapped natural watercourses; NOT verified 1800 waterways",
+  "art_status": "UNAPPROVED_STYLE_REFERENCE_ONLY",
+  "orientation": "north-up; local metric coordinates east x and north y",
+  "feature_segments": [
+    {
+      "id": "OSM:5",
+      "name": "Navisbach",
+      "role": "water",
+      "kind": "river",
+      "approx_intersection_length_m": 158
+    },
+    {
+      "id": "OSM:32",
+      "name": "Mountain stream",
+      "role": "water",
+      "kind": "stream",
+      "approx_intersection_length_m": 110
+    },
+    {
+      "id": "OSM:37",
+      "name": "Fidlerbach",
+      "role": "water",
+      "kind": "stream",
+      "approx_intersection_length_m": 1013
+    },
+    {
+      "id": "OSM:38",
+      "name": "Fidlerbach",
+      "role": "water",
+      "kind": "stream",
+      "approx_intersection_length_m": 8
+    },
+    {
+      "id": "ILLUSTRATIVE:TRAIL",
+      "name": "Illustrative pack trail",
+      "role": "trail",
+      "kind": "trail",
+      "approx_intersection_length_m": 404
+    }
+  ],
+  "edge_crossings": [
+    {
+      "feature": "Navisbach",
+      "role": "water",
+      "edge": "SE",
+      "point_xy_m": [
+        239.3257,
+        -467.7811
+      ]
+    },
+    {
+      "feature": "Navisbach",
+      "role": "water",
+      "edge": "S",
+      "point_xy_m": [
+        133.5945,
+        -500
+      ]
+    },
+    {
+      "feature": "Navisbach",
+      "role": "water",
+      "edge": "S",
+      "point_xy_m": [
+        89.9308,
+        -500
+      ]
+    },
+    {
+      "feature": "Navisbach",
+      "role": "water",
+      "edge": "S",
+      "point_xy_m": [
+        47.811,
+        -500
+      ]
+    },
+    {
+      "feature": "Fidlerbach",
+      "role": "water",
+      "edge": "N",
+      "point_xy_m": [
+        171.1453,
+        500
+      ]
+    },
+    {
+      "feature": "Illustrative pack trail",
+      "role": "trail",
+      "edge": "S",
+      "point_xy_m": [
+        -41.0509,
+        -500
+      ]
+    },
+    {
+      "feature": "Illustrative pack trail",
+      "role": "trail",
+      "edge": "SE",
+      "point_xy_m": [
+        322.8238,
+        -384.283
+      ]
+    }
+  ],
+  "note": "The Fidlerbach crosses much of this octagon; Navisbach is at its southern boundary. Any image depicting Navisbach running centrally north-south does NOT match these coordinates."
+}

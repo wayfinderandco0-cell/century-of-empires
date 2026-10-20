@@ -3554,7 +3554,12 @@ function v94CreateCanopy(){
  maskCanvas.width=data.width;maskCanvas.height=data.height;
  const mctx=maskCanvas.getContext('2d'),image=mctx.createImageData(data.width,data.height);
  for(let i=0;i<data.forest.length;i++){
-  let val=data.forest[i]?235:0;
+  const fx=i%data.width,fy=Math.floor(i/data.width);
+  const mx=Math.min(1447,Math.floor((fx+.5)/data.width*1448));
+  const my=Math.min(1085,Math.floor((fy+.5)/data.height*1086));
+  // Physical land and inferred woods must BOTH agree before drawing a tree.
+  const onLand=!!(atlasLandData?.alpha[(my*1448+mx)*4+3]>128);
+  let val=data.forest[i]&&onLand?235:0;
   image.data[i*4]=255;image.data[i*4+1]=255;
   image.data[i*4+2]=255;image.data[i*4+3]=val;
  }
@@ -3652,6 +3657,11 @@ function v94RoadRiver(x,y){
 }
 function v94WoodAt(x,y){
  const w=V94_FOREST;if(!w)return false;
+ if(atlasLandData?.alpha){
+  const mx=Math.min(1447,Math.max(0,Math.round(x)));
+  const my=Math.min(1085,Math.max(0,Math.round(y)));
+  if(atlasLandData.alpha[(my*1448+mx)*4+3]<128)return false;
+ }
  const xx=Math.min(w.width-1,Math.max(0,Math.floor(x/1448*w.width)));
  const yy=Math.min(w.height-1,Math.max(0,Math.floor(y/1086*w.height)));
  return !!w.forest[yy*w.width+xx];

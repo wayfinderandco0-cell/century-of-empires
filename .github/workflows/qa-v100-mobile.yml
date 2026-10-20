@@ -1,0 +1,58 @@
+name: V100 Brenner iPhone gameplay QA
+on:
+  push:
+    branches: [terrain-v100-brenner-gameplay]
+    paths:
+      - 'v100-brenner-slice.html'
+      - 'scripts/qa_v100_mobile.py'
+      - '.github/workflows/qa-v100-mobile.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install iPhone-format test browser
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Check JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('v100-brenner-slice.html').read_text()
+          chunks=re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>',html)
+          assert len(chunks)==1
+          Path('/tmp/v100.js').write_text(chunks[0])
+          PY
+          node --check /tmp/v100.js
+      - name: Run mobile UI and army encounter QA
+        run: python scripts/qa_v100_mobile.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v100-mobile-qa
+          path: terrain-v100/
+      - name: Save QA evidence to isolated preview branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v100/qa-report.json terrain-v100/*.jpg || true
+          if ! git diff --cached --quiet; then
+            git commit -m "V100: capture iPhone gameplay QA evidence"
+            for retry in 1 2 3; do
+              git fetch origin terrain-v100-brenner-gameplay
+              git rebase origin/terrain-v100-brenner-gameplay
+              if git push origin HEAD:terrain-v100-brenner-gameplay; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

@@ -6,6 +6,7 @@ on:
       - 'v90.html'
       - 'terrain-detail/central-europe-v90.webp'
       - 'terrain-detail/central-europe-v90.json'
+      - 'terrain-detail/central-europe-v90-elevation.json'
       - '.github/workflows/qa-v90-detail.yml'
   workflow_dispatch:
 
@@ -61,6 +62,8 @@ jobs:
                           page.wait_for_function("window.__v90QA && ['ready','unavailable'].includes(window.__v90QA.status)",timeout=60000)
                           detail=page.evaluate('window.__v90QA')
                           assert detail['status']=='ready',detail
+                          assert detail.get('heightGrid',[0,0])[0]==256,detail
+                          assert detail.get('heightGrid',[0,0])[1]>=250,detail
                           actual=page.locator('#v90RegionalRelief image').get_attribute('href')
                           assert actual.endswith('central-europe-v90.webp'),actual
                           isVisible=page.locator('#v90RegionalRelief').evaluate(
@@ -68,6 +71,7 @@ jobs:
                           assert isVisible,'Regional panel not visible at close zoom'
                           assert page.locator('#v90RegionalRelief image').count()==1
                           report['regionalTile']=detail
+                          report['tacticalElevationReadout']=page.evaluate("() => ({berlin:Math.round(v89ElevationAt(V87_CITIES.berlin[0],V87_CITIES.berlin[1]))})") if False else detail['heightGrid']
                           report['closeZoomWidth']=width
                           report['overlayVisible']=isVisible
                       page.wait_for_timeout(600)

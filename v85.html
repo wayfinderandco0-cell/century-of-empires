@@ -2558,10 +2558,14 @@ function v85TerrainArtwork(photo,maskCanvas){
  ctx.putImageData(img,0,0);
  // Fine material texture at 2× resolution is drawn on a second canvas.
  const hi=document.createElement('canvas');hi.width=w*2;hi.height=h*2;
- const t=hi.getContext('2d');
- if(!t)throw Error('High-resolution terrain canvas unavailable');
- t.imageSmoothingEnabled=true;t.imageSmoothingQuality='high';
- t.drawImage(canvas,0,0,hi.width,hi.height);
+ const bg=hi.getContext('2d');
+ if(!bg)throw Error('High-resolution terrain canvas unavailable');
+ bg.imageSmoothingEnabled=true;bg.imageSmoothingQuality='high';
+ bg.drawImage(canvas,0,0,hi.width,hi.height);
+ // Fine relief and trees are clipped separately; the ocean remains fully painted.
+ const details=document.createElement('canvas');details.width=w*2;details.height=h*2;
+ const t=details.getContext('2d');
+ if(!t)throw Error('Terrain detail canvas unavailable');
  t.scale(2,2);
  let randSeed=0x85f1a21e;
  const random=()=>{randSeed=(Math.imul(randSeed,1664525)+1013904223)>>>0;return randSeed/4294967296};
@@ -2595,6 +2599,7 @@ function v85TerrainArtwork(photo,maskCanvas){
  t.globalCompositeOperation='destination-in';
  t.drawImage(maskCanvas,0,0,w,h);
  t.globalCompositeOperation='source-over';
+ bg.drawImage(details,0,0);
  return hi.toDataURL('image/webp',.87);
 }
 function drawAtlasTerrainV85(){

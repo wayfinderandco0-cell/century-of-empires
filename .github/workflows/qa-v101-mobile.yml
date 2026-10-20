@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-v101/qa-report.json terrain-v101/*.jpg || true
+          git add -A terrain-v101/ || true
           if ! git diff --cached --quiet; then
             git commit -m "V101: record phone-size historical terrain QA"
             for retry in 1 2 3; do

@@ -1,0 +1,144 @@
+{
+  "sourceCommit": "3314a5909874611969dd73a20a7690e93cee88ca",
+  "browsers": {
+    "chromium": {
+      "checks": {
+        "assetsReady": true,
+        "correctVersion": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "physicalForestMeshes": true,
+        "zoomInWorks": true,
+        "tiltTargetSet": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "version": 104,
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 1.8999999999941792,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "forestModel": "3d layered crowns",
+        "visibleTrees": 0,
+        "forestTriangles": 0,
+        "loadMs": 530,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "version": 104,
+        "ready": true,
+        "frames": 215,
+        "maxFrameMs": 181.70000000001164,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "forestModel": "3d layered crowns",
+        "visibleTrees": 9625,
+        "forestTriangles": 212208,
+        "loadMs": 530,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    },
+    "webkit": {
+      "checks": {
+        "assetsReady": true,
+        "correctVersion": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "physicalForestMeshes": true,
+        "zoomInWorks": true,
+        "tiltTargetSet": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "version": 104,
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 106,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "forestModel": "3d layered crowns",
+        "visibleTrees": 0,
+        "forestTriangles": 0,
+        "loadMs": 2631,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "version": 104,
+        "ready": true,
+        "frames": 230,
+        "maxFrameMs": 146,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "trees.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "forestModel": "3d layered crowns",
+        "visibleTrees": 9441,
+        "forestTriangles": 208173,
+        "loadMs": 2631,
+        "treeCount": 57159,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    }
+  },
+  "physicalIPhoneTested": false,
+  "visualApproval": "Screenshots require human inspection; browser tests do not establish commercial quality.",
+  "passed": true
+}

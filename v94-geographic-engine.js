@@ -150,6 +150,7 @@ async function v94FetchAll(){
   }
   $('atlasBaseImage').setAttribute('href',base.src);
   V94_READY=true;
+  window.__v94Camera=(x,y,w)=>{view.cx=x;view.cy=y;view.w=w;view.overview=false;setView();if(game)renderAll();};
   $('map').classList.add('v94-terrain');
   v94UpdateGameplay();
   v94TileUpdate();

@@ -1,0 +1,136 @@
+{
+  "sourceCommit": "b57045f82a7812866fc195fdebdcb59fb363a638",
+  "browsers": {
+    "chromium": {
+      "checks": {
+        "assetsReady": true,
+        "bakedCanopyLoaded": true,
+        "correctVersion": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "zoomInWorks": true,
+        "tiltTargetSet": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "version": 105,
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 1.599999999976717,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "features.json"
+        ],
+        "errors": [],
+        "canopyMaterial": true,
+        "individualTreesDrawn": 0,
+        "loadMs": 756,
+        "treeCount": 0,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "version": 105,
+        "ready": true,
+        "frames": 189,
+        "maxFrameMs": 3.800000000046566,
+        "loads": [
+          "alpine-height.f32",
+          "manifest.json",
+          "features.json"
+        ],
+        "errors": [],
+        "canopyMaterial": true,
+        "individualTreesDrawn": 0,
+        "loadMs": 756,
+        "treeCount": 0,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    },
+    "webkit": {
+      "checks": {
+        "assetsReady": true,
+        "bakedCanopyLoaded": true,
+        "correctVersion": true,
+        "noCampaignStorage": true,
+        "naturalWaterways": true,
+        "portraitFits": true,
+        "coordinateRoundTrip": true,
+        "zoomInWorks": true,
+        "tiltTargetSet": true,
+        "overheadWorks": true,
+        "tapInspectsGeography": true,
+        "dragPans": true,
+        "level1Finite": true,
+        "level2Finite": true,
+        "level3Finite": true,
+        "level4Finite": true,
+        "sourcesAccessible": true,
+        "rotationKeepsFocus": true,
+        "landscapeFits": true,
+        "noJavaScriptErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "metrics": {
+        "version": 105,
+        "ready": true,
+        "frames": 1,
+        "maxFrameMs": 175,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "canopyMaterial": true,
+        "individualTreesDrawn": 0,
+        "loadMs": 4441,
+        "treeCount": 0,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "finalMetrics": {
+        "version": 105,
+        "ready": true,
+        "frames": 175,
+        "maxFrameMs": 175,
+        "loads": [
+          "manifest.json",
+          "alpine-height.f32",
+          "features.json"
+        ],
+        "errors": [],
+        "canopyMaterial": true,
+        "individualTreesDrawn": 0,
+        "loadMs": 4441,
+        "treeCount": 0,
+        "triangles": 307200,
+        "waterways": 74
+      },
+      "passed": true
+    }
+  },
+  "physicalIPhoneTested": false,
+  "visualApproval": "Screenshots require human inspection; browser tests do not establish commercial quality.",
+  "passed": true
+}

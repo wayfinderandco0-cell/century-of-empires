@@ -1,0 +1,10 @@
+{
+  "version": 105,
+  "width": 2048,
+  "height": 2048,
+  "forestCoverMean": 0.4075,
+  "strongForestFraction": 0.4104,
+  "artMethod": "continuous multi-scale canopy shade; no repeated tree billboards",
+  "sources": "V97 elevation/woodland, V102 local base image and water/trail geographic guides",
+  "historicalStatus": "illustrative; no claims of surveyed 1800 vegetation"
+}

@@ -55,6 +55,8 @@ jobs:
                      "document.querySelector('#map')?.classList.contains('v89-terrain') && document.querySelectorAll('#provinces .army-token').length>0",
                      timeout=30000)
                   page.wait_for_timeout(1500)
+                  report['cameraWidth']=page.locator('#map').evaluate('(el) => el.viewBox.baseVal.width')
+                  assert report['cameraWidth']<=700,'Portrait camera still too zoomed-out: '+str(report['cameraWidth'])
                   report['terrainImage']=page.locator('#atlasBaseImage').get_attribute('href')
                   assert report['terrainImage']=='./terrain-v89.webp',report
                   report['provinceCount']=page.locator('#territories path[data-zone]').count()
@@ -68,6 +70,7 @@ jobs:
                   assert report['units']>=2,report
                   page.screenshot(path='qa/v89-mobile.png',full_page=False,animations='disabled')
                   picture=Image.open('qa/v89-mobile.png').convert('RGB')
+                  picture.save('qa/v89-mobile.jpg','JPEG',quality=78,optimize=True)
                   report['screenshotSize']=list(picture.size)
                   assert picture.size[0]>=700 and picture.size[1]>=1400
                   assert len(picture.resize((160,320)).getcolors(160*320) or [])>800,'Map appears to render as a flat single color'
@@ -83,7 +86,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qa/v89-report.json qa/v89-mobile.png
+          git add qa/v89-report.json qa/v89-mobile.png qa/v89-mobile.jpg
           if ! git diff --cached --quiet; then
             git commit -m "QA: verify V89 measured terrain in iPhone-sized browser"
             for attempt in 1 2 3; do

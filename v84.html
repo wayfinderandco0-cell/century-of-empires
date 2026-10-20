@@ -2553,8 +2553,8 @@ async function loadNewAtlas(){
   const photo=new Image();
   photo.src='data:image/webp;base64,'+V84_BASE_ATLAS;
   await photo.decode();
-  if(photo.naturalWidth!==1448||photo.naturalHeight!==1086)
-   throw Error('Embedded terrain geography dimensions do not match map');
+  if(photo.naturalWidth<350||photo.naturalHeight<250||Math.abs(photo.naturalWidth/photo.naturalHeight-1448/1086)>.025)
+   throw Error('Embedded terrain geography aspect ratio is invalid');
   const w=1448,h=1086;
   const maskCanvas=document.createElement('canvas');maskCanvas.width=w;maskCanvas.height=h;
   const mc=maskCanvas.getContext('2d',{willReadFrequently:true});
@@ -2575,6 +2575,8 @@ async function loadNewAtlas(){
   $('map').querySelector('defs').appendChild(mask);
   for(const id of ['territories','nationFrontiers','weatherLayer','terrainDetail','atlasRivers'])
    $(id).setAttribute('mask','url(#atlasLandMask)');
+  // Show the verified atlas immediately before enhancing it; a failed paint leaves a map.
+  $('atlasBaseImage').setAttribute('href',photo.src);
   // Terrain painting is an enhancement; a painting error must not make the map blank.
   let rendered=photo.src;
   try{rendered=v84TerrainArtwork(photo,maskCanvas)}

@@ -77,7 +77,7 @@ else:
     ne=json.loads((ROOT/"terrain-v94"/"rivers.json").read_text())
     for n,item in enumerate(ne["rivers"]):
         if item.get("name") not in ("Inn","Adige","Drau","Isar","Salzach"):continue
-        nums=[float(k) for k in re.findall(r'-?\\d+(?:\\.\\d+)?',item["d"])]
+        nums=[float(k) for k in re.findall(r'-?\d+(?:\.\d+)?',item["d"])]
         coords=[[-14.+nums[i]/1448*63,75.-nums[i+1]/1086*49] for i in range(0,len(nums)-1,2)]
         if not any(WEST<lon<EAST and SOUTH<lat<NORTH for lon,lat in coords):continue
         lines.append({"id":"ne-"+str(n),"name":item["name"],"type":"river",

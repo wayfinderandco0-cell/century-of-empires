@@ -1,0 +1,31 @@
+{
+  "version": "94",
+  "projection": "equirectangular",
+  "extent": [
+    -14.0,
+    26.0,
+    49.0,
+    75.0
+  ],
+  "gameSize": [
+    1448,
+    1086
+  ],
+  "atlasSize": [
+    8192,
+    6144
+  ],
+  "tiles": [
+    4,
+    3
+  ],
+  "overview": "terrain-v94/overview.webp",
+  "tileTemplate": "terrain-v94/tiles/{x}-{y}.webp",
+  "heights": "terrain-v94/heights.json",
+  "woods": "terrain-v94/woods.json",
+  "land": "terrain-v94/land.json",
+  "rivers": "terrain-v94/rivers.json",
+  "elevationSource": "Mapzen/AWS Terrarium z8",
+  "physicalSource": "Natural Earth 10m",
+  "vegetationSource": "Natural Earth II idealized pre-modern landcover; NOT verified 1780 forest survey"
+}

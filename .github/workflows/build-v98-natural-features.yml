@@ -46,5 +46,11 @@ jobs:
           git add terrain-v98/
           if ! git diff --cached --quiet; then
             git commit -m "V98: measured tree-cover canopy and mapped Alpine streams"
-            git push origin HEAD:terrain-v98-natural-features
+            for retry in 1 2 3 4; do
+              git fetch origin terrain-v98-natural-features
+              git rebase origin/terrain-v98-natural-features
+              if git push origin HEAD:terrain-v98-natural-features; then exit 0; fi
+              sleep 3
+            done
+            exit 1
           fi

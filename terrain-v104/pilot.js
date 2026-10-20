@@ -120,7 +120,7 @@ function draw(){if(!ready)return;const t=performance.now();const {span,at}=matri
  for(const tile of ground){attrib(gp,'aPosition',tile.p,3);attrib(gp,'aNormal',tile.n,3);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,tile.i);gl.drawElements(gl.TRIANGLES,tile.count,gl.UNSIGNED_SHORT,0);}
  if(camera.span<31){gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-2,-3);gl.useProgram(lp);gl.uniformMatrix4fv(uniform(lp,'uVP'),false,VP);for(const r of ribbons){attrib(lp,'aPosition',r.b,3,24,0);attrib(lp,'aColor',r.b,3,24,12);gl.drawArrays(gl.TRIANGLES,0,r.count);}gl.disable(gl.POLYGON_OFFSET_FILL);}
  if(camera.span<4.3){updateForestGeometry();gl.useProgram(tp);gl.uniformMatrix4fv(uniform(tp,'uVP'),false,VP);gl.uniform1f(uniform(tp,'uFade'),clamp((4.3-camera.span)/2.0,0,1));attrib(tp,'aPosition',forestMesh.b,3,24,0);attrib(tp,'aColor',forestMesh.b,3,24,12);gl.drawArrays(gl.TRIANGLES,0,forestMesh.count);}
- updateLabels();drawCount++;metrics.frames=drawCount;metrics.maxFrameMs=Math.max(metrics.maxFrameMs,performance.now()-t);dirty=false;
+ document.body.classList.toggle('close-terrain',camera.span<3.7);updateLabels();drawCount++;metrics.frames=drawCount;metrics.maxFrameMs=Math.max(metrics.maxFrameMs,performance.now()-t);dirty=false;
 }
 function requestDraw(){if(!animating){animating=true;requestAnimationFrame(frame);}}
 function frame(now){animating=false;if(!ready)return;const dt=Math.min(50,now-lastFrame||16);lastFrame=now;let moving=false;for(const k of ['x','z','span','pitch','yaw']){const delta=target[k]-camera[k];if(Math.abs(delta)>.00003){camera[k]+=delta*(1-Math.exp(-dt/110));moving=true;}else camera[k]=target[k];}if(dirty||moving)draw();if(moving)requestDraw();}

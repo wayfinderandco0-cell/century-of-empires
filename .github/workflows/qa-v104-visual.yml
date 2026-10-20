@@ -1,4 +1,4 @@
-name: V104 Brenner conifer and water refinement
+name: V104 Brenner 3D forest geometry
 on:
   push:
     branches: [terrain-v104-forest-mesh]
@@ -39,13 +39,13 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin terrain-v104-visual-repair
-          if [ "$(git rev-parse origin/terrain-v104-visual-repair)" != "$SOURCE_SHA" ]; then
+          git fetch origin terrain-v104-forest-mesh
+          if [ "$(git rev-parse origin/terrain-v104-forest-mesh)" != "$SOURCE_SHA" ]; then
             echo 'Source advanced; evidence retained in uniquely named artifact. Do not overwrite newer source.'
             exit 1
           fi
           git add terrain-v104/
           if ! git diff --cached --quiet; then
             git commit -m 'V104: persist mobile browser screenshots and QA evidence'
-            git push origin HEAD:terrain-v104-visual-repair
+            git push origin HEAD:terrain-v104-forest-mesh
           fi

@@ -2,7 +2,7 @@
 import json, os, pathlib, threading, http.server, socketserver, time, base64, io
 from PIL import Image
 from playwright.sync_api import sync_playwright
-ROOT=pathlib.Path(__file__).resolve().parents[1]; OUT=ROOT/'terrain-v103';os.chdir(ROOT)
+ROOT=pathlib.Path(__file__).resolve().parents[1]; OUT=ROOT/'terrain-v104';os.chdir(ROOT)
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
 server=socketserver.ThreadingTCPServer(('127.0.0.1',0),Quiet)

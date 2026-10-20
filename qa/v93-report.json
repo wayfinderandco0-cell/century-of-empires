@@ -1,0 +1,73 @@
+{
+  "version": "v93",
+  "views": {
+    "standard": {
+      "state": {
+        "mapWidth": 194.42999267578125,
+        "lod": "3",
+        "forestDisplay": "inline",
+        "forestOpacity": "1",
+        "forestMask": "url(#atlasLandMask)",
+        "forestLayers": 2,
+        "softEdgeMask": "url(#v93ForestFeatherMask)",
+        "texturePresent": true,
+        "patternWorldWidth": 127.6272,
+        "patternScreenPx": 256.00272527398016,
+        "riverDisplay": "inline",
+        "riverSegments": 15,
+        "oldTreeSymbols": 0,
+        "legacyDetailHidden": true
+      },
+      "screenshot": "qa/v93-standard-iphone.jpg"
+    },
+    "tactical": {
+      "state": {
+        "mapWidth": 108.87999725341797,
+        "lod": "3",
+        "forestDisplay": "inline",
+        "forestOpacity": "1",
+        "forestMask": "url(#atlasLandMask)",
+        "forestLayers": 2,
+        "softEdgeMask": "url(#v93ForestFeatherMask)",
+        "texturePresent": true,
+        "patternWorldWidth": 71.4712,
+        "patternScreenPx": 256.00448845644127,
+        "riverDisplay": "inline",
+        "riverSegments": 15,
+        "oldTreeSymbols": 0,
+        "legacyDetailHidden": true
+      },
+      "screenshot": "qa/v93-tactical-iphone.jpg"
+    },
+    "extreme": {
+      "state": {
+        "mapWidth": 34.150001525878906,
+        "lod": "3",
+        "forestDisplay": "inline",
+        "forestOpacity": "1",
+        "forestMask": "url(#atlasLandMask)",
+        "forestLayers": 2,
+        "softEdgeMask": "url(#v93ForestFeatherMask)",
+        "texturePresent": true,
+        "patternWorldWidth": 22.4134,
+        "patternScreenPx": 255.96561081778842,
+        "riverDisplay": "inline",
+        "riverSegments": 15,
+        "oldTreeSymbols": 0,
+        "legacyDetailHidden": true
+      },
+      "screenshot": "qa/v93-extreme-iphone.jpg"
+    }
+  },
+  "armyMarkers": 41,
+  "qa": {
+    "status": "ready",
+    "forestZones": 26,
+    "woodlandPatches": 541,
+    "riverCount": 15,
+    "canopyMode": "fixed-screen-aerial",
+    "usesGameplayForests": true,
+    "usesGameplayRivers": true
+  },
+  "jsErrors": []
+}

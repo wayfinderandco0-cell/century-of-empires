@@ -54,7 +54,7 @@ function v91BuildWoodland(){
    if(!land(x,y)||!clearOfCity(x,y)||!clearOfRiver(x,y)){skipped++;continue;}
    const height=v89ElevationAt(x,y);
    if(height>1650||v89SlopeAt(x,y)>49){skipped++;continue;}
-   const px=fix(x),py=fix(y),scale=.9+rand()*1.02;
+   const px=fix(x),py=fix(y),scale=.23+rand()*.23;
    const shade=rand()>.45,conifer=height>500||cy<480||rand()<.30;
    if(conifer){
     const top=fix(y-3.4*scale),lower=fix(y+1.65*scale);

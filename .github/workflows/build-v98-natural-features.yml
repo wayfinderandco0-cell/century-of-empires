@@ -1,0 +1,50 @@
+name: Build V98 natural Alpine forests and streams
+
+on:
+  push:
+    branches: [terrain-v98-natural-features]
+    paths:
+      - 'scripts/build_v98_alpine_features.py'
+      - '.github/workflows/build-v98-natural-features.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install raster and map dependencies
+        run: python -m pip install --disable-pip-version-check "numpy<3" "rasterio>=1.3,<2" Pillow requests
+      - name: Generate tree canopy and local river network from geography
+        run: python -u scripts/build_v98_alpine_features.py
+      - name: Check output assets
+        run: |
+          python - <<'PY'
+          import json
+          from PIL import Image
+          from pathlib import Path
+          base=Path('terrain-v98')
+          d=json.loads((base/'streams.json').read_text())
+          m=json.loads((base/'manifest.json').read_text())
+          assert Image.open(base/'brenner-canopy.webp').size==(2400,2760)
+          assert len(d['ways'])>=60
+          assert m['waterwayWays']==len(d['ways'])
+          assert m['forestFraction']>.05
+          print('V98 REAL GEOGRAPHY ASSETS CONFIRMED')
+          PY
+      - name: Save assets to V98 branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v98/
+          if ! git diff --cached --quiet; then
+            git commit -m "V98: measured tree-cover canopy and mapped Alpine streams"
+            git push origin HEAD:terrain-v98-natural-features
+          fi

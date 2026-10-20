@@ -30,12 +30,13 @@ function v91BuildWoodland(){
  for(let zone=0;zone<V87_FORESTS.length;zone++){
   const [cx,cy,rx,ry]=V87_FORESTS[zone];
   // Broken irregular forest stands, not one artificial circular dark blob.
-  const standCount=Math.min(27,Math.max(11,Math.round(rx*ry/410)));
+  const standCount=Math.min(38,Math.max(16,Math.round(rx*ry/320)));
+  const stands=[];
   for(let j=0;j<standCount;j++){
    const a=rand()*Math.PI*2,r=Math.sqrt(rand())*.70;
    const x=cx+Math.cos(a)*rx*r,y=cy+Math.sin(a)*ry*r;
    if(!land(x,y)||!clearOfCity(x,y))continue;
-   const rw=5+rx*(.045+rand()*.085),rh=5+ry*(.045+rand()*.085),pieces=[];
+   const rw=7+rx*(.07+rand()*.13),rh=7+ry*(.07+rand()*.13),pieces=[];
    const phase=rand()*6.28;
    for(let n=0;n<22;n++){
     const t=n/22*Math.PI*2;
@@ -43,14 +44,23 @@ function v91BuildWoodland(){
     pieces.push(fix(x+Math.cos(t)*rw*mod)+' '+fix(y+Math.sin(t)*rh*mod));
    }
    patches.push('M'+pieces.join('L')+'Z');
+   stands.push([x,y,rw,rh]);
    if(rand()<.27)clearings.push('M'+fix(x-2)+' '+fix(y)+'q3 -2 6 0q-3 2 -6 0Z');
   }
   // Keep tree placement deterministic and consistent with terrain classification:
   // all tree sites lie inside the SAME existing forest ellipses used for combat.
-  const n=Math.min(360,Math.max(75,Math.round(rx*ry/23)));
+  const n=Math.min(520,Math.max(110,Math.round(rx*ry/16)));
   for(let i=0;i<n;i++){
-   const a=rand()*Math.PI*2,r=Math.sqrt(rand())*.80;
-   const x=cx+Math.cos(a)*rx*r,y=cy+Math.sin(a)*ry*r;
+   let x,y;
+   if(stands.length&&rand()<.80){
+    const stand=stands[Math.floor(rand()*stands.length)];
+    x=stand[0]+(rand()+rand()+rand()-1.5)*stand[2]*1.25;
+    y=stand[1]+(rand()+rand()+rand()-1.5)*stand[3]*1.25;
+   }else{
+    const a=rand()*Math.PI*2,r=Math.sqrt(rand())*.80;
+    x=cx+Math.cos(a)*rx*r;y=cy+Math.sin(a)*ry*r;
+   }
+   if(((x-cx)/rx)**2+((y-cy)/ry)**2>.68)continue;
    if(!land(x,y)||!clearOfCity(x,y)||!clearOfRiver(x,y)){skipped++;continue;}
    const height=v89ElevationAt(x,y);
    if(height>1650||v89SlopeAt(x,y)>49){skipped++;continue;}

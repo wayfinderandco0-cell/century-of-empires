@@ -20,6 +20,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -44,6 +47,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -68,6 +74,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -92,6 +101,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -116,6 +128,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -142,6 +157,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -168,6 +186,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.00010526315793,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -194,6 +215,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.0005882352941,
         "terrainClass": true,
         "coastPaths": 2
       },
@@ -220,6 +244,9 @@
         "displayed": "inline",
         "riverPaths": 2132,
         "oldWoodland": false,
+        "canopyVisible": true,
+        "canopyMask": "url(#v94ForestMask)",
+        "canopyPixels": 256.0005882352941,
         "terrainClass": true,
         "coastPaths": 2
       },

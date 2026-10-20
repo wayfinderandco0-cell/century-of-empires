@@ -8,6 +8,11 @@
     57.0
   ],
   "image": "terrain-detail/central-europe-v90.webp",
+  "elevationFile": "terrain-detail/central-europe-v90-elevation.json",
+  "elevationGrid": [
+    256,
+    267
+  ],
   "imageWidth": 3072,
   "imageHeight": 3209,
   "x": 482.666667,

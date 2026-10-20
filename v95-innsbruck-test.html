@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101f26">
+<title>Century of Empires — Innsbruck Terrain Zoom Test</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#101e27;color:#f5e8c7;font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app{height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{padding:10px 12px;background:#15262e;border-bottom:1px solid #64716b;flex:0 0 auto}
+h1{font:700 19px Georgia,serif;margin:0}small{display:block;color:#b1bcb1;font-size:11px;margin-top:2px}
+#stage{position:relative;flex:1;min-height:0;background:#375969;overflow:hidden}
+svg{height:100%;width:100%;display:block;touch-action:none;user-select:none}
+#shade{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 65px #13252a88}
+#legend{position:absolute;left:9px;top:10px;background:#10212adf;border:1px solid #87928a70;border-radius:6px;padding:7px 10px;font-size:11px;pointer-events:none;max-width:70%}
+#legend strong{font-size:13px}#legend span{display:block;color:#e0d9c4}
+#badge{position:absolute;right:8px;top:9px;font-size:10px;padding:5px 7px;background:#112a30ed;border-radius:4px;border:1px solid #91a19c75;pointer-events:none}
+#inspect{position:absolute;left:10px;bottom:10px;padding:7px 10px;background:#10212ae5;border:1px solid #71888280;font-size:11px;border-radius:5px;max-width:95%;pointer-events:none}
+footer{flex:0 0 auto;background:#14262e;border-top:1px solid #607066;padding:8px 10px max(10px,env(safe-area-inset-bottom))}
+#levels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+button{min-width:0;color:#f5eac9;border-radius:7px;border:1px solid #71837c;padding:10px 4px;background:#2a3b43;font-size:12px;font-weight:700;cursor:pointer}
+button.active{background:#b89a65;color:#152329;border-color:#f3c98b}
+#readout{margin:8px 2px 0;color:#d5dfd6;font-size:12px;min-height:33px}
+#note{color:#aebdb7;font-size:10px;line-height:1.4;margin-top:5px}
+.map-label{font-family:Georgia,serif;font-weight:700;paint-order:stroke;stroke:#132a2d;stroke-linejoin:round;stroke-width:2.4px;fill:#fff6db}
+.map-label.pass{fill:#ffe2a2}.map-dot{fill:#f9dba0;stroke:#10252b;stroke-width:1.8px;vector-effect:non-scaling-stroke}
+#contours path{fill:none;stroke:#f7ecd0;stroke-opacity:.5;stroke-width:.8;vector-effect:non-scaling-stroke}
+#routes path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+@media (orientation:landscape) and (max-height:480px){header{padding:4px 9px}h1{font-size:14px}small{font-size:9px}footer{padding:4px 9px}button{padding:5px}#readout{margin-top:3px;min-height:0}#note{display:none}}
+</style></head>
+<body><div id="app"><header><h1>Century of Empires · Alpine Terrain Test</h1><small>Innsbruck → Brenner Pass · V95 isolated zoom prototype</small></header>
+<div id="stage">
+<svg id="map" viewBox="0 0 220 220" role="img" aria-label="Interactive terrain map with three levels of zoom">
+<rect width="1448" height="1086" fill="#244d59"/>
+<image x="0" y="0" width="1448" height="1086" href="./terrain-v94/overview.webp" preserveAspectRatio="none"/>
+<image id="regional" x="482.666667" y="398.938776" width="275.809524" height="288.122449" href="./terrain-detail/central-europe-v90.webp" preserveAspectRatio="none" style="display:none"/>
+<g id="contours" style="display:none"></g><g id="routes"></g><g id="pins"></g>
+</svg><div id="shade"></div>
+<div id="legend"><strong id="levelName">1 / 3 · Alpine overview</strong><span id="levelDetail">Mountains and major valleys</span></div>
+<div id="badge">MEASURED RELIEF</div>
+<div id="inspect">Tap terrain to inspect the approximate elevation.</div></div>
+<footer><div id="levels"><button data-level="0" class="active">1 · Overview</button><button data-level="1">2 · Regional</button><button data-level="2">3 · Close-up</button></div>
+<div id="readout">Overview: identify the Alpine barrier and the Brenner corridor.</div>
+<div id="note">Preview only. Relief uses existing Mapzen z9 regional data; close zoom adds DEM-derived contour lines, not newly surveyed detail. Forest coverage and army movement are not yet implemented at tactical resolution. V94 and saved campaigns are unchanged.</div></footer></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id), svg=$('map'),NS='http://www.w3.org/2000/svg';
+const ext={lon0:-14,lon1:49,lat0:26,lat1:75},rw=1448,rh=1086;
+const pt=(lon,lat)=>({x:(lon-ext.lon0)/(ext.lon1-ext.lon0)*rw,y:(ext.lat1-lat)/(ext.lat1-ext.lat0)*rh});
+const inv=(x,y)=>({lon:ext.lon0+x/rw*(ext.lon1-ext.lon0),lat:ext.lat1-y/rh*(ext.lat1-ext.lat0)});
+const names=['1 / 3 · Alpine overview','2 / 3 · Brenner corridor','3 / 3 · Close-up terrain'];
+const details=['Mountain chain and valley geography','Regional shaded elevation and mountain crossing','Local relief, elevation contours and route comparison'];
+const views=[{lon:11.5,lat:47.2,w:220},{lon:11.50,lat:47.16,w:70},{lon:11.51,lat:47.135,w:21}];
+let level=0,center=pt(views[0].lon,views[0].lat),width=220,height=220,terrain=null,down=null,contoursMade=false;
+const places=[
+ {name:'Innsbruck',lon:11.404,lat:47.269},
+ {name:'Brenner Pass',lon:11.507,lat:47.005},
+ {name:'Vipiteno',lon:11.430,lat:46.894}
+];
+const valley=[[11.404,47.269],[11.432,47.205],[11.449,47.155],[11.467,47.100],[11.490,47.055],[11.507,47.005]];
+const ridges=[[11.404,47.269],[11.620,47.230],[11.660,47.120],[11.585,47.058],[11.507,47.005]];
+function element(tag,attrs){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,String(v));return e}
+function moveView(){
+ const rect=svg.getBoundingClientRect();
+ height=width*Math.max(1,rect.height)/Math.max(1,rect.width);
+ const x=Math.max(width/2,Math.min(rw-width/2,center.x));
+ const y=Math.max(height/2,Math.min(rh-height/2,center.y));
+ // The high zoom view stays centered over the Alps, not the full continent.
+ center={x,y};
+ svg.setAttribute('viewBox',[x-width/2,y-height/2,width,height].map(v=>v.toFixed(4)).join(' '));
+}
+function drawPins(){
+ const group=$('pins');group.replaceChildren();
+ const radius=Math.max(.15,width/280),labelSize=Math.max(.7,width/32);
+ for(const p of places){
+  const q=pt(p.lon,p.lat);
+  if(level===0&&p.name!=='Brenner Pass')continue;
+  group.appendChild(element('circle',{cx:q.x,cy:q.y,r:radius*1.3,class:'map-dot'}));
+  const txt=element('text',{x:q.x+radius*2,y:q.y-radius*1.8,'font-size':labelSize,class:'map-label'+(p.name==='Brenner Pass'?' pass':'')});
+  txt.textContent=p.name;group.appendChild(txt);
+ }
+}
+function drawRoutes(){
+ const group=$('routes');group.replaceChildren();if(level===0)return;
+ const line=(coords,color,dash)=>{
+  const points=coords.map(q=>pt(q[0],q[1])),d=points.map((q,i)=>(i?'L':'M')+q.x.toFixed(3)+' '+q.y.toFixed(3)).join('');
+  const attr={d,stroke:color,'stroke-width':level===2?2.5:2.1,'stroke-opacity':'.97'};
+  if(dash)attr['stroke-dasharray']='5 4';
+  group.appendChild(element('path',attr));
+ };
+ line(ridges,'#f9ac91',true);line(valley,'#ffe4a3',false);
+}
+function interpolate(a,b,ha,hb,target){
+ const t=(target-ha)/((hb-ha)||.00000001);
+ return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+}
+function buildContours(){
+ if(!terrain||contoursMade)return;
+ contoursMade=true;
+ const group=$('contours'),w=terrain.width,h=terrain.height,vals=terrain.heights;
+ const xr=275.809524/(w-1),yr=288.122449/(h-1),ox=482.666667,oy=398.938776;
+ const around=pt(11.50,47.15);
+ const mini=around.x-25,maxi=around.x+25,minj=around.y-30,maxj=around.y+30;
+ const i0=Math.max(0,Math.floor((mini-ox)/xr)),i1=Math.min(w-2,Math.ceil((maxi-ox)/xr));
+ const j0=Math.max(0,Math.floor((minj-oy)/yr)),j1=Math.min(h-2,Math.ceil((maxj-oy)/yr));
+ let paths=[];
+ for(let elevation=400;elevation<=3200;elevation+=200){
+  let str='';
+  for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){
+   const k=j*w+i,x=ox+i*xr,y=oy+j*yr;
+   const corners=[[x,y],[x+xr,y],[x+xr,y+yr],[x,y+yr]];
+   const hs=[vals[k],vals[k+1],vals[k+w+1],vals[k+w]];
+   const edges=[[0,1],[1,2],[2,3],[3,0]],cross=[];
+   for(const [a,b] of edges){
+    if((hs[a]<elevation&&hs[b]>=elevation)||(hs[b]<elevation&&hs[a]>=elevation)){
+     cross.push(interpolate(corners[a],corners[b],hs[a],hs[b],elevation));
+    }
+   }
+   for(let n=0;n+1<cross.length;n+=2){
+    let a=cross[n],b=cross[n+1];
+    str+='M'+a[0].toFixed(2)+' '+a[1].toFixed(2)+'L'+b[0].toFixed(2)+' '+b[1].toFixed(2);
+   }
+  }
+  if(str)paths.push(element('path',{d:str,'data-height':elevation}));
+ }
+ group.replaceChildren(...paths);
+}
+function sampleElevation(lon,lat){
+ if(!terrain)return null;
+ const u=Math.max(0,Math.min(terrain.width-1.001,(lon-7)/12*(terrain.width-1)));
+ const v=Math.max(0,Math.min(terrain.height-1.001,(57-lat)/13*(terrain.height-1)));
+ const i=Math.floor(u),j=Math.floor(v),a=u-i,b=v-j,d=terrain.heights,w=terrain.width;
+ return d[j*w+i]*(1-a)*(1-b)+d[j*w+i+1]*a*(1-b)+d[(j+1)*w+i]*(1-a)*b+d[(j+1)*w+i+1]*a*b;
+}
+function distKm(a,b){
+ const rad=Math.PI/180,dx=(b[0]-a[0])*rad*Math.cos((a[1]+b[1])*.5*rad)*6371;
+ const dy=(b[1]-a[1])*rad*6371;return Math.hypot(dx,dy);
+}
+function routeCost(coords){
+ if(!terrain)return null;
+ let dist=0,up=0,maxGrade=0;
+ for(let k=1;k<coords.length;k++){
+  const a=coords[k-1],b=coords[k],km=distKm(a,b),steps=Math.max(1,Math.ceil(km/.8));
+  for(let n=1;n<=steps;n++){
+   const interp=t=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+   const e0=sampleElevation(...interp((n-1)/steps)),e1=sampleElevation(...interp(n/steps));
+   if(e0!==null&&e1!==null){const change=e1-e0;up+=Math.max(0,change);maxGrade=Math.max(maxGrade,Math.abs(change)/Math.max(1,km*1000/steps));}
+  }
+  dist+=km;
+ }
+ return {distance:dist,ascent:up,grade:maxGrade,cost:dist+up/100+maxGrade*35};
+}
+function report(){
+ const note=$('readout');
+ if(level===0){note.textContent='Overview: identify the Alpine barrier and the Brenner corridor.';return}
+ if(!terrain){note.textContent='Loading sampled elevation data…';return}
+ const a=routeCost(valley),b=routeCost(ridges);
+ note.textContent='Brenner corridor (gold): '+a.distance.toFixed(1)+' km, sampled ascent '+Math.round(a.ascent)+' m. Ridge alternative (red dashed): '+b.distance.toFixed(1)+' km, ascent '+Math.round(b.ascent)+' m. Routes illustrative, not historical army roads.';
+}
+function setLevel(n){
+ level=n;const d=views[n];center=pt(d.lon,d.lat);width=d.w;
+ $('regional').style.display=n>0?'':'none';$('contours').style.display=n===2?'':'none';
+ $('levelName').textContent=names[n];$('levelDetail').textContent=details[n];
+ for(const btn of document.querySelectorAll('[data-level]'))btn.classList.toggle('active',Number(btn.dataset.level)===n);
+ if(n===2)buildContours();
+ moveView();drawRoutes();drawPins();report();
+}
+for(const btn of document.querySelectorAll('[data-level]'))btn.addEventListener('click',()=>setLevel(Number(btn.dataset.level)));
+svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;down={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y,moved:false};svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointermove',e=>{if(!down)return;let dx=e.clientX-down.x,dy=e.clientY-down.y;if(Math.hypot(dx,dy)>5)down.moved=true;const rect=svg.getBoundingClientRect();center={x:down.cx-dx*width/Math.max(1,rect.width),y:down.cy-dy*width/Math.max(1,rect.width)};moveView()});
+svg.addEventListener('pointerup',e=>{
+ if(!down)return;
+ const moved=down.moved;down=null;if(moved)return;
+ const rect=svg.getBoundingClientRect(),nx=(e.clientX-rect.left)/Math.max(1,rect.width),ny=(e.clientY-rect.top)/Math.max(1,rect.height),coords=inv(center.x+(nx-.5)*width,center.y+(ny-.5)*height);
+ const m=sampleElevation(coords.lon,coords.lat);
+ $('inspect').textContent='Location '+coords.lat.toFixed(3)+'°N, '+coords.lon.toFixed(3)+'°E'+(m===null?' · Elevation data loading':' · Elevation approximately '+Math.round(m)+' m');
+});
+svg.addEventListener('pointercancel',()=>{down=null});
+window.addEventListener('resize',moveView);
+fetch('./terrain-detail/central-europe-v90-elevation.json').then(r=>{if(!r.ok)throw Error('elevation missing');return r.json()}).then(data=>{
+ if(data.width!==256||data.height!==267||data.heights.length!==256*267)throw Error('invalid regional elevation');
+ terrain=data;buildContours();report();$('badge').textContent='MAPZEN z9 RELIEF';
+}).catch(e=>{$('badge').textContent='IMAGE-ONLY TEST';$('readout').textContent='Terrain image visible; measured elevation data could not load ('+e.message+').'});
+setLevel(0);
+})();
+</script></body></html>

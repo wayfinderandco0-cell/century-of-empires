@@ -107,17 +107,11 @@ jobs:
           Path('qa/v94-report.json').write_text(json.dumps(report,indent=2)+'\n')
           print('V94 FULL THEATER QA PASSED',json.dumps({'regions':list(report['regions']), 'geo':report['geography'], 'errors':report['jsErrors']}))
           PY
-      - name: Publish all-region QA evidence
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qa/v94-report.json qa/v94-*-iphone.jpg
-          if ! git diff --cached --quiet; then
-            git commit -m "QA V94 full geographic theater across nine iPhone viewport regions"
-            for retry in 1 2 3 4 5; do
-              git pull --rebase origin main
-              if git push origin HEAD:main; then exit 0; fi
-              sleep 4
-            done
-            exit 1
-          fi
+      - name: Save screenshots and results as a test artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v94-mobile-geography-qa
+          path: |
+            qa/v94-report.json
+            qa/v94-*-iphone.jpg
+          retention-days: 30

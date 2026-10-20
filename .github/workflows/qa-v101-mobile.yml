@@ -1,0 +1,59 @@
+name: V101 generated historical terrain QA
+on:
+  push:
+    branches: [terrain-v101-historical-detail]
+    paths:
+      - 'v101-historical-brenner.html'
+      - 'scripts/qa_v101_mobile.py'
+      - '.github/workflows/qa-v101-mobile.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test browser
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify syntax and no satellite imagery endpoints
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('v101-historical-brenner.html').read_text()
+          assert not re.search('basemap.at|mapsneu.wien|bmaporthofoto|orthophoto',html,re.I)
+          scripts=re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>',html)
+          assert len(scripts)==1
+          Path('/tmp/v101.js').write_text(scripts[0])
+          PY
+          node --check /tmp/v101.js
+      - name: Check mobile historic map fog and encounter
+        run: python scripts/qa_v101_mobile.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v101-historical-map-qa
+          path: terrain-v101/
+      - name: Save QA evidence to isolated branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v101/qa-report.json terrain-v101/*.jpg || true
+          if ! git diff --cached --quiet; then
+            git commit -m "V101: record phone-size historical terrain QA"
+            for retry in 1 2 3; do
+              git fetch origin terrain-v101-historical-detail
+              git rebase origin/terrain-v101-historical-detail
+              if git push origin HEAD:terrain-v101-historical-detail; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

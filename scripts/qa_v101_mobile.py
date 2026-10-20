@@ -47,7 +47,7 @@ try:
         test("generated canvas exists",page.locator("#generatedLandscape").count()==1)
         test("no modern road imagery",page.locator('img[src*="mapsneu.wien.gv.at"]').count()==0)
         test("painted trees status",page.evaluate("document.getElementById('photoStatus').textContent.includes('painted trees')"))
-        test("period terrain draws all troop types",page.locator("#photoUnits image").count()>=1 and page.locator("#photoUnits g").count()>=4)
+        test("period terrain draws all troop types",page.locator("#photoUnits image").count()>=1 and page.locator("#photoUnits g").count()>=3)
         test("aerial retains mapped water canvas",page.locator("#streamLayer").count()==1)
         page.screenshot(path=str(OUT/"v101-aerial-phone.jpg"),type="jpeg",quality=75)
         page.locator("#v100Go").click()

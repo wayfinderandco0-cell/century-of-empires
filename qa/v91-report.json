@@ -4,9 +4,9 @@
   "terrain": {
     "status": "ready",
     "forestZones": 26,
-    "renderedTrees": 4143,
-    "skippedTrees": 1105,
-    "forestPatches": 329,
+    "renderedTrees": 6278,
+    "skippedTrees": 977,
+    "forestPatches": 453,
     "riverCount": 15,
     "usesGameplayForests": true,
     "usesGameplayRivers": true

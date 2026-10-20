@@ -1,0 +1,28 @@
+{
+  "terrain": {
+    "mode": "measured-elevation",
+    "atlas": [
+      4096,
+      3072
+    ],
+    "grid": [
+      256,
+      192
+    ],
+    "coastlines": 1419,
+    "berlinElevation": 47
+  },
+  "terrainImage": "./terrain-v89.webp",
+  "provinceCount": 41,
+  "units": 41,
+  "coastlines": 2,
+  "imageLoaded": [
+    4096,
+    3072
+  ],
+  "screenshotSize": [
+    780,
+    1688
+  ],
+  "pageErrors": []
+}

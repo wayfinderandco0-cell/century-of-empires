@@ -64,12 +64,13 @@ jobs:
                     patternScreenPx:Number(pattern.getAttribute('width'))*cssW/width,
                     riverDisplay:getComputedStyle(river).display,
                     riverSegments:river.querySelectorAll('.river-channel').length,
-                    oldTreeSymbols:document.querySelectorAll('.v91-tree-dark,.v91-tree-light,.v86-canopy-dark').length};
+                    oldTreeSymbols:document.querySelectorAll('.v91-tree-dark,.v91-tree-light').length,
+                    legacyDetailHidden:getComputedStyle(document.querySelector('#terrainDetail')).display==='none'};
                 }""")
                 assert 235<state['patternScreenPx']<280,state
                 assert state['forestLayers']==2 and state['forestMask']=='url(#atlasLandMask)',state
                 assert state['forestDisplay']!='none' and state['riverDisplay']!='none',state
-                assert state['riverSegments']==15 and state['oldTreeSymbols']==0,state
+                assert state['riverSegments']==15 and state['oldTreeSymbols']==0 and state['legacyDetailHidden'],state
                 filename='qa/v92-'+step+'-iphone.jpg'
                 page.wait_for_timeout(450)
                 page.screenshot(path=filename,type='jpeg',quality=90,animations='disabled')

@@ -48,3 +48,16 @@ Provide a fast, courteous 24/7 front desk for inbound website chat, email, and S
 - Broken email/SMS provider does not display "sent"; retry/failure logged.
 - Mobile owner view shows unread, urgent and awaiting-human tickets.
 - Premium V3 homepage/competition graphics are restored and visually smoke-tested on an iPhone.
+
+## V10 form and phone-contact standard
+Every visitor-facing contact, inquiry, demo request, and new registration/guardian-contact flow must offer a clearly labeled **phone number (optional)** field suitable for mobile numeric keyboards, alongside email when a follow-up is requested. The studio must be able to follow up via **email**, **text message**, or **phone call**, according to the individual's stated preference.
+- Present a preferred contact method selection (email/text/call) on visitor inquiry forms.
+- Ask separate, unchecked, explicit permissions for non-marketing SMS follow-up and callback; a phone number alone is not permission to send promotional texts or automated calls.
+- Do not allow a text/call preference to be submitted without a phone number and corresponding consent. Keep a distinct marketing opt-in.
+- Server must validate, normalize, and store phone, contact method, SMS permissions and callback permissions; never infer consent from a populated telephone field.
+- Owner's secure lead view and notification should display the preferred channel and permission status. If user selects SMS/callback, the owner should know whether it is permitted or still requires manual resolution.
+- Send actual SMS only from a correctly configured approved provider with opt-out handling. Phone calls are human follow-ups by default, not AI robocalls.
+- For fictional demo data, a sample parent/guardian phone can appear in the internal roster form, but **no actual student or minor contact info** should be entered into public preview.
+- Preserve optional entry and a clearly communicated alternative: someone without a phone can still submit an email request.
+- No customer phone numbers or email addresses should be sent to third-party AI inference unless strictly necessary and explicitly permitted.
+- Test on iPhone that the telephone keyboard opens, field spacing is readable, selecting SMS/call without consent shows a clear error, email remains usable, and no fake delivery claims appear.

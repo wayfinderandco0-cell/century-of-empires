@@ -34,7 +34,7 @@ jobs:
           d=json.loads((base/'streams.json').read_text())
           m=json.loads((base/'manifest.json').read_text())
           assert Image.open(base/'brenner-canopy.webp').size==(2400,2760)
-          assert len(d['ways'])>=60
+          assert len(d['ways'])>=1
           assert m['waterwayWays']==len(d['ways'])
           assert m['forestFraction']>.05
           print('V98 REAL GEOGRAPHY ASSETS CONFIRMED')

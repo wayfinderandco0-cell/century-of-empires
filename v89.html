@@ -1126,7 +1126,7 @@ const p=bases.find(b=>b.owner===game.player&&b.capital)||bases.find(b=>b.owner==
 game.caretaker=false;syncLeaders();historicDispatches();fitTheater();
 // Start on the selected nation at a readable, navigable scale.
 // The recenter key still shows all of Europe and the Mediterranean.
-view.w=stageAspect()<1.12?930:1490;
+view.w=stageAspect()<1.12?620:1490;
 view.cx=p?.x??700;view.cy=(p?.y??570)+30;
 view.overview=false;setView();
 renderAll();showPanel('map');save();startWeatherMotion();

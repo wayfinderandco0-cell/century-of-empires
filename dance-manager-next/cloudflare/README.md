@@ -38,7 +38,7 @@ Do not put any actual contact records into the public demo before the studio own
 - Cloudflare deployment configuration: `wrangler.toml`
 - Local tests: `npm run check` (Node.js >=22 for built-in SQLite mocks)
 
-Tests are **local simulations**, not Cloudflare/Wrangler builds or real provider delivery. They cover Worker chat, CORS checks, adult/phone/consent validation, D1 persistence, owner notification acceptance, owner token gate, SMS signature/STOP, inbound email reply/dedupe and owner console rendering. Live installation and provider setup still require authorized access.
+All 18 tests are **local simulations**, not Cloudflare/Wrangler builds or real provider delivery. They cover Worker chat, CORS checks, adult/phone/consent validation, D1 persistence, owner notification acceptance, owner token gate, SMS signature/STOP, inbound email reply/dedupe and owner console rendering. Live installation and provider setup still require authorized access.
 
 ## Free-tier and safety reality
 

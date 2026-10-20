@@ -27,7 +27,7 @@ const json=(data,status=200,headers={})=>new Response(JSON.stringify(data),{stat
 const now=()=>new Date().toISOString();
 function cors(request,env) {const origin=request.headers.get('Origin');return allowedOrigin(origin,env.ALLOWED_ORIGINS)?{'Access-Control-Allow-Origin':origin,'Vary':'Origin'}:null;}
 function mailReady(env){return Boolean(env.DB&&env.RATE_SALT&&env.RESEND_API_KEY&&env.LEAD_FROM_EMAIL&&env.LEAD_TO_EMAIL&&validEmail(env.LEAD_FROM_EMAIL)&&validEmail(env.LEAD_TO_EMAIL));}
-function aiReady(env){return Boolean(env.AI&&typeof env.AI.run==='function');}
+function aiReady(env){return Boolean(env.DB&&env.RATE_SALT&&env.AI&&typeof env.AI.run==='function');}
 function ownerReady(env){return Boolean(env.DB&&env.OWNER_API_TOKEN&&env.OWNER_API_TOKEN.length>=24);}
 function smsReady(env){return Boolean(env.DB&&env.TWILIO_AUTH_TOKEN&&env.TWILIO_FROM_NUMBER&&env.TWILIO_ACCOUNT_SID);}
 function status(env){return {status:'ok',version:'cloudflare-v10',aiConfigured:aiReady(env),leadsConfigured:mailReady(env),ownerAlertsConfigured:mailReady(env),smsConfigured:smsReady(env),inboxConfigured:ownerReady(env),inboundEmailConfigured:env.INBOUND_EMAIL_ENABLED==='true'&&Boolean(env.DB&&env.INBOUND_EMAIL_ADDRESS),inboundSmsConfigured:smsReady(env)};}

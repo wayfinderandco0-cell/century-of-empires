@@ -42,3 +42,5 @@ test('incoming email records inquiry and sends one threaded acknowledgment',asyn
 });
 
 test('owner console is present but data APIs stay protected',async()=>{const r=await worker.fetch(new Request(base+'/owner'),env,ctx);assert.equal(r.status,200);assert.match(await r.text(),/Customer inquiries/);assert.match(r.headers.get('Content-Security-Policy'),/frame-ancestors/);});
+
+test('health must not advertise AI readiness without database and rate limiter',async()=>{const r=await worker.fetch(new Request(base+'/health'),{...env,RATE_SALT:undefined},ctx);assert.equal((await r.json()).aiConfigured,false)});

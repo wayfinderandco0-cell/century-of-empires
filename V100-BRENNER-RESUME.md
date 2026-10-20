@@ -1,57 +1,38 @@
-# Century of Empires — V100 Brenner slice resume checkpoint
-Date: 2026-10-20 (America/Chicago)
-Development branch: `terrain-v100-brenner-gameplay`
-Base: main commit `706c447886ea3e6b337272a23cb2619205b25152` (published V99 preview).
+# Century of Empires — V100 Brenner Pass checkpoint
+Updated: 2026-10-20
 
-## Confirmed state
-- V100 development branch created and isolated from main.
-- This checkpoint document is the first V100 commit. **No playable V100 build has yet been committed, mobile-tested, or published.**
-- V99 terrain preview exists: `v99-brenner-real-trees-streams.html`, with V97 measured mountain relief, Austrian official orthophoto tiles at close zoom, and V99 88 OSM-mapped local waterway segments (73 streams per prior QA).
-- V94 game `v94.html` and campaign-save behavior must remain unchanged. Do not touch V94 or its save keys. Build V100 as a separate file.
+## VERIFIED / COMPLETED
+- V100 interactive vertical-slice HTML: `v100-brenner-slice.html` originally implemented on `terrain-v100-brenner-gameplay`.
+- Published that separate file to GitHub `main` with commit `793b2464a3490e1b7b983ef685a65fc5f601b476`. GitHub Pages deployment subsequently runs from main; verify deployment separately.
+- Play URL: https://wayfinderandco0-cell.github.io/century-of-empires/v100-brenner-slice.html
+- Source geography reused V99 measured Copernicus GLO-30 terrain, forest display, and official modern Austrian aerial photos plus OSM waterway data; V94 unit art reused.
+- Four LOD stages: strategic overview **hides all towns/armies**, regional shows labels and army-color dots, mountains shows unit images/counts/status bars, aerial shows orthophoto plus troop overlay.
+- Prototype army counts / force condition / morale displayed when allowed by detection.
+- Austrian and Prussian sample armies follow **one** curated illustrative Brenner corridor, dynamically march, pause/reset and meet. Slope affects movement; a crossing slowdown is expressly illustrative.
+- Fog of war hides enemy counts/locations until own scouting range or optional allied shared sight reveals them.
+- Two browser QA runs completed; most recent run passed **20/20** iPhone-sized (390 × 844) Chromium checks, including zero JavaScript page errors, real aerial tile display, units, scout-sharing, commands and eventual contact. Screenshot outputs and report saved under `terrain-v100/` on the V100 branch.
+- Visual screenshot review led to follow-up polish: collapsed source/legal note, separated contact markers, adjusted sprite artwork blending.
+- Older V94 HTML, its real campaign saves and save keys **remain unchanged**.
 
-## User-approved design decisions — do not re-ask
-1. **One vertical slice first**, Innsbruck → Brenner Pass, rather than rebuilding Europe at once.
-2. **Very few army routes.** Main geographically credible valley/pass corridor only for prototype; at most one meaningful alternate later if it improves gameplay. Do NOT copy modern road spaghetti or create dozens of bypasses that prevent armies meeting. Soldiers, cavalry, artillery/wagons should be directed to real crossings and mountain passes.
-3. Preserve the realistic V97 mountains and V99 close aerial trees and mapped streams; improve blue river/stream blending. Modern image data must not be presented as historically verified 1780 roads/forests/bridges.
-4. Zoom LOD:
-   - far zoom: terrain and borders only; **no town labels, towns, or army units**.
-   - medium zoom: town names and locations appear; army units only simple nation-color dots, no counts or sprites.
-   - close zoom: reuse the existing V94 unit artwork for visible units, scaled naturally to map terrain and routes; no giant figures.
-   - maintain consistent world coordinates between views and keep switches smooth.
-5. Fog of war:
-   - player's own armies always visible where appropriate for the zoom level;
-   - enemies visible only if within scouting radius of own armies, observed territory, or allied shared-visibility border areas;
-   - otherwise **do not reveal enemy army count or exact positions**. Last-known markers may be a later enhancement, clearly marked stale.
-   - zoom LOD **never overrides fog of war**.
-6. Gameplay goal: army travels along the selected valley route; river crossings and steep gradients affect travel; opposing armies sharing the corridor are capable of meeting/engaging.
-7. Test on iPhone-size viewport before promising a user-facing build. Publish only after basic JS, map, touch, and assets pass QA.
+## Still NOT done
+- A real physical iPhone/Safari test has not been performed. GitHub Pages publication does not prove touch/pan success on the user's device.
+- Brenner route follows plausible valley control points for an *illustrative prototype*, not an authenticated 1780 road. Ancient trails/bridges, historical forests, river-crossing specifics and battles remain to be researched.
+- Movement is a fixed shared corridor with calculated slowdown, **not** Europe-wide route-aware pathfinding; the unit encounter is a meeting event, **not** an implemented battle simulation.
+- V100 standalone scene is not wired into the production V94 game's economy, diplomacy, AI, combat, existing provinces or save state.
+- Unit graphic composites remain prototypes; make cavalry and artillery look natural without needing screen-blended dark photographic backgrounds.
+- Grounded geography/forests and close-detail textures outside the Brenner prototype remain unfinished.
 
-## Next action in next active session (no background work)
-Create `v100-brenner-slice.html` on `terrain-v100-brenner-gameplay`, borrowing V99 geography layers and V94 unit art, implementing a **minimal interactive demo**:
-- One main Innsbruck–Brenner corridor with a known, clearly illustrative path and limited encounter choke point; label historical uncertainty.
-- Two sample armies approaching along this route; marching/start-pause-reset controls and collision encounter indication.
-- 4-level existing map control with user LOD rules, including no towns/units at level 1, medium town names + dots, and detailed sprites closer in.
-- Small simple player sight range and ally share toggle to demonstrate fog; do not expose enemy count outside sight.
-- Existing V99 aerial close-up works, mapped streams are kept and water styles improved if feasible.
-- All prototype armies and controls isolated, not wired to production V94 save state or combat engine yet.
-- Verify behavior and publish a standalone preview only when ready; say what is real vs simplified.
+## Next logical work
+1. User view test: open V100 published link in iPhone Safari; evaluate portrait/landscape, tabs, forest/stream rendering, army scale and pinch/pan. Do not assume these verified based solely on headless Chromium.
+2. Correct route fidelity against historical geographic sources, keeping **few strategic chokepoint routes**.
+3. Finalize infantry/cavalry/artillery composite sprite and status UI.
+4. Implement actual province-to-terrain-corrridor integration inside a **new game version** only after reliable standalone QA; preserve older campaign saves.
+5. Expand Europe using reusable terrain + army LOD architecture only after this isolated slice is good.
 
-## Explicit blockers / honesty
-- Branch creation != playable V100.
-- No verified 1780 road or bridge dataset yet; paths require curated historical geography review.
-- Existing V94 army movement is province-link based; route-aware pathfinding integration and true combat engine are **not** complete.
-- Current V99 aerial-view overlay and regional relief are separate display layers; sprite positions/visibility must be consistent across them.
-- No autonomous ongoing coding between chats. Resume work from this checkpoint when user returns.
-
-## Success checklist
-- [ ] V100 HTML prototype added and opened successfully
-- [ ] Only one visible main strategic movement route in Brenner
-- [ ] Far: no towns/labels/units
-- [ ] Medium: labels + basic dots only, detected armies only
-- [ ] Close: scaled V94 sprites for detected armies, same positions
-- [ ] Two opposing troops advance along corridor and can meet
-- [ ] Fog hides enemy positions/counts outside scouting/ally sight
-- [ ] Streams, aerial canopy and relief appear and load together
-- [ ] Mobile visual QA passes
-- [ ] Standalone user test URL available
-- [x] V94 and user campaign saves preserved by isolated V100 branch
+## User-approved principles
+- Realistic geography and map appearance outrank adding more game mechanics.
+- 4 zoom levels smooth with the same world geography; no artificial multi-route road spaghetti.
+- Far: no towns/units. Medium: towns/dots only. Close: small formation art, counts, strength/power and morale.
+- No fog leaks from zoom transitions. Enemy counts remain hidden without legitimate sight.
+- Trees/rivers/mountains are strategic terrain: control movement, defense and choke points.
+- Modern aerial observations must **not** be represented as historically verified terrain from 1780.

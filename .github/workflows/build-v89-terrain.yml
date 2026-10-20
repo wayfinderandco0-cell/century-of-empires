@@ -1,0 +1,58 @@
+name: Build real elevation terrain atlas
+
+on:
+  push:
+    paths:
+      - 'scripts/build_v89_terrain.py'
+      - '.github/workflows/build-v89-terrain.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install terrain-builder dependencies
+        run: python -m pip install --disable-pip-version-check numpy Pillow requests
+      - name: Generate geographic elevation and coastline layers
+        run: python scripts/build_v89_terrain.py
+      - name: Verify output dimensions and measurements
+        run: |
+          python - <<'PY'
+          import json
+          from PIL import Image
+          m=Image.open('terrain-v89.webp')
+          assert m.size==(4096,3072),m.size
+          h=json.load(open('terrain-v89-height.json'))
+          assert (h['width'],h['height'])==(256,192)
+          assert len(h['heights'])==256*192
+          assert max(h['heights'])>1500,'DEM did not load European mountain peaks'
+          c=json.load(open('terrain-v89-land.json'))
+          assert len(c['polygons'])>20,'Natural Earth coastline did not load'
+          print('VALIDATED',m.size,'max elevation',max(h['heights']),'land polygons',len(c['polygons']))
+          PY
+      - name: Commit generated map layers
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add terrain-v89.webp terrain-v89-height.json terrain-v89-land.json
+          if git diff --cached --quiet; then
+            echo "No map data changes"
+          else
+            git commit -m "Build real measured-elevation V89 atlas and registered geography"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 3
+            done
+            exit 1
+          fi

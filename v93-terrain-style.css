@@ -1,0 +1,20 @@
+/* V93 satellite-style forests: real relief remains visible through textured tree cover. */
+#map #v93Woodland{pointer-events:none;opacity:1}
+#map #v93Woodland[data-zoom-lod="0"]{display:none}
+#map #v93Woodland[data-zoom-lod="1"]{opacity:.26}
+#map #v93Woodland[data-zoom-lod="2"]{opacity:.70}
+#map #v93Woodland[data-zoom-lod="3"]{opacity:1}
+#map #v93Woodland .v93-forest-bed{fill:#43654d;fill-opacity:.28;stroke:none}
+#map #v93Woodland .v93-forest-canopy{fill:url(#v93ForestPattern);fill-opacity:.93;stroke:none}
+#map.v89-terrain #v93Woodland[data-zoom-lod="3"] .v93-forest-bed{fill-opacity:.23}
+#map.v89-terrain #v93Woodland[data-zoom-lod="3"] .v93-forest-canopy{fill-opacity:.99}
+/* Restore waterways suppressed in V83 terrain mode; game river lines, not decorative fakes. */
+#map.v89-terrain #atlasRivers{display:inline!important;opacity:1!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="0"]{opacity:.24!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="1"]{opacity:.50!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="2"]{opacity:.80!important}
+#map.v89-terrain #atlasRivers[data-zoom-lod="3"]{opacity:1!important}
+#map.v89-terrain #atlasRivers .river-bank{stroke:#c6d3c7;stroke-width:2.8;stroke-opacity:.72}
+#map.v89-terrain #atlasRivers .river-channel{stroke:#427c8b;stroke-width:1.65;stroke-opacity:1}
+#map.v89-terrain #atlasRivers .river-minor.river-bank{stroke-width:1.8;stroke-opacity:.58}
+#map.v89-terrain #atlasRivers .river-minor.river-channel{stroke-width:1.1;stroke-opacity:.88}

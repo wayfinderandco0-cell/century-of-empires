@@ -1,0 +1,23 @@
+{
+  "v89Screenshot": "qa/v89-dresden-zoom.jpg",
+  "v89JsErrors": [],
+  "regionalTile": {
+    "status": "ready",
+    "region": "Central Europe",
+    "image": [
+      3072,
+      3209
+    ],
+    "mapRect": [
+      482.666667,
+      398.938776,
+      275.809524,
+      288.122449
+    ],
+    "source": "Mapzen/AWS elevation-tiles-prod Terrarium z9"
+  },
+  "closeZoomWidth": 108.87999725341797,
+  "overlayVisible": true,
+  "v90Screenshot": "qa/v90-dresden-zoom.jpg",
+  "v90JsErrors": []
+}

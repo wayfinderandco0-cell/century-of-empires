@@ -58,13 +58,13 @@ function v91BuildWoodland(){
    const shade=rand()>.45,conifer=height>500||cy<480||rand()<.30;
    if(conifer){
     const top=fix(y-3.4*scale),lower=fix(y+1.65*scale);
-    const side=fix(1.8*scale),wide=fix(2.7*scale);
-    const d='M'+px+' '+top+'l-'+side+' '+fix(2.45*scale)+
-     'h'+fix(.82*scale)+'l-'+wide+' '+fix(2.55*scale)+
-     'h'+fix(1.1*scale)+'l-'+fix(1.05*scale)+' '+fix(1.32*scale)+
-     'h'+fix(2.1*scale)+'l-'+fix(1.0*scale)+' -'+fix(1.32*scale)+
-     'h'+fix(1.1*scale)+'l-'+wide+' -'+fix(2.55*scale)+
-     'h'+fix(.82*scale)+'Z';
+    const d='M'+px+' '+top+
+     'l-'+fix(1.5*scale)+' '+fix(2.3*scale)+
+     'l'+fix(.7*scale)+' 0l-'+fix(1.7*scale)+' '+fix(2.1*scale)+
+     'l'+fix(.9*scale)+' 0l-'+fix(1.25*scale)+' '+fix(2*scale)+
+     'l'+fix(5.7*scale)+' 0l-'+fix(1.25*scale)+' -'+fix(2*scale)+
+     'l'+fix(.9*scale)+' 0l-'+fix(1.7*scale)+' -'+fix(2.1*scale)+
+     'l'+fix(.7*scale)+' 0Z';
     (shade?dark:light).push(d);
     trunks.push('M'+px+' '+lower+'v'+fix(1.0*scale));
     shadows.push('M'+fix(x-1.5*scale)+' '+fix(y+2.8*scale)+

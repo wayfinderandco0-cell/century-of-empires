@@ -1,0 +1,95 @@
+name: Visual smoke-test V89 mobile map
+
+on:
+  push:
+    paths:
+      - 'v89.html'
+      - '.github/workflows/qa-v89-map.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser checks
+        run: |
+          python -m pip install --disable-pip-version-check playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Run iPhone-sized visual and functional terrain smoke test
+        run: |
+          python - <<'PY'
+          import json, subprocess, time, os
+          from pathlib import Path
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          Path('qa').mkdir(exist_ok=True)
+          web=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                              stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          report={}
+          try:
+              time.sleep(2)
+              with sync_playwright() as pw:
+                  browser=pw.chromium.launch(headless=True,args=['--disable-gpu-sandbox'])
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  errors=[]
+                  page.on('pageerror',lambda error: errors.append(str(error)))
+                  page.goto('http://127.0.0.1:8765/v89.html',wait_until='domcontentloaded',timeout=60000)
+                  page.wait_for_function("window.__terrainQA && window.__terrainQA.mode !== 'loading'",timeout=120000)
+                  status=page.evaluate("window.__terrainQA")
+                  report['terrain']=status
+                  assert status.get('mode')=='measured-elevation',status
+                  assert status.get('atlas')==[4096,3072],status
+                  assert status.get('coastlines',0)>20,status
+                  # Reveal the map as on the iPhone. Choose default Prussia.
+                  page.locator('#startBtn').click()
+                  page.wait_for_function(
+                     "document.querySelector('#map')?.classList.contains('v89-terrain') && document.querySelectorAll('#provinces .army-token').length>0",
+                     timeout=30000)
+                  page.wait_for_timeout(1500)
+                  report['terrainImage']=page.locator('#atlasBaseImage').get_attribute('href')
+                  assert report['terrainImage']=='./terrain-v89.webp',report
+                  report['provinceCount']=page.locator('#territories path[data-zone]').count()
+                  report['units']=page.locator('#provinces .army-token').count()
+                  report['coastlines']=page.locator('#continentCoasts path').count()
+                  report['imageLoaded']=page.evaluate("""async () => {
+                    const p=new Image();p.src='./terrain-v89.webp';await p.decode();return [p.naturalWidth,p.naturalHeight]
+                  }""")
+                  assert report['imageLoaded']==[4096,3072]
+                  assert report['provinceCount']>=40,report
+                  assert report['units']>=2,report
+                  page.screenshot(path='qa/v89-mobile.png',full_page=False,animations='disabled')
+                  picture=Image.open('qa/v89-mobile.png').convert('RGB')
+                  report['screenshotSize']=list(picture.size)
+                  assert picture.size[0]>=700 and picture.size[1]>=1400
+                  assert len(picture.resize((160,320)).getcolors(160*320) or [])>800,'Map appears to render as a flat single color'
+                  report['pageErrors']=errors
+                  assert not errors,'Browser JavaScript errors: '+repr(errors)
+                  browser.close()
+          finally:
+              web.terminate()
+          Path('qa/v89-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('BROWSER QA PASS',json.dumps(report))
+          PY
+      - name: Commit validated screenshot and browser report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/v89-report.json qa/v89-mobile.png
+          if ! git diff --cached --quiet; then
+            git commit -m "QA: verify V89 measured terrain in iPhone-sized browser"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 2
+            done
+            exit 1
+          fi

@@ -1,0 +1,20 @@
+{
+  "source": "Mapzen/AWS elevation-tiles-prod Terrarium z9",
+  "projection": "equirectangular",
+  "bboxLonLat": [
+    7.0,
+    44.0,
+    19.0,
+    57.0
+  ],
+  "image": "terrain-detail/central-europe-v90.webp",
+  "imageWidth": 3072,
+  "imageHeight": 3209,
+  "x": 482.666667,
+  "y": 398.938776,
+  "width": 275.809524,
+  "height": 288.122449,
+  "gameWidth": 1448,
+  "gameHeight": 1086,
+  "lastVerifiedDEMZoom": 9
+}

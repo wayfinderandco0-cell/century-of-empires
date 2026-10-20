@@ -29,8 +29,14 @@ try:
     page.screenshot(path=str(OUT/f'{name}-portrait.png'))
     page.locator('#zoomIn').click();page.wait_for_timeout(650)
     result['checks']['zoomInWorks']=page.evaluate('terrainPilot.camera.span<6.8')
-    page.locator('#tilt').click();page.wait_for_timeout(650)
-    result['checks']['overheadWorks']=page.evaluate('terrainPilot.camera.pitch>1.3')
+    page.locator('#tilt').click()
+    result['checks']['tiltTargetSet']=page.evaluate('terrainPilot.target.pitch>1.3')
+    # A slow software-rendering frame can delay camera interpolation; wait for the actual rendered pitch.
+    try:
+     page.wait_for_function('terrainPilot.camera.pitch>1.3',timeout=7000)
+     result['checks']['overheadWorks']=True
+    except Exception:
+     result['checks']['overheadWorks']=False
     page.locator('#home').click();page.wait_for_timeout(800)
     page.locator('#terrain').tap(position={'x':170,'y':400})
     result['checks']['tapInspectsGeography']=page.locator('#inspect').is_visible()

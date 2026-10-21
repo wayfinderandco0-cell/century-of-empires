@@ -1,0 +1,24 @@
+name: Matrei V107 iPhone Browser QA
+on:
+  push:
+    branches: [matrei-lidar-preview-release]
+    paths: ['v107-matrei-terrain-study.html','scripts/qa_matrei_preview.py','.github/workflows/qa-matrei-v107.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install browser engines
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Test iPhone portrait and landscape, route toggle, camera, runtime
+        run: python scripts/qa_matrei_preview.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: matrei-v107-browser-qa, path: terrain-puzzle/wipptal-matrei/matrei-v107-browser-qa.json}

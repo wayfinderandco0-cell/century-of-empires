@@ -475,6 +475,10 @@ window.addEventListener("resize",resize);
 window.centuryV116Proof={get ready(){return imageReady},get route(){return state.selected},
  get count(){return state.marks.length},get sharedTransformError(){return transformError},
  get snapshot(){return {cam:view,route:state.selected,marks:[...state.marks],distancePx:state.distancePx,position:graph.sample(state.selected,state.distancePx),moving:state.playing,notice:state.notice}},get bridgeCandidate(){return candidate},get baselineBridge(){return originalBridge},changeView:setPreset,
- measurePoint:(p,n=state.selected)=>closestDistance(p,routes[n]),routes,graph,renderer,index,chooseRoute:choose};
+ measurePoint:(p,n=state.selected)=>closestDistance(p,routes[n]),routes,graph,renderer,index,chooseRoute:choose,
+  qaSetDistance:(name,d)=>{if(!Object.hasOwn(routes,name)||!Number.isFinite(d))throw Error("Bad QA coordinate");
+    state.selected=name;state.distancePx=Math.max(0,Math.min(graph.length(name),d));
+    state.playing=false;state.notice="QA-only position inspection; not actual travel";
+    syncRouteButtons();draw();return graph.sample(name,state.distancePx);}};
 resize();syncRouteButtons();requestAnimationFrame(frame);
 </script></body></html>

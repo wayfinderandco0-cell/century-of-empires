@@ -110,7 +110,7 @@ for lineidx,line in enumerate(road_lines):
  for k in range(n):
   d=k/(n-1)*geom.length;p=geom.interpolate(d)
   nid=f"{CELL}:R{lineidx}:N{k}"
-  waypoints.append({"id":nid,"coords_xy_m":rnd((p.x,p.y)),"road_source_way":line["osm_way_id"],"line_id":lineidx,"distance_along_m":round(d,2),"visible_in_game":False,"approved_for_movement":False})
+  waypoints.append({"id":nid,"coords_xy_m":rnd((p.x,p.y)),"road_source_ways":line["source_osm_way_ids"],"line_id":lineidx,"distance_along_m":round(d,2),"visible_in_game":False,"approved_for_movement":False})
   if prev:links.append({"from":prev,"to":nid,"line_id":lineidx,"active":False,"historical_alignment_verified":False,"troop_suitability":"pending_terrain_check"})
   prev=nid
 # Sample retained DEM for context: broad landforms only.

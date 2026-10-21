@@ -95,15 +95,24 @@ function build(graph){
   ctx.save();
   try{
    ctx.lineCap="round";ctx.lineJoin="round";
-   ctx.globalAlpha=opts.alpha===undefined?.82:opts.alpha;
+   ctx.globalAlpha=opts.alpha===undefined?.38:opts.alpha;
    if(!Number.isFinite(ctx.globalAlpha)||ctx.globalAlpha<0||ctx.globalAlpha>1)
      throw Error("Invalid road opacity");
    for(const path of chosen){
-    trace(ctx,project,path,"#443f30",18*scale);
-    trace(ctx,project,path,"#9b845c",14*scale);
-    trace(ctx,project,path,"#b8a077",11*scale);
-    trace(ctx,project,offsets(path,-3.6),"#66583f",1.3*scale);
-    trace(ctx,project,offsets(path,3.6),"#66583f",1.3*scale);
+    if(path===edges.bridge){
+     // Keep the underlying stone bridge visible. Do not paint a modern
+     // solid ribbon across its masonry, parapets, river, or approach.
+     trace(ctx,project,path,"#715f48",2.6*scale);
+     trace(ctx,project,offsets(path,-1.35),"#5a4b3b",.48*scale);
+     trace(ctx,project,offsets(path,1.35),"#5a4b3b",.48*scale);
+    }else{
+     // Narrow, translucent preindustrial cartway with two wheel ruts.
+     trace(ctx,project,path,"#4f4634",9*scale);
+     trace(ctx,project,path,"#9b8a68",7.5*scale);
+     trace(ctx,project,path,"#c0ad84",6*scale);
+     trace(ctx,project,offsets(path,-2),"#665b46",.75*scale);
+     trace(ctx,project,offsets(path,2),"#665b46",.75*scale);
+    }
    }
   }finally{ctx.restore();}
   return Object.freeze({kind:"prototype-cart-track",route,

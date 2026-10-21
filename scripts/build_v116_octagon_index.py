@@ -21,12 +21,23 @@ ALLOWED_KINDS = {"background", "scenic", "route", "strategic"}
 def make_index(manifest, annotations=None, cols=24, rows=18):
     if manifest.get("projection") != "equirectangular":
         raise ValueError("Expected V94 equirectangular projection")
-    west, south, east, north = manifest["extent"]
-    width, height = manifest["gameSize"]
-    if cols < 1 or rows < 1 or cols * rows > 5000:
+    extent = manifest.get("extent")
+    game_size = manifest.get("gameSize")
+    if (not isinstance(extent, (list, tuple)) or len(extent) != 4 or
+            any(type(v) not in (int, float) or not math.isfinite(v) for v in extent)):
+        raise ValueError("extent must contain four finite numeric coordinates")
+    if (not isinstance(game_size, (list, tuple)) or len(game_size) != 2 or
+            any(type(v) not in (int, float) or not math.isfinite(v) or v <= 0 for v in game_size)):
+        raise ValueError("gameSize must contain two positive finite numeric dimensions")
+    west, south, east, north = extent
+    width, height = game_size
+    if west >= east or south >= north:
+        raise ValueError("extent must have increasing west/east and south/north bounds")
+    if (type(cols) is not int or type(rows) is not int or
+            cols < 1 or rows < 1 or cols * rows > 5000):
         raise ValueError("Invalid requested grid dimensions")
     dx, dy = width / cols, height / rows
-    if abs(dx - dy) > 0.015 * max(dx, dy):
+    if not math.isclose(dx, dy, rel_tol=1e-9, abs_tol=1e-9):
         raise ValueError("Octagons need square map-pixel footprints for regular edges")
     annotated = (annotations or {}).get("cells", {})
     if not isinstance(annotated, dict):

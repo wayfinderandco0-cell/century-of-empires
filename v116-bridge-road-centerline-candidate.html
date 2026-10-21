@@ -27,11 +27,11 @@ button:disabled{opacity:.5}
 <small>The revised route is provisional artwork alignment. No far-bank continuation, historic GIS verification or production travel enabled.</small></div></div>
 <div id="bottom">
 <div class="group" id="views">
-<button data-view="whole" aria-pressed="true">Whole art</button><button data-view="town">Village</button>
-<button data-view="junction">Fork</button><button data-view="bridge">Bridge</button>
+<button data-view="whole" aria-pressed="false">Whole art</button><button data-view="town">Village</button>
+<button data-view="junction">Fork</button><button data-view="bridge" aria-pressed="true">Bridge</button>
 </div>
 <div class="group">
-<button id="south" aria-pressed="true">South route</button><button id="bridgeRoute">Bridge candidate</button>
+<button id="south" aria-pressed="false">South route</button><button id="bridgeRoute" aria-pressed="true">Bridge candidate</button>
 <button id="march">March demo</button><button id="overlays">Hide lines</button><button id="audit">Audit +</button>
 </div>
 <div id="status" role="status">Loading original artwork…</div>
@@ -175,7 +175,7 @@ const originalArt="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAw
 const renderer=CenturyV116Tiles;
 renderer.validate(index);
 const C=document.getElementById("map"),ctx=C.getContext("2d",{alpha:false}),state={
-  selected:"south",playing:false,progress:0,showLines:true,edit:false,marks:[],preset:"whole"
+  selected:"bridge",playing:false,progress:.71,showLines:true,edit:false,marks:[],preset:"bridge"
 };
 const candidate={"schemaVersion":1,"kind":"candidate_painted_bridge_centerline_not_authoritative","sourceImage":"V115 embedded original V109-like JPEG, 1100x842 pixels","sourceV115BlobSha":"9a8f44120c2f220abf434bed384f230cf6483296","sourceRouteFile":"terrain-grid/v115-route-provenance.json","originalBrokenBridgePath":[[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[418,744],[398,748],[378,751],[364,753],[388,758],[412,763],[435,768],[460,775],[483,780],[505,784],[527,788],[550,793],[573,796],[593,800],[611,803],[634,807],[655,813],[678,818],[704,824]],"sharedForkIndex":36,"bridgeCenterlineArtPx":[[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[450,746],[466,749],[483,752],[500,757],[516,762],[531,766],[549,771],[570,775],[591,779],[613,783],[634,786],[656,789],[679,794],[699,799]],"visualReferencePointsArtPx":[[540,769],[560,773],[600,781],[645,790],[687,797]],"method":"Visual inspection of decoded actual JPEG with red/cyan original path and yellow candidate; reference pixels chosen by analyst from painted bridge. These are not survey/GIS/historical points.","regressionAcceptance":{"maxCandidatePointDriftPx":4,"minOriginalPointDriftPx":15,"forbidReverseXAfterFork":true,"requireEndpointWithinImage":true,"stopAtVisibleFarBank":true},"verification":{"sharedCoordinateSystem":true,"sourceIsActualV115Artwork":true,"oldBacktrackingRouteRemoved":true,"artworkCenterlineProvisional":true,"historicalRoadVerified":false,"realIphoneSafariVerified":false,"roadOnFarBankBeyondBridgeVerified":false,"traversableProductionBridge":false,"conquerableProductionTarget":false},"roadBeyondBridge":"STOP at end of painted far-bank bridge candidate; cannot leave artwork. No invented continuation.","notes":["South route intentionally not modified in this change. Its alignment is still unverified.","All visual markers refer to V115 oblique art pixels, not geographic survey points.","Apply candidate to standalone inspector only until physical iPhone review."]};
 const originalBridge=provenance.bridgePath;
@@ -205,7 +205,7 @@ function calcCam(){
 function resize(){
  w=C.clientWidth||innerWidth; h=C.clientHeight||innerHeight;
  dpr=Math.min(2,devicePixelRatio||1); C.width=Math.round(w*dpr);C.height=Math.round(h*dpr);
- if(!widthWorld)setPreset("whole"); else draw();
+ if(!widthWorld)setPreset("bridge"); else draw();
 }
 function screen(p){
  return renderer.worldToScreen(artWorld(p),view,{width:w,height:h});
@@ -294,7 +294,7 @@ function frame(t){
   if(state.progress>=1)state.playing=false; draw();}
  lastFrame=t;requestAnimationFrame(frame);
 }
-function choose(name){state.selected=name;state.progress=0;state.playing=false;
+function choose(name){state.selected=name;state.progress=name==="bridge"?.71:0;state.playing=false;
  document.getElementById("march").textContent="March demo";
  document.getElementById("south").setAttribute("aria-pressed",String(name==="south"));
  document.getElementById("bridgeRoute").setAttribute("aria-pressed",String(name==="bridge"));draw();}

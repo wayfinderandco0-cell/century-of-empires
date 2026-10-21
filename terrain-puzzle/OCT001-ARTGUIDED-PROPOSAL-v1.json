@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "cell_id": "BNR:O:0:0",
+  "status": "ART_GUIDED_PROPOSAL_NOT_GAMEPLAY",
+  "linked_style_image": "century_oct001_vnext_natural_river_clean.jpg (conversation asset, not GitHub)",
+  "linked_renderer_script": "build_oct001_art_guided_corridors.py (conversation asset, not GitHub)",
+  "north_up": true,
+  "origin_lonlat": [
+    11.52,
+    47.13
+  ],
+  "world_extent_xy_m": [
+    -560,
+    -560,
+    560,
+    560
+  ],
+  "control_point_system": "1000x1000 normalized illustration pixels, x right/y down. Transform world_xy_m=(1.12*art_x-560,560-1.12*art_y).",
+  "canonical_geometry": "PCHIP x as a function of north-up y, arc-length sample every 3.5m; hidden nodes derive from precisely the same polyline every ~32m (including end).",
+  "proposals": [
+    {
+      "id": "west_meadow_terrace",
+      "art_points_1000": [
+        [
+          540,
+          170
+        ],
+        [
+          548,
+          226
+        ],
+        [
+          547,
+          283
+        ],
+        [
+          530,
+          335
+        ],
+        [
+          506,
+          373
+        ],
+        [
+          523,
+          417
+        ],
+        [
+          542,
+          459
+        ],
+        [
+          508,
+          510
+        ],
+        [
+          472,
+          540
+        ],
+        [
+          444,
+          577
+        ],
+        [
+          414,
+          608
+        ],
+        [
+          392,
+          648
+        ],
+        [
+          385,
+          688
+        ],
+        [
+          372,
+          732
+        ]
+      ],
+      "source": "art-directed meadow terrace under approval"
+    },
+    {
+      "id": "east_bank_north_approach",
+      "art_points_1000": [
+        [
+          741,
+          172
+        ],
+        [
+          725,
+          224
+        ],
+        [
+          737,
+          274
+        ],
+        [
+          714,
+          327
+        ],
+        [
+          732,
+          369
+        ],
+        [
+          720,
+          414
+        ]
+      ],
+      "source": "art-directed partial east-bank corridor, intentionally stops before uncertain rocky terrain"
+    }
+  ],
+  "labels": {
+    "bridge": "NONE",
+    "river_crossing": "NONE",
+    "historic_road": "NOT_VERIFIED",
+    "route_ability": "DISABLED",
+    "route_neighbor_seam": "NOT_CHECKED"
+  },
+  "validation": {
+    "candidate_routes": 2,
+    "hidden_candidate_nodes": 34,
+    "geometry": [
+      {
+        "id": "west_meadow_terrace",
+        "nodes": 24,
+        "rendered_source_points": 205,
+        "length_m": 713.9,
+        "max_node_to_centerline_error_m": 0.0007,
+        "minimum_water_clearance_m": 101.38
+      },
+      {
+        "id": "east_bank_north_approach",
+        "nodes": 10,
+        "rendered_source_points": 83,
+        "length_m": 287,
+        "max_node_to_centerline_error_m": 0.0005,
+        "minimum_water_clearance_m": 70.67
+      }
+    ],
+    "all_gameplay_links_disabled": true,
+    "source_image_registered_to_measured_dem": false,
+    "river_source_Fidlerbach_mapped": true,
+    "all_candidate_points_inside_octagon": true
+  },
+  "full_resolution_exports": {
+    "clean": "century_oct001_artguided_corridor_clean.jpg",
+    "debug": "century_oct001_artguided_corridor_debug.jpg",
+    "comparison": "century_oct001_artguided_comparison.jpg",
+    "all_are_conversation_files_not_repository_assets": true
+  },
+  "warnings": [
+    "Illustrated landscape is not DEM-registered, so no physical passability or historicity established.",
+    "Neither route is certified for cavalry or artillery.",
+    "Both routes end within octagon, not validated links to adjacent cells.",
+    "No historical bridges or fords are claimed.",
+    "Keep previous 25-node legacy graph intact for comparison; no migration or gameplay change."
+  ]
+}

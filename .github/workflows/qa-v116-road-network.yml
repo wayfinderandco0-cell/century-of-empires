@@ -1,0 +1,39 @@
+name: V116 Corrected Road Graph (Actual Artwork) Browser QA
+on:
+  push:
+    branches: [terrain-v116-hour6-route-art-integrity]
+    paths:
+      - "v116-bridge-road-centerline-candidate.html"
+      - "terrain-grid/v116-painted-road-network-candidate.json"
+      - "scripts/v116_local_art_renderer.js"
+      - "scripts/qa_v116_road_network.py"
+      - "tests/test_v116_road_network.js"
+      - ".github/workflows/qa-v116-road-network.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  verify-road-graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Validate candidate geometry and seamless renderer
+        run: |
+          node tests/test_v116_road_network.js
+          node tests/test_v116_renderer.js
+          python -m unittest discover -s tests -p 'test_v116_*.py' -v
+      - name: Install iPhone-viewport browser engines
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Audit actual JPEG road alignment, controls and unit travel
+        run: python scripts/qa_v116_road_network.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v116-original-artwork-road-qa
+          path: qa/v116/

@@ -1,0 +1,43 @@
+name: Tyrol High Resolution Terrain Source Check
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'scripts/discover_tyrol_wcs.py'
+      - '.github/workflows/qa-tyrol-wcs.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python scripts/discover_tyrol_wcs.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tyrol-wcs-discovery-${{ github.run_id }}
+          path: terrain-puzzle/wipptal-matrei/tirol-*
+      - name: Save capability metadata
+        if: success()
+        env:
+          SHA_AT_START: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$SHA_AT_START" ]; then
+            echo 'Branch moved, leaving result in action artifact.'
+            exit 1
+          fi
+          git add terrain-puzzle/wipptal-matrei/tirol-high-res-source-discovery.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Document official Tyrol sub-meter DEM service'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

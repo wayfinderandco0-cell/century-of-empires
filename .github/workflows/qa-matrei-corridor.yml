@@ -1,0 +1,53 @@
+name: Matrei Historic Corridor Geographic Control
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'scripts/build_matrei_corridor.py'
+      - '.github/workflows/qa-matrei-corridor.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: matrei-corridor-source
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install geographic processing
+        run: pip install pillow shapely
+      - name: Retrieve modern OpenStreetMap geometry, crop and validate
+        run: python scripts/build_matrei_corridor.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrei-control-${{ github.run_id }}
+          path: |
+            terrain-puzzle/wipptal-matrei/matrei-road-control.json
+            terrain-puzzle/wipptal-matrei/matrei-road-qa.json
+            terrain-puzzle/wipptal-matrei/matrei-modern-road-control.jpg
+      - name: Save geographic source to branch when head unchanged
+        if: success()
+        env:
+          ORIGINAL_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$ORIGINAL_SHA" ]; then
+            echo 'Branch changed; keep generated artifact only.'
+            exit 1
+          fi
+          git add terrain-puzzle/wipptal-matrei/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Matrei historic corridor: geographic control map, modern road candidate and disabled nodes'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

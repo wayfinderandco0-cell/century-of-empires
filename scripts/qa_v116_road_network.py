@@ -82,6 +82,7 @@ try:
                         )
                         page.screenshot(path=str(OUT / f"{name}-south.png"), full_page=True)
                         for view in ("whole", "town", "junction", "bridge"):
+                            page.locator("#viewToggle").click()
                             page.locator(f'[data-view="{view}"]').click()
                             checks[f"view_{view}"] = page.evaluate(
                                 "centuryV116Proof.sharedTransformError < .000001"
@@ -108,6 +109,7 @@ try:
                             "centuryV116Proof.count === 0"
                         )
                         page.locator("#audit").click()
+                        page.locator("#viewToggle").click()
                         page.locator('[data-view="bridge"]').click()
                         if h > w:
                             page.locator("#march").click()

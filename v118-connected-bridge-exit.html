@@ -79,7 +79,7 @@ function distanceToCenterline(p,route){
 }
 function build(graph){
  if(!graph||graph.kind!=="art-aligned-candidate"||graph.approvedForProduction!==false||
-    graph.conquerable!==false||graph.bridgeTerminal!=="visible-far-bank-only"||
+    graph.conquerable!==false||!["visible-far-bank-only","authored-east-edge-only"].includes(graph.bridgeTerminal)||
     typeof graph.sample!=="function"||typeof graph.length!=="function"||
     !graph.edges||!graph.paths||!graph.endpoints||!Array.isArray(graph.imageSize))
     throw Error("V117 refuses unverified or production bridge graph");
@@ -409,7 +409,7 @@ else root.CenturyV117RoadArt=api;
         throw Error("Invalid movement step");
       const distance=Math.min(length(name),rawDistance+deltaPx);
       return {route:name,distance,position:sample(name,distance),arrived:distance>=length(name)-1e-8,
-        terminal:name==="bridge"?"visible-far-bank-stop":"art-boundary-stop"};
+        terminal:name==="bridge"?(endOfBridge==="authored-east-edge-only"?"east-boundary-stop":"visible-far-bank-stop"):"art-boundary-stop"};
     }
     function landmarkAudit(landmarks,original) {
       if(!Array.isArray(landmarks)||landmarks.length<1)throw Error("No visual landmarks");
@@ -454,7 +454,7 @@ function extend(original){
    throw Error("V118 requires the verified candidate bridge endpoint at [699,799]");
  const out=original.map(p=>p.slice()).concat(east.map(p=>p.slice()));
  if(!same(out.at(-1),[1100,781]))throw Error("East boundary mismatch");
- for(let i=1;i<out.length;i++){
+ for(let i=original.length;i<out.length;i++){
   const p=out[i],a=out[i-1];
   if(!p.every(Number.isFinite)||p.some((n,j)=>n<0||n>(j?842:1100))||
      Math.hypot(p[0]-a[0],p[1]-a[1])>34)
@@ -507,7 +507,7 @@ const C=document.getElementById("map"),ctx=C.getContext("2d",{alpha:false}),stat
 };
 const candidate={"schemaVersion":1,"kind":"candidate_painted_bridge_centerline_not_authoritative","sourceImage":"V115 embedded original V109-like JPEG, 1100x842 pixels","sourceV115BlobSha":"9a8f44120c2f220abf434bed384f230cf6483296","sourceRouteFile":"terrain-grid/v115-route-provenance.json","originalBrokenBridgePath":[[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[418,744],[398,748],[378,751],[364,753],[388,758],[412,763],[435,768],[460,775],[483,780],[505,784],[527,788],[550,793],[573,796],[593,800],[611,803],[634,807],[655,813],[678,818],[704,824]],"sharedForkIndex":36,"bridgeCenterlineArtPx":[[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[450,746],[466,749],[483,752],[500,757],[516,762],[531,766],[549,771],[570,775],[591,779],[613,783],[634,786],[656,789],[679,794],[699,799]],"visualReferencePointsArtPx":[[540,769],[560,773],[600,781],[645,790],[687,797]],"method":"Visual inspection of decoded actual JPEG with red/cyan original path and yellow candidate; reference pixels chosen by analyst from painted bridge. These are not survey/GIS/historical points.","regressionAcceptance":{"maxCandidatePointDriftPx":4,"minOriginalPointDriftPx":15,"forbidReverseXAfterFork":true,"requireEndpointWithinImage":true,"stopAtVisibleFarBank":true},"verification":{"sharedCoordinateSystem":true,"sourceIsActualV115Artwork":true,"oldBacktrackingRouteRemoved":true,"artworkCenterlineProvisional":true,"historicalRoadVerified":false,"realIphoneSafariVerified":false,"roadOnFarBankBeyondBridgeVerified":false,"traversableProductionBridge":false,"conquerableProductionTarget":false},"roadBeyondBridge":"STOP at end of painted far-bank bridge candidate; cannot leave artwork. No invented continuation.","notes":["South route intentionally not modified in this change. Its alignment is still unverified.","All visual markers refer to V115 oblique art pixels, not geographic survey points.","Apply candidate to standalone inspector only until physical iPhone review."]};
 const originalBridge=provenance.bridgePath;
-const graph=CenturyV116RoadGraph.build({south:provenance.rawPath,bridge:CenturyV118East.extend(candidate.bridgeCenterlineArtPx),forkIndex:provenance.forkIndex,imageSize:[1100,842]});
+const graph=CenturyV116RoadGraph.build({south:provenance.rawPath,bridge:CenturyV118East.extend(candidate.bridgeCenterlineArtPx),forkIndex:provenance.forkIndex,imageSize:[1100,842],endOfBridge:"authored-east-edge-only"});
 const roadPainter=CenturyV117RoadArt.build(graph);
 const routes=graph.paths;
 const sizes=index.artSizePx,box=index.artBoxWorldPx; const SW=sizes[0],SH=sizes[1];

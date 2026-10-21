@@ -1,0 +1,71 @@
+{
+  "version": 116,
+  "status": "prototype_geometry_audit_only",
+  "source": {
+    "repository": "wayfinderandco0-cell/century-of-empires",
+    "path": "v115-town-pan-controls.html",
+    "branch": "main",
+    "githubBlobSha": "9a8f44120c2f220abf434bed384f230cf6483296",
+    "description": "Exact route arrays extracted from V115 source; prototype-only and not evidence of historical or visually aligned road"
+  },
+  "mapProjection": "equirectangular",
+  "artBoxWorldPx": [
+    584.731743146,
+    617.607375696,
+    0.45,
+    0.344454545
+  ],
+  "forkArtPx": [
+    437,
+    742
+  ],
+  "forkWorldPx": [
+    584.910515873,
+    617.91092115
+  ],
+  "routes": {
+    "south": {
+      "artPointCount": 43,
+      "artLengthPx": 965.24547,
+      "startWorldPx": [
+        584.983743146,
+        617.607375696
+      ],
+      "endWorldPx": [
+        584.860606782,
+        617.951830241
+      ],
+      "candidateParentCells": [
+        "r10-c09"
+      ],
+      "verifiedForArmyTravel": false,
+      "verifiedAgainstArtwork": false
+    },
+    "bridge": {
+      "artPointCount": 56,
+      "artLengthPx": 1227.81346,
+      "startWorldPx": [
+        584.983743146,
+        617.607375696
+      ],
+      "endWorldPx": [
+        585.019743146,
+        617.944466605
+      ],
+      "candidateParentCells": [
+        "r10-c09"
+      ],
+      "verifiedForArmyTravel": false,
+      "verifiedAgainstArtwork": false
+    }
+  },
+  "candidateParentCells": [
+    "r10-c09"
+  ],
+  "sourceArtFractionOfOneParentCell": 4.25824e-05,
+  "needsHierarchicalChildTiles": true,
+  "verifiedDeepZoomEligibleCells": [],
+  "generatedV116PlayableAnnotations": {},
+  "bridgeFarBankContinuation": "unverified; no inferred road",
+  "warning": "Candidate cells indicate where V115 artwork lies, NOT verified historical roads or accessible strategic objectives."
+}

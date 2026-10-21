@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "wayfinderandco0-cell/century-of-empires",
+    "path": "v115-town-pan-controls.html",
+    "branch": "main",
+    "githubBlobSha": "9a8f44120c2f220abf434bed384f230cf6483296",
+    "description": "Exact route arrays extracted from V115 source; prototype-only and not evidence of historical or visually aligned road"
+  },
+  "sourceArt": {"widthPx":1100,"heightPx":842},
+  "matreiLonLat": [11.451,47.127],
+  "artWidthAtlasPx":0.45,
+  "artAnchorPx": [580,365],
+  "forkIndex":36,
+  "rawPath": [[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[423,761],[403,780],[379,797],[352,815],[325,834],[315,842]],
+  "bridgePath": [[616,0],[615,22],[613,45],[614,51],[610,77],[609,103],[597,129],[585,156],[581,182],[574,208],[570,234],[563,253],[554,274],[538,300],[519,326],[504,352],[494,379],[502,402],[511,421],[512,435],[504,447],[493,463],[485,477],[483,493],[485,507],[496,525],[508,541],[514,557],[513,565],[507,582],[495,600],[480,625],[467,650],[453,688],[447,706],[446,724],[437,742],[418,744],[398,748],[378,751],[364,753],[388,758],[412,763],[435,768],[460,775],[483,780],[505,784],[527,788],[550,793],[573,796],[593,800],[611,803],[634,807],[655,813],[678,818],[704,824]],
+  "verification": {
+    "historicalRoadEvidence":false,
+    "roadCenterlineMatchesPaintedArt":false,
+    "bridgeCrossingMatchesPaintedArt":false,
+    "farBankContinuationVerified":false,
+    "accessibleStrategicObjectiveVerified":false
+  },
+  "knownLimitations":["V115 route arrays were visually guessed and user reported off-road movement", "V115 bridge route ends on the far bank with no verified continuation"]
+}

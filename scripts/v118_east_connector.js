@@ -8,8 +8,9 @@
 const farBank=Object.freeze([699,799]);
 const east=Object.freeze([[717,794],[737,783],[758,773],[781,769],[806,772],
  [830,769],[851,762],[870,751],[888,737],[901,721],
- [910,705],[914,691],[916,680],[922,670],[937,670],
- [947,681],[957,694],[974,704],[997,709],[1020,711],
+ [910,705],[912,699],[914,691],[916,683],[916,680],[918,675],
+ [922,670],[928,668],[934,668],[937,670],[943,675],
+ [947,681],[952,688],[957,694],[965,700],[974,704],[997,709],[1020,711],
  [1046,713],[1074,710],[1100,704]].map(p=>Object.freeze(p)));
 const same=(a,b)=>a&&b&&a[0]===b[0]&&a[1]===b[1];
 function extend(original){
@@ -48,12 +49,12 @@ function draw(ctx,project,graph){
  });
  ctx.save();
  try{
-  ctx.lineJoin="round";ctx.lineCap="round";ctx.globalAlpha=.54;
+  ctx.lineJoin="round";ctx.lineCap="round";ctx.globalAlpha=.58;ctx.globalCompositeOperation="soft-light";
   // Compact preindustrial cartway: soil, narrow dusty center, two wheel ruts.
-  line(p,6.5,"#514531");line(p,5.4,"#827252");
-  line(p,4.3,"#b19b71");
-  line(shift(-1.6),.36,"#675638");
-  line(shift(1.6),.36,"#675638");
+  line(p,5.5,"#c8ac81");line(p,4.4,"#d5be9d");
+  ctx.globalCompositeOperation="source-over";ctx.globalAlpha=.21;line(p,2.8,"#b69e79");
+  line(shift(-1.4),.25,"#675638");
+  line(shift(1.4),.25,"#675638");
  }finally{ctx.restore()}
  return {sameRoute:true,endpoint:path.at(-1).slice(),paintedStart:farBank.slice()};
 }

@@ -485,12 +485,12 @@ function draw(ctx,project,graph){
  });
  ctx.save();
  try{
-  ctx.lineJoin="round";ctx.lineCap="round";ctx.globalAlpha=.83;
+  ctx.lineJoin="round";ctx.lineCap="round";ctx.globalAlpha=.54;
   // Compact preindustrial cartway: soil, narrow dusty center, two wheel ruts.
-  line(p,11,"#3d3629");line(p,8.6,"#796845");
-  line(p,6.2,"#a28b62");
-  line(shift(-2.2),.85,"#51452f");
-  line(shift(2.2),.85,"#51452f");
+  line(p,6.5,"#514531");line(p,5.4,"#827252");
+  line(p,4.3,"#b19b71");
+  line(shift(-1.6),.36,"#675638");
+  line(shift(1.6),.36,"#675638");
  }finally{ctx.restore()}
  return {sameRoute:true,endpoint:path.at(-1).slice(),paintedStart:farBank.slice()};
 }

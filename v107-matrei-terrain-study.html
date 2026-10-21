@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="theme-color" content="#132923"><title>Century of Empires — Matrei Terrain Study</title>
+<style>:root{font-family:system-ui,-apple-system,sans-serif;color:#eee5cb;background:#102820}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+#stage{position:relative;width:100vw;height:100dvh;overflow:hidden;touch-action:none;background:#273c31}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#fade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0d2423db,transparent 26%,transparent 74%,#0b231ed9)}
+header{position:absolute;top:max(16px,env(safe-area-inset-top));left:18px;right:18px;pointer-events:none}
+.eyebrow{font-size:11px;letter-spacing:2px;color:#e2d5ba}.eyebrow span{float:right;font-size:9px;letter-spacing:.8px}
+h1{font:39px Georgia,serif;line-height:1.05;font-weight:400;margin:16px 0 4px}header p{font-size:12px;color:#ddd8c6;margin:0;max-width:380px;line-height:1.45;text-shadow:0 1px 3px #000}
+#maptool{position:absolute;right:17px;top:46%;display:grid;gap:7px}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}#maptool button{width:46px;height:46px;border:1px solid #b6c6a75c;border-radius:9px;background:#17332cda;color:#eee4ca;font-size:25px}
+footer{position:absolute;bottom:max(13px,env(safe-area-inset-bottom));left:15px;right:15px}#bar{display:flex;align-items:center;gap:9px;margin-bottom:12px}#debug{background:#203d32ed;color:#f2e2bb;border:1px solid #d0d0b360;border-radius:8px;padding:10px 12px;font-size:12px}#debug[aria-pressed=true]{color:#1a3027;background:#ddc793}
+#status{font-size:11px;color:#d1dfc8;flex:1;text-align:right}
+nav{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #bdc6a35c;border-radius:8px;overflow:hidden;background:#153329ef}
+nav button{color:#e6dfc9;border:0;border-right:1px solid #ffffff15;background:transparent;padding:11px 0;font-size:12px}nav button:last-child{border-right:0}nav button.active{background:#d1bd85;color:#203228}
+.caption{font-size:10px;line-height:1.45;text-align:center;color:#d6dcc6;margin-top:10px;padding:0 10px}
+#loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);padding:18px;color:#eadbc0;background:#19372dea;border-radius:7px;font-size:12px}
+@media(orientation:landscape) and (max-height:520px){header{top:9px}h1{font-size:26px;margin:7px 0 2px}header p{font-size:9px}footer{width:530px;max-width:60vw;left:50%;transform:translateX(-50%);bottom:7px}nav button{padding:5px;font-size:10px}.caption{display:none}#bar{margin-bottom:5px}#debug{padding:5px 8px;font-size:10px}#maptool{top:30%}#maptool button{width:35px;height:35px;font-size:20px}}
+</style></head><body><div id="stage">
+<canvas id="map" aria-label="Matrei relief terrain map, draggable and zoomable"></canvas><div id="fade"></div>
+<header><div class="eyebrow">CENTURY <i>of</i> EMPIRES <span>TERRAIN STUDY 107</span></div><h1>Matrei · Wipptal</h1><p>Circa 1800 historical terrain study · measured Tyrol laser elevation · reconstructed vegetation and buildings</p></header>
+<div id="maptool"><button id="plus" aria-label="Zoom in">+</button><button id="minus" aria-label="Zoom out">−</button><button id="reset" aria-label="Reset camera">⌖</button></div><div id="loading">Loading geographic terrain…</div>
+<footer><div id="bar"><button id="debug" aria-pressed="false">Show hidden dots</button><span id="status">Road and stream controls</span></div>
+<nav><button data-span="1560">01 Atlas</button><button data-span="1120" class="active">02 Region</button><button data-span="760">03 Local</button><button data-span="420">04 Terrain</button></nav>
+<div class="caption">Art study only · actual mapped road is a modern guide, not verified 1800 alignment · stream crossing blocked · no game systems changed</div></footer>
+</div><script>
+(()=>{"use strict";
+const canvas=document.querySelector("canvas"),ctx=canvas.getContext("2d",{alpha:false});
+const assetBase="terrain-puzzle/wipptal-matrei/",clean=new Image(),hidden=new Image();
+let done=false,debug=false,W=390,H=844,dpr=1,state={x:-35,y:0,span:1120},pointer=new Map(),pinch=null,queued=false;
+const spans=[1560,1120,760,420];
+const choose=()=>debug?hidden:clean;
+function mapToCanvas(x,y){return [W/2+(x-state.x)*H/state.span,H/2-(y-state.y)*H/state.span]}
+function paint(){queued=false;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#314a3b";ctx.fillRect(0,0,W,H);
+const im=choose();if(im.complete&&im.naturalWidth){const a=mapToCanvas(-560,560),b=mapToCanvas(560,-560);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.drawImage(im,a[0],a[1],b[0]-a[0],b[1]-a[1]);}
+for(const b of document.querySelectorAll("[data-span]"))b.classList.toggle("active",Math.abs(+b.dataset.span-state.span)<1);
+}
+function render(){if(!queued){queued=true;requestAnimationFrame(paint)}}
+function size(){W=canvas.clientWidth||innerWidth;H=canvas.clientHeight||innerHeight;dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(dpr*W);canvas.height=Math.round(dpr*H);render();}
+function zoom(span,px=W/2,py=H/2){let old=state.span/H,newSpan=Math.max(160,Math.min(3600,span));const wx=state.x+(px-W/2)*old,wy=state.y-(py-H/2)*old;
+state.span=newSpan;state.x=wx-(px-W/2)*state.span/H;state.y=wy+(py-H/2)*state.span/H;render();}
+clean.onload=()=>{done=true;document.getElementById("loading").hidden=true;render()};clean.onerror=()=>{document.getElementById("loading").textContent="Image unavailable. Reload this page."};hidden.onload=render;
+clean.src=assetBase+"matrei-1800-georelief-study.webp";hidden.src=assetBase+"matrei-1800-georelief-debug.webp";
+document.getElementById("debug").onclick=()=>{debug=!debug;let b=document.getElementById("debug");b.setAttribute("aria-pressed",String(debug));b.textContent=debug?"Hide hidden dots":"Show hidden dots";document.getElementById("status").textContent=debug?"27 candidates · one crossing blocked":"Road and stream controls";render()};
+document.getElementById("plus").onclick=()=>zoom(state.span*.75);document.getElementById("minus").onclick=()=>zoom(state.span/ .75);document.getElementById("reset").onclick=()=>{state={x:-35,y:0,span:1120};render()};
+document.querySelectorAll("[data-span]").forEach(b=>b.onclick=()=>zoom(Number(b.dataset.span)));
+canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointer.set(e.pointerId,[e.clientX,e.clientY]);if(pointer.size===2)pinchData()});
+function pinchData(){let p=[...pointer.values()];if(p.length<2)return;pinch={mid:[(p[0][0]+p[1][0])/2,(p[0][1]+p[1][1])/2],d:Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])}}
+canvas.addEventListener("pointermove",e=>{if(!pointer.has(e.pointerId))return;let p=pointer.get(e.pointerId);pointer.set(e.pointerId,[e.clientX,e.clientY]);if(pointer.size===1){state.x-=(e.clientX-p[0])*state.span/H;state.y+=(e.clientY-p[1])*state.span/H;render()}else if(pointer.size===2){const old=pinch;pinchData();if(old&&pinch.d>8&&old.d>8){zoom(state.span*old.d/pinch.d,pinch.mid[0],pinch.mid[1]);state.x-=(pinch.mid[0]-old.mid[0])*state.span/H;state.y+=(pinch.mid[1]-old.mid[1])*state.span/H;render();}}});
+for(const type of ["pointercancel","pointerup","lostpointercapture"])canvas.addEventListener(type,e=>{pointer.delete(e.pointerId);pinchData()});
+canvas.addEventListener("wheel",e=>{e.preventDefault();zoom(state.span*Math.exp(e.deltaY*.001),e.offsetX,e.offsetY)},{passive:false});
+window.addEventListener("resize",size);size();
+window.matreiStudy={get ready(){return done&&hidden.complete&&hidden.naturalWidth>0},get debug(){return debug},get span(){return state.span},get routeNodes(){return 27},get graphEnabled(){return false}};
+})();
+</script></body></html>

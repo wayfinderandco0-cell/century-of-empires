@@ -18,9 +18,9 @@ function ctx(){
 }
 test("far bank through eastern cell boundary is continuous",()=>{
  const g=graph();
- assert.deepEqual(g.endpoints.bridgeStop,[1100,781]);
- assert.deepEqual(g.paths.bridge.at(-1),[1100,781]);
- assert.deepEqual(Exit.nextCellEntry,[0,781]);
+ assert.deepEqual(g.endpoints.bridgeStop,[1100,704]);
+ assert.deepEqual(g.paths.bridge.at(-1),[1100,704]);
+ assert.deepEqual(Exit.nextCellEntry,[0,704]);
  assert.deepEqual(g.paths.bridge.slice(-Exit.points.length),Exit.points);
 });
 test("army stays on the same painted exit geometry at every sample",()=>{
@@ -39,7 +39,7 @@ test("moving army reaches far bank and then the cart track exit",()=>{
  assert(across.position[0]>699&&across.arrived===false);
  const edge=g.advance("bridge",bankDist,2000);
  assert.equal(edge.arrived,true);
- assert.deepEqual(edge.position,[1100,781]);
+ assert.deepEqual(edge.position,[1100,704]);
 });
 test("invalid crossings and paint/army divergence fail closed",()=>{
  assert.throws(()=>Exit.extend([[699,798]]),/requires/);

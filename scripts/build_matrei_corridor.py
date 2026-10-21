@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 import base64,io,json,math,re
 from PIL import Image,ImageDraw,ImageFilter
 from shapely.geometry import LineString,Polygon,Point
+from shapely.ops import substring
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"terrain-puzzle"/"wipptal-matrei";OUT.mkdir(parents=True,exist_ok=True)
 ORIGIN=(11.453056,47.130278) # Wikimedia Commons photograph of historic Matrei Brennerstraße
@@ -151,7 +152,7 @@ for w in river_lines:
 node_by_id={n["id"]:n for n in waypoints}
 for e in links:
  p=node_by_id[e["from"]]["coords_xy_m"];q=node_by_id[e["to"]]["coords_xy_m"]
- segment=LineString([p,q])
+ segment=substring(road_geom,node_by_id[e["from"]]["distance_along_m"],node_by_id[e["to"]]["distance_along_m"])
  hits=[c["crossing_id"] for c in water_intersections
        if c["xy_m"] is not None and segment.distance(Point(c["xy_m"]))<.4]
  e["crossing_ids"]=hits

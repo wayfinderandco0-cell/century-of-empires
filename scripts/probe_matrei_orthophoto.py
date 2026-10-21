@@ -32,6 +32,38 @@ im=Image.open(BytesIO(r.content)).convert("RGB")
 a=np.asarray(im)
 info.update({"size":list(im.size),"rgb_std":[round(float(np.std(a[:,:,i])),1) for i in range(3)]})
 info["sufficient_visual_variation"]=im.size==(900,900) and min(info["rgb_std"])>=7
+
+# A uniform white JPEG can be HTTP 200 when WMS bbox axis order does not match.
+# Probe interoperable alternative CRSs and 1.1.1's deterministic E/N axis convention.
+info["alternates"]=[]
+if not info["sufficient_visual_variation"]:
+ from pyproj import Transformer
+ XX,YY=Transformer.from_crs("EPSG:4326","EPSG:3857",always_xy=True).transform(*center)
+ candidates=[
+  ("wms111_native",{"VERSION":"1.1.1","SRS":"EPSG:31254","BBOX":f"{x-300},{y-300},{x+300},{y+300}"}),
+  ("wms130_bbox_swapped",{"VERSION":"1.3.0","CRS":"EPSG:31254","BBOX":f"{y-300},{x-300},{y+300},{x+300}"}),
+  ("wms130_webmercator",{"VERSION":"1.3.0","CRS":"EPSG:3857","BBOX":f"{XX-430},{YY-430},{XX+430},{YY+430}"}),
+  ("wms111_webmercator",{"VERSION":"1.1.1","SRS":"EPSG:3857","BBOX":f"{XX-430},{YY-430},{XX+430},{YY+430}"})]
+ for label,patch in candidates:
+  pp={**params,**patch}
+  if "SRS" in patch:pp.pop("CRS",None)
+  try:
+   rr=requests.get(base,params=pp,headers=headers,timeout=40)
+   candidate={"method":label,"http_status":rr.status_code,"bytes":len(rr.content)}
+   if rr.status_code==200 and rr.content.startswith(b"\xff\xd8"):
+    ii=Image.open(BytesIO(rr.content)).convert("RGB")
+    aa=np.asarray(ii)
+    candidate["rgb_std"]=[round(float(np.std(aa[:,:,k])),2) for k in range(3)]
+    if min(candidate["rgb_std"])>=7 and ii.size==(900,900):
+     info["sufficient_visual_variation"]=True
+     info["successful_method"]=label
+     im=ii
+     info["rgb_std"]=candidate["rgb_std"]
+   else:candidate["reply"]=rr.text[:160]
+   info["alternates"].append(candidate)
+   if info["sufficient_visual_variation"]:break
+  except Exception as ex:info["alternates"].append({"method":label,"error":str(ex)[:250]})
+
 im.save(out/"matrei-official-modern-orthophoto-reference.jpg",quality=85)
 preview=im.resize((620,620),Image.Resampling.LANCZOS)
 buf=BytesIO();preview.save(buf,format="JPEG",quality=65,optimize=True)

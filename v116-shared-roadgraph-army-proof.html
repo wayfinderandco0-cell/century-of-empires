@@ -35,6 +35,16 @@ button:disabled{opacity:.5}
  #bottom{width:min(630px,65%);max-width:65%;right:6px}
  #status{font-size:9px;max-height:22px}
 }
+
+/* Bridge view: compact 1-row dock at rest, extras accessible through Options. */
+#views{display:none}
+#bottom:has(#sheet.open) #views{display:flex}
+#status{display:none}
+#bottom:has(#sheet.open) #status{display:block;white-space:normal;max-height:none}
+#bottom>.group:not(#views) button{min-height:44px}
+@media(orientation:landscape) and (max-height:480px){
+ #bottom>.group:not(#views) button{min-height:39px}
+}
 </style></head><body>
 <div id="stage"><canvas id="map" aria-label="Original V115 painting overlaid with unverified road route"></canvas></div>
 <div id="head"><div class="panel"><strong>V116 · Unified road & army proof</strong>
@@ -47,12 +57,12 @@ button:disabled{opacity:.5}
 </div>
 <div class="group">
 <button id="south" aria-pressed="true">South route</button><button id="bridgeRoute">Bridge candidate</button>
-<button id="march">March demo</button><button id="resetArmy">Reset</button><button id="overlays">Hide lines</button><button id="audit">Audit +</button>
+<button id="march">March demo</button><button id="resetArmy">Reset</button><button id="focusBridge">Bridge</button><button id="audit">Options +</button>
 </div>
 <div id="status" role="status">Loading original artwork…</div>
 <div id="sheet">
 <p>**Artwork inspection only.** The visible painting is authoritative for the route comparison, but not proof of historical roads. Tap “Mark road,” then tap points in the *painted* roadway. Each point measures its distance to the selected candidate route in original 1100×842 image pixels. Pinch and drag while Mark road is off.</p>
-<div class="group"><button id="mark" aria-pressed="false">Mark road</button><button id="undo">Undo mark</button><button id="clear">Clear marks</button><button id="copy">Copy audit JSON</button></div>
+<div class="group"><button id="overlays">Hide lines</button><button id="mark" aria-pressed="false">Mark road</button><button id="undo">Undo mark</button><button id="clear">Clear marks</button><button id="copy">Copy audit JSON</button></div>
 <div id="measure" style="font-size:11px;padding:6px 0">No independent painted-road marks yet. Geometric alignment alone does NOT certify road alignment.</div>
 </div>
 </div>
@@ -305,7 +315,7 @@ const sizes=index.artSizePx,box=index.artBoxWorldPx; const SW=sizes[0],SH=sizes[
 const artWorld=p=>renderer.artToWorld(index,p);
 const worldArt=p=>[(p[0]-box[0])*SW/(box[2]-box[0]),(p[1]-box[1])*SH/(box[3]-box[1])];
 const presets={whole:{center:[550,421],factor:1},town:{center:[516,390],factor:2.1},
-  junction:{center:[473,703],factor:3.3},bridge:{center:[617,766],factor:4.0}};
+  junction:{center:[473,703],factor:3.3},bridge:{center:[609,766],factor:5.0}};
 let w=0,h=0,dpr=1,widthWorld=0,center=artWorld(presets.whole.center),view=[...box],pointer=new Map(),gesture=null;
 let imageReady=false,error="",lastFrame=0;
 const img=new Image(); img.onload=()=>{imageReady=true;draw();};
@@ -321,7 +331,14 @@ function setPreset(name){
   draw();
 }
 function calcCam(){
- const dh=widthWorld*h/Math.max(1,w);view=[center[0]-widthWorld/2,center[1]-dh/2,center[0]+widthWorld/2,center[1]+dh/2];
+ const dx=widthWorld/2,dy=widthWorld*h/Math.max(1,w)/2;
+ // Never pan the existing source artwork out of the screen when the source
+ // dimension is large enough to cover the camera axis. No invented terrain.
+ const clampCenter=(v,half,min,max)=>
+   half*2>max-min?(min+max)/2:Math.max(min+half,Math.min(max-half,v));
+ center[0]=clampCenter(center[0],dx,box[0],box[2]);
+ center[1]=clampCenter(center[1],dy,box[1],box[3]);
+ view=[center[0]-dx,center[1]-dy,center[0]+dx,center[1]+dy];
 }
 function resize(){
  w=C.clientWidth||innerWidth; h=C.clientHeight||innerHeight;
@@ -443,12 +460,13 @@ document.getElementById("resetArmy").onclick=()=>{
  state.playing=false;state.distancePx=0;state.notice="Army reset to northern art edge";
  lastFrame=0;syncRouteButtons();draw();
 };
-document.getElementById("overlays").onclick=()=>{
- state.showLines=!state.showLines;document.getElementById("overlays").textContent=state.showLines?"Hide lines":"Show lines";draw()};
+document.getElementById("focusBridge").onclick=()=>setPreset("bridge");
 document.getElementById("audit").onclick=()=>{
  const e=document.getElementById("sheet");e.classList.toggle("open");
- document.getElementById("audit").textContent=e.classList.contains("open")?"Audit −":"Audit +";
+ document.getElementById("audit").textContent=e.classList.contains("open")?"Options −":"Options +";
 };
+document.getElementById("overlays").onclick=()=>{
+ state.showLines=!state.showLines;document.getElementById("overlays").textContent=state.showLines?"Hide lines":"Show lines";draw()};
 document.getElementById("mark").onclick=()=>{
  state.edit=!state.edit;document.getElementById("mark").setAttribute("aria-pressed",String(state.edit));
  document.getElementById("mark").textContent=state.edit?"Finish marking":"Mark road";draw()};

@@ -1,0 +1,41 @@
+{
+  "cell_id": "BNR:O:1:0",
+  "mapped_streams": [
+    {
+      "name": "Navisbach",
+      "type": "river",
+      "length_m": 1029.2
+    },
+    {
+      "name": "Navisbach",
+      "type": "stream",
+      "length_m": 77.6
+    },
+    {
+      "name": "Weinrichbach",
+      "type": "stream",
+      "length_m": 75.3
+    },
+    {
+      "name": "Dremelbach",
+      "type": "stream",
+      "length_m": 703.7
+    },
+    {
+      "name": "Höltner Bach",
+      "type": "stream",
+      "length_m": 253.2
+    }
+  ],
+  "illustrative_trail_length_m": 1042.5,
+  "route_nodes": 18,
+  "route_edges": 17,
+  "blocked_edges": 1,
+  "portal_entry_at_SW": 1,
+  "connector_path_length_m": 289,
+  "shared_border_001_east_x_m": 500,
+  "shared_border_002_west_x_m": 500,
+  "shared_edge_portal_match": true,
+  "all_edges_disabled": true,
+  "disclaimer": "Illustrative trail; modern mapped streams; coarse 160–230m elevation. No verified nineteenth-century pass or road"
+}

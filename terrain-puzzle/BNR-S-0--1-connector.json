@@ -1,0 +1,64 @@
+{
+  "id": "BNR:S:0:-1",
+  "center_xy_m": [
+    500,
+    -500
+  ],
+  "vertices_xy_m": [
+    [
+      207.106781,
+      -500
+    ],
+    [
+      500,
+      -792.893219
+    ],
+    [
+      792.893219,
+      -500
+    ],
+    [
+      500,
+      -207.106781
+    ]
+  ],
+  "type": "rotated_square_connector",
+  "state": "geometry_registered_path_candidate_disabled",
+  "source": "single V102 illustrative pack-trail polyline clipped to shared connector square",
+  "route_segments": [
+    {
+      "points_xy_m": [
+        [
+          322.82375,
+          -384.28303
+        ],
+        [
+          391.99751,
+          -370.53392
+        ],
+        [
+          514.68086,
+          -346.06356
+        ],
+        [
+          563.54517,
+          -328.97702
+        ],
+        [
+          596.81835,
+          -303.92513
+        ]
+      ],
+      "length_m": 289.04
+    }
+  ],
+  "from_cell": "BNR:O:0:0",
+  "to_cell": "BNR:O:1:0",
+  "from_edge": "SE",
+  "to_edge": "SW",
+  "exit_node_001": "BNR:O:0:0:N025",
+  "entry_node_002": "BNR:O:1:0:N001",
+  "geometry_crossing_continuity_candidate": true,
+  "route_enabled": false,
+  "reason": "historical authenticity, water and terrain still unverified"
+}

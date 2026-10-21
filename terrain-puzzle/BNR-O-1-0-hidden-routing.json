@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "cell_id": "BNR:O:1:0",
+  "status": "PROVISIONAL_NOT_PLAYABLE",
+  "hidden": true,
+  "approved_for_gameplay": false,
+  "source": "V102 illustrative trail and V99 mapped waterways; V97 DEM for slope screening",
+  "connector_reference": "BNR:S:0:-1",
+  "nodes": [
+    {
+      "id": "BNR:O:1:0:N001",
+      "xy_m": [
+        596.818354,
+        -303.925135
+      ],
+      "elevation_m": 1304.6,
+      "boundary_edge": "SW",
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N002",
+      "xy_m": [
+        655.038992,
+        -286.121321
+      ],
+      "elevation_m": 1299.7,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N003",
+      "xy_m": [
+        712.970148,
+        -266.451436
+      ],
+      "elevation_m": 1295.4,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N004",
+      "xy_m": [
+        769.640157,
+        -243.02608
+      ],
+      "elevation_m": 1302.5,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N005",
+      "xy_m": [
+        829.35172,
+        -229.427818
+      ],
+      "elevation_m": 1306.9,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N006",
+      "xy_m": [
+        883.876897,
+        -204.550896
+      ],
+      "elevation_m": 1314.9,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N007",
+      "xy_m": [
+        931.488963,
+        -165.968052
+      ],
+      "elevation_m": 1321.9,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N008",
+      "xy_m": [
+        984.675979,
+        -144.006017
+      ],
+      "elevation_m": 1325,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N009",
+      "xy_m": [
+        1045.205349,
+        -138.992922
+      ],
+      "elevation_m": 1327.6,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N010",
+      "xy_m": [
+        1103.977033,
+        -122.801865
+      ],
+      "elevation_m": 1328.7,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N011",
+      "xy_m": [
+        1165.231738,
+        -123.969086
+      ],
+      "elevation_m": 1331,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N012",
+      "xy_m": [
+        1216.878365,
+        -90.910605
+      ],
+      "elevation_m": 1328,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N013",
+      "xy_m": [
+        1265.397688,
+        -53.479377
+      ],
+      "elevation_m": 1321.9,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N014",
+      "xy_m": [
+        1310.525719,
+        -12.486718
+      ],
+      "elevation_m": 1322,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N015",
+      "xy_m": [
+        1329.965988,
+        41.616338
+      ],
+      "elevation_m": 1334.3,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N016",
+      "xy_m": [
+        1340.024458,
+        100.088301
+      ],
+      "elevation_m": 1344.5,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N017",
+      "xy_m": [
+        1373.194829,
+        150.528738
+      ],
+      "elevation_m": 1352.2,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    },
+    {
+      "id": "BNR:O:1:0:N018",
+      "xy_m": [
+        1428.432883,
+        167.230527
+      ],
+      "elevation_m": 1353.2,
+      "boundary_edge": null,
+      "route": "illustrative_pack_trail_candidate",
+      "hidden": true,
+      "approved": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "BNR:O:1:0:E001",
+      "from": "BNR:O:1:0:N001",
+      "to": "BNR:O:1:0:N002",
+      "distance_m": 60.9,
+      "max_grade_pct": 9,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E002",
+      "from": "BNR:O:1:0:N002",
+      "to": "BNR:O:1:0:N003",
+      "distance_m": 61.2,
+      "max_grade_pct": 10.6,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E003",
+      "from": "BNR:O:1:0:N003",
+      "to": "BNR:O:1:0:N004",
+      "distance_m": 61.3,
+      "max_grade_pct": 14.6,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E004",
+      "from": "BNR:O:1:0:N004",
+      "to": "BNR:O:1:0:N005",
+      "distance_m": 61.2,
+      "max_grade_pct": 8.1,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E005",
+      "from": "BNR:O:1:0:N005",
+      "to": "BNR:O:1:0:N006",
+      "distance_m": 59.9,
+      "max_grade_pct": 15,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E006",
+      "from": "BNR:O:1:0:N006",
+      "to": "BNR:O:1:0:N007",
+      "distance_m": 61.3,
+      "max_grade_pct": 13.6,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E007",
+      "from": "BNR:O:1:0:N007",
+      "to": "BNR:O:1:0:N008",
+      "distance_m": 57.5,
+      "max_grade_pct": 6.8,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E008",
+      "from": "BNR:O:1:0:N008",
+      "to": "BNR:O:1:0:N009",
+      "distance_m": 60.7,
+      "max_grade_pct": 5.2,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E009",
+      "from": "BNR:O:1:0:N009",
+      "to": "BNR:O:1:0:N010",
+      "distance_m": 61,
+      "max_grade_pct": 3.3,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E010",
+      "from": "BNR:O:1:0:N010",
+      "to": "BNR:O:1:0:N011",
+      "distance_m": 61.3,
+      "max_grade_pct": 7,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E011",
+      "from": "BNR:O:1:0:N011",
+      "to": "BNR:O:1:0:N012",
+      "distance_m": 61.3,
+      "max_grade_pct": 6.3,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E012",
+      "from": "BNR:O:1:0:N012",
+      "to": "BNR:O:1:0:N013",
+      "distance_m": 61.3,
+      "max_grade_pct": 11.4,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E013",
+      "from": "BNR:O:1:0:N013",
+      "to": "BNR:O:1:0:N014",
+      "distance_m": 61,
+      "max_grade_pct": 14.2,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E014",
+      "from": "BNR:O:1:0:N014",
+      "to": "BNR:O:1:0:N015",
+      "distance_m": 57.5,
+      "max_grade_pct": 23,
+      "water_crossings": [
+        "Dremelbach"
+      ],
+      "status": "blocked_unverified_water_crossing",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E015",
+      "from": "BNR:O:1:0:N015",
+      "to": "BNR:O:1:0:N016",
+      "distance_m": 59.3,
+      "max_grade_pct": 18,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E016",
+      "from": "BNR:O:1:0:N016",
+      "to": "BNR:O:1:0:N017",
+      "distance_m": 60.4,
+      "max_grade_pct": 15.3,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    },
+    {
+      "id": "BNR:O:1:0:E017",
+      "from": "BNR:O:1:0:N017",
+      "to": "BNR:O:1:0:N018",
+      "distance_m": 57.7,
+      "max_grade_pct": 3,
+      "water_crossings": [],
+      "status": "terrain_screened_candidate",
+      "enabled_in_game": false,
+      "travel_cost": null,
+      "historically_verified": false,
+      "hidden": true
+    }
+  ]
+}

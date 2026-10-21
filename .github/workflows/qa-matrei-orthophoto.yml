@@ -1,0 +1,41 @@
+name: Verify Matrei Official Orthophoto
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'scripts/probe_matrei_orthophoto.py'
+      - '.github/workflows/qa-matrei-orthophoto.yml'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  photo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install dependencies
+        run: pip install requests numpy pillow pyproj
+      - name: Retrieve official Tirol sample
+        run: python scripts/probe_matrei_orthophoto.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrei-orthophoto-${{ github.run_id }}
+          path: terrain-puzzle/wipptal-matrei/matrei-*orthophoto*
+      - name: Save reference only on unchanged branch
+        if: success()
+        env: {SHA_AT_START: '${{ github.sha }}'}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$SHA_AT_START" ]; then
+            exit 1
+          fi
+          git add terrain-puzzle/wipptal-matrei/matrei-*orthophoto*
+          if ! git diff --cached --quiet; then
+            git commit -m 'Matrei: official real orthophoto reference and alignment QA'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

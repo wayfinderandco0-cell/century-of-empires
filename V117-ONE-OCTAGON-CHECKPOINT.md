@@ -22,3 +22,10 @@ The cart track is a *new candidate visual overlay* laid on the original painting
 4. Only after one full passage is approved, formalize reuse across neighboring legitimate cells.
 
 **Honest status:** V117 is a structural synchronization proof and visual diagnostic, not an integrated finished game terrain cell.
+
+## October 21 V117 verification and visual correction
+- Node and Chromium/WebKit mobile QA **PASSED** on commit `5168ed8a739ad4e3e4d302c07264793714766155`, workflow https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/39667460840.
+- Code-level unit-to-visible-road centerline error approximately 1.2e-13 art pixels in repeated samples. Four emulated mobile viewports passed, no JavaScript errors, path/fork logic and camera retention.
+- The initial screenshot revealed a large opaque highway-like ribbon over the stone bridge. This was rejected and the prototype painter corrected: narrow translucent cart track on land, very subtle wheel ruts over exposed stone bridge. The corrected WebKit landscape/portrait screenshots were inspected; the original bridge detail and surrounding river are now visible rather than hidden. They still do NOT verify the entire underlying 1800s cart road.
+- Remaining **visible** problem: roadway after the far bank remains absent. Do not imply finished passage. A full-source-art comparison and adjacent-exit authoring remain next.
+- Another CI run on the branch exports the exact painting and clean underlay as inspection evidence; do not misinterpret source/canvas equality as historical approval.

@@ -5,6 +5,9 @@ on:
     paths:
       - "scripts/v116_road_graph.js"
       - "tests/test_v116_road_graph.js"
+      - "scripts/build_v116_candidate_tile_index.js"
+      - "tests/test_v116_route_tile_coverage.js"
+      - "terrain-grid/v116-candidate-route-tiles.json"
       - "v116-shared-roadgraph-army-proof.html"
       - "scripts/qa_v116_road_graph_browser.py"
       - ".github/workflows/qa-v116-roadgraph.yml"
@@ -22,6 +25,8 @@ jobs:
         with: {python-version: "3.11"}
       - name: Reusable road-graph invariant tests
         run: node --test tests/test_v116_road_graph.js
+      - name: Repaired bridge tile-coverage invariants
+        run: node --test tests/test_v116_route_tile_coverage.js
       - name: Existing V116 graph/renderer regression tests
         run: node tests/test_v116_renderer.js
       - name: Browser dependencies

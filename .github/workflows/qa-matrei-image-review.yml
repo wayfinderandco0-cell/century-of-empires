@@ -1,0 +1,34 @@
+name: Prepare Matrei Small Image Review
+on:
+  workflow_dispatch:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths: ['.github/workflows/qa-matrei-image-review.yml']
+permissions: {contents: write}
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Encode small inspection JPEG as readable text
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          p=Path('terrain-puzzle/wipptal-matrei')
+          data=(p/'matrei-1800-georelief-comparison.jpg').read_bytes()
+          (p/'matrei-1800-georelief-comparison-base64.txt').write_text(base64.b64encode(data).decode())
+          PY
+      - name: Save inspection encoding
+        env: {START_SHA: '${{ github.sha }}'}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$START_SHA" ]; then
+            exit 1
+          fi
+          git add terrain-puzzle/wipptal-matrei/matrei-1800-georelief-comparison-base64.txt
+          git commit -m 'Matrei: QA-only image inspection encoding'
+          git push origin HEAD:terrain-puzzle-atlas-v1

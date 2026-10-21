@@ -16,7 +16,7 @@ function extend(original){
    throw Error("V118 requires the verified candidate bridge endpoint at [699,799]");
  const out=original.map(p=>p.slice()).concat(east.map(p=>p.slice()));
  if(!same(out.at(-1),[1100,781]))throw Error("East boundary mismatch");
- for(let i=1;i<out.length;i++){
+ for(let i=original.length;i<out.length;i++){
   const p=out[i],a=out[i-1];
   if(!p.every(Number.isFinite)||p.some((n,j)=>n<0||n>(j?842:1100))||
      Math.hypot(p[0]-a[0],p[1]-a[1])>34)

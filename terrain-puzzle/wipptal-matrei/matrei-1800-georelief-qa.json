@@ -1,0 +1,31 @@
+{
+  "source": "Land Tirol 50cm DGM_M28 through WCS resampled to 1m then 1700px for artwork",
+  "raster_native_request_resolution_m": 1,
+  "source_crs": "PROJCS[\"MGI / Austria GK West\",GEOGCS[\"MGI\",DATUM[\"Militar-Geographische_Institut\",SPHEROID[\"Bessel 1841\",6377397.155,299.152812800003,AUTHORITY[\"EPSG\",\"7004\"]],AUTHORITY[\"EPSG\",\"6312\"]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4312\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",10.3333333333333],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",-5000000],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"31254\"]]",
+  "source_pixel_size": [
+    1.0,
+    1.0
+  ],
+  "pixel_world_size_m": 0.6588,
+  "terrain_elevation_range_m": [
+    975.31,
+    1230.42
+  ],
+  "candidate_road_len_m": 1035.69,
+  "hidden_nodes": 27,
+  "disabled_edges": 26,
+  "blocked_unverified_water_crossings": 1,
+  "road_grade_node_sampling_max_pct": 2.7,
+  "historical_road_centerline_verified": false,
+  "historical_village_buildings_verified": false,
+  "reconstructed_1800_forests_verified": false,
+  "all_route_edges_disabled": true,
+  "river_was_drawn_from_georeferenced_vectors": true,
+  "geometry_shared_for_road_and_dots": true,
+  "source_dem_valid_fraction": 1.0,
+  "outputs": [
+    "matrei-1800-georelief-study.webp",
+    "matrei-1800-georelief-debug.webp",
+    "matrei-1800-georelief-comparison.jpg"
+  ]
+}\n

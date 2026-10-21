@@ -1,0 +1,34 @@
+{
+  "date_utc": "2026-10-21T02:31:50.431632+00:00",
+  "endpoint": "https://gis.tirol.gv.at/arcgis/services/Service_Public/orthofoto/MapServer/WMSServer",
+  "requested_layer": "Image_Aktuell_RGB",
+  "crs": "EPSG:31254",
+  "center_lonlat": [
+    11.453056,
+    47.130278
+  ],
+  "center_xy": [
+    84977.65946868862,
+    221866.66642409842
+  ],
+  "extent_m": 600,
+  "era": "modern photography - NOT c.1800",
+  "license": "CC BY 4.0, Land Tirol",
+  "gameplay_modified": false,
+  "capabilities_http": 200,
+  "layer_found": true,
+  "image_http": 200,
+  "content_type": "image/jpeg",
+  "bytes": 22973,
+  "size": [
+    900,
+    900
+  ],
+  "rgb_std": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "sufficient_visual_variation": false,
+  "validated": "returned_jpeg_but_blank_or_low_variation_NEEDS_RESEARCH"
+}

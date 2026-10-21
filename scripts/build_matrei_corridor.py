@@ -144,7 +144,20 @@ water_intersections=[]
 for w in river_lines:
  inter=road_geom.intersection(LineString(w["coords"]))
  if not inter.is_empty:
-  water_intersections.append({"waterway":w["name"],"geometry_type":inter.geom_type,"crossing_approved":False})
+  water_intersections.append({"crossing_id":f"{CELL}:X{len(water_intersections)+1:02d}","waterway":w["name"],"geometry_type":inter.geom_type,"xy_m":rnd((inter.x,inter.y)) if inter.geom_type=="Point" else None,"crossing_approved":False})
+
+# Resolve which exact candidate node interval crosses the mapped stream.
+# Do not silently draw or activate a bridge where the modern road touches water.
+node_by_id={n["id"]:n for n in waypoints}
+for e in links:
+ p=node_by_id[e["from"]]["coords_xy_m"];q=node_by_id[e["to"]]["coords_xy_m"]
+ segment=LineString([p,q])
+ hits=[c["crossing_id"] for c in water_intersections
+       if c["xy_m"] is not None and segment.distance(Point(c["xy_m"]))<.4]
+ e["crossing_ids"]=hits
+ e["status"]="BLOCKED_UNVERIFIED_CROSSING" if hits else "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED"
+ e["approved_for_movement"]=False
+blocked_links=[e["id"] if "id" in e else e["from"]+" -> "+e["to"] for e in links if e["crossing_ids"]]
 
 elev_summary={"origin_elevation_m":round(elev(0,0),1),
  "center_north_500_m":round(elev(0,500),1),"center_south_500_m":round(elev(0,-500),1),
@@ -212,8 +225,8 @@ validation={"road_segments":len(road_lines),"original_osm_ways_joined":len(order
  "candidate_in_polygon":all(POLYGON.buffer(.001).covers(Point(p["coords_xy_m"])) for p in waypoints),
  "historic_exact_alignment_not_claimed":not control["exact_road_location_1800_verified"],
  "no_approved_crossings":not control["crossings_approved"],
- "max_coarse_road_grade_pct":road_terrain_estimate["maximum_coarse_model_grade_pct"],"mapped_water_crossings":len(water_intersections),"candidate_entry_exit_edges":["N","S"],"dem_origin_m":elev_summary["origin_elevation_m"],
+ "max_coarse_road_grade_pct":road_terrain_estimate["maximum_coarse_model_grade_pct"],"mapped_water_crossings":len(water_intersections),"blocked_unverified_crossing_edges":len(blocked_links),"crossings_have_blocked_route_links":all(any(c["crossing_id"] in e["crossing_ids"] for e in links) for c in water_intersections if c["xy_m"]),"candidate_entry_exit_edges":["N","S"],"dem_origin_m":elev_summary["origin_elevation_m"],
  "historical_market_origin_lonlat":list(ORIGIN)}
-if not all((validation[k] for k in ("road_segments","continuous_centerline","nodes","all_edges_off","candidate_in_polygon","historic_exact_alignment_not_claimed","no_approved_crossings"))):raise RuntimeError("Failed route QA: "+str(validation))
+if not all((validation[k] for k in ("road_segments","continuous_centerline","nodes","all_edges_off","candidate_in_polygon","historic_exact_alignment_not_claimed","no_approved_crossings","crossings_have_blocked_route_links"))):raise RuntimeError("Failed route QA: "+str(validation))
 (OUT/"matrei-road-qa.json").write_text(json.dumps(validation,indent=2)+"\n")
 print(json.dumps(validation,indent=2),flush=True)

@@ -38,9 +38,9 @@ const base=cam.span>3500&&atlasImg.complete&&atlasImg.naturalWidth?atlasImg:imag
 drawRaster(base);
 if(cam.span<=3500&&image.complete&&image.naturalWidth&&atlasImg.complete&&atlasImg.naturalWidth)drawRaster(image);
 for(const r of d.water){path(r.pts);ctx.strokeStyle=r.kind==="river"?"#91bbbe":"#7dabb0";ctx.lineWidth=(r.kind==="river"?2.4:1.15);ctx.globalAlpha=.78;ctx.stroke();}
-ctx.globalAlpha=.75;ctx.lineWidth=1.5;ctx.strokeStyle="#d8bd8e";ctx.setLineDash([3,4]);for(const a of d.trail){path(a);ctx.stroke();}ctx.setLineDash([]);ctx.globalAlpha=1;
+ctx.globalAlpha=.62;ctx.lineWidth=1.15;ctx.strokeStyle="#d4b47d";ctx.setLineDash([]);for(const a of d.trail){path(a);ctx.stroke();}ctx.globalAlpha=1;
 if(debug){
-let colors=["#f2dda3","#d2bba4"];for(let i=0;i<d.oct.length;i++){let c=d.oct[i];path(c.p,true);ctx.fillStyle=i?"#e5a87316":"#89c8a11c";ctx.fill();ctx.strokeStyle=colors[i];ctx.lineWidth=2.2;ctx.stroke();let [x,y]=project([i*1000,0]);ctx.fillStyle="#fff1c5";ctx.font="bold 19px Georgia";ctx.textAlign="center";ctx.fillText("OCTAGON "+c.id,x,y-17);}
+let colors=["#f2dda3","#d2bba4"];for(let i=0;i<d.oct.length;i++){let c=d.oct[i];path(c.p,true);ctx.fillStyle=i?"#e5a87316":"#89c8a11c";ctx.fill();ctx.strokeStyle=colors[i];ctx.lineWidth=2.2;ctx.stroke();let [x,y]=project([i*1000,0]);ctx.fillStyle="#fff1c5";ctx.font="bold 24px Georgia";ctx.textAlign="center";ctx.fillText(c.id,x,y-17);}
 path(d.connector.p,true);ctx.fillStyle="#cdbb8540";ctx.fill();ctx.strokeStyle="#c2d4bf";ctx.setLineDash([3,5]);ctx.lineWidth=1.6;ctx.stroke();ctx.setLineDash([]);
 for(const g of d.graph){const byId=new Map(g.nodes.map(n=>[n.id,n.p]));for(const e of g.edges){const a=byId.get(e.a),b=byId.get(e.b);if(!a||!b)continue;path([a,b]);ctx.lineWidth=3;ctx.strokeStyle=e.blocked?"#f08a7d":"#f1d681";ctx.setLineDash(e.blocked?[3,5]:[5,4]);ctx.stroke();}for(const n of g.nodes){let [x,y]=project(n.p);ctx.beginPath();ctx.arc(x,y,3.1,0,Math.PI*2);ctx.fillStyle="#fcf4cb";ctx.fill();ctx.strokeStyle="#1b352a";ctx.lineWidth=1;ctx.stroke();}}
 path(d.connector.path);ctx.strokeStyle="#ffd891";ctx.lineWidth=4;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);

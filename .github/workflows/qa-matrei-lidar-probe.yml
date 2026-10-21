@@ -1,0 +1,40 @@
+name: Probe Matrei 50cm Laser Terrain
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'scripts/probe_matrei_lidar.py'
+      - '.github/workflows/qa-matrei-lidar-probe.yml'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests pyproj rasterio numpy
+      - run: python scripts/probe_matrei_lidar.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrei-lidar-sample-${{ github.run_id }}
+          path: |
+            terrain-puzzle/wipptal-matrei/matrei-highres-wcs-probe.json
+            terrain-puzzle/wipptal-matrei/matrei-test-wcs-300m.tif
+      - name: Save DEM validation if branch unchanged
+        if: success()
+        env: {SOURCE_SHA: '${{ github.sha }}'}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          test "$(git rev-parse origin/terrain-puzzle-atlas-v1)" = "$SOURCE_SHA" || exit 1
+          git add terrain-puzzle/wipptal-matrei/matrei-highres-wcs-probe.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Verify official Tirol 50cm Matrei DGM geographic raster'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

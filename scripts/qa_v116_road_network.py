@@ -98,7 +98,7 @@ try:
                         )
                         page.locator("#audit").click()
                         page.locator("#mark").click()
-                        page.locator("#map").click(position={"x": w//2, "y": h//2})
+                        page.locator("#map").click(position={"x": max(30, w//10), "y": max(125, int(h * .4))})
                         checks["road_annotation_tap"] = page.evaluate(
                             "centuryV116Proof.count === 1"
                         )

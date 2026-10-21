@@ -85,7 +85,7 @@ const views={
 europe:{x:690,y:530,span:3000},
 region:{x:matrei[0],y:matrei[1]-0.5,span:335},
 pass:{x:matrei[0],y:matrei[1],span:18},
-town:{x:matrei[0],y:matrei[1]-.085,span:.34}
+town:{x:artBox.x+artBox.w/2,y:artBox.y+artBox.h/2,span:artBox.h*1.04}
 };
 function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
 function alpha(span,start,fully){return clamp((start-span)/(start-fully),0,1)}

@@ -6,6 +6,7 @@ A passing browser test does not establish historical GIS accuracy or iPhone Safa
 """
 import http.server
 import json
+import base64
 import threading
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -64,6 +65,11 @@ try:
                            bridgeEnd:centuryV117Proof.bridgeEnd,productionReady:centuryV117Proof.productionReady,
                            marked:centuryV117Proof.artisticDeviationMeasured
                         })""")
+                        if engine=="chromium" and shape=="portrait":
+                            dataurl=page.evaluate("() => originalArt")
+                            assert dataurl.startswith("data:image/jpeg;base64,"),key
+                            (OUT/"original-v115-art.jpg").write_bytes(
+                                base64.b64decode(dataurl.split(",",1)[1]))
                         assert paired["synced"] is True,(key,paired)
                         assert paired["cartTrack"] is True,(key,paired)
                         assert paired["productionReady"] is False,(key,paired)
@@ -110,6 +116,8 @@ try:
                         assert page.locator("#cartRoad").is_visible(),key
                         page.locator("#cartRoad").click()
                         assert page.evaluate("centuryV117Proof.cartTrack") is False,key
+                        page.screenshot(path=str(OUT/f"original-underlay-{key}.png"),
+                                        full_page=True,animations="disabled")
                         page.locator("#cartRoad").click()
                         assert page.evaluate("centuryV117Proof.cartTrack") is True,key
                         assert page.evaluate("centuryV117Proof.synced") is True,key

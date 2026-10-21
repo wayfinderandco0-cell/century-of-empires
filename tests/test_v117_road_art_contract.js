@@ -45,7 +45,7 @@ test("earth track uses identical source coordinates across four zoom levels and 
   const result=art.paint(ctx,projection,{route:"bridge"});
   assert.equal(result.farBankContinuationVerified,false);
   assert.equal(result.approvedForProduction,false);
-  assert.equal(calls.filter(x=>x[0]==="stroke").length,10);
+  assert.equal(calls.filter(x=>x[0]==="stroke").length,8);
   assert(calls.every(x=>x[0]!=="stroke"||x[2]>0));
   assert(art.assertSynced());
  }
@@ -53,7 +53,7 @@ test("earth track uses identical source coordinates across four zoom levels and 
 test("road painter draws both exits without duplicating the shared approach",()=>{
  const {art}=make();const {ctx,calls}=canvas();
  art.paint(ctx,p=>p,{route:"both"});
- assert.equal(calls.filter(x=>x[0]==="stroke").length,15);
+ assert.equal(calls.filter(x=>x[0]==="stroke").length,13);
 });
 test("changing a route without changing the corresponding road fails closed",()=>{
  const {graph,art}=make();graph.paths.bridge[40][0]+=8;

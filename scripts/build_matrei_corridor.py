@@ -47,7 +47,7 @@ for w in root.findall("way"):
   ("hauptstra" in name.lower().replace("ß","ss").replace(" ","")))
  if qualifies:
   roads.append({"osm_way_id":w.get("id"),"name":name,"modern_ref":ref,"modern_highway_class":hw,"coords":pts})
- water=tags.get("waterway") in {"stream","river"} or tags.get("water")=="river"
+ water=tags.get("waterway") in {"stream","river"}
  if water:
   streams.append({"osm_way_id":w.get("id"),"name":name,"kind":tags.get("waterway","water"),"coords":pts})
 if not roads:raise RuntimeError("No mapped Brennerstraße / B182 candidate in Matrei footprint. Do not invent road.")
@@ -61,6 +61,42 @@ for r in roads:
  for p in parts(r["coords"]):
   if p.length>12:road_lines.append({**{k:v for k,v in r.items() if k!="coords"},"coords":[rnd(a) for a in p.coords],"length_m":round(p.length,2)})
 if not road_lines:raise RuntimeError("Brennerstraße modern path not within this octagon; location correction needed")
+
+# Join successive modern road *ways* at their actual shared endpoints.
+# OpenStreetMap storage boundaries are NOT road gaps and must not create disconnected troop dots.
+raw_road_segments=road_lines[:]
+pending=raw_road_segments[:]
+start_index=max(range(len(pending)),key=lambda i:max(pending[i]["coords"][0][1],pending[i]["coords"][-1][1]))
+seed=pending.pop(start_index)
+chain=seed["coords"][:]
+if chain[-1][1]>chain[0][1]:chain.reverse()
+ordered_ways=[seed["osm_way_id"]]
+merge_max_gap_m=2.0
+max_observed_join_gap=0.0
+while pending:
+ cur=chain[-1]
+ proposals=[]
+ for i,line in enumerate(pending):
+  p=line["coords"]
+  proposals.append((geodist(cur,p[0]),i,False))
+  proposals.append((geodist(cur,p[-1]),i,True))
+ gap,i,reverse=min(proposals)
+ if gap>merge_max_gap_m:
+  raise RuntimeError("Brennerstraße guide has a real unmapped gap of %.2fm. Do NOT connect by a fake straight shortcut."%gap)
+ seg=pending.pop(i)
+ coords=seg["coords"][::-1] if reverse else seg["coords"]
+ max_observed_join_gap=max(max_observed_join_gap,gap)
+ chain.extend(coords[1:])
+ ordered_ways.append(seg["osm_way_id"])
+line_length=LineString(chain).length
+road_lines=[{"name":"Brennerstraße / B182 (modern alignment)",
+             "modern_ref":"B182","modern_highway_class":"mixed",
+             "source_osm_way_ids":ordered_ways,
+             "coords":[rnd(p) for p in chain],
+             "length_m":round(line_length,2),
+             "historical_alignment_verified":False,
+             "max_join_gap_m":round(max_observed_join_gap,4)}]
+
 river_lines=[]
 for r in streams:
  for p in parts(r["coords"]):
@@ -125,6 +161,10 @@ draw.rectangle((0,1130,WIDTH,1200),fill=(20,41,36,245))
 draw.text((25,1150),"DEVELOPER CONTROLS: old Brenner trade route historically documented; movement graph INACTIVE",fill="#e0dbc4")
 imgpath=OUT/"matrei-modern-road-control.jpg"
 im.save(imgpath,quality=87,optimize=True)
+# Small JPEG can be inspected through GitHub's UTF-8 connector without retrieving binary files.
+buf=io.BytesIO();im.resize((600,600)).save(buf,format="JPEG",quality=74)
+(OUT/"matrei-control-preview.jpeg.base64.txt").write_text(base64.b64encode(buf.getvalue()).decode())
+
 control={"schema_version":"1.0","cell_id":CELL,
  "status":"MODERN_MAPPED_ROAD_GEOMETRY_CANDIDATE_HISTORIC_ROUTE_EXISTS_NOT_EXACTLY_LOCATED",
  "origin_lonlat":list(ORIGIN),"projection":"local metric longitude/latitude approximation (x east, y north), not Europe-wide projection",
@@ -143,13 +183,13 @@ control={"schema_version":"1.0","cell_id":CELL,
  "crossings_approved":[],"artwork_state":"GEOGRAPHIC_CONTROL_ONLY_NOT_PREMIUM_TERRAIN_ART",
  "dem_context":elev_summary}
 (OUT/"matrei-road-control.json").write_text(json.dumps(control,indent=2)+"\n")
-validation={"road_segments":len(road_lines),"river_segments":len(river_lines),
+validation={"road_segments":len(road_lines),"original_osm_ways_joined":len(ordered_ways),"max_segment_join_gap_m":round(max_observed_join_gap,4),"continuous_centerline":len(road_lines)==1 and len(ordered_ways)>=3,"river_segments":len(river_lines),
  "nodes":len(waypoints),"links":len(links),"all_edges_off":all(not e["active"] for e in links),
  "candidate_in_polygon":all(POLYGON.buffer(.001).covers(Point(p["coords_xy_m"])) for p in waypoints),
  "historic_exact_alignment_not_claimed":not control["exact_road_location_1800_verified"],
  "no_approved_crossings":not control["crossings_approved"],
  "dem_origin_m":elev_summary["origin_elevation_m"],
  "historical_market_origin_lonlat":list(ORIGIN)}
-if not all((validation[k] for k in ("road_segments","nodes","all_edges_off","candidate_in_polygon","historic_exact_alignment_not_claimed","no_approved_crossings"))):raise RuntimeError("Failed route QA: "+str(validation))
+if not all((validation[k] for k in ("road_segments","continuous_centerline","nodes","all_edges_off","candidate_in_polygon","historic_exact_alignment_not_claimed","no_approved_crossings"))):raise RuntimeError("Failed route QA: "+str(validation))
 (OUT/"matrei-road-qa.json").write_text(json.dumps(validation,indent=2)+"\n")
 print(json.dumps(validation,indent=2),flush=True)

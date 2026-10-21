@@ -1,0 +1,27 @@
+name: V113 Route Geometry and Camera QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "v113-bridge-camera-repair.html"
+      - "scripts/qa_v113_bridge_camera.py"
+      - ".github/workflows/qa-v113-bridge-camera.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v113_bridge_camera.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v113-mobile-evidence
+          path: qa/v113/

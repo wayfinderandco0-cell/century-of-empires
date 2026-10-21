@@ -12,6 +12,8 @@
   "no_approved_crossings": true,
   "max_coarse_road_grade_pct": 11.0,
   "mapped_water_crossings": 1,
+  "blocked_unverified_crossing_edges": 1,
+  "crossings_have_blocked_route_links": true,
   "candidate_entry_exit_edges": [
     "N",
     "S"

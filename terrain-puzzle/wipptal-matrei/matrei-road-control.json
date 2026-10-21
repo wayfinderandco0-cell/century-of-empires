@@ -44,7 +44,7 @@
   ],
   "sources": {
     "osm_api_url": "https://api.openstreetmap.org/api/0.6/map?bbox=11.441056,47.122277999999994,11.465056,47.138278",
-    "osm_downloaded_utc": "2026-10-21T01:48:02.898093+00:00",
+    "osm_downloaded_utc": "2026-10-21T01:50:04.233959+00:00",
     "map_data_attribution": "\u00a9 OpenStreetMap contributors, ODbL; modern geometries, NOT 1800 road survey",
     "dem_source": "terrain-v97/brenner-data.json, Copernicus GLO-30-derived coarse retained 260x300 grid",
     "relief_source": "terrain-v97/brenner-relief.webp",
@@ -1335,7 +1335,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N1",
@@ -1343,7 +1346,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N2",
@@ -1351,7 +1357,12 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [
+        "WIP:O:0:0:X01"
+      ],
+      "status": "BLOCKED_UNVERIFIED_CROSSING",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N3",
@@ -1359,7 +1370,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N4",
@@ -1367,7 +1381,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N5",
@@ -1375,7 +1392,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N6",
@@ -1383,7 +1403,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N7",
@@ -1391,7 +1414,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N8",
@@ -1399,7 +1425,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N9",
@@ -1407,7 +1436,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N10",
@@ -1415,7 +1447,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N11",
@@ -1423,7 +1458,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N12",
@@ -1431,7 +1469,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N13",
@@ -1439,7 +1480,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N14",
@@ -1447,7 +1491,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N15",
@@ -1455,7 +1502,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N16",
@@ -1463,7 +1513,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N17",
@@ -1471,7 +1524,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N18",
@@ -1479,7 +1535,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N19",
@@ -1487,7 +1546,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N20",
@@ -1495,7 +1557,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N21",
@@ -1503,7 +1568,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N22",
@@ -1511,7 +1579,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N23",
@@ -1519,7 +1590,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N24",
@@ -1527,7 +1601,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     },
     {
       "from": "WIP:O:0:0:R0:N25",
@@ -1535,7 +1612,10 @@
       "line_id": 0,
       "active": false,
       "historical_alignment_verified": false,
-      "troop_suitability": "pending_terrain_check"
+      "troop_suitability": "pending_terrain_check",
+      "crossing_ids": [],
+      "status": "CANDIDATE_HISTORICAL_ALIGNMENT_UNVERIFIED",
+      "approved_for_movement": false
     }
   ],
   "all_routes_enabled": false,
@@ -1558,8 +1638,13 @@
   },
   "mapped_water_intersections": [
     {
+      "crossing_id": "WIP:O:0:0:X01",
       "waterway": "Waldraster Bach",
       "geometry_type": "Point",
+      "xy_m": [
+        -47.39126,
+        404.53448
+      ],
       "crossing_approved": false
     }
   ],

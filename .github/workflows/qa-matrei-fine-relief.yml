@@ -1,0 +1,48 @@
+name: Matrei 1800 Fine Relief Graphics Proof
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'scripts/build_matrei_fine_relief.py'
+      - '.github/workflows/qa-matrei-fine-relief.yml'
+  workflow_dispatch:
+permissions: {contents: write}
+concurrency: {group: matrei-fine-relief, cancel-in-progress: false}
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install geospatial renderer
+        run: pip install requests rasterio pyproj numpy scipy pillow
+      - name: Fetch measured 50cm Tirol DGM and build visual terrain with locked road controls
+        run: python scripts/build_matrei_fine_relief.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrei-fine-relief-${{ github.run_id }}
+          path: |
+            terrain-puzzle/wipptal-matrei/matrei-1800-georelief-study.webp
+            terrain-puzzle/wipptal-matrei/matrei-1800-georelief-debug.webp
+            terrain-puzzle/wipptal-matrei/matrei-1800-georelief-comparison.jpg
+            terrain-puzzle/wipptal-matrei/matrei-1800-georelief-qa.json
+      - name: Commit proof to the development branch
+        if: success()
+        env: {STARTING_SHA: '${{ github.sha }}'}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$STARTING_SHA" ]; then
+            echo 'Branch moved. Generated QA stays as artifact rather than overwriting newer work.'
+            exit 1
+          fi
+          git add terrain-puzzle/wipptal-matrei/matrei-1800-georelief-*
+          if ! git diff --cached --quiet; then
+            git commit -m 'Matrei art proof: actual submeter laser relief, 1800 material study and route-alignment diagnostics'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

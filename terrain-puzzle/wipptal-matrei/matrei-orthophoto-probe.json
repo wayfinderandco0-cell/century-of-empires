@@ -1,5 +1,5 @@
 {
-  "date_utc": "2026-10-21T02:31:50.431632+00:00",
+  "date_utc": "2026-10-21T02:32:53.065531+00:00",
   "endpoint": "https://gis.tirol.gv.at/arcgis/services/Service_Public/orthofoto/MapServer/WMSServer",
   "requested_layer": "Image_Aktuell_RGB",
   "crs": "EPSG:31254",
@@ -25,10 +25,23 @@
     900
   ],
   "rgb_std": [
-    0.0,
-    0.0,
-    0.0
+    47.21,
+    41.22,
+    41.2
   ],
-  "sufficient_visual_variation": false,
-  "validated": "returned_jpeg_but_blank_or_low_variation_NEEDS_RESEARCH"
+  "sufficient_visual_variation": true,
+  "alternates": [
+    {
+      "method": "wms111_native",
+      "http_status": 200,
+      "bytes": 281184,
+      "rgb_std": [
+        47.21,
+        41.22,
+        41.2
+      ]
+    }
+  ],
+  "successful_method": "wms111_native",
+  "validated": "retrieval_only_no_historical_claim"
 }

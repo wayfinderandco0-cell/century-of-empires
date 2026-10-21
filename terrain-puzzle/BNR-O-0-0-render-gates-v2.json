@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "cell_id": "BNR:O:0:0",
+  "status": "VISUAL_STUDY_ONLY",
+  "historical_road_verified": false,
+  "crossing_verified": false,
+  "terrain_model_sufficient_for_passability": false,
+  "source_graph": "terrain-puzzle/BNR-O-0-0-hidden-routing.json",
+  "source_water": "terrain-v102/features.json",
+  "source_elevation": "terrain-v97/brenner-data.json",
+  "counts": {
+    "hidden_nodes": 25,
+    "links": 23,
+    "foot_candidate_links": 13,
+    "steep_blocked": 9,
+    "unverified_water_crossing_blocked": 1,
+    "enabled_gameplay_links": 0
+  },
+  "rendering_gates": {
+    "trail": "Visible illustrative path may follow only preliminary-screened candidate graph links; never paint a continuous trail across blocked steep links or an unverified crossing.",
+    "stream": "Use mapped Fidlerbach centerline, subdued irregular water texture and banks; do not move water to match an attractive image.",
+    "nodes": "Developer-overlay only; do not show in player view.",
+    "octagon": "Invisible cell clip and canonical shared edge; full-bleed artwork requires 60m overlap.",
+    "terrain": "The high-resolution visual painting is illustrative; a new geographically registered relief base must be prepared before physical passability is approved.",
+    "gameplay": "All routes stay disabled; foot/cavalry/wheeled-artillery ability must be assessed separately.",
+    "history": "Neither reconstructed trail nor ford is authenticated for circa 1800."
+  },
+  "next_gate": "Higher-resolution geographic surface and period-road evidence, then first cell and connector seam QA with cell 002.",
+  "outputs_in_conversation": [
+    "century_oct001_screened_clean.jpg",
+    "century_oct001_screened_debug.jpg",
+    "century_oct001_screened_comparison.jpg",
+    "century_oct001_screened_QA.json",
+    "build_oct001_screened_corridors.py"
+  ],
+  "existing_game_versions_untouched": true
+}

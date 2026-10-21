@@ -353,7 +353,7 @@ C.addEventListener("wheel",e=>{e.preventDefault();widthWorld*=Math.exp(e.deltaY*
 window.addEventListener("resize",resize);
 window.centuryV116Proof={get ready(){return imageReady},get route(){return state.selected},
  get count(){return state.marks.length},get sharedTransformError(){return transformError},
- get snapshot(){return {cam:view,route:state.selected,marks:[...state.marks]}},get roadNetwork(){return network},get baselineBridge(){return originalBridge},get baselineSouth(){return originalSouth},changeView:setPreset,
+ get snapshot(){return {cam:view,route:state.selected,marks:[...state.marks]}},get progress(){return state.progress},get moving(){return state.playing},get roadNetwork(){return network},get baselineBridge(){return originalBridge},get baselineSouth(){return originalSouth},changeView:setPreset,
  measurePoint:(p,n=state.selected)=>closestDistance(p,routes[n]),routes,renderer,index};
 resize();requestAnimationFrame(frame);
 </script></body></html>

@@ -20,6 +20,21 @@ button:disabled{opacity:.5}
 #sheet.open{display:block}#sheet p{font-size:11px;line-height:1.35;margin:0 0 7px}
 #sheet .group{flex-wrap:wrap}#sheet .group button{min-width:25%}
 @media(max-height:480px){#head .panel{max-width:360px}#head small{display:none}#bottom{width:min(630px,66%);left:auto;right:6px}button{min-height:34px;padding:4px 5px}#sheet{max-height:42vh}#status{font-size:9px}}
+
+/* V116 iPhone review: avoid obscuring the painted road with explanatory chrome. */
+#head{top:max(6px,env(safe-area-inset-top));left:6px;right:auto}
+#head .panel{padding:5px 8px;max-width:min(84vw,360px)}
+#head .panel strong{font-size:12px}
+#head .panel>div,#head .panel>small{display:none}
+#bottom{gap:3px}
+#bottom .group{gap:4px}
+#status{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:24px;padding:4px 7px}
+#bottom:has(#sheet.open) #status{white-space:normal;max-height:none}
+@media (orientation:landscape) and (max-height:480px){
+ #head .panel{max-width:300px}
+ #bottom{width:min(630px,65%);max-width:65%;right:6px}
+ #status{font-size:9px;max-height:22px}
+}
 </style></head><body>
 <div id="stage"><canvas id="map" aria-label="Original V115 painting overlaid with unverified road route"></canvas></div>
 <div id="head"><div class="panel"><strong>V116 · Unified road & army proof</strong>

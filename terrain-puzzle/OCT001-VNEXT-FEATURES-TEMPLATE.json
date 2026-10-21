@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "cell_id": "BNR:O:0:0",
+  "coordinate_system": {
+    "origin_lonlat": [
+      11.52,
+      47.13
+    ],
+    "units": "metres",
+    "x_axis": "east",
+    "y_axis": "north"
+  },
+  "river_source": "terrain-v102/features.json",
+  "designed_corridors": [],
+  "crossing_registry": [],
+  "path_nodes": [],
+  "movement_enabled": false,
+  "note": "No routes or bridges may be invented by copying their screen-pixel position from the user-approved image. Author them against georegistered terrain, then generate artwork and nodes from the same polyline."
+}

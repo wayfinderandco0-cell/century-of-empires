@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "id": "OCT001-VNEXT-ART-ROUTE-CONTRACT",
+  "updated_at": "2026-10-20",
+  "cell_id": "BNR:O:0:0",
+  "status": "SPEC_SAVED_ASSETS_PENDING_APPROVAL",
+  "region": {
+    "origin_lonlat": [
+      11.52,
+      47.13
+    ],
+    "axes": "x=east/y=north",
+    "pitch_m": 1000,
+    "bleed_m": 60,
+    "master_bounds_m": [
+      -560,
+      -560,
+      560,
+      560
+    ],
+    "recommended_master_px": [
+      4096,
+      4096
+    ],
+    "shared_east_edge": {
+      "x_m": 500,
+      "y_min": -207.106781,
+      "y_max": 207.106781
+    },
+    "southeast_connector": "BNR:S:0:-1"
+  },
+  "sources": {
+    "cell": "terrain-puzzle/BNR-O-0-0.json",
+    "neighbor": "terrain-puzzle/BNR-O-1-0.json",
+    "river": "terrain-v102/features.json",
+    "river_control": "terrain-puzzle/BNR-O-0-0-geographic-control.json",
+    "elevation": "terrain-v97/brenner-data.json",
+    "legacy_unapproved_graph": "terrain-puzzle/BNR-O-0-0-hidden-routing.json"
+  },
+  "style_target": {
+    "approved_by_user": true,
+    "description": "Rich natural Alpine evergreen forest, cliffs, meadow, convincing irregular river channel, rocks, rapids, winding trails.",
+    "is_measured_geography": false,
+    "bridge_in_reference_is_verified": false
+  },
+  "art_rules": {
+    "full_rectangular_source": true,
+    "octagon_outline_baked": false,
+    "route_dots_baked": false,
+    "render_river_from_source_geometry": true,
+    "river_banks_and_rapids": true,
+    "trail_from_single_accepted_vector": true,
+    "hidden_nodes_generated_from_that_vector": true,
+    "microdetail_historically_verified": false
+  },
+  "route_rules": {
+    "status": "PENDING",
+    "old_nodes_not_authoritative_for_rebuild": true,
+    "node_spacing_straight_m": [
+      40,
+      65
+    ],
+    "node_spacing_curves_m": [
+      10,
+      25
+    ],
+    "all_links_disabled_for_gameplay": true,
+    "no_bridge_without_approved_crossing": true,
+    "no_shortcut_chords": true,
+    "foot_cavalry_artillery_require_separate_approvals": true
+  },
+  "acceptance": {
+    "trail_max_screen_error_px": 2,
+    "trail_max_world_error_m": 2,
+    "shared_feature_endpoint_error_m": 0,
+    "enabled_steep_unverified_links": 0,
+    "enabled_water_unverified_links": 0,
+    "visible_debug_dots_normal_view": 0,
+    "requires_iPhone_physical_visual_review": true
+  },
+  "asset_checklist": [
+    {
+      "name": "geographically registered editable 4096 master with 60m bleed",
+      "status": "NOT_BUILT"
+    },
+    {
+      "name": "natural river/banks georeferenced to source polyline",
+      "status": "NOT_BUILT"
+    },
+    {
+      "name": "reviewed plausible trail vector in local XY metres",
+      "status": "NOT_AUTHORED"
+    },
+    {
+      "name": "hidden node graph derived from accepted vector",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "name": "clean and debug iPhone previews of identical imagery",
+      "status": "NOT_TESTED"
+    },
+    {
+      "name": "001-002 east boundary and connector seam proof",
+      "status": "NOT_TESTED"
+    }
+  ],
+  "historical_status": "River based on modern mapped natural watercourse guides. Trail/bridge concepts are not authenticated for c.1800.",
+  "protected_versions": [
+    "v94",
+    "V100",
+    "V101",
+    "V102",
+    "V103",
+    "V104",
+    "V105",
+    "V106",
+    "original gameplay",
+    "existing campaign saves"
+  ]
+}

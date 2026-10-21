@@ -122,6 +122,30 @@ def elev(x,y):
  v=max(0,min(NY-1.00001,(bounds[3]-lat)/(bounds[3]-bounds[1])*(NY-1)))
  i=int(u);j=int(v);a=u-i;b=v-j;k=j*NX+i
  return (arr[k]*(1-a)+arr[k+1]*a)*(1-b)+(arr[k+NX]*(1-a)+arr[k+NX+1]*a)*b
+# Coarse DEM gradient and mapped water-intersection audit only, not a road certification.
+# Use 10m along-geometry sampling to avoid skipping sharp turns in the modern guide.
+road_geom=LineString(road_lines[0]["coords"])
+observations=[]
+for d in range(0,int(road_geom.length)+1,10):
+ pp=road_geom.interpolate(d);observations.append((d,elev(pp.x,pp.y)))
+last=road_geom.interpolate(road_geom.length)
+observations.append((road_geom.length,elev(last.x,last.y)))
+grades=[]
+for i in range(1,len(observations)):
+ dd=observations[i][0]-observations[i-1][0]
+ if dd>0:grades.append(abs(observations[i][1]-observations[i-1][1])/dd)
+road_terrain_estimate={
+ "elevation_north_entry_m":round(elev(*road_lines[0]["coords"][0]),1),
+ "elevation_south_exit_m":round(elev(*road_lines[0]["coords"][-1]),1),
+ "maximum_coarse_model_grade_pct":round(100*max(grades),1) if grades else None,
+ "total_descent_m":round(sum(max(0,a[1]-b[1]) for a,b in zip(observations,observations[1:])),1),
+ "dem_adequacy":"CANNOT_CERTIFY_REAL_GRADIENT_OR_HISTORIC_WHEELED_ACCESS"}
+water_intersections=[]
+for w in river_lines:
+ inter=road_geom.intersection(LineString(w["coords"]))
+ if not inter.is_empty:
+  water_intersections.append({"waterway":w["name"],"geometry_type":inter.geom_type,"crossing_approved":False})
+
 elev_summary={"origin_elevation_m":round(elev(0,0),1),
  "center_north_500_m":round(elev(0,500),1),"center_south_500_m":round(elev(0,-500),1),
  "resolution_warning":"V97 retained grid ~160-230m, insufficient to certify path gradients or bridges"}
@@ -181,14 +205,14 @@ control={"schema_version":"1.0","cell_id":CELL,
  "candidate_waypoints":waypoints,"candidate_edges":links,"all_routes_enabled":False,
  "historical_road_existed_during_game":True,"exact_road_location_1800_verified":False,
  "crossings_approved":[],"artwork_state":"GEOGRAPHIC_CONTROL_ONLY_NOT_PREMIUM_TERRAIN_ART",
- "dem_context":elev_summary}
+ "dem_context":elev_summary,"coarse_road_gradient":road_terrain_estimate,"mapped_water_intersections":water_intersections,"road_entry_exit_candidates":[{"edge":"N","xy_m":road_lines[0]["coords"][0],"approved":False},{"edge":"S","xy_m":road_lines[0]["coords"][-1],"approved":False}]}
 (OUT/"matrei-road-control.json").write_text(json.dumps(control,indent=2)+"\n")
 validation={"road_segments":len(road_lines),"original_osm_ways_joined":len(ordered_ways),"max_segment_join_gap_m":round(max_observed_join_gap,4),"continuous_centerline":len(road_lines)==1 and len(ordered_ways)>=3,"river_segments":len(river_lines),
  "nodes":len(waypoints),"links":len(links),"all_edges_off":all(not e["active"] for e in links),
  "candidate_in_polygon":all(POLYGON.buffer(.001).covers(Point(p["coords_xy_m"])) for p in waypoints),
  "historic_exact_alignment_not_claimed":not control["exact_road_location_1800_verified"],
  "no_approved_crossings":not control["crossings_approved"],
- "dem_origin_m":elev_summary["origin_elevation_m"],
+ "max_coarse_road_grade_pct":road_terrain_estimate["maximum_coarse_model_grade_pct"],"mapped_water_crossings":len(water_intersections),"candidate_entry_exit_edges":["N","S"],"dem_origin_m":elev_summary["origin_elevation_m"],
  "historical_market_origin_lonlat":list(ORIGIN)}
 if not all((validation[k] for k in ("road_segments","continuous_centerline","nodes","all_edges_off","candidate_in_polygon","historic_exact_alignment_not_claimed","no_approved_crossings"))):raise RuntimeError("Failed route QA: "+str(validation))
 (OUT/"matrei-road-qa.json").write_text(json.dumps(validation,indent=2)+"\n")

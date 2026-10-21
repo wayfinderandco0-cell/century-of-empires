@@ -61,7 +61,15 @@ try:
                         assert app["approvedForProduction"] is False,key
                         page.locator("#bridgeRoute").click()
                         assert page.evaluate("centuryV116Proof.route")=="bridge",key
-                        page.locator("button[data-view=bridge]").click()
+                        assert not page.locator("#views").is_visible(),key
+                        assert not page.locator("#status").is_visible(),key
+                        page.locator("#focusBridge").click()
+                        camera_inside=page.evaluate("""() => {
+                          const a=window.centuryV116Proof,b=a.index.artBoxWorldPx,c=a.snapshot.cam;
+                          return c[0]>=b[0]-1e-9 && c[2]<=b[2]+1e-9 &&
+                            c[1]>=b[1]-1e-9 && c[3]<=b[3]+1e-9;
+                        }""")
+                        assert camera_inside,(key,"Bridge camera exposed off-art blank band")
                         position=page.evaluate("""() => {
                           const a=window.centuryV116Proof;
                           return a.qaSetDistance('bridge',a.graph.forkDistance+150);
@@ -92,7 +100,7 @@ try:
                         report["cases"][key]={"passed":True,"scriptErrors":page_errors,
                             "viewport":viewport,"tiles":48,"sharedTransformErrorArtPx":app["transformError"],
                             "paintedBridgeScreenshot":str(screenshot.relative_to(ROOT)),
-                            "positionStayedFixedUnderPan":True,"forkBlocksTeleport":True,
+                            "positionStayedFixedUnderPan":True,"bridgeCameraWithinSourceArt":True,"forkBlocksTeleport":True,
                             "visibleBridgeStop":app["farBankEnd"]}
                     finally:
                         page.close()

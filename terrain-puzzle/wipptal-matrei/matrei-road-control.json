@@ -1,0 +1,2037 @@
+{
+  "schema_version": "1.0",
+  "cell_id": "WIP:O:0:0",
+  "status": "MODERN_MAPPED_ROAD_GEOMETRY_CANDIDATE_HISTORIC_ROUTE_EXISTS_NOT_EXACTLY_LOCATED",
+  "origin_lonlat": [
+    11.453056,
+    47.130278
+  ],
+  "projection": "local metric longitude/latitude approximation (x east, y north), not Europe-wide projection",
+  "octagon_pitch_m": 1000,
+  "polygon_xy_m": [
+    [
+      -207.10678,
+      -500
+    ],
+    [
+      207.10678,
+      -500
+    ],
+    [
+      500,
+      -207.10678
+    ],
+    [
+      500,
+      207.10678
+    ],
+    [
+      207.10678,
+      500
+    ],
+    [
+      -207.10678,
+      500
+    ],
+    [
+      -500,
+      207.10678
+    ],
+    [
+      -500,
+      -207.10678
+    ]
+  ],
+  "sources": {
+    "osm_api_url": "https://api.openstreetmap.org/api/0.6/map?bbox=11.441056,47.122277999999994,11.465056,47.138278",
+    "osm_downloaded_utc": "2026-10-21T01:44:26.485788+00:00",
+    "map_data_attribution": "\u00a9 OpenStreetMap contributors, ODbL; modern geometries, NOT 1800 road survey",
+    "dem_source": "terrain-v97/brenner-data.json, Copernicus GLO-30-derived coarse retained 260x300 grid",
+    "relief_source": "terrain-v97/brenner-relief.webp",
+    "historic_road_evidence": [
+      "https://orawww.uibk.ac.at/apex/uprod/f?p=LLW:3:0::NO::P3_ID:1179",
+      "https://austria-forum.org/af/AustriaWiki/Brennerstra%C3%9Fe",
+      "https://www.steinach.gv.at/Leben_in_Steinach/Wissenswertes/Geschichte"
+    ]
+  },
+  "route_alignment_source": "modern OSM named Brennerstra\u00dfe or B182 or Hauptstra\u00dfe; period-exact centerline unverified",
+  "road_segments": [
+    {
+      "osm_way_id": "4863694",
+      "name": "",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -71.75147,
+          309.92601
+        ],
+        [
+          -73.63728,
+          281.41696
+        ],
+        [
+          -72.47853,
+          263.22727
+        ],
+        [
+          -67.74508,
+          240.29535
+        ],
+        [
+          -65.40487,
+          234.31747
+        ],
+        [
+          -63.14796,
+          228.55109
+        ],
+        [
+          -30.61972,
+          145.42845
+        ]
+      ],
+      "length_m": 172.09
+    },
+    {
+      "osm_way_id": "131354084",
+      "name": "",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -46.00152,
+          407.60931
+        ],
+        [
+          -48.87946,
+          401.24181
+        ],
+        [
+          -49.65196,
+          399.52748
+        ],
+        [
+          -56.56658,
+          384.22098
+        ]
+      ],
+      "length_m": 25.66
+    },
+    {
+      "osm_way_id": "132978668",
+      "name": "Brenner Stra\u00dfe",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -6.748,
+          -74.12799
+        ],
+        [
+          -15.84379,
+          -172.15638
+        ],
+        [
+          -16.25276,
+          -186.91741
+        ],
+        [
+          -17.60842,
+          -209.08122
+        ],
+        [
+          -18.80504,
+          -217.88664
+        ],
+        [
+          -19.6154,
+          -227.98336
+        ],
+        [
+          -23.0462,
+          -247.4421
+        ],
+        [
+          -29.77148,
+          -269.46119
+        ],
+        [
+          -39.85183,
+          -299.05005
+        ],
+        [
+          -43.32807,
+          -308.93526
+        ]
+      ],
+      "length_m": 238.96
+    },
+    {
+      "osm_way_id": "132978670",
+      "name": "",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -55.23364,
+          -340.93976
+        ],
+        [
+          -57.71018,
+          -347.29614
+        ],
+        [
+          -59.79289,
+          -352.65063
+        ],
+        [
+          -61.1637,
+          -356.21287
+        ],
+        [
+          -68.6539,
+          -375.64934
+        ],
+        [
+          -83.9524,
+          -415.90265
+        ],
+        [
+          -101.99251,
+          -465.50684
+        ],
+        [
+          -113.41869,
+          -500.0
+        ]
+      ],
+      "length_m": 169.4
+    },
+    {
+      "osm_way_id": "175467446",
+      "name": "",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -56.56658,
+          384.22098
+        ],
+        [
+          -59.77775,
+          373.55652
+        ],
+        [
+          -61.08796,
+          369.52674
+        ],
+        [
+          -64.89744,
+          348.24236
+        ],
+        [
+          -71.75147,
+          309.92601
+        ]
+      ],
+      "length_m": 75.92
+    },
+    {
+      "osm_way_id": "312987934",
+      "name": "M\u00fchlbachl",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -34.71429,
+          500.0
+        ],
+        [
+          -34.60339,
+          497.57814
+        ],
+        [
+          -34.61853,
+          490.68743
+        ],
+        [
+          -34.6564,
+          477.72978
+        ],
+        [
+          -35.39103,
+          462.75724
+        ],
+        [
+          -36.88301,
+          453.9407
+        ],
+        [
+          -38.39772,
+          445.01283
+        ],
+        [
+          -41.93455,
+          425.46504
+        ],
+        [
+          -46.00152,
+          407.60931
+        ]
+      ],
+      "length_m": 93.44
+    },
+    {
+      "osm_way_id": "1322086248",
+      "name": "Brenner Stra\u00dfe",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -43.32807,
+          -308.93526
+        ],
+        [
+          -48.4099,
+          -322.72781
+        ],
+        [
+          -50.9546,
+          -329.62965
+        ],
+        [
+          -54.68077,
+          -339.32562
+        ],
+        [
+          -55.23364,
+          -340.93976
+        ]
+      ],
+      "length_m": 34.15
+    },
+    {
+      "osm_way_id": "1322086249",
+      "name": "Brenner Stra\u00dfe",
+      "modern_ref": "B182",
+      "modern_highway_class": "primary",
+      "coords": [
+        [
+          -30.61972,
+          145.42845
+        ],
+        [
+          -29.06715,
+          141.30961
+        ],
+        [
+          -27.77208,
+          137.86982
+        ],
+        [
+          -14.38968,
+          102.381
+        ],
+        [
+          -2.64316,
+          71.23367
+        ],
+        [
+          0.9997,
+          55.84924
+        ],
+        [
+          2.62801,
+          48.96967
+        ],
+        [
+          4.24874,
+          42.13462
+        ],
+        [
+          4.37749,
+          27.45151
+        ],
+        [
+          1.90095,
+          9.91861
+        ],
+        [
+          0.34081,
+          -3.62903
+        ],
+        [
+          0.16662,
+          -5.10959
+        ],
+        [
+          -5.61197,
+          -63.11844
+        ],
+        [
+          -6.39962,
+          -70.77726
+        ],
+        [
+          -6.748,
+          -74.12799
+        ]
+      ],
+      "length_m": 226.08
+    }
+  ],
+  "waterway_segments": [
+    {
+      "name": "Sill",
+      "type": "river",
+      "osm_way_id": "33757002",
+      "coords": [
+        [
+          14.08674,
+          362.52471
+        ],
+        [
+          49.65196,
+          373.83482
+        ],
+        [
+          63.44333,
+          382.92967
+        ],
+        [
+          73.25103,
+          392.51432
+        ]
+      ],
+      "length_m": 67.55
+    },
+    {
+      "name": "Sill",
+      "type": "river",
+      "osm_way_id": "124476534",
+      "coords": [
+        [
+          -29.93196,
+          -500.0
+        ],
+        [
+          -9.23211,
+          -466.93174
+        ],
+        [
+          15.67717,
+          -437.66571
+        ],
+        [
+          47.22086,
+          -411.39419
+        ],
+        [
+          109.56603,
+          -364.14998
+        ],
+        [
+          120.25983,
+          -348.56518
+        ],
+        [
+          127.40922,
+          -336.27546
+        ]
+      ],
+      "length_m": 229.84
+    },
+    {
+      "name": "",
+      "type": "water",
+      "osm_way_id": "128247509",
+      "coords": [
+        [
+          99.40994,
+          123.26464
+        ],
+        [
+          108.36941,
+          114.83771
+        ],
+        [
+          126.14445,
+          110.10661
+        ],
+        [
+          139.29964,
+          105.36438
+        ],
+        [
+          153.43182,
+          96.31406
+        ],
+        [
+          163.69393,
+          84.77018
+        ],
+        [
+          170.79031,
+          72.0463
+        ],
+        [
+          182.27176,
+          56.20547
+        ],
+        [
+          187.86859,
+          37.06956
+        ],
+        [
+          189.85285,
+          26.26039
+        ],
+        [
+          190.66321,
+          6.82392
+        ],
+        [
+          186.74771,
+          -18.47912
+        ],
+        [
+          177.2278,
+          -48.31288
+        ],
+        [
+          163.79239,
+          -82.45472
+        ],
+        [
+          158.47578,
+          -101.17875
+        ],
+        [
+          153.01527,
+          -125.65802
+        ],
+        [
+          145.04036,
+          -194.98811
+        ],
+        [
+          143.77559,
+          -250.94868
+        ],
+        [
+          142.10184,
+          -281.3947
+        ],
+        [
+          141.26118,
+          -299.49533
+        ],
+        [
+          139.9964,
+          -321.30292
+        ],
+        [
+          132.43804,
+          -350.72479
+        ],
+        [
+          114.52668,
+          -370.68447
+        ],
+        [
+          95.21422,
+          -383.44174
+        ],
+        [
+          81.77123,
+          -392.28055
+        ],
+        [
+          78.83271,
+          -396.59976
+        ],
+        [
+          63.43575,
+          -407.92101
+        ],
+        [
+          45.10028,
+          -421.49092
+        ],
+        [
+          25.09105,
+          -442.88662
+        ],
+        [
+          15.71504,
+          -455.23201
+        ],
+        [
+          12.17064,
+          -458.50482
+        ],
+        [
+          -7.27057,
+          -482.99522
+        ],
+        [
+          -15.60144,
+          -495.63004
+        ],
+        [
+          -18.11108,
+          -500.0
+        ]
+      ],
+      "length_m": 740.43
+    },
+    {
+      "name": "",
+      "type": "water",
+      "osm_way_id": "128247509",
+      "coords": [
+        [
+          -38.31186,
+          -500.0
+        ],
+        [
+          -12.47358,
+          -458.89444
+        ],
+        [
+          -0.86338,
+          -442.01832
+        ],
+        [
+          21.11496,
+          -419.38697
+        ],
+        [
+          35.67125,
+          -406.01744
+        ],
+        [
+          54.70349,
+          -393.88356
+        ],
+        [
+          76.81815,
+          -377.21895
+        ],
+        [
+          89.86732,
+          -368.25769
+        ],
+        [
+          91.79856,
+          -366.93298
+        ],
+        [
+          108.0286,
+          -351.50403
+        ],
+        [
+          116.85175,
+          -337.2996
+        ],
+        [
+          124.12989,
+          -309.53639
+        ],
+        [
+          127.20474,
+          -267.76913
+        ],
+        [
+          128.46952,
+          -224.15395
+        ],
+        [
+          127.62886,
+          -194.11982
+        ],
+        [
+          127.00783,
+          -169.01716
+        ],
+        [
+          136.72465,
+          -102.78176
+        ],
+        [
+          144.56323,
+          -72.3246
+        ],
+        [
+          152.25792,
+          -54.22397
+        ],
+        [
+          163.73937,
+          -24.8021
+        ],
+        [
+          169.1923,
+          -7.11335
+        ],
+        [
+          172.55494,
+          10.78691
+        ],
+        [
+          174.6528,
+          25.39209
+        ],
+        [
+          170.17686,
+          40.62067
+        ],
+        [
+          163.31525,
+          60.15733
+        ],
+        [
+          156.03711,
+          71.89046
+        ],
+        [
+          145.96433,
+          83.40094
+        ],
+        [
+          135.46744,
+          90.81486
+        ],
+        [
+          122.02446,
+          94.92256
+        ],
+        [
+          103.40876,
+          95.13407
+        ],
+        [
+          97.67561,
+          99.0414
+        ],
+        [
+          90.25357,
+          106.65569
+        ],
+        [
+          95.58532,
+          116.31827
+        ],
+        [
+          99.40994,
+          123.26464
+        ]
+      ],
+      "length_m": 746.13
+    },
+    {
+      "name": "",
+      "type": "water",
+      "osm_way_id": "128247750",
+      "coords": [
+        [
+          56.49841,
+          166.77962
+        ],
+        [
+          76.10624,
+          144.33751
+        ],
+        [
+          99.40994,
+          123.26464
+        ],
+        [
+          95.58532,
+          116.31827
+        ],
+        [
+          90.25357,
+          106.65569
+        ],
+        [
+          71.06228,
+          126.8714
+        ],
+        [
+          43.25991,
+          157.58459
+        ],
+        [
+          26.70421,
+          178.1454
+        ],
+        [
+          7.58109,
+          205.30748
+        ],
+        [
+          -7.36903,
+          229.64203
+        ],
+        [
+          -16.37394,
+          250.67038
+        ],
+        [
+          -24.56848,
+          273.8138
+        ],
+        [
+          -30.35464,
+          291.76972
+        ],
+        [
+          -33.08868,
+          307.59942
+        ],
+        [
+          -32.28589,
+          321.77046
+        ],
+        [
+          -28.9081,
+          334.06019
+        ],
+        [
+          -16.79048,
+          356.66928
+        ],
+        [
+          -0.78007,
+          366.42091
+        ],
+        [
+          15.20762,
+          373.06672
+        ],
+        [
+          55.27908,
+          389.15246
+        ],
+        [
+          60.29274,
+          393.88356
+        ],
+        [
+          63.50391,
+          403.52387
+        ],
+        [
+          63.89016,
+          412.97494
+        ],
+        [
+          60.16399,
+          423.17185
+        ],
+        [
+          50.26541,
+          448.11866
+        ],
+        [
+          36.63309,
+          480.82448
+        ],
+        [
+          30.20317,
+          494.61702
+        ],
+        [
+          27.4668,
+          500.0
+        ]
+      ],
+      "length_m": 572.75
+    },
+    {
+      "name": "",
+      "type": "water",
+      "osm_way_id": "128247750",
+      "coords": [
+        [
+          44.74519,
+          500.0
+        ],
+        [
+          45.11542,
+          499.38152
+        ],
+        [
+          59.134,
+          473.06547
+        ],
+        [
+          65.17766,
+          457.19124
+        ],
+        [
+          77.26499,
+          432.05518
+        ],
+        [
+          85.87607,
+          410.51476
+        ],
+        [
+          89.27658,
+          399.09333
+        ],
+        [
+          87.70129,
+          390.37698
+        ],
+        [
+          62.11039,
+          372.29861
+        ],
+        [
+          45.24417,
+          366.47657
+        ],
+        [
+          30.58942,
+          363.27056
+        ],
+        [
+          8.21726,
+          351.7378
+        ],
+        [
+          -0.4014,
+          343.98993
+        ],
+        [
+          -9.65623,
+          334.91735
+        ],
+        [
+          -16.98739,
+          322.43838
+        ],
+        [
+          -17.75989,
+          305.61793
+        ],
+        [
+          -15.05615,
+          288.0405
+        ],
+        [
+          -6.44506,
+          264.60764
+        ],
+        [
+          4.74859,
+          238.14688
+        ],
+        [
+          19.27459,
+          213.38931
+        ],
+        [
+          42.77521,
+          183.678
+        ],
+        [
+          56.49841,
+          166.77962
+        ]
+      ],
+      "length_m": 424.43
+    },
+    {
+      "name": "Sch\u00f6fnerbach",
+      "type": "stream",
+      "osm_way_id": "152337534",
+      "coords": [
+        [
+          272.22996,
+          365.18526
+        ],
+        [
+          282.20427,
+          369.12599
+        ],
+        [
+          288.61147,
+          370.42843
+        ],
+        [
+          331.35713,
+          375.74965
+        ]
+      ],
+      "length_m": 60.34
+    },
+    {
+      "name": "Sch\u00f6fnerbach",
+      "type": "stream",
+      "osm_way_id": "152337553",
+      "coords": [
+        [
+          272.22996,
+          365.18526
+        ],
+        [
+          97.1076,
+          389.62
+        ],
+        [
+          87.70129,
+          390.37698
+        ],
+        [
+          73.25103,
+          392.51432
+        ]
+      ],
+      "length_m": 200.86
+    },
+    {
+      "name": "Waldraster Bach",
+      "type": "stream",
+      "osm_way_id": "152348812",
+      "coords": [
+        [
+          -155.93029,
+          500.0
+        ],
+        [
+          -138.17876,
+          467.2991
+        ],
+        [
+          -123.24379,
+          444.9683
+        ],
+        [
+          -110.87624,
+          433.01254
+        ],
+        [
+          -107.00618,
+          428.64879
+        ]
+      ],
+      "length_m": 87.11
+    },
+    {
+      "name": "Waldraster Bach",
+      "type": "stream",
+      "osm_way_id": "152348813",
+      "coords": [
+        [
+          -107.00618,
+          428.64879
+        ],
+        [
+          -86.43651,
+          417.34981
+        ],
+        [
+          -63.38274,
+          409.66873
+        ],
+        [
+          -32.31618,
+          399.69446
+        ],
+        [
+          -23.22039,
+          396.53297
+        ]
+      ],
+      "length_m": 90.03
+    },
+    {
+      "name": "Waldraster Bach",
+      "type": "stream",
+      "osm_way_id": "152348814",
+      "coords": [
+        [
+          -23.22039,
+          396.53297
+        ],
+        [
+          -16.79805,
+          392.97073
+        ],
+        [
+          8.64138,
+          370.82918
+        ],
+        [
+          14.08674,
+          362.52471
+        ]
+      ],
+      "length_m": 51.0
+    },
+    {
+      "name": "Sill",
+      "type": "river",
+      "osm_way_id": "152387110",
+      "coords": [
+        [
+          127.40922,
+          -336.27546
+        ],
+        [
+          130.62039,
+          -311.88524
+        ],
+        [
+          131.30201,
+          -283.94392
+        ],
+        [
+          133.26355,
+          -235.80916
+        ],
+        [
+          135.06605,
+          -192.45002
+        ],
+        [
+          142.86677,
+          -109.62794
+        ],
+        [
+          153.76505,
+          -71.37838
+        ],
+        [
+          169.51796,
+          -32.50544
+        ],
+        [
+          174.6528,
+          -17.80007
+        ],
+        [
+          174.93302,
+          -16.08574
+        ],
+        [
+          179.43169,
+          11.42143
+        ],
+        [
+          180.56772,
+          23.36607
+        ],
+        [
+          178.31838,
+          34.68731
+        ],
+        [
+          173.89545,
+          48.20156
+        ],
+        [
+          157.03681,
+          79.37116
+        ],
+        [
+          129.5601,
+          95.90218
+        ],
+        [
+          106.80927,
+          109.0602
+        ],
+        [
+          95.58532,
+          116.31827
+        ],
+        [
+          90.56408,
+          120.34805
+        ],
+        [
+          72.34978,
+          137.24643
+        ],
+        [
+          30.60457,
+          188.05288
+        ],
+        [
+          9.52748,
+          217.48588
+        ],
+        [
+          -5.86947,
+          247.9319
+        ],
+        [
+          -14.82894,
+          273.5689
+        ],
+        [
+          -21.274,
+          293.80688
+        ],
+        [
+          -25.02289,
+          306.9315
+        ],
+        [
+          -24.69723,
+          317.38445
+        ],
+        [
+          -21.4179,
+          328.51645
+        ],
+        [
+          -12.56446,
+          339.19204
+        ],
+        [
+          2.66588,
+          353.38534
+        ],
+        [
+          14.08674,
+          362.52471
+        ]
+      ],
+      "length_m": 799.91
+    },
+    {
+      "name": "Sill",
+      "type": "river",
+      "osm_way_id": "152387200",
+      "coords": [
+        [
+          73.85691,
+          393.5496
+        ],
+        [
+          69.74449,
+          415.91378
+        ],
+        [
+          31.96982,
+          500.0
+        ]
+      ],
+      "length_m": 114.92
+    },
+    {
+      "name": "",
+      "type": "stream",
+      "osm_way_id": "153691418",
+      "coords": [
+        [
+          500.0,
+          -62.54172
+        ],
+        [
+          489.29444,
+          -63.419
+        ],
+        [
+          458.49296,
+          -58.28715
+        ],
+        [
+          442.98998,
+          -51.83059
+        ],
+        [
+          429.75147,
+          -50.58381
+        ],
+        [
+          419.22429,
+          -49.55966
+        ],
+        [
+          367.38359,
+          -41.85632
+        ],
+        [
+          313.48289,
+          -31.84865
+        ],
+        [
+          287.55875,
+          -25.16945
+        ]
+      ],
+      "length_m": 216.64
+    },
+    {
+      "name": "",
+      "type": "stream",
+      "osm_way_id": "153691425",
+      "coords": [
+        [
+          287.55875,
+          -25.16945
+        ],
+        [
+          253.39463,
+          2.01489
+        ],
+        [
+          236.24819,
+          0.40075
+        ]
+      ],
+      "length_m": 60.88
+    },
+    {
+      "name": "",
+      "type": "stream",
+      "osm_way_id": "153691428",
+      "coords": [
+        [
+          217.58705,
+          -7.7924
+        ],
+        [
+          205.44671,
+          -7.07995
+        ],
+        [
+          174.93302,
+          -16.08574
+        ]
+      ],
+      "length_m": 43.98
+    },
+    {
+      "name": "",
+      "type": "stream",
+      "osm_way_id": "1377031636",
+      "coords": [
+        [
+          236.24819,
+          0.40075
+        ],
+        [
+          226.91762,
+          -3.69582
+        ]
+      ],
+      "length_m": 10.19
+    },
+    {
+      "name": "",
+      "type": "stream",
+      "osm_way_id": "1377031637",
+      "coords": [
+        [
+          226.91762,
+          -3.69582
+        ],
+        [
+          217.58705,
+          -7.7924
+        ]
+      ],
+      "length_m": 10.19
+    }
+  ],
+  "candidate_waypoints": [
+    {
+      "id": "WIP:O:0:0:R0:N0",
+      "coords_xy_m": [
+        -71.75147,
+        309.92601
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R0:N1",
+      "coords_xy_m": [
+        -73.26563,
+        275.58297
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 34.42,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R0:N2",
+      "coords_xy_m": [
+        -68.02383,
+        241.64581
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 68.83,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R0:N3",
+      "coords_xy_m": [
+        -55.70424,
+        209.52941
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 103.25,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R0:N4",
+      "coords_xy_m": [
+        -43.16198,
+        177.47893
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 137.67,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R0:N5",
+      "coords_xy_m": [
+        -30.61972,
+        145.42845
+      ],
+      "road_source_way": "4863694",
+      "line_id": 0,
+      "distance_along_m": 172.09,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R1:N0",
+      "coords_xy_m": [
+        -46.00152,
+        407.60931
+      ],
+      "road_source_way": "131354084",
+      "line_id": 1,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R1:N1",
+      "coords_xy_m": [
+        -56.56658,
+        384.22098
+      ],
+      "road_source_way": "131354084",
+      "line_id": 1,
+      "distance_along_m": 25.66,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N0",
+      "coords_xy_m": [
+        -6.748,
+        -74.12799
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N1",
+      "coords_xy_m": [
+        -10.42755,
+        -113.78373
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 39.83,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N2",
+      "coords_xy_m": [
+        -14.1071,
+        -153.43947
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 79.65,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N3",
+      "coords_xy_m": [
+        -16.63507,
+        -193.16781
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 119.48,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N4",
+      "coords_xy_m": [
+        -20.46054,
+        -232.77682
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 159.3,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N5",
+      "coords_xy_m": [
+        -30.38786,
+        -271.27044
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 199.13,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R2:N6",
+      "coords_xy_m": [
+        -43.32807,
+        -308.93526
+      ],
+      "road_source_way": "132978668",
+      "line_id": 2,
+      "distance_along_m": 238.96,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N0",
+      "coords_xy_m": [
+        -55.23364,
+        -340.93976
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N1",
+      "coords_xy_m": [
+        -67.45478,
+        -372.53773
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 33.88,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N2",
+      "coords_xy_m": [
+        -79.50521,
+        -404.20122
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 67.76,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N3",
+      "coords_xy_m": [
+        -91.25319,
+        -435.97734
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 101.64,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N4",
+      "coords_xy_m": [
+        -102.76524,
+        -467.83953
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 135.52,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R3:N5",
+      "coords_xy_m": [
+        -113.41869,
+        -500.0
+      ],
+      "road_source_way": "132978670",
+      "line_id": 3,
+      "distance_along_m": 169.4,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R4:N0",
+      "coords_xy_m": [
+        -56.56658,
+        384.22098
+      ],
+      "road_source_way": "175467446",
+      "line_id": 4,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R4:N1",
+      "coords_xy_m": [
+        -65.06711,
+        347.29387
+      ],
+      "road_source_way": "175467446",
+      "line_id": 4,
+      "distance_along_m": 37.96,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R4:N2",
+      "coords_xy_m": [
+        -71.75147,
+        309.92601
+      ],
+      "road_source_way": "175467446",
+      "line_id": 4,
+      "distance_along_m": 75.92,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R5:N0",
+      "coords_xy_m": [
+        -34.71429,
+        500.0
+      ],
+      "road_source_way": "312987934",
+      "line_id": 5,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R5:N1",
+      "coords_xy_m": [
+        -35.09126,
+        468.86696
+      ],
+      "road_source_way": "312987934",
+      "line_id": 5,
+      "distance_along_m": 31.15,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R5:N2",
+      "coords_xy_m": [
+        -39.64969,
+        438.09328
+      ],
+      "road_source_way": "312987934",
+      "line_id": 5,
+      "distance_along_m": 62.29,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R5:N3",
+      "coords_xy_m": [
+        -46.00152,
+        407.60931
+      ],
+      "road_source_way": "312987934",
+      "line_id": 5,
+      "distance_along_m": 93.44,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R6:N0",
+      "coords_xy_m": [
+        -43.32807,
+        -308.93526
+      ],
+      "road_source_way": "1322086248",
+      "line_id": 6,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R6:N1",
+      "coords_xy_m": [
+        -55.23364,
+        -340.93976
+      ],
+      "road_source_way": "1322086248",
+      "line_id": 6,
+      "distance_along_m": 34.15,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N0",
+      "coords_xy_m": [
+        -30.61972,
+        145.42845
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 0.0,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N1",
+      "coords_xy_m": [
+        -17.32714,
+        110.17085
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 37.68,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N2",
+      "coords_xy_m": [
+        -4.0313,
+        74.91448
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 75.36,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N3",
+      "coords_xy_m": [
+        4.28243,
+        38.29258
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 113.04,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N4",
+      "coords_xy_m": [
+        0.85625,
+        0.84688
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 150.72,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N5",
+      "coords_xy_m": [
+        -2.97404,
+        -36.6374
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 188.4,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    },
+    {
+      "id": "WIP:O:0:0:R7:N6",
+      "coords_xy_m": [
+        -6.748,
+        -74.12799
+      ],
+      "road_source_way": "1322086249",
+      "line_id": 7,
+      "distance_along_m": 226.08,
+      "visible_in_game": false,
+      "approved_for_movement": false
+    }
+  ],
+  "candidate_edges": [
+    {
+      "from": "WIP:O:0:0:R0:N0",
+      "to": "WIP:O:0:0:R0:N1",
+      "line_id": 0,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R0:N1",
+      "to": "WIP:O:0:0:R0:N2",
+      "line_id": 0,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R0:N2",
+      "to": "WIP:O:0:0:R0:N3",
+      "line_id": 0,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R0:N3",
+      "to": "WIP:O:0:0:R0:N4",
+      "line_id": 0,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R0:N4",
+      "to": "WIP:O:0:0:R0:N5",
+      "line_id": 0,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R1:N0",
+      "to": "WIP:O:0:0:R1:N1",
+      "line_id": 1,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N0",
+      "to": "WIP:O:0:0:R2:N1",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N1",
+      "to": "WIP:O:0:0:R2:N2",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N2",
+      "to": "WIP:O:0:0:R2:N3",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N3",
+      "to": "WIP:O:0:0:R2:N4",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N4",
+      "to": "WIP:O:0:0:R2:N5",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R2:N5",
+      "to": "WIP:O:0:0:R2:N6",
+      "line_id": 2,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R3:N0",
+      "to": "WIP:O:0:0:R3:N1",
+      "line_id": 3,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R3:N1",
+      "to": "WIP:O:0:0:R3:N2",
+      "line_id": 3,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R3:N2",
+      "to": "WIP:O:0:0:R3:N3",
+      "line_id": 3,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R3:N3",
+      "to": "WIP:O:0:0:R3:N4",
+      "line_id": 3,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R3:N4",
+      "to": "WIP:O:0:0:R3:N5",
+      "line_id": 3,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R4:N0",
+      "to": "WIP:O:0:0:R4:N1",
+      "line_id": 4,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R4:N1",
+      "to": "WIP:O:0:0:R4:N2",
+      "line_id": 4,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R5:N0",
+      "to": "WIP:O:0:0:R5:N1",
+      "line_id": 5,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R5:N1",
+      "to": "WIP:O:0:0:R5:N2",
+      "line_id": 5,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R5:N2",
+      "to": "WIP:O:0:0:R5:N3",
+      "line_id": 5,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R6:N0",
+      "to": "WIP:O:0:0:R6:N1",
+      "line_id": 6,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N0",
+      "to": "WIP:O:0:0:R7:N1",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N1",
+      "to": "WIP:O:0:0:R7:N2",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N2",
+      "to": "WIP:O:0:0:R7:N3",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N3",
+      "to": "WIP:O:0:0:R7:N4",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N4",
+      "to": "WIP:O:0:0:R7:N5",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    },
+    {
+      "from": "WIP:O:0:0:R7:N5",
+      "to": "WIP:O:0:0:R7:N6",
+      "line_id": 7,
+      "active": false,
+      "historical_alignment_verified": false,
+      "troop_suitability": "pending_terrain_check"
+    }
+  ],
+  "all_routes_enabled": false,
+  "historical_road_existed_during_game": true,
+  "exact_road_location_1800_verified": false,
+  "crossings_approved": [],
+  "artwork_state": "GEOGRAPHIC_CONTROL_ONLY_NOT_PREMIUM_TERRAIN_ART",
+  "dem_context": {
+    "origin_elevation_m": 993.2,
+    "center_north_500_m": 998.0,
+    "center_south_500_m": 997.4,
+    "resolution_warning": "V97 retained grid ~160-230m, insufficient to certify path gradients or bridges"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "road_segments": 8,
+  "river_segments": 18,
+  "nodes": 37,
+  "links": 29,
+  "all_edges_off": true,
+  "candidate_in_polygon": true,
+  "historic_exact_alignment_not_claimed": true,
+  "no_approved_crossings": true,
+  "dem_origin_m": 993.2,
+  "historical_market_origin_lonlat": [
+    11.453056,
+    47.130278
+  ]
+}

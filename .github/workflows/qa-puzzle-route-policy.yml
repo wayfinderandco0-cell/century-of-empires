@@ -1,0 +1,29 @@
+name: Octagon Puzzle Movement Policy Check
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'terrain-puzzle/ACTIVE-ROUTE-REGISTRY-v1.json'
+      - 'terrain-puzzle/BNR-O-0-0.json'
+      - 'terrain-puzzle/BNR-O-0-0-hidden-routing.json'
+      - 'terrain-puzzle/BNR-O-1-0-hidden-routing.json'
+      - 'terrain-puzzle/OCT001-ARTGUIDED-PROPOSAL-v1.json'
+      - 'terrain-puzzle/BNR-S-0--1-connector.json'
+      - 'scripts/check_puzzle_route_policy.mjs'
+      - '.github/workflows/qa-puzzle-route-policy.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Guard rejected routes and disabled crossings
+        run: |
+          node --check scripts/check_puzzle_route_policy.mjs
+          node scripts/check_puzzle_route_policy.mjs

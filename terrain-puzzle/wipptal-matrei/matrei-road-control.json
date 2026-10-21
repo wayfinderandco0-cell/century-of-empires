@@ -44,7 +44,7 @@
   ],
   "sources": {
     "osm_api_url": "https://api.openstreetmap.org/api/0.6/map?bbox=11.441056,47.122277999999994,11.465056,47.138278",
-    "osm_downloaded_utc": "2026-10-21T01:46:51.654917+00:00",
+    "osm_downloaded_utc": "2026-10-21T01:48:02.898093+00:00",
     "map_data_attribution": "\u00a9 OpenStreetMap contributors, ODbL; modern geometries, NOT 1800 road survey",
     "dem_source": "terrain-v97/brenner-data.json, Copernicus GLO-30-derived coarse retained 260x300 grid",
     "relief_source": "terrain-v97/brenner-relief.webp",
@@ -1548,5 +1548,37 @@
     "center_north_500_m": 998.0,
     "center_south_500_m": 997.4,
     "resolution_warning": "V97 retained grid ~160-230m, insufficient to certify path gradients or bridges"
-  }
+  },
+  "coarse_road_gradient": {
+    "elevation_north_entry_m": 999.8,
+    "elevation_south_exit_m": 1003.9,
+    "maximum_coarse_model_grade_pct": 11.0,
+    "total_descent_m": 7.1,
+    "dem_adequacy": "CANNOT_CERTIFY_REAL_GRADIENT_OR_HISTORIC_WHEELED_ACCESS"
+  },
+  "mapped_water_intersections": [
+    {
+      "waterway": "Waldraster Bach",
+      "geometry_type": "Point",
+      "crossing_approved": false
+    }
+  ],
+  "road_entry_exit_candidates": [
+    {
+      "edge": "N",
+      "xy_m": [
+        -34.71429,
+        500.0
+      ],
+      "approved": false
+    },
+    {
+      "edge": "S",
+      "xy_m": [
+        -113.41869,
+        -500.0
+      ],
+      "approved": false
+    }
+  ]
 }

@@ -10,6 +10,12 @@
   "candidate_in_polygon": true,
   "historic_exact_alignment_not_claimed": true,
   "no_approved_crossings": true,
+  "max_coarse_road_grade_pct": 11.0,
+  "mapped_water_crossings": 1,
+  "candidate_entry_exit_edges": [
+    "N",
+    "S"
+  ],
   "dem_origin_m": 993.2,
   "historical_market_origin_lonlat": [
     11.453056,

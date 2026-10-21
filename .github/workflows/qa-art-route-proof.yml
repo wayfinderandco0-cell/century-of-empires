@@ -1,0 +1,29 @@
+name: Alpine Art-Route Preview Browser QA
+on:
+  push:
+    branches: [art-route-style-proof]
+    paths:
+      - v108-art-route-proof.html
+      - scripts/qa_art_route_proof.py
+      - .github/workflows/qa-art-route-proof.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install browser engines
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify iPhone zoom controls, nodes, marching and layouts
+        run: python scripts/qa_art_route_proof.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alpine-art-route-evidence-${{ github.run_id }}
+          path: terrain-puzzle/art-route-style-qa/

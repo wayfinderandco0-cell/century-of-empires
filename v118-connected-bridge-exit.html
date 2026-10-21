@@ -444,16 +444,17 @@ const originalArt="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAw
 (function(root){
 "use strict";
 const farBank=Object.freeze([699,799]);
-const east=Object.freeze([[718,797],[740,794],[762,790],[785,793],
- [806,799],[827,803],[848,807],[872,803],[896,798],[922,793],
- [946,788],[969,783],[992,785],[1016,790],[1038,792],
- [1061,789],[1081,784],[1100,781]].map(p=>Object.freeze(p)));
+const east=Object.freeze([[717,794],[737,783],[758,773],[781,769],[806,772],
+ [830,769],[851,762],[870,751],[888,737],[901,721],
+ [910,705],[914,691],[916,680],[922,670],[937,670],
+ [947,681],[957,694],[974,704],[997,709],[1020,711],
+ [1046,713],[1074,710],[1100,704]].map(p=>Object.freeze(p)));
 const same=(a,b)=>a&&b&&a[0]===b[0]&&a[1]===b[1];
 function extend(original){
  if(!Array.isArray(original)||!original.length||!same(original.at(-1),farBank))
    throw Error("V118 requires the verified candidate bridge endpoint at [699,799]");
  const out=original.map(p=>p.slice()).concat(east.map(p=>p.slice()));
- if(!same(out.at(-1),[1100,781]))throw Error("East boundary mismatch");
+ if(!same(out.at(-1),[1100,704]))throw Error("East boundary mismatch");
  for(let i=original.length;i<out.length;i++){
   const p=out[i],a=out[i-1];
   if(!p.every(Number.isFinite)||p.some((n,j)=>n<0||n>(j?842:1100))||
@@ -495,7 +496,7 @@ function draw(ctx,project,graph){
  return {sameRoute:true,endpoint:path.at(-1).slice(),paintedStart:farBank.slice()};
 }
 const api=Object.freeze({extend,draw,farBank,exit:east.at(-1),
-  nextCellEntry:Object.freeze([0,781]),points:east});
+  nextCellEntry:Object.freeze([0,704]),points:east});
 if(typeof module==="object"&&module.exports)module.exports=api;
 else root.CenturyV118East=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
@@ -514,7 +515,7 @@ const sizes=index.artSizePx,box=index.artBoxWorldPx; const SW=sizes[0],SH=sizes[
 const artWorld=p=>renderer.artToWorld(index,p);
 const worldArt=p=>[(p[0]-box[0])*SW/(box[2]-box[0]),(p[1]-box[1])*SH/(box[3]-box[1])];
 const presets={whole:{center:[550,421],factor:1},town:{center:[516,390],factor:2.1},
-  junction:{center:[473,703],factor:3.3},bridge:{center:[609,766],factor:5.0},east:{center:[915,784],factor:4.0}};
+  junction:{center:[473,703],factor:3.3},bridge:{center:[609,766],factor:5.0},east:{center:[900,713],factor:3.1}};
 let w=0,h=0,dpr=1,widthWorld=0,center=artWorld(presets.whole.center),view=[...box],pointer=new Map(),gesture=null;
 let imageReady=false,error="",lastFrame=0;
 const img=new Image(); img.onload=()=>{imageReady=true;draw();};

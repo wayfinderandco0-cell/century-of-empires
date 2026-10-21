@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "cell_id": "BNR:O:0:0",
-  "status": "ART_GUIDED_PROPOSAL_NOT_GAMEPLAY",
+  "status": "REJECTED_FOR_001_AS_USABLE_ROUTES",
   "linked_style_image": "century_oct001_vnext_natural_river_clean.jpg (conversation asset, not GitHub)",
   "linked_renderer_script": "build_oct001_art_guided_corridors.py (conversation asset, not GitHub)",
   "north_up": true,
@@ -78,7 +78,9 @@
           732
         ]
       ],
-      "source": "art-directed meadow terrace under approval"
+      "source": "art-directed meadow terrace under approval",
+      "review_status": "REJECTED_NO_USABLE_CORRIDOR",
+      "route_for_gameplay": false
     },
     {
       "id": "east_bank_north_approach",
@@ -108,7 +110,9 @@
           414
         ]
       ],
-      "source": "art-directed partial east-bank corridor, intentionally stops before uncertain rocky terrain"
+      "source": "art-directed partial east-bank corridor, intentionally stops before uncertain rocky terrain",
+      "review_status": "REJECTED_NO_USABLE_CORRIDOR",
+      "route_for_gameplay": false
     }
   ],
   "labels": {
@@ -156,5 +160,13 @@
     "Both routes end within octagon, not validated links to adjacent cells.",
     "No historical bridges or fords are claimed.",
     "Keep previous 25-node legacy graph intact for comparison; no migration or gameplay change."
-  ]
+  ],
+  "user_review": {
+    "date": "2026-10-20",
+    "result": "REJECTED",
+    "reason": "Both decorative strips fail credible continuous movement and terrain accessibility; east-bank strip terminates without usable connection.",
+    "art_style_remains_approved": true,
+    "all_generated_candidate_nodes_retired": true,
+    "movement_activation_forbidden": true
+  }
 }

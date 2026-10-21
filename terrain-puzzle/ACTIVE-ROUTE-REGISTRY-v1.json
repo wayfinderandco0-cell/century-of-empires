@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "atlas": "CENTURY-EUROPE-HISTORIC-v1",
+  "branch": "terrain-puzzle-atlas-v1",
+  "route_policy_version": "2026-10-20-rejection",
+  "approval_guard": "DENY_UNLESS_APPROVED",
+  "not_playable": true,
+  "cells": {
+    "BNR:O:0:0": {
+      "role": "ALPINE_TERRAIN_BARRIER_STUDY",
+      "art_style": "USER_APPROVED_RIVER_AND_FOREST_REFERENCE",
+      "terrain_access_status": "NO_APPROVED_ROUTE",
+      "physical_impassability_proven": false,
+      "route_nodes_active": 0,
+      "route_edges_active": 0,
+      "rejected_route_ids": [
+        "west_meadow_terrace",
+        "east_bank_north_approach"
+      ],
+      "previous_25_node_23_edge_graph": "DIAGNOSTIC_ONLY_RETIRED_FROM_ROUTE_PLANNING",
+      "human_review_reason": "Paths appear as unusable strips, discontinuous or over steep rocky terrain; no credible through-travel.",
+      "historical_route_approved": false,
+      "valid_edge_exits": [],
+      "allowed_crossings": [],
+      "notes": "No inference that every point of this real valley is impassable. Routing stays closed until credible geography/historical evidence."
+    },
+    "BNR:O:1:0": {
+      "role": "EASTERN_PUZZLE_NEIGHBOR",
+      "terrain_access_status": "NOT_VERIFIED",
+      "route_nodes_active": 0,
+      "route_edges_active": 0,
+      "historical_route_approved": false,
+      "candidate_nodes_retained_for_diagnostics": 18,
+      "candidate_edges_retained_for_diagnostics": 17,
+      "known_unverified_crossing": 1,
+      "valid_edge_exits": [],
+      "allowed_crossings": [],
+      "notes": "Sixteen geometry-screened trail fragments are NOT evidence of a traversable historical road; no active connection to Octagon 001."
+    }
+  },
+  "connectors": {
+    "BNR:S:0:-1": {
+      "route_status": "CLOSED",
+      "active": false,
+      "from": "BNR:O:0:0",
+      "to": "BNR:O:1:0",
+      "old_geometry_continuity_is_not_passability": true,
+      "forbid_retired_old_node": "BNR:O:0:0:N025",
+      "approved_portals": [],
+      "crossings_approved": []
+    }
+  },
+  "next_target": {
+    "region": "Wipptal corridor near Matrei / Steinach and onward to Brenner Pass",
+    "reason": "Documented north–south road passage, unlike illustrative Navis/Fidlerbach cliff-side trail.",
+    "historical_road_period": "1770s to 1800; later 1833–1845 road reconstruction must not be retrofitted onto 1800 map",
+    "location_status": "NOT_GEOREFERENCED_IN_PUZZLE_YET",
+    "source_links": [
+      "https://orawww.uibk.ac.at/apex/uprod/f?p=LLW:3:0::NO::P3_ID:1179",
+      "https://www.wipptal.at/en/your-wipptal/the-wipptal-valley",
+      "https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica/Brenner_Pass"
+    ],
+    "next_steps": [
+      "Map historical road evidence to accurate map coordinates",
+      "Build route study cells over true Wipptal landforms",
+      "Differentiate road/track foot, cavalry and artillery passage",
+      "Create natural-art-first road and valley scene; nodes generated from approved centerline"
+    ]
+  }
+}

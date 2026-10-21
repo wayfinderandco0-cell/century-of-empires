@@ -209,5 +209,19 @@
     "water_crossings_registered": true,
     "neighbor_edges_exact": true,
     "portrait_and_landscape_iphone_review": true
+  },
+  "route_decision": {
+    "status": "NO_APPROVED_ROUTE_PENDING_GEO_AND_HISTORICAL_VALIDATION",
+    "decision_date": "2026-10-20",
+    "active_movement_nodes": 0,
+    "active_movement_edges": 0,
+    "current_design_access": "closed_for_this_prototype_not_claim_of_geographically_absolute_impassability",
+    "rejected_proposals": [
+      "west_meadow_terrace",
+      "east_bank_north_approach"
+    ],
+    "nearby_main_route": "historically documented Wipptal / Brenner corridor; separate geographic cell discovery required",
+    "information_source": "terrain-puzzle/ACTIVE-ROUTE-REGISTRY-v1.json",
+    "safeguards": "No invented road, ford, or open path through steep artwork. Production gameplay and saves remain unchanged."
   }
 }

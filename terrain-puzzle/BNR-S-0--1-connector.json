@@ -60,5 +60,12 @@
   "entry_node_002": "BNR:O:1:0:N001",
   "geometry_crossing_continuity_candidate": true,
   "route_enabled": false,
-  "reason": "historical authenticity, water and terrain still unverified"
+  "reason": "historical authenticity, water and terrain still unverified",
+  "user_review": {
+    "date": "2026-10-20",
+    "status": "CLOSED_PENDING_TRAVERSABILITY_AND_PERIOD_EVIDENCE",
+    "require_both_cells_approved": true,
+    "blocked_from_gameplay": true,
+    "old_001_exit_node_retired": true
+  }
 }

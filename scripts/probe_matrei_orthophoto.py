@@ -31,11 +31,11 @@ if r.status_code!=200 or not r.content.startswith(b"\xff\xd8"):
 im=Image.open(BytesIO(r.content)).convert("RGB")
 a=np.asarray(im)
 info.update({"size":list(im.size),"rgb_std":[round(float(np.std(a[:,:,i])),1) for i in range(3)]})
-if im.size!=(900,900) or min(info["rgb_std"])<7:raise RuntimeError("WMS image appears incorrect")
+info["sufficient_visual_variation"]=im.size==(900,900) and min(info["rgb_std"])>=7
 im.save(out/"matrei-official-modern-orthophoto-reference.jpg",quality=85)
 preview=im.resize((620,620),Image.Resampling.LANCZOS)
 buf=BytesIO();preview.save(buf,format="JPEG",quality=65,optimize=True)
 (out/"matrei-modern-orthophoto-reference-preview.base64.txt").write_text(base64.b64encode(buf.getvalue()).decode())
-info["validated"]="retrieval_only_no_historical_claim"
+info["validated"]="retrieval_only_no_historical_claim" if info["sufficient_visual_variation"] else "returned_jpeg_but_blank_or_low_variation_NEEDS_RESEARCH"
 (out/"matrei-orthophoto-probe.json").write_text(json.dumps(info,indent=2)+"\n")
 print(json.dumps(info,indent=2))

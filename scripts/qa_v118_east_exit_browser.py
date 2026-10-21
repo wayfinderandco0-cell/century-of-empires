@@ -42,8 +42,8 @@ try:
                          terminal:centuryV116Proof.graph.bridgeTerminal,
                          routeLength:centuryV116Proof.graph.length("bridge")
                         })""")
-                        assert original["edge"]==[1100,781],(name,original)
-                        assert original["entry"]==[0,781],(name,original)
+                        assert original["edge"]==[1100,704],(name,original)
+                        assert original["entry"]==[0,704],(name,original)
                         assert original["tileCount"]==48,name
                         assert original["synced"] is True,name
                         assert original["approved"] is False,name

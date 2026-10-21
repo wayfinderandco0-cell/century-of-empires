@@ -1,0 +1,31 @@
+name: V110 Terrain Zoom iPhone QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "v110-zoom-continuity.html"
+      - "scripts/qa_v110_zoom.py"
+      - ".github/workflows/qa-v110-zoom.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install mobile browser engines
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify map zoom, army selection and march
+        run: python scripts/qa_v110_zoom.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v110-terrain-zoom-evidence
+          path: qa/v110/

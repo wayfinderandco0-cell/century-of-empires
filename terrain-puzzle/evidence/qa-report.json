@@ -1,0 +1,49 @@
+{
+  "purpose": "Two-piece geographically registered atlas; candidate routes disabled",
+  "browsers": {
+    "chromium": {
+      "checks": {
+        "ready": true,
+        "twoOctagons": true,
+        "connector": true,
+        "hiddenInitially": true,
+        "routeCounts": true,
+        "fitPortrait": true,
+        "toggleOn": true,
+        "ariaOn": true,
+        "toggleOff": true,
+        "terrainZoom": true,
+        "homeReset": true,
+        "fitLandscape": true,
+        "noErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "passed": true
+    },
+    "webkit": {
+      "checks": {
+        "ready": true,
+        "twoOctagons": true,
+        "connector": true,
+        "hiddenInitially": true,
+        "routeCounts": true,
+        "fitPortrait": true,
+        "toggleOn": true,
+        "ariaOn": true,
+        "toggleOff": true,
+        "terrainZoom": true,
+        "homeReset": true,
+        "fitLandscape": true,
+        "noErrors": true,
+        "noFailedRequests": true
+      },
+      "errors": [],
+      "failedRequests": [],
+      "passed": true
+    }
+  },
+  "physicalIPhoneTested": false,
+  "passed": true
+}

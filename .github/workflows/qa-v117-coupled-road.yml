@@ -34,4 +34,6 @@ jobs:
         if: always()
         with:
           name: v117-coupled-road-portrait-landscape
-          path: qa/v117/
+          path: |
+            qa/v117/
+            v117-coupled-cart-road-proof.html

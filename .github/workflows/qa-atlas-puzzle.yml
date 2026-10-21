@@ -1,0 +1,51 @@
+name: Atlas Puzzle Two-Octagon QA
+on:
+  push:
+    branches: [terrain-puzzle-atlas-v1]
+    paths:
+      - 'v106-atlas-puzzle-proof.html'
+      - 'scripts/qa_atlas_puzzle.py'
+      - '.github/workflows/qa-atlas-puzzle.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: atlas-puzzle-qa
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install phone browser engines
+        run: |
+          pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Render and verify two-piece map in both browsers
+        run: python scripts/qa_atlas_puzzle.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas-puzzle-evidence-${{ github.run_id }}
+          path: terrain-puzzle/evidence/
+      - name: Persist test evidence to the development branch
+        if: always()
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin terrain-puzzle-atlas-v1
+          if [ "$(git rev-parse origin/terrain-puzzle-atlas-v1)" != "$SOURCE_SHA" ]; then
+            echo 'Branch changed; evidence remains in the workflow artifact.'
+            exit 1
+          fi
+          git add terrain-puzzle/evidence/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Atlas puzzle: save mobile two-piece browser evidence'
+            git push origin HEAD:terrain-puzzle-atlas-v1
+          fi

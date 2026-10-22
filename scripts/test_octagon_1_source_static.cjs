@@ -11,16 +11,20 @@ const jpg=read("terrain-grid/octagon-1-v119-source.jpg");
 assert.equal(jpg.length,591185,"Original source must be byte-for-byte preserved");
 assert.equal(jpg[0],0xff);assert.equal(jpg[1],0xd8);
 assert.equal(jpg.at(-2),0xff);assert.equal(jpg.at(-1),0xd9);
-const gitBlob=crypto.createHash("sha1").update(Buffer.from("blob "+jpg.length+"\\0")).update(jpg).digest("hex");
+const gitBlob=crypto.createHash("sha1").update(Buffer.concat([Buffer.from("blob "+jpg.length),Buffer.from([0]),jpg])).digest("hex");
 assert.equal(gitBlob,"96c5eeee5afafa20c5442da42c9a1caedd4b00ad","Source identity changed");
 assert.ok(html.includes('const IMAGE="./terrain-grid/octagon-1-v119-source.jpg"'),"Image must load externally");
 assert.ok(!html.includes("data:image/jpeg;base64,"),"No duplicated inline source image");
 assert.ok(html.includes('id="raw"') && html.includes("if(showInk){"),"Raw-source comparison view missing");
 assert.ok(html.includes('get sourceLabelStillBaked(){return true}'),"Baked-label issue must remain disclosed");
 function points(name){
- const match=html.match(new RegExp("const\\s+"+name+"=(\\\\[\\\\[.*?\\\\]\\\\])\\s*;"));
- if(!match)throw Error("Missing "+name+" route geometry");
- return JSON.parse(match[1]);
+ const anchor="const "+name+"=";
+ const index=html.indexOf(anchor);
+ if(index<0)throw Error("Missing "+name+" route geometry");
+ const start=index+anchor.length;
+ const end=html.indexOf(";",start);
+ if(end<start)throw Error("No terminator for "+name);
+ return JSON.parse(html.slice(start,end));
 }
 const approach=points("APPROACH"),east=points("BASE_EAST"),south=points("SOUTH");
 assert.deepEqual(approach.at(-1),[699,799],"Bridge end must not move");

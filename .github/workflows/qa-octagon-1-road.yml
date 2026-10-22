@@ -1,9 +1,11 @@
 name: Octagon 1 Road Authoring QA
 on:
   push:
-    branches: [octagon-1-road-authoring, octagon-1-fork-bank-route]
+    branches: [octagon-1-road-authoring, octagon-1-fork-bank-route, octagon-1-source-asset-gate-20261022, octagon-1-art-review-clean-20261022]
     paths:
       - "octagon-1-road-authoring.html"
+      - "terrain-grid/octagon-1-v119-source.jpg"
+      - "scripts/octagon_1_corridor_gate.js"
       - "scripts/qa_octagon_1_road.py"
       - ".github/workflows/qa-octagon-1-road.yml"
   workflow_dispatch:

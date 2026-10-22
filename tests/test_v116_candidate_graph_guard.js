@@ -6,29 +6,9 @@ const {test}=require("node:test");
 const assert=require("node:assert/strict");
 const {buildSafe}=require("../scripts/v116_candidate_graph_guard.js");
 const copy=x=>JSON.parse(JSON.stringify(x));
-const source=()=>({
-  source:{repository:"wayfinderandco0-cell/century-of-empires",path:"v115-town-pan-controls.html",
-    githubBlobSha:"9a8f44120c2f220abf434bed384f230cf6483296"},
-  sourceArt:{widthPx:1100,heightPx:842},forkIndex:1,
-  rawPath:[[616,0],[437,742],[325,834]],
-  verification:{historicalRoadEvidence:false,roadCenterlineMatchesPaintedArt:false,
-    bridgeCrossingMatchesPaintedArt:false,farBankContinuationVerified:false,
-    accessibleStrategicObjectiveVerified:false}
-});
-const candidate=()=>({schemaVersion:1,kind:"candidate_painted_bridge_centerline_not_authoritative",
-  sourceRouteFile:"terrain-grid/v115-route-provenance.json",
-  sourceV115BlobSha:"9a8f44120c2f220abf434bed384f230cf6483296",
-  sharedForkIndex:1,bridgeCenterlineArtPx:[[616,0],[437,742],[699,799]],
-  verification:{historicalRoadVerified:false,roadOnFarBankBeyondBridgeVerified:false,
-    traversableProductionBridge:false,conquerableProductionTarget:false}
-});
-const fakeRoad={build:({south,bridge,imageSize})=>({
-  kind:"art-aligned-candidate",approvedForProduction:false,conquerable:false,
-  bridgeTerminal:"visible-far-bank-only",imageSize,
-  forkPoint:south[1].slice(),edges:{approach:south.slice(0,2),south:south.slice(1),bridge:bridge.slice(1)},
-  paths:{south:copy(south),bridge:copy(bridge)},
-  endpoints:{approachStart:south[0].slice(),southExit:south.at(-1).slice(),bridgeStop:bridge.at(-1).slice()}
-})};
+const source=()=>copy(require("../terrain-grid/v115-route-provenance.json"));
+const candidate=()=>copy(require("../terrain-grid/v116-bridge-painted-candidate.json"));
+const fakeRoad=require("../scripts/v116_road_graph.js");
 test("sourced candidate remains nonproduction and deeply immutable",()=>{
   const s=source(),c=candidate(),g=buildSafe(s,c,fakeRoad);
   assert.equal(g.approvedForProduction,false);
@@ -80,4 +60,22 @@ test("road graph trying to override production flags or endpoint is rejected",()
     const rogue={build:args=>{const g=fakeRoad.build(args);edit(g);return g;}};
     assert.throws(()=>buildSafe(source(),candidate(),rogue),/diverges/);
   }
+});
+
+test("all interior geometry and shared fork remain pinned despite matching endpoints",()=>{
+  for(const mutate of [
+    (s,c)=>{c.bridgeCenterlineArtPx[44][1]+=1;},
+    (s,c)=>{s.rawPath[5][0]+=1;},
+    (s,c)=>{s.rawPath[5][0]+=1;c.bridgeCenterlineArtPx[5][0]+=1;},
+    (s,c)=>{s.forkIndex=35;c.sharedForkIndex=35;}
+  ]){
+    const s=source(),c=candidate();mutate(s,c);
+    assert.throws(()=>buildSafe(s,c,fakeRoad),/provenance/);
+  }
+});
+test("unmodified source fixtures are never mutated by the guard",()=>{
+  const s=source(),c=candidate(),beforeS=copy(s),beforeC=copy(c);
+  buildSafe(s,c,fakeRoad);
+  assert.deepEqual(s,beforeS);
+  assert.deepEqual(c,beforeC);
 });

@@ -1,0 +1,31 @@
+name: V116 Pinned Route Geometry Regression
+on:
+  push:
+    branches: [terrain-v116-hour23-geometry-integrity]
+    paths:
+      - "scripts/v116_candidate_graph_guard.js"
+      - "scripts/build_v116_candidate_tile_index.js"
+      - "scripts/v116_road_graph.js"
+      - "terrain-grid/v115-route-provenance.json"
+      - "terrain-grid/v116-bridge-painted-candidate.json"
+      - "terrain-grid/v116-candidate-route-tiles.json"
+      - "tests/test_v116_candidate_graph_guard.js"
+      - "tests/test_v116_index_provenance_gate.js"
+      - "tests/test_v116_route_tile_coverage.js"
+      - ".github/workflows/qa-v116-geometry-integrity.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  route-geometry-and-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Candidate provenance and shared graph regressions
+        run: node --test tests/test_v116_candidate_graph_guard.js tests/test_v116_index_provenance_gate.js tests/test_v116_route_tile_coverage.js tests/test_v116_road_graph.js
+      - name: Rebuild candidate tile coverage and require no drift
+        run: |
+          node scripts/build_v116_candidate_tile_index.js
+          git diff --exit-code -- terrain-grid/v116-candidate-route-tiles.json

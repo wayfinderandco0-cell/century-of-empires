@@ -51,6 +51,16 @@ try:
                         assert not state["approved"] and not state["historical"]
                         page.screenshot(path=str(OUT / f"{name}-first-frame.png"), animations="disabled")
 
+                        # Test actual touchscreen tap, not only the test API. 
+                        # Project an on-cartway bridge point into CSS pixels at the initial camera.
+                        camera = state["camera"]
+                        fit_scale = max(viewport["width"] / 1536, viewport["height"] / 1024)
+                        tap_x = viewport["width"] / 2 + (813 - camera[0]) * fit_scale
+                        tap_y = viewport["height"] / 2 + (486 - camera[1]) * fit_scale
+                        page.touchscreen.tap(tap_x, tap_y)
+                        page.wait_for_function("OctagonOne.moved === true", timeout=5000)
+                        page.evaluate("OctagonOne.halt()")
+
                         destinations = []
                         for road in ("west", "north", "south", "bridge", "village", "southeast"):
                             page.evaluate("OctagonOne.halt()")

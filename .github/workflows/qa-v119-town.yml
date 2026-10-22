@@ -1,0 +1,27 @@
+name: V119 Matrei Label and Road Mobile QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "v119-matrei-town-label.html"
+      - "scripts/qa_v119_town.py"
+      - ".github/workflows/qa-v119-town.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  browser-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v119_town.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v119-iphone-road-and-label-screenshots
+          path: qa/v119/

@@ -529,7 +529,9 @@ function setPreset(name){
   if(!presets[name])return;
   state.preset=name; const p=presets[name];center=artWorld(p.center);
   const fitW=Math.max(box[2]-box[0],(box[3]-box[1])*w/Math.max(1,h))*1.045;
-  widthWorld=fitW/p.factor;
+  // V119 portrait close-ups must show only actual painted terrain, not empty bands.
+  const coverW=(box[3]-box[1])*w/Math.max(1,h)*0.995;
+  widthWorld=name==="whole"?fitW/p.factor:Math.min(fitW/p.factor,coverW,box[2]-box[0]);
   for(const b of document.querySelectorAll("[data-view]"))
     b.setAttribute("aria-pressed",String(b.dataset.view===name));
   draw();
@@ -750,7 +752,7 @@ for(const evt of ["pointerup","pointercancel","lostpointercapture"])C.addEventLi
 C.addEventListener("wheel",e=>{e.preventDefault();widthWorld*=Math.exp(e.deltaY*.001);draw()},{passive:false});
 window.addEventListener("resize",resize);
 window.centuryV119Proof={get name(){return townLabel.name},get artAnchor(){return [...townLabel.artAnchor]},
- get screenAnchor(){return screen(townLabel.artAnchor)},get sourceArtworkHasOldBanner(){return true},
+ get screenAnchor(){return screen(townLabel.artAnchor)},get cameraWithinImage(){const e=1e-8;return view[0]>=box[0]-e&&view[1]>=box[1]-e&&view[2]<=box[2]+e&&view[3]<=box[3]+e},get sourceArtworkHasOldBanner(){return true},
  get productionReady(){return false}};
 window.centuryV118Proof={get eastExit(){return graph.endpoints.bridgeStop.slice()},
  get neighborEntry(){return CenturyV118East.nextCellEntry.slice()},

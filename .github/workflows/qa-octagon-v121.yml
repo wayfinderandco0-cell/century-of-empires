@@ -6,6 +6,12 @@ on:
       - "v121-octagon-1-painted-road.html"
       - "scripts/qa_octagon_v121.py"
       - ".github/workflows/qa-octagon-v121.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "v121-octagon-1-painted-road.html"
+      - "scripts/qa_octagon_v121.py"
+      - ".github/workflows/qa-octagon-v121.yml"
   workflow_dispatch:
 permissions:
   contents: read

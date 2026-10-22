@@ -12,6 +12,7 @@ from statistics import median
 from PIL import Image
 
 from qa_octagon_1_raw_road import SW, SH, extract, inspect, verify_source_blob
+from qa_octagon_1_diagnostic_spans import low_contrast_runs
 
 FORK_INDEX = 36
 
@@ -65,6 +66,8 @@ def build_report(editor_text, image_bytes):
             "samples": len(rows), "valid_samples": len(values),
             "median_cross_track_contrast": round(median(values), 2) if values else None,
             "out_of_bounds_samples": len(rows) - len(values),
+            "low_contrast_threshold": 18,
+            "low_contrast_runs": low_contrast_runs(rows),
             "warning": "Contrast does not establish a painted or historical road.",
         }
     return report

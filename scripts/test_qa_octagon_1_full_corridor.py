@@ -77,6 +77,8 @@ class FullCorridorTests(unittest.TestCase):
         self.assertFalse(report["painted_road_verified"])
         self.assertFalse(report["bridge_far_bank_verified"])
         self.assertFalse(report["neighbor_connection_verified"])
+        self.assertTrue(all("low_contrast_runs" in part for part in report["segments"].values()))
+        self.assertTrue(any(part["low_contrast_runs"] for part in report["segments"].values()))
 
     def test_wrong_source_fails_closed(self):
         a, e, s = geometry()

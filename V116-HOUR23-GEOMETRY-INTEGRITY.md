@@ -1,6 +1,6 @@
 # V116 geometry integrity checkpoint — 2026-10-22
 
-Branch: `terrain-v116-hour23-geometry-integrity` (from `terrain-v116-hour22-full-path-pin`, `ac97f74517aed6e69ed886468fa3782513b11aed`).
+Branch: `terrain-v116-hour23-geometry-integrity-ci` (from `terrain-v116-hour22-full-path-pin`, `ac97f74517aed6e69ed886468fa3782513b11aed`).
 
 ## Change
 - The candidate graph guard now pins the **entire** existing south and provisional painted-bridge centerlines plus fork index 36, not only the source blob and terminal [699,799]. Unreviewed edits to interior points must fail closed.

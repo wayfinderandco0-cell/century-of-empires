@@ -1,7 +1,7 @@
 name: V116 Pinned Route Geometry Regression
 on:
   push:
-    branches: [terrain-v116-hour23-geometry-integrity]
+    branches: ["terrain-v116-hour23-geometry-integrity-*"]
     paths:
       - "scripts/v116_candidate_graph_guard.js"
       - "scripts/build_v116_candidate_tile_index.js"

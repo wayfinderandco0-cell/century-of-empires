@@ -48,6 +48,7 @@ def sample(route, fraction):
             a, b = route[i], route[i + 1]
             return [round(a[0] + t * (b[0] - a[0])),
                     round(a[1] + t * (b[1] - a[1]))]
+        remaining -= length
 
 
 def run(text, out=OUT):

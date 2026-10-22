@@ -11,6 +11,7 @@ const source=require("../terrain-grid/v115-route-provenance.json");
 const correction=require("../terrain-grid/v116-bridge-painted-candidate.json");
 const road=require("./v116_road_graph.js");
 const {buildSafe}=require("./v116_candidate_graph_guard.js");
+const trace=require("./v116_route_tile_trace.js");
 function hit(a,b,r){
  const dx=b[0]-a[0],dy=b[1]-a[1];let lo=0,hi=1;
  for(const [p,q] of [[-dx,a[0]-r[0]],[dx,r[2]-a[0]],[-dy,a[1]-r[1]],[dy,r[3]-a[1]]]){
@@ -20,18 +21,16 @@ function hit(a,b,r){
  }
  return true;
 }
-function coveredTiles(points,tiles){
- const ids=[];
- for(const tile of tiles){
-   const b=tile.imageCropPx;
-   if(points.slice(1).some((p,i)=>hit(points[i],p,b)))ids.push(tile.id);
- }
- return ids.sort();
+// Match army/tile seam tracing's half-open ownership. A corner touch
+// or a line exactly on a boundary must not create phantom corridor tiles.
+function coveredTiles(points,tiles,index=old){
+ if(!index||index.tiles!==tiles)throw Error("Candidate coverage requires the same validated tile index");
+ return trace.traceRoute(index,points).visitedTileIds;
 }
 function makeIndex({localTiles=old,routeSource=source,bridgeCandidate=correction}={}){
  const g=buildSafe(routeSource,bridgeCandidate,road);
- const coverage={south:coveredTiles(g.paths.south,localTiles.tiles),
-                 bridge:coveredTiles(g.paths.bridge,localTiles.tiles)};
+ const coverage={south:coveredTiles(g.paths.south,localTiles.tiles,localTiles),
+                 bridge:coveredTiles(g.paths.bridge,localTiles.tiles,localTiles)};
  const result={...localTiles,
     routeCandidateTileIds:coverage,
     routeSourceVersion:{

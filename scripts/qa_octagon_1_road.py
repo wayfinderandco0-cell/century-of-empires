@@ -85,10 +85,10 @@ try:
                     south_finish=page.evaluate("Octagon1Proof.setArmyProgress(1)")
                     assert south_finish==[315,842],(name,south_finish)
                     page.locator("#chooseBridge").click()
-                    bridge=page.evaluate("""() => ({
+                    bridge=page.evaluate("""fork => ({
                       route:Octagon1Proof.activeRoute,matched:Octagon1Proof.routeAndInkSame,
-                      atFork:Math.hypot(...Octagon1Proof.movementPoint.map((n,i)=>n-fork_before[i]))<1e-6
-                    })""")
+                      atFork:Math.hypot(...Octagon1Proof.movementPoint.map((n,i)=>n-fork[i]))<1e-6
+                    })""",fork_before)
                     assert bridge["route"]=="bridge" and bridge["matched"] and bridge["atFork"],(name,bridge)
                     page.locator("#menu").click()
                     page.screenshot(path=str(OUT/(name+"-two-routes.png")),animations="disabled")

@@ -1,0 +1,28 @@
+name: Octagon 1 Independent Raw Road Evidence
+on:
+  push:
+    branches: [octagon-1-hour8-raw-road-evidence-20261022]
+    paths:
+      - "scripts/qa_octagon_1_raw_road.py"
+      - "scripts/test_qa_octagon_1_raw_road.py"
+      - "octagon-1-road-authoring.html"
+      - "terrain-grid/octagon-1-v119-source.jpg"
+      - ".github/workflows/qa-octagon-1-raw-road.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  raw-source-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install pillow
+      - run: python scripts/test_qa_octagon_1_raw_road.py
+      - run: python scripts/qa_octagon_1_raw_road.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: octagon-1-raw-road-evidence
+          path: qa/octagon-1/raw-road/

@@ -38,3 +38,18 @@ The standalone `octagon-1-road-authoring.html` displays the actual source JPEG e
 - Current *candidate* east exit: `[1100,704]`.
 - Future next-cell matching entry: `[0,704]`. The neighbor is not built.
 - No historical-road claim; no production approval.
+
+## Prototype controls versus real campaign interaction (approved requirement, Oct 22 2026)
+
+The standalone Octagon 1 road-authoring inspector may show explicit `Village`, `Bridge`, `East bank`, `Edit road`, `Add point`, `March`, `Halt`, `Tools`, `Undo`, `Reset`, and guide/debug controls **for development and QA only**.
+
+In the finished Century of Empires game, these developer/test controls **must not appear on top of the gameplay map**. Preserve and integrate the existing game mechanics and unit interface instead; do not implement a second, incompatible movement system or rework the established controls for this prototype.
+
+- Player selects an army/formation and uses the **existing tap-to-move / movement-order system** to designate a destination. The underlying connected road/terrain graph determines available movements, unit paths and ETA.
+- Where the south village road and eastern bridge provide alternatives, the game must support selecting the intended route through its **existing army-order/path-selection interaction**, not dedicated permanent `South` and `Bridge` buttons. If ambiguous, show a **contextual, temporary route choice or waypoint preview** as part of the unit order, never persistent prototype keys.
+- Retain established formation mechanics: split, march, halt, retreat, entrench, forced march/fatigue, leaders, battle engagement and unit movement timing wherever supported by the campaign code. Do not silently change gameplay rules to get the octagon demo to work.
+- Show normal unit indicators (flag, troop count where intelligence permits, strength/health and morale bars) according to existing zoom/fog-of-war requirements, not developer waypoint markers or diagnostic UI in the live game.
+- Prototype route editing and geometry inspection are restricted to the **development tool**; gameplay routes are not edited by players. The eventual production road graph uses approved authored art but calls the established unit movement/order engine.
+- Acceptance: the road fork is a functioning graph junction; either destination can be ordered from the existing unit UI; the chosen route is visibly followed with correct ETA and no water crossing; no `Edit road`, `Add point`, `East bank`, `Village`, `Bridge`, `Tools`, test `March` or debugging buttons clutter the normal campaign map.
+
+**Integration gate:** Do not call Octagon 1 production-ready until this existing-game-order compatibility has been tested. The current authoring editor remains separate and intentionally retains its editing/testing controls.

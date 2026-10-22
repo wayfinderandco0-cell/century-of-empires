@@ -1,0 +1,27 @@
+name: Octagon 1 Road Authoring QA
+on:
+  push:
+    branches: [octagon-1-road-authoring]
+    paths:
+      - "octagon-1-road-authoring.html"
+      - "scripts/qa_octagon_1_road.py"
+      - ".github/workflows/qa-octagon-1-road.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile-browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_octagon_1_road.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: octagon-1-source-first-qa
+          path: qa/octagon-1/

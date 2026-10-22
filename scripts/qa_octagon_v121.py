@@ -103,6 +103,10 @@ try:
                         assert not page.evaluate("OctagonOne.orderToPoint([820,220])"), name
                         page.evaluate("OctagonOne.halt()")
                         # From the SE exit to the western exit, routing must traverse both bridge endpoints.
+                        # Restore the actual SE origin after exercising midsegment routing above.
+                        page.evaluate("OctagonOne.halt()")
+                        assert page.evaluate("OctagonOne.orderTo('southeast')")
+                        page.evaluate("OctagonOne.setProgress(1)")
                         page.evaluate("OctagonOne.halt()")
                         page.evaluate("OctagonOne.orderTo('west')")
                         pts = page.evaluate("OctagonOne.route")

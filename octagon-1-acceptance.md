@@ -53,3 +53,15 @@ In the finished Century of Empires game, these developer/test controls **must no
 - Acceptance: the road fork is a functioning graph junction; either destination can be ordered from the existing unit UI; the chosen route is visibly followed with correct ETA and no water crossing; no `Edit road`, `Add point`, `East bank`, `Village`, `Bridge`, `Tools`, test `March` or debugging buttons clutter the normal campaign map.
 
 **Integration gate:** Do not call Octagon 1 production-ready until this existing-game-order compatibility has been tested. The current authoring editor remains separate and intentionally retains its editing/testing controls.
+
+## Octagon 1 visual review — October 22, 2026
+
+From three actual iPhone preview screenshots, the owner reported that the moving army now generally stays on the visible route, but the eastern bridge continuation doubles back across water, the baked-in Matrei/Waldraster Bach label banners are unacceptable, and the separate southbound village route must remain available. The persistent camera/editor buttons are allowed only in this standalone QA tool; the live game continues to use the existing army-order interface.
+
+On the isolated `octagon-1-fork-bank-route` development branch, the next test candidate:
+- Exposes both the **south road to artwork edge [315,842]** and **bridge road to [1100,704]** from the shared fork [437,742]. Both visible strokes and troop motion read their respective path arrays; this is still prototype-only.
+- Removes the previous eastern U-shaped backtracking/hairpin in candidate waypoints. **The new land-bank route is unapproved until independent image/river inspection and physical iPhone review confirm no terrain or water conflicts.** A monotonic road-x invariant prevents reintroducing the same loop during editing; it does not prove collision-free terrain.
+- Keeps `Matrei am Brenner` and `Waldraster Bach` embedded labels marked as **unresolved original-art defects**. Do not claim any image cleanup until a new verified, source-compatible background is authored and inspected.
+- Does not alter `v94.html`, main game movement mechanics, players' save data, existing deployment pages or any production path assignments.
+
+The roadmap remains: artist-clean background + visually verified road fork and river bridge; then tie approved terrain into the existing army-order engine; then manual phone acceptance; only then duplicate to additional octagons.

@@ -38,12 +38,16 @@ try:
                         matching:Octagon1Proof.routeAndInkSame,
                         unapproved:Octagon1Proof.productionReady===false,
                         bakedLabel:Octagon1Proof.sourceLabelStillBaked,
-                        routeLength:Octagon1Proof.route.length
+                        routeLength:Octagon1Proof.route.length,
+                        selected:Octagon1Proof.activeRoute,
+                        southExit:Octagon1Proof.southExit,
+                        noHairpin:Octagon1Proof.landBankCandidateHasHairpin===false
                     })""")
                     assert proof["bridge"]==[699,799],(name,proof)
                     assert proof["exit"]==[1100,704],(name,proof)
                     assert proof["next"]==[0,704],(name,proof)
                     assert proof["matching"] and proof["unapproved"] and proof["bakedLabel"],(name,proof)
+                    assert proof["selected"]=="bridge" and proof["southExit"]==[315,842] and proof["noHairpin"],(name,proof)
                     page.locator("#east").click()
                     page.screenshot(path=str(OUT/(name+"-east.png")),animations="disabled")
                     page.locator("#edit").click()
@@ -60,6 +64,34 @@ try:
                     assert after["matching"] is True,name
                     assert before!=after["route"],name
                     assert after["route"][51+6][1]==before[51+6][1]-3,name
+                    # The former east-bank road loop should be absent.
+                    assert page.evaluate("Octagon1Proof.landBankCandidateHasHairpin === false"),name
+                    # Both branch alternatives share one fork and can each receive valid movement orders.
+                    page.locator("#edit").click()
+                    page.locator("#menu").click()
+                    page.locator("#forkStart").click()
+                    fork_before=page.evaluate("Octagon1Proof.movementPoint")
+                    page.locator("#chooseSouth").click()
+                    south=page.evaluate("""() => ({
+                      route:Octagon1Proof.activeRoute,
+                      exit:Octagon1Proof.southExit,
+                      matched:Octagon1Proof.routeAndInkSame,
+                      length:Octagon1Proof.route.length,
+                      pos:Octagon1Proof.movementPoint
+                    })""")
+                    assert south["route"]=="south" and south["exit"]==[315,842] and south["matched"],(name,south)
+                    assert south["pos"]==fork_before,(name,south)
+                    assert south["length"]==43,(name,south)
+                    south_finish=page.evaluate("Octagon1Proof.setArmyProgress(1)")
+                    assert south_finish==[315,842],(name,south_finish)
+                    page.locator("#chooseBridge").click()
+                    bridge=page.evaluate("""fork => ({
+                      route:Octagon1Proof.activeRoute,matched:Octagon1Proof.routeAndInkSame,
+                      atFork:Math.hypot(...Octagon1Proof.movementPoint.map((n,i)=>n-fork[i]))<1e-6
+                    })""",fork_before)
+                    assert bridge["route"]=="bridge" and bridge["matched"] and bridge["atFork"],(name,bridge)
+                    page.locator("#menu").click()
+                    page.screenshot(path=str(OUT/(name+"-two-routes.png")),animations="disabled")
                     for f in [0,.2,.5,.8,1]:
                         pos=page.evaluate("f => Octagon1Proof.setArmyProgress(f)",f)
                         assert 0<=pos[0]<=1100 and 0<=pos[1]<=842,(name,f,pos)
@@ -73,6 +105,7 @@ finally:
 report={"passed":len(results)==4 and all(x["passed"] for x in results.values()),
         "results":results,
         "physical_iPhone_approved":False,
+        "source_water_bank_review_complete":False,
         "original_art_repaired":False,
         "historical_road_verified":False,
         "neighboring_octagon_built":False,

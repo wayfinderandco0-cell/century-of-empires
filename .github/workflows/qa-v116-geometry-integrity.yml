@@ -1,17 +1,22 @@
 name: V116 Pinned Route Geometry Regression
 on:
   push:
-    branches: [terrain-v116-hour23-geometry-integrity]
+    branches: [terrain-v116-hour23-geometry-integrity, terrain-v116-hour24-halfopen-route-coverage]
     paths:
       - "scripts/v116_candidate_graph_guard.js"
       - "scripts/build_v116_candidate_tile_index.js"
       - "scripts/v116_road_graph.js"
+      - "scripts/v116_route_tile_trace.js"
+      - "scripts/v116_local_art_renderer.js"
       - "terrain-grid/v115-route-provenance.json"
       - "terrain-grid/v116-bridge-painted-candidate.json"
       - "terrain-grid/v116-candidate-route-tiles.json"
       - "tests/test_v116_candidate_graph_guard.js"
       - "tests/test_v116_index_provenance_gate.js"
       - "tests/test_v116_route_tile_coverage.js"
+      - "tests/test_v116_halfopen_coverage.js"
+      - "tests/test_v116_route_tile_trace.js"
+      - "tests/test_v116_trace_backtracking.js"
       - ".github/workflows/qa-v116-geometry-integrity.yml"
   workflow_dispatch:
 permissions: {contents: read}
@@ -24,7 +29,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
       - name: Candidate provenance and shared graph regressions
-        run: node --test tests/test_v116_candidate_graph_guard.js tests/test_v116_index_provenance_gate.js tests/test_v116_route_tile_coverage.js tests/test_v116_road_graph.js
+        run: node --test tests/test_v116_candidate_graph_guard.js tests/test_v116_index_provenance_gate.js tests/test_v116_route_tile_coverage.js tests/test_v116_road_graph.js tests/test_v116_halfopen_coverage.js tests/test_v116_route_tile_trace.js tests/test_v116_trace_backtracking.js
       - name: Rebuild candidate tile coverage and require no drift
         run: |
           node scripts/build_v116_candidate_tile_index.js

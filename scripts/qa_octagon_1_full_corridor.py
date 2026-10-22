@@ -13,6 +13,7 @@ from PIL import Image
 
 from qa_octagon_1_raw_road import SW, SH, extract, inspect, verify_source_blob
 from qa_octagon_1_diagnostic_spans import low_contrast_runs
+from qa_octagon_1_unobservable_spans import unobservable_runs
 
 FORK_INDEX = 36
 
@@ -56,11 +57,15 @@ def build_report(editor_text, image_bytes):
         "production_ready": False,
         "method": "unaltered source JPEG cross-track contrast; no road classification",
         "segments": {},
+        "unobservable_sample_total": 0,
+        "all_cross_track_samples_observable": False,
     }
     for name, path in paths.items():
         rows = inspect(art, path)
         values = [r["raw_cross_track_contrast"] for r in rows
                   if r["raw_cross_track_contrast"] is not None]
+        missing = unobservable_runs(rows)
+        report["unobservable_sample_total"] += sum(span["sample_count"] for span in missing)
         report["segments"][name] = {
             "start": path[0], "end": path[-1], "vertices": len(path),
             "samples": len(rows), "valid_samples": len(values),
@@ -68,8 +73,11 @@ def build_report(editor_text, image_bytes):
             "out_of_bounds_samples": len(rows) - len(values),
             "low_contrast_threshold": 18,
             "low_contrast_runs": low_contrast_runs(rows),
+            "unobservable_runs": missing,
+            "cross_track_samples_observable": not missing,
             "warning": "Contrast does not establish a painted or historical road.",
         }
+    report["all_cross_track_samples_observable"] = report["unobservable_sample_total"] == 0
     return report
 
 

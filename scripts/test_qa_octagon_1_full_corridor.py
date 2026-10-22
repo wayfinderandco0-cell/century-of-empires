@@ -79,6 +79,9 @@ class FullCorridorTests(unittest.TestCase):
         self.assertFalse(report["neighbor_connection_verified"])
         self.assertTrue(all("low_contrast_runs" in part for part in report["segments"].values()))
         self.assertTrue(any(part["low_contrast_runs"] for part in report["segments"].values()))
+        self.assertGreater(report["unobservable_sample_total"], 0)
+        self.assertFalse(report["all_cross_track_samples_observable"])
+        self.assertTrue(any(part["unobservable_runs"] for part in report["segments"].values()))
 
     def test_wrong_source_fails_closed(self):
         a, e, s = geometry()

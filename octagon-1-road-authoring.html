@@ -29,7 +29,7 @@ small{color:#e1ca9a}
 <b>One source of truth:</b> the visible cartway and the marching unit use exactly the same saved points.
 In edit mode, drag a gold control point to realign the east-bank road on the terrain. Tap Add point, then tap the desired position to insert a new bend. Turn off Edit to pan and pinch-zoom. The stone bridge and its endpoints cannot be moved here. Use the prototype fork controls below to inspect both valid routes; final gameplay uses existing army orders rather than these editor buttons.
 <div><button id="forkStart">Start at fork</button><button id="chooseSouth">South via village</button><button id="chooseBridge">East across bridge</button></div>
-<div><button id="undo">Undo</button><button id="reset">Reset east road</button><button id="save">Save on this device</button><button id="copy">Copy route JSON</button><button id="guide">Hide guides</button></div>
+<div><button id="undo">Undo</button><button id="reset">Reset east road</button><button id="save">Save on this device</button><button id="copy">Copy route JSON</button><button id="guide">Hide guides</button><button id="raw">Source art only</button></div>
 <small>Historical roads, river crossings, neighboring artwork, and the baked-in old village label still require art review. This editor makes no production-readiness claim.</small>
 </div>
 <div id="status" role="status">Loading the source terrain…</div>
@@ -57,7 +57,7 @@ function validate(a){
 }
 let east=clone(initial);
 try{const saved=JSON.parse(localStorage.getItem(STORE));if(validate(saved))east=clone(saved);}catch(_){}
-let history=[],edit=false,add=false,showGuides=true,moving=false,distance=0,lastFrame=0,selected="bridge",forkDistance=0;
+let history=[],edit=false,add=false,showGuides=true,showInk=true,moving=false,distance=0,lastFrame=0,selected="bridge",forkDistance=0;
 let center=[610,650],zoom=1.45,w=0,h=0,dpr=1,scale=1,pointers=new Map(),dragIndex=-1,pinch=0;
 let notice="",ready=false,route=[],lengths=[],total=0;
 function build(){
@@ -109,6 +109,7 @@ function paint(){
  if(!w||!h)return;camera();ctx.setTransform(dpr,0,0,dpr,0,0);
  ctx.fillStyle="#263a2e";ctx.fillRect(0,0,w,h);
  if(ready)ctx.drawImage(image,...toScreen([0,0]),SW*scale,SH*scale);
+ if(showInk){
  ctx.save();ctx.lineJoin="round";ctx.lineCap="round";
  // Actual authored road and unit positions come from the same route[] — no second geometry source.
  let approach=fixed.slice(0,-1),stone=fixed.slice(-17),beyond=[fixed.at(-1)].concat(east),south=SOUTH.slice(FORK_INDEX);
@@ -131,6 +132,7 @@ function paint(){
  ctx.beginPath();ctx.arc(q[0],q[1],9,0,Math.PI*2);ctx.fillStyle="#153827";ctx.fill();
  ctx.lineWidth=2;ctx.strokeStyle="#f8de91";ctx.stroke();ctx.fillStyle="#fff5d0";
  ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="bold 12px Georgia";ctx.fillText("I",q[0],q[1]);
+ }
  update();
 }
 function view(x,y,z){center=[x,y];zoom=z;camera();paint();}
@@ -154,6 +156,7 @@ document.getElementById("forkStart").onclick=()=>{moving=false;distance=forkDist
 document.getElementById("chooseSouth").onclick=()=>chooseRoute("south");
 document.getElementById("chooseBridge").onclick=()=>chooseRoute("bridge");
 document.getElementById("guide").onclick=()=>{showGuides=!showGuides;document.getElementById("guide").textContent=showGuides?"Hide guides":"Show guides";paint();};
+document.getElementById("raw").onclick=()=>{showInk=!showInk;document.getElementById("raw").textContent=showInk?"Source art only":"Show authored road";paint();};
 document.getElementById("undo").onclick=()=>{if(history.length){east=history.pop();build();paint();setNotice("Previous geometry restored.");}};
 document.getElementById("reset").onclick=()=>{history.push(clone(east));east=clone(initial);build();paint();setNotice("Candidate road reset. No game saves changed.");};
 document.getElementById("save").onclick=()=>{try{localStorage.setItem(STORE,JSON.stringify(east));setNotice("Road waypoints saved in this browser only.");}catch(e){setNotice("Local storage unavailable — copy JSON instead.");}};
@@ -228,7 +231,7 @@ window.Octagon1Proof={
  get southExit(){return southPath.at(-1).slice()},get activeRoute(){return selected},get forkDistance(){return forkDistance},
  get landBankCandidateHasHairpin(){return east.some((q,i)=>i>0&&q[0]<=east[i-1][0])},
  get currentCamera(){return {center:center.slice(),zoom,scale}},
- get editMode(){return edit},get sourceLabelStillBaked(){return true},get exportCandidate(){return exportCandidate()},
+ get editMode(){return edit},get sourceLabelStillBaked(){return true},get rawArtOnly(){return !showInk},get exportCandidate(){return exportCandidate()},
  setRoadCandidate:(p)=>{if(!validate(p))throw Error("Invalid edited road");history.push(clone(east));east=clone(p);build();paint();return true},
  chooseRoute:(name)=>{chooseRoute(name);return {route:selected,atFork:Math.abs(distance-forkDistance)<1e-6}},
  setArmyProgress:(fraction)=>{moving=false;distance=total*Math.max(0,Math.min(1,fraction));paint();return sample(distance);}

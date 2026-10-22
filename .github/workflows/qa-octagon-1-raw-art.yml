@@ -1,10 +1,15 @@
 name: Octagon 1 Independent Source-Art Review
 on:
   push:
-    branches: [octagon-1-raw-art-review-20261022]
+    branches:
+      - octagon-1-raw-source-*
     paths:
+      - "octagon-1-road-authoring.html"
+      - "v115-town-pan-controls.html"
+      - "v119-matrei-town-label.html"
       - "scripts/audit_octagon_1_source_art.py"
-      - "tests/test_octagon_1_source_art.py"
+      - "scripts/audit_octagon_1_edge.py"
+      - "tests/test_octagon_1_*.py"
       - ".github/workflows/qa-octagon-1-raw-art.yml"
   workflow_dispatch:
 permissions: {contents: read}
@@ -17,10 +22,15 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
       - run: python -m pip install pillow
-      - run: python -m unittest discover -s tests -p 'test_octagon_1_source_art.py' -v
-      - run: python scripts/audit_octagon_1_source_art.py
+      - name: Check source identity, raw image and east-edge audits
+        run: python -m unittest discover -s tests -p 'test_octagon_1_*.py' -v
+      - name: Extract unpainted JPEG evidence
+        run: python scripts/audit_octagon_1_source_art.py
+      - name: Inspect east image boundary without inventing neighboring terrain
+        run: python scripts/audit_octagon_1_edge.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: octagon-1-original-jpeg-review
-          path: qa/octagon-1-raw-art/
+          name: octagon-1-unpainted-source-and-edge
+          path: |
+            qa/octagon-1-raw-art/

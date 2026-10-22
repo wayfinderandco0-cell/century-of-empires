@@ -13,14 +13,12 @@ permissions: {contents: read}
 jobs:
   mobile-browser-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.56.0-noble
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.11"}
-      - run: |
-          pip install playwright
-          python -m playwright install --with-deps chromium webkit
+      - run: python -m pip install --disable-pip-version-check playwright==1.56.0
       - run: python scripts/qa_octagon_1_road.py
       - uses: actions/upload-artifact@v4
         if: always()

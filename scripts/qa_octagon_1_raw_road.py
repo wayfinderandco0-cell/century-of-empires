@@ -2,6 +2,8 @@
 """Raw JPEG route sampling diagnostic. Contrast is not evidence of a real road."""
 import argparse
 import csv
+import hashlib
+import io
 import json
 import math
 import re
@@ -10,6 +12,17 @@ from statistics import median
 from PIL import Image, ImageDraw
 
 SW, SH = 1100, 842
+# Pinned original source JPEG Git blob; update only after a reviewed art replacement.
+SOURCE_BLOB_SHA = "96c5eeee5afafa20c5442da42c9a1caedd4b00ad"
+
+def verify_source_blob(raw, expected=SOURCE_BLOB_SHA):
+    """Reject same-size but different art before interpreting any road samples."""
+    if not isinstance(raw, bytes):
+        raise ValueError("Source image must be raw bytes")
+    digest = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+    if digest != expected:
+        raise ValueError("Source JPEG changed: independent art review and new pin required")
+    return digest
 
 def extract(text, name):
     m = re.search(r'const\s+' + re.escape(name) + r'\s*=\s*(\[\[.*?\]\])\s*;', text, re.S)
@@ -70,7 +83,9 @@ def main():
     approach, east, south = (extract(text, name) for name in ('APPROACH', 'BASE_EAST', 'SOUTH'))
     if approach[-1] != [699, 799] or east[-1] != [1100, 704] or south[-1] != [315, 842]:
         raise ValueError('Candidate endpoint changed: independent review required')
-    with Image.open(a.image) as source:
+    source_bytes = a.image.read_bytes()
+    source_blob_sha = verify_source_blob(source_bytes)
+    with Image.open(io.BytesIO(source_bytes)) as source:
         if source.size != (SW, SH):
             raise ValueError('Unexpected original JPEG dimensions')
         im = source.convert('RGB')
@@ -85,6 +100,7 @@ def main():
             for row in rows:
                 writer.writerow({'route': name, **row})
     report = {'source': str(a.image), 'source_dimensions': [SW, SH],
+              'source_git_blob_sha': source_blob_sha, 'source_identity_verified': True,
               'method': 'unaltered JPEG 3x3 median pixels, 14px cross-track offsets, 16px arc samples',
               'painted_road_verified': False, 'historical_road_verified': False,
               'bridge_far_bank_verified': False, 'production_ready': False, 'routes': {}}

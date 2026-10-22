@@ -1,0 +1,20 @@
+name: Octagon 1 Export Evidence Gate
+on:
+  push:
+    branches: [octagon-1-export-evidence-gate-20261022]
+    paths:
+      - scripts/octagon_1_corridor_gate.js
+      - scripts/test_octagon_1_corridor_gate.cjs
+      - terrain-grid/octagon-1-east-candidate.json
+      - .github/workflows/qa-octagon-1-export-gate.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  candidate-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: node scripts/test_octagon_1_corridor_gate.cjs

@@ -74,6 +74,34 @@ try:
                             )
                             assert math.dist(end, last) < .01, (name, road, end, last)
                             destinations.append(road)
+                        # Regression: redirect an army halfway through a painted segment.
+                        # The first rerouted point must remain at its exact current position,
+                        # and every subsequent progress sample must be on the road artwork graph.
+                        page.evaluate("OctagonOne.halt()")
+                        assert page.evaluate("OctagonOne.orderTo('south')")
+                        middle = page.evaluate("OctagonOne.setProgress(0.37)")
+                        deviation = page.evaluate("OctagonOne.roadDeviation")
+                        assert deviation < 0.001, (name, 'midroad', middle, deviation)
+                        assert page.evaluate("OctagonOne.orderTo('village')")
+                        new_route = page.evaluate("OctagonOne.route")
+                        assert math.dist(new_route[0], middle) < 0.001, (name, new_route[0], middle)
+                        for fraction in (0, .11, .24, .33, .48, .67, .81, 1):
+                            loc = page.evaluate("f => OctagonOne.setProgress(f)", fraction)
+                            error = page.evaluate("OctagonOne.roadDeviation")
+                            assert error < 0.001, (name, fraction, loc, error)
+
+                        # Mid-segment destinations are not rounded to a nearby waypoint.
+                        # A 20px-off-road destination must be rejected by the deterministic API.
+                        page.evaluate("OctagonOne.halt()")
+                        end_point = [792.5, 482.4125]  # fractional location on bridge approach
+                        assert page.evaluate("p => OctagonOne.orderToPoint(p)", end_point), name
+                        projected_end = page.evaluate("OctagonOne.targetPosition")
+                        assert math.dist(projected_end, end_point) < 0.01, (name, projected_end)
+                        arrived = page.evaluate("OctagonOne.setProgress(1)")
+                        assert math.dist(arrived, end_point) < 0.01, (name, arrived)
+                        assert page.evaluate("OctagonOne.roadDeviation") < .001, name
+                        assert not page.evaluate("OctagonOne.orderToPoint([820,220])"), name
+                        page.evaluate("OctagonOne.halt()")
                         # From the SE exit to the western exit, routing must traverse both bridge endpoints.
                         page.evaluate("OctagonOne.halt()")
                         page.evaluate("OctagonOne.orderTo('west')")

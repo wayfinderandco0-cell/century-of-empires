@@ -78,13 +78,16 @@ try:
                         # The first rerouted point must remain at its exact current position,
                         # and every subsequent progress sample must be on the road artwork graph.
                         page.evaluate("OctagonOne.halt()")
-                        assert page.evaluate("OctagonOne.orderTo('south')")
-                        middle = page.evaluate("OctagonOne.setProgress(0.37)")
-                        deviation = page.evaluate("OctagonOne.roadDeviation")
-                        assert deviation < 0.001, (name, 'midroad', middle, deviation)
-                        assert page.evaluate("OctagonOne.orderTo('village')")
-                        new_route = page.evaluate("OctagonOne.route")
-                        assert math.dist(new_route[0], middle) < 0.001, (name, new_route[0], middle)
+                        reroute = page.evaluate("""() => {
+                          if (!OctagonOne.orderTo('south')) return null;
+                          const middle = OctagonOne.setProgress(0.37);
+                          const deviation = OctagonOne.roadDeviation;
+                          if (!OctagonOne.orderTo('village')) return null;
+                          return {middle, deviation, route: OctagonOne.route};
+                        }""")
+                        assert reroute, name
+                        assert reroute["deviation"] < 0.001, (name, 'midroad', reroute)
+                        assert math.dist(reroute["route"][0], reroute["middle"]) < 0.001, (name, reroute)
                         for fraction in (0, .11, .24, .33, .48, .67, .81, 1):
                             loc = page.evaluate("f => OctagonOne.setProgress(f)", fraction)
                             error = page.evaluate("OctagonOne.roadDeviation")

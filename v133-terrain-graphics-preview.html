@@ -255,9 +255,9 @@ window.V133=Object.freeze({
  get ready(){return ready},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
  get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
  get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},
- get connectedRoute(){return atlas?!!graph.planRoute(V133Atlas.endpoints(atlas).west,V133Atlas.endpoints(atlas).south):false},
- destinations(){return atlas?V133Atlas.endpoints(atlas):null},
- orderTo(name){return atlas&&V133Atlas.endpoints(atlas)[name]?issue(V133Atlas.endpoints(atlas)[name]):false},
+ get connectedRoute(){return atlas?!!graph.planRoute(V123Atlas.endpoints(atlas).west,V123Atlas.endpoints(atlas).south):false},
+ destinations(){return atlas?V123Atlas.endpoints(atlas):null},
+ orderTo(name){return atlas&&V123Atlas.endpoints(atlas)[name]?issue(V123Atlas.endpoints(atlas)[name]):false},
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
@@ -270,12 +270,12 @@ async function boot(){
   const roadMatch=html.match(/const ROADS=(\{[^\r\n]+\});/);
   if(!artMatch||!roadMatch)throw Error('V121 source art/route declaration missing');
   const v121Roads=JSON.parse(roadMatch[1]);
-  atlas=V133Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
+  atlas=V123Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
   if(!graph.seams.every(s=>s.pass))throw Error('Octagon seam integrity failed; movement blocked');
   const source=new Image();source.src=artMatch[1];
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
-  art=source;cacheConceptTiles();currentKey=V133Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
+  art=source;cacheConceptTiles();currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
   ready=true;statusEl.textContent='Connected three-tile test · tap roads to move';
  }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
 }

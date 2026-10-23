@@ -19,7 +19,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 </style></head><body>
 <canvas id="map" aria-label="Three adjacent Alpine octagons; tap physical roads to march across borders"></canvas>
 <header><section><strong>CENTURY OF EMPIRES</strong> · V137
-<small>Continuous Alpine terrain · exact roads unchanged</small></section></header>
+<small>Geographic relief experiment · exact roads unchanged</small></section></header>
 <div id="menu"><button id="whole">Whole crossing</button><button id="debug">Inspect exact roads</button>
 <small>Neighboring territory shares one phototextured terrain surface. The terrain edge is softly blended and contains no duplicated Matrei villages. Historical and art approval are still required. The original campaign and saves are untouched.</small></div>
 <footer><div id="status">Loading original Matrei artwork…</div>
@@ -219,8 +219,19 @@ async function buildLandscape(){
     loadGroundImage('terrain-v97/brenner-relief.webp'),
     loadGroundImage('terrain-v102/alpine-material.webp')
   ]);
-  if(imgs[0]){g.globalAlpha=.13;g.globalCompositeOperation='multiply';g.drawImage(imgs[0],0,0,lw,lh);}
-  if(imgs[1]){g.globalAlpha=.09;g.globalCompositeOperation='multiply';g.drawImage(imgs[1],0,0,lw,lh);}
+  // V140 experimental: use a ONE-PIECE, geography-derived Alpine material
+  // raster instead of reducing the established terrain data to a barely
+  // visible 9% multiply. This is modern Copernicus/WorldCover topography,
+  // illustrative beneath V123's NOT-yet-geo-registered local routes. Do not
+  // present it as a historical map or an orthophoto.
+  if(imgs[1]){
+    g.save();g.globalAlpha=.88;g.globalCompositeOperation='source-over';
+    g.drawImage(imgs[1],0,0,lw,lh);g.restore();
+  }
+  if(imgs[0]){
+    g.save();g.globalAlpha=.30;g.globalCompositeOperation='multiply';
+    g.drawImage(imgs[0],0,0,lw,lh);g.restore();
+  }
   g.globalAlpha=1;g.globalCompositeOperation='source-over';
   photoPatchCount=0;photoStampCount=0;valleyStampCount=0;
   const toLand=p=>[(p[0]-groundBounds[0])/groundBounds[2]*lw,

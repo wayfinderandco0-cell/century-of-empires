@@ -1,0 +1,29 @@
+name: V137 Continuous Alpine Mobile QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v137-coherent-alpine-preview.html'
+      - 'scripts/qa_v137_coherent.py'
+      - '.github/workflows/qa-v137-coherent.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  alpine-iphone-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v137_coherent.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v137-chromium-webkit-iphone-landscape-portrait
+          path: qa/v137-clean/

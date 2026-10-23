@@ -1,0 +1,37 @@
+name: V128 Road Cross-Section Review
+on:
+  push:
+    branches: [terrain-v128-cross-section-review-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'scripts/audit_v127_road_pixels.py'
+      - 'scripts/audit_v128_road_profiles.py'
+      - 'scripts/test_v127_road_pixel_audit.py'
+      - 'scripts/test_v128_road_profiles.py'
+      - '.github/workflows/qa-octagon-v128.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  road-cross-section-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image decoder
+        run: python -m pip install 'Pillow>=11,<13'
+      - name: Run V127 and V128 synthetic regression tests
+        run: |
+          python -m unittest discover -s scripts -p 'test_v127_road_pixel_audit.py' -v
+          python -m unittest discover -s scripts -p 'test_v128_road_profiles.py' -v
+      - name: Sample actual pinned V121 painting and prioritize review points
+        run: python scripts/audit_v128_road_profiles.py --report v128-road-cross-sections.json > /dev/null
+      - name: Preserve source-art review coordinates
+        uses: actions/upload-artifact@v4
+        with:
+          name: v128-road-cross-sections
+          path: v128-road-cross-sections.json
+          retention-days: 30

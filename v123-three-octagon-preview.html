@@ -29,10 +29,10 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <script src="terrain-grid/v123-atlas.js"></script>
 <script>
 'use strict';
-const W=1536,H=1024, C=document.querySelector('#map'),cx=C.getContext('2d',{alpha:false});
+const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});const tileTextures=new Map();
 const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
 let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2054,540],ready=false,debug=false;
-let art=null,atlas=null,graph=null,army=null,currentKey=null,path=[],travel=0,distance=0,moving=false,goal=null,last=0;
+let art=null,atlas=null,graph=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0;
 const pointers=new Map();let gesture=null,down=null;
 const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const world=(p)=>[cam[0]+(p[0]-width/2)/scale,cam[1]+(p[1]-height/2)/scale];
@@ -96,12 +96,20 @@ function conceptTile(t){
   cx.fillStyle='#292c22';cx.fillRect(x+6,y+10,7,16);
  }
 }
+function cacheConceptTiles(){
+ for(const t of atlas.tiles)if(t.id!=='matrei'){
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const original=cx;cx=off.getContext('2d',{alpha:false});
+  try{conceptTile(t);}finally{cx=original;}
+  tileTextures.set(t.id,off);
+ }
+}
 function render(){
  if(!width||!height)return;
  cx.setTransform(dpr,0,0,dpr,0,0);
  cx.fillStyle='#12251e';cx.fillRect(0,0,width,height);
- cx.save();cx.translate(dpr*(width/2-cam[0]*scale),dpr*(height/2-cam[1]*scale));
- cx.scale(dpr*scale,dpr*scale);
+ cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);
+ cx.scale(scale,scale);
  if(atlas){
   for(const t of atlas.tiles){
    cx.save();cx.translate(t.origin[0],t.origin[1]);polygon(cx);cx.clip();
@@ -109,7 +117,7 @@ function render(){
     cx.drawImage(art,0,0,W,H);
     // Only the two source-unpainted border extensions get new artwork.
     paintTrack([[0,478],[99,478]],17);paintTrack([[466,958],[466,1024]],17);
-   }else conceptTile(t);
+   }else {const tex=tileTextures.get(t.id);if(tex)cx.drawImage(tex,0,0,W,H);}
    cx.restore();
    polygonAt(t);
    if(debug){cx.strokeStyle='#f0dc9e';cx.lineWidth=1.8;cx.stroke();}
@@ -143,12 +151,37 @@ function resize(){width=C.clientWidth||window.innerWidth;height=C.clientHeight||
  dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(width*dpr);C.height=Math.round(height*dpr);
  base=Math.min(width/3200,height/2450);redraw();}
 function redraw(){scale=base*zoom;render();}
+function currentEdge(){
+ if(path.length<2||pathKeys.length!==path.length)return pausedEdge;
+ let remaining=travel;
+ for(let i=1;i<path.length;i++){
+  const len=hypot(path[i-1],path[i]);
+  if(remaining<=len+1e-5){
+   if(i===1&&pathKeys[0]===null)return startEdge;
+   return pathKeys[i-1]&&pathKeys[i]?{a:pathKeys[i-1],b:pathKeys[i]}:null;
+  }
+  remaining-=len;
+ }
+ return null;
+}
 function issue(to){
  if(!ready)return false;
- const result=graph.planRoute(currentKey,to);
- if(!result){statusEl.textContent='No verified cartway route';return false;}
- goal=to;path=result.positions;travel=0;distance=result.distance;moving=distance>.001;
- statusEl.textContent=moving?'Army marching across '+result.seams+' tile border(s)':'Unit already here';
+ const edge=moving?currentEdge():pausedEdge;
+ const candidates=edge?[edge.a,edge.b]:[currentKey];
+ let chosen=null;
+ for(const key of candidates){
+  if(!key)continue;
+  const found=graph.planRoute(key,to);
+  if(!found)continue;
+  const start=graph.graph.get(key).world;
+  const points=hypot(army,start)>1e-5?[army.slice(),...found.positions]:found.positions.slice();
+  const keys=points.length===found.positions.length?found.keys.slice():[null,...found.keys];
+  const cost=hypot(army,start)+found.distance;
+  if(!chosen||cost<chosen.cost)chosen={cost,points,keys,found,entry:edge};
+ }
+ if(!chosen){statusEl.textContent='No connected road route';return false;}
+ goal=to;path=chosen.points;pathKeys=chosen.keys;travel=0;distance=chosen.cost;startEdge=chosen.entry;pausedEdge=null;
+ moving=distance>.001;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
  return true;
 }
 function nearestRoadNode(p){
@@ -173,11 +206,11 @@ function sampleRoute(d){
 function march(dt){if(!moving)return;
  travel=Math.min(distance,travel+Math.max(0,dt)*215);
  army=sampleRoute(travel);
- if(travel>=distance-.01){moving=false;currentKey=goal;statusEl.textContent='Unit arrived · tap a different road';}
+ if(travel>=distance-.01){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;statusEl.textContent='Unit arrived · tap a different road';}
 }
 function halt(){if(!moving)return;
- const nearest=nearestRoadNode(army);currentKey=nearest.key;army=graph.graph.get(currentKey).world.slice();
- moving=false;path=[];goal=null;statusEl.textContent='Unit halted at nearest road node';}
+ pausedEdge=currentEdge();moving=false;path=[];pathKeys=[];goal=null;travel=0;distance=0;
+ statusEl.textContent='Unit halted on the exact painted cartway';}
 C.addEventListener('pointerdown',e=>{
  C.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
  if(pointers.size===1)down=[e.clientX,e.clientY];
@@ -215,7 +248,7 @@ window.V123=Object.freeze({
  get connectedRoute(){return atlas?!!graph.planRoute(V123Atlas.endpoints(atlas).west,V123Atlas.endpoints(atlas).south):false},
  destinations(){return atlas?V123Atlas.endpoints(atlas):null},
  orderTo(name){return atlas&&V123Atlas.endpoints(atlas)[name]?issue(V123Atlas.endpoints(atlas)[name]):false},
- progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;}return army.slice();},
+ progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
  get experimental(){return !!atlas?.experimentalSeams}
@@ -228,6 +261,7 @@ async function boot(){
   if(!artMatch||!roadMatch)throw Error('V121 source art/route declaration missing');
   const v121Roads=JSON.parse(roadMatch[1]);
   atlas=V123Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
+  cacheConceptTiles();
   if(!graph.seams.every(s=>s.pass))throw Error('Octagon seam integrity failed; movement blocked');
   const source=new Image();source.src=artMatch[1];
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});

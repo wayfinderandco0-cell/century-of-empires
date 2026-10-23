@@ -23,10 +23,11 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <div id="menu"><button id="whole">Whole crossing</button><button id="debug">Inspect exact roads</button>
 <small>Neighbor art is a stylized temporary proof, not a historically surveyed 1780 landscape. The original campaign and saves are untouched.</small></div>
 <footer><div id="status">Loading original Matrei artwork…</div>
-<div id="hint">Tap a visible road to march · drag to pan · pinch to zoom</div>
+<div id="hint">Tap available test routes · red dashed village section is closed · drag to pan · pinch to zoom</div>
 <div class="actions"><button id="halt">Halt unit</button><button id="center">Center army</button><button id="options">Map options</button></div></footer>
 <script src="terrain-grid/v122-seam-engine.js"></script>
 <script src="terrain-grid/v123-atlas.js"></script>
+<script src="terrain-grid/v131-road-hit-test.js"></script>
 <script>
 'use strict';
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});const tileTextures=new Map();
@@ -37,7 +38,6 @@ const pointers=new Map();let gesture=null,down=null;
 const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const world=(p)=>[cam[0]+(p[0]-width/2)/scale,cam[1]+(p[1]-height/2)/scale];
 const screen=(p)=>[width/2+(p[0]-cam[0])*scale,height/2+(p[1]-cam[1])*scale];
-const nodes=()=>Array.from(graph.graph.entries());
 const tileColor=t=>t.id==='west'?'#365444':'#3a4d3c';
 function lcg(seed){let a=seed>>>0;return ()=>{a=(Math.imul(1664525,a)+1013904223)>>>0;return a/4294967296;};}
 function polygon(ctx){ctx.beginPath();ctx.moveTo(256,0);ctx.lineTo(W-256,0);ctx.lineTo(W,256);ctx.lineTo(W,H-256);ctx.lineTo(W-256,H);ctx.lineTo(256,H);ctx.lineTo(0,H-256);ctx.lineTo(0,256);ctx.closePath();}
@@ -132,6 +132,14 @@ function render(){
    for(const pts of Object.values(t.roads)){cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#f9d84f';cx.lineWidth=2;cx.stroke();}
    cx.restore();
   }
+  // Show unsafe source-paint/army-path discrepancies on every zoom.
+  // This is an overlay, not a new road or a claim of historical accuracy.
+  for(const t of atlas.tiles)for(const [road,indexes] of Object.entries(t.blockedRoadSegments||{})){
+   const pts=t.roads[road];
+   cx.save();cx.translate(...t.origin);cx.strokeStyle='#ec543d';cx.lineWidth=8;cx.setLineDash([12,8]);
+   for(const i of indexes){cx.beginPath();cx.moveTo(...pts[i]);cx.lineTo(...pts[i+1]);cx.stroke();}
+   cx.restore();
+  }
   if(path.length>1){cx.beginPath();path.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#efdc91c2';cx.lineWidth=3;cx.stroke();}
   if(army){cx.save();cx.translate(...army);
    const k=16/scale;cx.fillStyle='#172e26';cx.strokeStyle='#e7d087';cx.lineWidth=2/scale;
@@ -184,16 +192,18 @@ function issue(to){
  moving=distance>.001;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
  return true;
 }
-function nearestRoadNode(p){
- let closest=null,dd=Infinity;
- for(const [key,n] of nodes()){
-  const d=hypot(n.world,p);if(d<dd){dd=d;closest=key;}
- }return {key:closest,distance:dd};
-}
 function tap(pt){
- const a=nearestRoadNode(world(pt));
- if(a.distance>72){statusEl.textContent='Select an actual road, not a field or building';return;}
- issue(a.key);
+ const radius=Math.min(72,Math.max(14,22/scale));
+ const hit=V131RoadHit.hitTest(graph,world(pt),radius);
+ if(hit.kind==='blocked'){
+  statusEl.textContent='Road closed: movement line misses the painted road';
+  return false;
+ }
+ if(hit.kind!=='open'){
+  statusEl.textContent='Tap an available test route, not a field or building';
+  return false;
+ }
+ return issue(hit.key);
 }
 function sampleRoute(d){
  let remaining=d;
@@ -251,7 +261,9 @@ window.V123=Object.freeze({
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
- get experimental(){return !!atlas?.experimentalSeams}
+ get experimental(){return !!atlas?.experimentalSeams},
+ // Read-only mobile QA hook: world-space test taps go through the real handler.
+ testTapWorld(p){const ok=tap(screen(p));return {ok,status:statusEl.textContent,moving,point:army?.slice()};}
 });
 async function boot(){
  try{
@@ -267,7 +279,7 @@ async function boot(){
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
   art=source;currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
-  ready=true;statusEl.textContent='Connected three-tile test · tap roads to move';
+  ready=true;statusEl.textContent='Engineering preview · red dashed village road is closed';
  }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
 }
 function frame(t){if(last)march(Math.min(.04,(t-last)/1000));last=t;render();requestAnimationFrame(frame);}

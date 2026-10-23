@@ -88,19 +88,20 @@ function sourcePatchCandidates(roads){
  const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(art,0,0);
  const rgba=g.getImageData(0,0,W,H).data;
  const samples=[];
- for(let y=155;y<865;y+=55)for(let x=190;x<1370;x+=55){
-  if(signedEdge(x,y)<155||distanceToRoad([x,y],roads)<105)continue;
+ for(let y=125;y<900;y+=42)for(let x=145;x<1395;x+=42){
+  if(signedEdge(x,y)<92||distanceToRoad([x,y],roads)<78)continue;
   // Avoid Matrei rooftops, original bridge, river crossing and baked-in labels.
-  if(y>540&&x>320&&x<1210)continue;
-  let roof=0,bright=0,dark=0,total=0;
+  if(y>555&&x>270&&x<1080)continue;
+  let roof=0,bright=0,dark=0,water=0,total=0;
   for(let yy=y-60;yy<=y+60;yy+=12)for(let xx=x-60;xx<=x+60;xx+=12){
    const k=(yy*W+xx)*4,r=rgba[k],v=rgba[k+1],b=rgba[k+2];
    if(r>100&&r>v*1.22&&r>b*1.24)roof++;
    if(r>220&&v>220&&b>220)bright++;
    if(r<28&&v<28&&b<28)dark++;
+   if(b>r*1.17&&v>r*1.23&&b+v>200)water++;
    total++;
   }
-  if(roof/total>.045||bright/total>.28||dark/total>.035)continue;
+  if(roof/total>.075||bright/total>.75||dark/total>.10||water/total>.055)continue;
   samples.push([x,y]);
  }
  return samples;
@@ -138,7 +139,17 @@ async function buildLandscape(){
  // Generate solely from original wild mountain/forest/meadow sampling spots.
  // Fixed geometric seed means neighboring territory is distinct yet stable.
  const sites=sourcePatchCandidates(Object.values(originalRoads||{}));
- if(sites.length<5)throw Error('Not enough road-free wilderness patches for safe photographic terrain');
+ if(sites.length<8){
+   // Verified safe fallback zones (mountains, woodland and rocky slopes)
+   // used only when the source road-exclusion scan is unusually restrictive.
+   for(const p of [[314,335],[350,220],[460,155],[630,160],[670,355],[910,240],
+                   [1165,155],[1275,205],[1245,730],[1090,825],[910,815],
+                   [520,820],[260,390],[700,265]]){
+     if(signedEdge(p[0],p[1])>68&&!sites.some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<35))
+       sites.push(p);
+   }
+  }
+  if(sites.length<5)throw Error('Photographic texture source insufficient: '+sites.length);
  const patches=sites.slice(0,54).map((q,i)=>photoStamp(art,q[0],q[1],i%3===0?140:160));
  photoPatchCount=patches.length;
  const cols=18,rows=14,cellW=lw/(cols-1),cellH=lh/(rows-1);

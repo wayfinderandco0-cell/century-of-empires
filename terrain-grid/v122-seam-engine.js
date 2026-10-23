@@ -112,4 +112,6 @@ function buildNetwork(plan,epsilon=EPS){
  }
  return {tiles,graph,seams,planRoute,key};
 }
-module.exports={octagon,boundaryDistance,sharedSideLength,endpoint,validateSeam,buildNetwork};
+const seamApi={octagon,boundaryDistance,sharedSideLength,endpoint,validateSeam,buildNetwork};
+if(typeof module!=='undefined'&&module.exports)module.exports=seamApi;
+if(typeof window!=='undefined')window.V122Seam=seamApi;

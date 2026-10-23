@@ -1,0 +1,41 @@
+name: V144 source-derived Alpine projection experiment
+on:
+  push:
+    branches: [terrain-v144-source-projection-audit-20261023]
+    paths:
+      - 'terrain-grid/v144-geo-material.js'
+      - 'scripts/test_v144_geo_material.js'
+      - 'scripts/qa_v137_coherent.py'
+      - 'v137-coherent-alpine-preview.html'
+      - '.github/workflows/qa-v144-source-projection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-projection-and-visual-rejection:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_v138_matrei_mask.js
+      - run: node scripts/test_v144_geo_material.js
+      - run: python -m pip install playwright==1.64.1 Pillow
+      - run: python scripts/test_v140_neighbor_detail.py
+      - name: Capture four iPhone-sized views of authentic-source-only experiment
+        run: python scripts/qa_v137_coherent.py
+        env:
+          COE_PREVIEW_QUERY: '?geoMaterials=1'
+          COE_QA_OUTPUT: qa/v144-source
+      # Fail closed. A red job is correct if genuine high-detail neighboring
+      # art is still absent; this is not a numeric-threshold relaxation.
+      - name: Strict Matrei-vs-neighbor visual parity
+        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v144-source --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v144-source-only-iphone-and-visual-audit
+          path: qa/v144-source/

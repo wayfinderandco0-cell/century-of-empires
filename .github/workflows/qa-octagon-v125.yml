@@ -1,0 +1,36 @@
+name: V125 Shared Octagon Border QA
+on:
+  push:
+    branches: [terrain-v125-shared-border-seam-gate-20261023]
+    paths:
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'terrain-grid/v123-atlas.js'
+      - 'scripts/test_v122_seams.js'
+      - 'scripts/test_v123_atlas.js'
+      - 'scripts/test_v124_octagon_containment.js'
+      - 'scripts/test_v125_shared_border.js'
+      - '.github/workflows/qa-octagon-v125.yml'
+  pull_request:
+    paths:
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'scripts/test_v125_shared_border.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shared-border-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: V122 existing seam contract
+        run: node scripts/test_v122_seams.js
+      - name: V123 existing engineering preview
+        run: node scripts/test_v123_atlas.js
+      - name: V124 polygon containment
+        run: node scripts/test_v124_octagon_containment.js
+      - name: V125 shared-border regression
+        run: node scripts/test_v125_shared_border.js

@@ -147,6 +147,7 @@ async function buildLandscape(){
     const n0=hash(a,b)*(1-fx)+hash(a+1,b)*fx,n1=hash(a,b+1)*(1-fx)+hash(a+1,b+1)*fx;
     return n0*(1-fy)+n1*fy;
   };
+  statusEl.textContent='Building continuous Alpine elevation…';
   const altitude=new Float32Array(nx*ny),wetness=new Float32Array(nx*ny),shade=new Float32Array(nx*ny);
   // Broad landform changes are continuous across BOTH tile borders. Valleys
   // wander independently, while the northern rock ridges rise above the woods.
@@ -170,9 +171,11 @@ async function buildLandscape(){
   // Generate satellite-like albedo directly from the elevation map. Each point
   // has a deterministic unique value, avoiding the recognisable copy/paste
   // cliffs, villages, streams and conifers reported on physical iPhone Safari.
+  statusEl.textContent='Painting unique Alpine terrain…';
   const texture=document.createElement('canvas');texture.width=lw;texture.height=lh;
   const tg=texture.getContext('2d',{alpha:false}),image=tg.createImageData(lw,lh),pixels=image.data;
   for(let y=0;y<lh;y++){
+    if((y%24)===0)await new Promise(resolve=>setTimeout(resolve,0));
     const vy=y*(ny-1)/(lh-1),iy=Math.min(ny-2,Math.floor(vy)),fy=vy-iy;
     for(let x=0;x<lw;x++){
       const vx=x*(nx-1)/(lw-1),ix=Math.min(nx-2,Math.floor(vx)),fx=vx-ix;
@@ -199,6 +202,7 @@ async function buildLandscape(){
       pixels[i+3]=255;
     }
   }
+  statusEl.textContent='Blending landscape photography…';
   tg.putImageData(image,0,0);
   g.drawImage(texture,0,0);
   // Real-world photomaterial supplies subdued detail but is never stamped,
@@ -229,6 +233,7 @@ async function buildLandscape(){
       g.restore();valleyStampCount+=pts.length;
     }
   }
+  statusEl.textContent='Fitting the Matrei road painting…';
   sharedGround=land;
   centerPhoto=document.createElement('canvas');centerPhoto.width=W;centerPhoto.height=H;
   const center=centerPhoto.getContext('2d',{willReadFrequently:true});
@@ -236,9 +241,12 @@ async function buildLandscape(){
   const im=center.getImageData(0,0,W,H),p=im.data;
   // Suppress the painted octagon border; soften authentic art into the larger
   // unique relief surface. Original imagery and road coordinates remain intact.
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  for(let y=0;y<H;y++){
+    if((y%28)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    for(let x=0;x<W;x++){
     const k=(y*W+x)*4,d=signedEdge(x,y);
     p[k+3]=Math.round(p[k+3]*smooth((d-14)/230));
+    }
   }
   center.putImageData(im,0,0);
   continuousTerrain=true;

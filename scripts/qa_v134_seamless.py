@@ -23,7 +23,11 @@ try:
                     errors=[]
                     page.on("pageerror",lambda error:errors.append(str(error)))
                     page.goto(url,wait_until="domcontentloaded",timeout=30000)
-                    page.wait_for_function("window.V134?.ready===true",timeout=30000)
+                    try:
+                        page.wait_for_function("window.V134?.ready===true",timeout=10000)
+                    except Exception:
+                        print("V134 loading diagnostic:",engine,orient,"status:",page.locator("#status").inner_text(),"errors:",errors,flush=True)
+                        raise
                     assert page.evaluate("V134.artDimensions")==[1536,1024]
                     assert page.evaluate("V134.connectedRoute")
                     assert all(s["pass"] for s in page.evaluate("V134.seamStatus"))

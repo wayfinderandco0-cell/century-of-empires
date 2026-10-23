@@ -1,0 +1,31 @@
+name: V133 Terrain Graphics iPhone QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v133-terrain-graphics-preview.html'
+      - 'scripts/qa_v133_graphics.py'
+      - '.github/workflows/qa-v133-graphics.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  graphics-and-movement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser testing
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify V133 graphics page and working unit routes
+        run: python scripts/qa_v133_graphics.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v133-iphone-graphics-screenshots
+          path: qa/v133-graphics/

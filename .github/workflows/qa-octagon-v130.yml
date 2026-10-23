@@ -1,0 +1,28 @@
+name: V130 Reviewed Road Closure
+on:
+  push:
+    branches: [terrain-v130-reviewed-road-closure-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'scripts/test_v12*.js'
+      - '.github/workflows/qa-octagon-v130.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  graph-road-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run V122-V126 and V130 route regression suites
+        run: |
+          node scripts/test_v122_seams.js
+          node scripts/test_v123_atlas.js
+          node scripts/test_v124_octagon_containment.js
+          node scripts/test_v125_shared_border.js
+          node scripts/test_v126_source_art_identity.js
+          node scripts/test_v130_blocked_road_segments.js

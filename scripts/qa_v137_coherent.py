@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """V137 coherent-terrain preview regression (not production art approval)."""
-import http.server, json, threading
+import http.server, json, threading, urllib.request
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
@@ -11,7 +11,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(("127.0.0.1",0),Handler)
 threading.Thread(target=server.serve_forever,daemon=True).start()
-url=f"http://127.0.0.1:{server.server_port}/v137-continuous-alpine-preview.html"
+url=f"http://127.0.0.1:{server.server_port}/v137-coherent-alpine-preview.html"
+# Fail immediately when QA points at a missing or obsolete preview, instead of
+# spending a minute waiting on an empty 404 document.
+with urllib.request.urlopen(url,timeout=5) as response:
+    source=response.read()
+    assert response.status==200 and b"V137 Three-Octagon Route Preview" in source, "Wrong V137 QA target"
 results={}
 try:
     with sync_playwright() as playwright:
@@ -25,8 +30,16 @@ try:
                     page.goto(url,wait_until="domcontentloaded",timeout=30000)
                     try:
                         page.wait_for_function("window.V137?.ready===true",timeout=30000)
-                    except Exception:
-                        print("V137 loading diagnostic:",engine,orient,"status:",page.locator("#status").inner_text(),"errors:",errors,flush=True)
+                    except Exception as boot_error:
+                        # A saturated renderer can also block DOM inspection. Never
+                        # allow the diagnostic itself to wait another 30 seconds.
+                        try:
+                            stage=page.locator("#status").text_content(timeout=2000)
+                        except Exception as probe_error:
+                            stage="<DOM unresponsive: "+type(probe_error).__name__+">"
+                        print("V137 boot failure:",engine,orient,
+                              "stage:",repr(stage),"pageerrors:",errors,
+                              "cause:",repr(boot_error),flush=True)
                         raise
                     assert page.evaluate("V137.artDimensions")==[1536,1024]
                     assert page.evaluate("V137.connectedRoute")

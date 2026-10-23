@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "v122-three-octagon-seam-contract",
+  "purpose": "Fail closed on physical gaps between source-painted road, octagon edges and neighboring cells. This is not a three-painted-tile release.",
+  "cell": {
+    "width": 1536,
+    "height": 1024,
+    "corner": 256
+  },
+  "source": "terrain-grid/octagon-1-v121.manifest.json",
+  "tiles": [
+    {
+      "id": "matrei",
+      "origin": [
+        1536,
+        0
+      ],
+      "roadsManifest": "terrain-grid/octagon-1-v121.manifest.json",
+      "artReviewed": false,
+      "role": "painted pilot"
+    },
+    {
+      "id": "western_neighbor",
+      "origin": [
+        0,
+        0
+      ],
+      "roadsManifest": null,
+      "artReviewed": false,
+      "role": "not painted"
+    },
+    {
+      "id": "southern_neighbor",
+      "origin": [
+        1536,
+        1024
+      ],
+      "roadsManifest": null,
+      "artReviewed": false,
+      "role": "not painted"
+    }
+  ],
+  "links": [
+    {
+      "id": "matrei-west",
+      "from": {
+        "tile": "matrei",
+        "road": "west",
+        "end": "start"
+      },
+      "to": {
+        "tile": "western_neighbor",
+        "road": "east",
+        "end": "start"
+      },
+      "bothRoadsVisuallyVerified": false,
+      "enabled": false
+    },
+    {
+      "id": "matrei-south",
+      "from": {
+        "tile": "matrei",
+        "road": "south",
+        "end": "end"
+      },
+      "to": {
+        "tile": "southern_neighbor",
+        "road": "north",
+        "end": "start"
+      },
+      "bothRoadsVisuallyVerified": false,
+      "enabled": false
+    }
+  ],
+  "requiredBeforeOpen": [
+    "Extend and repaint center cartway to exact shared octagon boundary",
+    "Paint distinct western and southern neighbor terrain with roads meeting matching boundary positions",
+    "Verify shared world positions at both ends within 1.5 pixels",
+    "Physically inspect iPhone portrait and landscape for painted-road alignment",
+    "Only then set verified and enabled true; do not permit invisible shortcuts"
+  ],
+  "acceptance": {
+    "threePaintedTiles": false,
+    "matchingRoadArt": false,
+    "physicalIphoneApproved": false,
+    "networkRouteEnabled": false,
+    "productionIntegrated": false
+  }
+}

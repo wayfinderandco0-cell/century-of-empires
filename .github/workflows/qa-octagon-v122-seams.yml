@@ -1,0 +1,27 @@
+name: V122 Octagon Boundary Safety
+on:
+  push:
+    branches: [terrain-v122-seam-geometry-contract]
+    paths:
+      - "terrain-grid/v122-seam-engine.js"
+      - "terrain-grid/octagon-network-v122.json"
+      - "scripts/test_v122_seams.js"
+      - ".github/workflows/qa-octagon-v122-seams.yml"
+  pull_request:
+    paths:
+      - "terrain-grid/v122-seam-engine.js"
+      - "terrain-grid/octagon-network-v122.json"
+      - "scripts/test_v122_seams.js"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seam-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/test_v122_seams.js

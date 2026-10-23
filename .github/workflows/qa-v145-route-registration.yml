@@ -1,0 +1,30 @@
+name: V145 three-tile geographic route registration guard
+on:
+  push:
+    branches: [terrain-v145-route-georegistration-gate-20261023]
+    paths:
+      - 'terrain-grid/v145-route-registration.js'
+      - 'scripts/test_v145_route_registration.js'
+      - 'terrain-grid/v123-atlas.js'
+      - 'terrain-grid/v144-geo-material.js'
+      - '.github/workflows/qa-v145-route-registration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  geographic-registration-synthetic-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing Matrei mask and V144 source-projection checks
+        run: |
+          node scripts/test_v138_matrei_mask.js
+          node scripts/test_v144_geo_material.js
+      - name: V145 fail-closed V123 route-geography registration tests
+        run: node scripts/test_v145_route_registration.js
+      # No claim of source authentication or approved visual parity.
+      # The V144 visual acceptance gate remains red until real imagery exists.

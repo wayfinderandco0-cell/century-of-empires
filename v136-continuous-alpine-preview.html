@@ -150,15 +150,28 @@ async function buildLandscape(){
    }
   }
   if(sites.length<5)throw Error('Photographic texture source insufficient: '+sites.length);
- const patches=sites.slice(0,54).map((q,i)=>photoStamp(art,q[0],q[1],i%3===0?140:160));
+ // Do not choose the first 54 north-facing snow patches: shuffle the
+ // available valley, hillside and high-Alpine material across ALL elevations.
+ const randomize=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(rng()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;};
+ const hi=randomize(sites.filter(q=>q[1]<320)).slice(0,22);
+ const mid=randomize(sites.filter(q=>q[1]>=320&&q[1]<610)).slice(0,26);
+ const low=randomize(sites.filter(q=>q[1]>=610)).slice(0,26);
+ const selected=randomize([...hi,...mid,...low]);
+ const patches=selected.map((q,i)=>photoStamp(art,q[0],q[1],i%3===0?116:142));
  photoPatchCount=patches.length;
- const cols=18,rows=14,cellW=lw/(cols-1),cellH=lh/(rows-1);
+ const cols=31,rows=23,cellW=lw/(cols-1),cellH=lh/(rows-1);
  for(let j=-1;j<=rows;j++)for(let i=-1;i<=cols;i++){
-  const x=i*cellW+(rng()-.5)*cellW*.78,y=j*cellH+(rng()-.5)*cellH*.78;
-  const idx=Math.floor(rng()*patches.length),img=patches[idx],radius=165+rng()*145;
+  const x=i*cellW+(rng()-.5)*cellW*.72,y=j*cellH+(rng()-.5)*cellH*.72;
+  // Terrain gets greener approaching the valley floor rather than repeating
+  // cliffs and snow fields everywhere. Sampling stays within native scale.
+  const from=j<rows*.29?hi:j>rows*.54&&low.length?low:mid.length?mid:hi;
+  const reference=from.length?from:sites;
+  const q=reference[Math.floor(rng()*reference.length)];
+  const idx=selected.findIndex(p=>p===q);
+  const img=patches[Math.max(0,idx)],radius=76+rng()*83;
   g.save();g.translate(x,y);g.rotate((rng()-.5)*1.65);
   g.scale(rng()<.5?-1:1,1);
-  g.globalAlpha=.79+rng()*.15;
+  g.globalAlpha=.84+rng()*.13;
   g.drawImage(img,-radius,-radius,radius*2,radius*2);
   g.restore();photoStampCount++;
  }
@@ -167,7 +180,7 @@ async function buildLandscape(){
  const light=g.createLinearGradient(0,lh,0,0);
  light.addColorStop(0,'rgba(49,64,48,.05)');
  light.addColorStop(.53,'rgba(28,37,34,.13)');
- light.addColorStop(1,'rgba(37,43,49,.26)');
+ light.addColorStop(1,'rgba(37,43,49,.13)');
  g.fillStyle=light;g.fillRect(0,0,lw,lh);
  g.globalCompositeOperation='source-over';
  sharedGround=land;

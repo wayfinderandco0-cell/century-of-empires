@@ -18,7 +18,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 @media(max-height:440px){header section{padding:5px 8px}footer{padding:5px 7px;width:fit-content;max-width:95vw}footer .actions{margin-top:3px}button{padding:4px 7px;min-height:30px}}
 </style></head><body>
 <canvas id="map" aria-label="Three adjacent Alpine octagons; tap physical roads to march across borders"></canvas>
-<header><section><strong>CENTURY OF EMPIRES</strong> · V137
+<header><section><strong>CENTURY OF EMPIRES</strong> · V140 EXPERIMENT
 <small>Geographic relief experiment · exact roads unchanged</small></section></header>
 <div id="menu"><button id="whole">Whole crossing</button><button id="debug">Inspect exact roads</button>
 <small>Neighboring territory shares one phototextured terrain surface. The terrain edge is softly blended and contains no duplicated Matrei villages. Historical and art approval are still required. The original campaign and saves are untouched.</small></div>
@@ -49,14 +49,11 @@ function paintTrack(pts,thick=19){
  cx.strokeStyle='#61513b';cx.lineWidth=1.3;cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
 }
 function paintNaturalTrailFinish(pts){
- // Only outer endpoints taper. The same unmodified pts remain the army graph.
- // A trail disappears into forest instead of a hard, full-width road cap.
- if(pts.length<5){paintTrack(pts,17);return;}
- paintTrack(pts.slice(0,-2),17);
- cx.save();
- cx.globalAlpha=.51;paintTrack(pts.slice(-3,-1),8);
- cx.globalAlpha=.13;paintTrack(pts.slice(-2),3);
- cx.restore();
+ // Every traversable graph segment must remain visibly painted to its END.
+ // Previous fade painted the final physical army leg at 13% opacity, giving
+ // the false appearance that a marching unit had gone off the roadway.
+ // This is a known survey-limited endpoint, NOT a claim of onward routing.
+ paintTrack(pts,16);
 }
 function distanceToRoad(p,roads){
  let best=Infinity;

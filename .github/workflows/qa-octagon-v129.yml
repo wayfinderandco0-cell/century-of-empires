@@ -1,0 +1,40 @@
+name: V129 Raw Road Art Review
+on:
+  push:
+    branches: [terrain-v129-raw-art-review-export-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'scripts/audit_v127_road_pixels.py'
+      - 'scripts/audit_v128_road_profiles.py'
+      - 'scripts/export_v129_source_review.py'
+      - 'scripts/test_v127_road_pixel_audit.py'
+      - 'scripts/test_v128_road_profiles.py'
+      - 'scripts/test_v129_source_review.py'
+      - '.github/workflows/qa-octagon-v129.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  raw-road-art-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image decoder
+        run: python -m pip install 'Pillow>=11,<13'
+      - name: Run V127-V129 synthetic regression tests
+        run: |
+          python -m unittest discover -s scripts -p 'test_v127_road_pixel_audit.py' -v
+          python -m unittest discover -s scripts -p 'test_v128_road_profiles.py' -v
+          python -m unittest discover -s scripts -p 'test_v129_source_review.py' -v
+      - name: Export pinned V121 raw and marked inspection crops
+        run: python scripts/export_v129_source_review.py --out v129-road-source-review
+      - name: Preserve road inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: v129-raw-road-source-review
+          path: v129-road-source-review/
+          retention-days: 30

@@ -483,7 +483,12 @@ window.V137=Object.freeze({
  destinations(){return atlas?V123Atlas.endpoints(atlas):null},
  orderTo(name){return atlas&&V123Atlas.endpoints(atlas)[name]?issue(V123Atlas.endpoints(atlas)[name]):false},
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
- halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
+ halt,zoomTo(z){zoom=z;redraw();},
+ focusTile(name){
+   const centers={west:[790,510],matrei:[2350,530],south:[2300,1580]};
+   if(!centers[name])return false;
+   cam=centers[name].slice();zoom=2.4;redraw();return true;
+ },inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
  get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get valleyStampCount(){return valleyStampCount},get detailMarkCount(){return detailMarkCount},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams}
 });

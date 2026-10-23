@@ -33,6 +33,18 @@ try:
                     assert all(s["pass"] for s in page.evaluate("V134.seamStatus"))
                     assert not page.evaluate("V134.productionApproved")
                     assert page.evaluate("V134.roadNodeCount")>=90
+                    page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
+                    scene_colors=page.evaluate("""() => {
+                      const canvas=document.querySelector('#map'),ctx=canvas.getContext('2d');
+                      const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+                      const colors=new Set(),w=canvas.width,h=canvas.height;
+                      for(let iy=3;iy<28;iy++)for(let ix=2;ix<20;ix++){
+                        const x=Math.floor(ix*w/20),y=Math.floor(iy*h/30),j=(y*w+x)*4;
+                        colors.add(data[j]+','+data[j+1]+','+data[j+2]);
+                      }
+                      return colors.size;
+                    }""")
+                    assert scene_colors>40,(engine,orient,"blank scene",scene_colors)
                     page.screenshot(path=str(out/f"{engine}-{orient}-opening.png"),animations="disabled")
                     assert page.evaluate("V134.orderTo('west')")
                     page.evaluate("V134.progress(1)")

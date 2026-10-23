@@ -20,6 +20,25 @@ function segmentDistance(p,a,b){
 function boundaryDistance(p,polygon){
  return Math.min(...polygon.map((a,i)=>segmentDistance(p,a,polygon[(i+1)%polygon.length])));
 }
+function sharedSideLength(a,b,epsilon=EPS){
+ const pa=octagon(a.width,a.height,a.corner||256).map(p=>translate(p,a.origin));
+ const pb=octagon(b.width,b.height,b.corner||256).map(p=>translate(p,b.origin));
+ let best=0;
+ for(let i=0;i<pa.length;i++){
+  const u=pa[i],v=pa[(i+1)%pa.length];
+  const dx=v[0]-u[0],dy=v[1]-u[1],len=Math.hypot(dx,dy);
+  for(let j=0;j<pb.length;j++){
+   const p=pb[j],q=pb[(j+1)%pb.length];
+   const lineError=(point)=>Math.abs(dx*(point[1]-u[1])-dy*(point[0]-u[0]))/len;
+   // Collinear border runs only: a corner touch is NOT a road seam.
+   if(lineError(p)>epsilon||lineError(q)>epsilon)continue;
+   const t1=((p[0]-u[0])*dx+(p[1]-u[1])*dy)/len;
+   const t2=((q[0]-u[0])*dx+(q[1]-u[1])*dy)/len;
+   best=Math.max(best,Math.max(0,Math.min(len,Math.max(t1,t2))-Math.max(0,Math.min(t1,t2))));
+  }
+ }
+ return best;
+}
 function endpoint(tile,port){
  const road=tile.roads && tile.roads[port.road];
  if(!road||road.length<2||road.some(p=>!Array.isArray(p)||p.length!==2))return null;
@@ -38,6 +57,7 @@ function validateSeam(tiles,link,epsilon=EPS){
  if(distanceA>epsilon)errors.push('from_road_ends_inside_tile');
  if(distanceB>epsilon)errors.push('to_road_ends_inside_tile');
  if(gap>epsilon)errors.push('world_seam_gap');
+ if(sharedSideLength(a,b,epsilon)<epsilon*2)errors.push('no_shared_octagon_side');
  if(a.artReviewed!==true||b.artReviewed!==true ||
     link.bothRoadsVisuallyVerified!==true)errors.push('source_art_not_approved');
  // Prevent an invisible/temporary connection being used in the live game.
@@ -92,4 +112,4 @@ function buildNetwork(plan,epsilon=EPS){
  }
  return {tiles,graph,seams,planRoute,key};
 }
-module.exports={octagon,boundaryDistance,endpoint,validateSeam,buildNetwork};
+module.exports={octagon,boundaryDistance,sharedSideLength,endpoint,validateSeam,buildNetwork};

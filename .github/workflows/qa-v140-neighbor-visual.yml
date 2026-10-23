@@ -1,0 +1,35 @@
+name: V141 Alpine Neighbor Parity
+on:
+  push:
+    branches: [terrain-v141-detail-parity-20261023]
+    paths:
+      - 'scripts/qa_v140_neighbor_detail.py'
+      - 'scripts/test_v140_neighbor_detail.py'
+      - 'scripts/qa_v137_coherent.py'
+      - 'v137-coherent-alpine-preview.html'
+      - '.github/workflows/qa-v140-neighbor-visual.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-detail-acceptance:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_v138_matrei_mask.js
+      - run: python -m pip install playwright==1.64.1 Pillow
+      - run: python scripts/test_v140_neighbor_detail.py
+      - run: python scripts/qa_v137_coherent.py
+      # Fail-closed gate: V139 neighbor art is rejected. A red visual QA
+      # job is correct until both neighbor tiles meet the minimum detail bar.
+      - run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v137-clean --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v140-three-tile-visual-audit-and-iphone-screenshots
+          path: qa/v137-clean/

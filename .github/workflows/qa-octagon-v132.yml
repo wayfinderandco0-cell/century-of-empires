@@ -1,0 +1,47 @@
+name: V132 Army Route Integrity And Mobile QA
+on:
+  push:
+    branches: [terrain-v132-army-route-contract-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'scripts/test_v12*.js'
+      - 'scripts/test_v13*.js'
+      - 'scripts/qa_octagon_v123.py'
+      - 'v123-three-octagon-preview.html'
+      - '.github/workflows/qa-octagon-v132.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  route-contract-and-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Regression tests V122-V126 and V130-V132
+        run: |
+          node scripts/test_v122_seams.js
+          node scripts/test_v123_atlas.js
+          node scripts/test_v124_octagon_containment.js
+          node scripts/test_v125_shared_border.js
+          node scripts/test_v126_source_art_identity.js
+          node scripts/test_v130_blocked_road_segments.js
+          node scripts/test_v131_road_hit_test.js
+          node scripts/test_v132_route_contract.js
+      - name: Install browser QA dependencies
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify portrait/landscape marching and closed-road rejection
+        run: python scripts/qa_octagon_v123.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v132-army-route-contract-mobile-evidence
+          path: qa/v123-three-octagons/

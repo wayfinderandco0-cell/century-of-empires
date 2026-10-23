@@ -35,24 +35,34 @@ function insideOctagon(point,polygon,epsilon=1e-7){
  }
  return true;
 }
-function sharedSideLength(a,b,epsilon=EPS){
- const pa=octagon(a.width,a.height,a.corner||256).map(p=>translate(p,a.origin));
- const pb=octagon(b.width,b.height,b.corner||256).map(p=>translate(p,b.origin));
- let best=0;
+// Only opposite-facing, exactly collinear octagon edges form a shared border.
+// Overlapping tiles can share a top/bottom line but must never form a seam.
+function sharedBorderSegments(a,b){
+ const pa=octagon(a.width,a.height,a.corner??256).map(p=>translate(p,a.origin));
+ const pb=octagon(b.width,b.height,b.corner??256).map(p=>translate(p,b.origin));
+ const tolerance=1e-7,segments=[];
  for(let i=0;i<pa.length;i++){
   const u=pa[i],v=pa[(i+1)%pa.length];
   const dx=v[0]-u[0],dy=v[1]-u[1],len=Math.hypot(dx,dy);
   for(let j=0;j<pb.length;j++){
    const p=pb[j],q=pb[(j+1)%pb.length];
-   const lineError=(point)=>Math.abs(dx*(point[1]-u[1])-dy*(point[0]-u[0]))/len;
-   // Collinear border runs only: a corner touch is NOT a road seam.
-   if(lineError(p)>epsilon||lineError(q)>epsilon)continue;
+   const bx=q[0]-p[0],by=q[1]-p[1],blen=Math.hypot(bx,by);
+   // Same-facing edges indicate overlapping interiors, not neighbors.
+   if((dx*bx+dy*by)/(len*blen)>-1+1e-9)continue;
+   const lineError=point=>Math.abs(dx*(point[1]-u[1])-dy*(point[0]-u[0]))/len;
+   if(lineError(p)>tolerance||lineError(q)>tolerance)continue;
    const t1=((p[0]-u[0])*dx+(p[1]-u[1])*dy)/len;
    const t2=((q[0]-u[0])*dx+(q[1]-u[1])*dy)/len;
-   best=Math.max(best,Math.max(0,Math.min(len,Math.max(t1,t2))-Math.max(0,Math.min(t1,t2))));
+   const lo=Math.max(0,Math.min(t1,t2)),hi=Math.min(len,Math.max(t1,t2));
+   if(hi-lo<=tolerance)continue; // corner contact is not a side
+   const at=t=>[u[0]+t*dx/len,u[1]+t*dy/len];
+   segments.push([at(lo),at(hi)]);
   }
  }
- return best;
+ return segments;
+}
+function sharedSideLength(a,b){
+ return sharedBorderSegments(a,b).reduce((best,[u,v])=>Math.max(best,dist(u,v)),0);
 }
 function endpoint(tile,port){
  const road=tile.roads && tile.roads[port.road];
@@ -72,7 +82,11 @@ function validateSeam(tiles,link,epsilon=EPS){
  if(distanceA>epsilon)errors.push('from_road_ends_inside_tile');
  if(distanceB>epsilon)errors.push('to_road_ends_inside_tile');
  if(gap>epsilon)errors.push('world_seam_gap');
- if(sharedSideLength(a,b,epsilon)<epsilon*2)errors.push('no_shared_octagon_side');
+ const shared=sharedBorderSegments(a,b);
+ if(!shared.length)errors.push('no_shared_octagon_side');
+ else if(!shared.some(([u,v])=>segmentDistance(worldA,u,v)<=1e-6 &&
+                                  segmentDistance(worldB,u,v)<=1e-6))
+  errors.push('endpoint_not_on_shared_border');
  if(a.artReviewed!==true||b.artReviewed!==true ||
     link.bothRoadsVisuallyVerified!==true)errors.push('source_art_not_approved');
  // Prevent an invisible/temporary connection being used in the live game.
@@ -134,6 +148,6 @@ function buildNetwork(plan,epsilon=EPS){
  }
  return {tiles,graph,seams,planRoute,key};
 }
-const seamApi={octagon,boundaryDistance,insideOctagon,sharedSideLength,endpoint,validateSeam,buildNetwork};
+const seamApi={octagon,boundaryDistance,insideOctagon,sharedBorderSegments,sharedSideLength,endpoint,validateSeam,buildNetwork};
 if(typeof module!=='undefined'&&module.exports)module.exports=seamApi;
 if(typeof window!=='undefined')window.V122Seam=seamApi;

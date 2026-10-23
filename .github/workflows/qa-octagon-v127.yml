@@ -1,0 +1,33 @@
+name: V127 Independent Road Pixel Evidence
+on:
+  push:
+    branches: [terrain-v127-independent-road-pixel-audit-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'scripts/audit_v127_road_pixels.py'
+      - 'scripts/test_v127_road_pixel_audit.py'
+      - '.github/workflows/qa-octagon-v127.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-road-pixel-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install WebP decoder
+        run: python -m pip install 'Pillow>=11,<13'
+      - name: Validate sampling algorithm with synthetic fixtures
+        run: python -m unittest discover -s scripts -p 'test_v127_road_pixel_audit.py' -v
+      - name: Independently sample actual pinned V121 painting
+        run: python scripts/audit_v127_road_pixels.py --report v127-road-pixel-audit.json
+      - name: Preserve audit measurements for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: v127-road-pixel-audit
+          path: v127-road-pixel-audit.json
+          retention-days: 30

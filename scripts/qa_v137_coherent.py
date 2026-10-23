@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """V137 coherent-terrain preview regression (not production art approval)."""
-import http.server, json, threading, urllib.request
+import http.server, json, os, threading, urllib.request
 from PIL import Image, ImageStat
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
-out=root/"qa"/"v137-clean"
+out=root/os.environ.get("COE_QA_OUTPUT", "qa/v137-clean")
+source_only=os.environ.get("COE_PREVIEW_QUERY", "")=="?geoMaterials=1"
 out.mkdir(parents=True,exist_ok=True)
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(root),**kwargs)
     def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(("127.0.0.1",0),Handler)
 threading.Thread(target=server.serve_forever,daemon=True).start()
-url=f"http://127.0.0.1:{server.server_port}/v137-coherent-alpine-preview.html"
+url=f"http://127.0.0.1:{server.server_port}/v137-coherent-alpine-preview.html"+os.environ.get("COE_PREVIEW_QUERY", "")
 # Fail immediately when QA points at a missing or obsolete preview, instead of
 # spending a minute waiting on an empty 404 document.
 with urllib.request.urlopen(url,timeout=5) as response:
@@ -50,7 +51,14 @@ try:
                     assert page.evaluate("V137.valleyStampCount") >= 20
                     # User's physical iPhone screenshot exposed flat neighbors
                     # although graph and nonblank canvas tests had passed.
-                    assert page.evaluate("V137.detailMarkCount") >= 10000
+                    assert page.evaluate("V137.geoMaterialSourceOnly") == source_only
+                    if source_only:
+                        assert page.evaluate("V137.detailMarkCount") == 0, "Source-only experiment must not add fake tree/rock decals"
+                        crop=page.evaluate("V137.geoCrop")
+                        assert crop and not crop["routeGeoregistered"] and not crop["historicallyCertified"]
+                        assert abs(crop["metresPerWorldX"]/crop["metresPerWorldY"]-1)<1e-8
+                    else:
+                        assert page.evaluate("V137.detailMarkCount") >= 10000
                     for region in ("west", "south"):
                         assert page.evaluate("(region) => V137.focusTile(region)",region)
                         page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
@@ -58,7 +66,7 @@ try:
                         # Minimal photo-detail regression to catch flat west/south
                         # backdrops seen in physical iPhone screenshots of V137/V139.
                         # This is NOT a substitute for manual geographic/art review.
-                        if engine=="webkit" and orient=="portrait":
+                        if not source_only and engine=="webkit" and orient=="portrait":
                             pic=Image.open(out/f"{engine}-{orient}-{region}-terrain.png").convert("L")
                             iw,ih=pic.size
                             y0=.14 if region=="west" else .34
@@ -106,7 +114,8 @@ try:
                     page.close()
             finally:browser.close()
 finally:server.shutdown()
-report={"passed":len(results)==4,"results":results,"humanArtworkApproval":False,"campaignUnchanged":True}
+report={"passed":len(results)==4,"results":results,"sourceOnlyExperiment":source_only,
+        "humanArtworkApproval":False,"routeGeoregistered":False,"campaignUnchanged":True}
 (out/"report.json").write_text(json.dumps(report,indent=2))
 print(json.dumps(report,indent=2))
 assert report["passed"]

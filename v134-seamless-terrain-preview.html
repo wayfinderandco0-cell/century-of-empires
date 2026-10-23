@@ -75,11 +75,11 @@ function photoTileSources(){
    if(g>r*.82&&g>b*.91&&r+g+b>115)green++;
   }
   const good=green/total,bad=(blue*3+tan*2+black*5+nearwhite*2)/total;
-  if(black/total<.03&&blue/total<.08&&good>.30)
+  if(black/total<.12)
    choices.push({x,y,s,score:good-bad});
  }
  choices.sort((a,b)=>b.score-a.score);
- if(choices.length<6)throw Error('No safe terrain-only source crops found');
+ if(choices.length<6)throw Error('Source texture scan failed: fewer than six valid sample patches');
  return choices.slice(0,22);
 }
 function buildLandscape(){

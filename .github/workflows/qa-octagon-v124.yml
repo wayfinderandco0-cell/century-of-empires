@@ -1,0 +1,33 @@
+name: V124 Octagon Road Containment QA
+on:
+  push:
+    branches: [terrain-v124-road-polygon-containment-20261023]
+    paths:
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'terrain-grid/v123-atlas.js'
+      - 'scripts/test_v122_seams.js'
+      - 'scripts/test_v123_atlas.js'
+      - 'scripts/test_v124_octagon_containment.js'
+      - '.github/workflows/qa-octagon-v124.yml'
+  pull_request:
+    paths:
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'scripts/test_v124_octagon_containment.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  polygon-and-route-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing V122 seam safety
+        run: node scripts/test_v122_seams.js
+      - name: Existing V123 three-tile route safety
+        run: node scripts/test_v123_atlas.js
+      - name: New V124 polygon containment safety
+        run: node scripts/test_v124_octagon_containment.js

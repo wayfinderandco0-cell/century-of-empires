@@ -36,7 +36,7 @@ check('Reviewed village mismatch is explicitly closed in the V123 engineering at
    'Raw V121 source coordinates must remain immutable');
  const net=demo.network;
  const lower=net.key('matrei',[1150,568]);
- const upper=net.key('matrei',[1058,220]);
+ const upper=net.key('matrei',[1137,112]);
  const bridge=net.key('matrei',[813,486]);
  assert(net.planRoute(bridge,lower),'Safe bridge-to-village junction must remain accessible');
  assert.equal(net.planRoute(bridge,upper),null,'No army may traverse suspect road from below');

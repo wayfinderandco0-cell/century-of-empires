@@ -107,6 +107,20 @@ function buildNetwork(plan,epsilon=EPS){
    if(!Array.isArray(points))throw Error('Bad road: '+t.id+'/'+road);
    for(const point of points)if(!insideOctagon(point,polygon))throw Error('Road leaves octagon: '+t.id+'/'+road);
   }
+  // Reviewed raw-art hazards may close individual *segments* without
+  // changing source coordinates or drawing an invented replacement road.
+  const blocked=t.blockedRoadSegments??{};
+  if(!blocked||typeof blocked!=='object'||Array.isArray(blocked))throw Error('Bad blocked road segments');
+  for(const [road,indexes] of Object.entries(blocked)){
+   const points=t.roads?.[road];
+   if(!Array.isArray(points)||!Array.isArray(indexes))throw Error('Bad blocked road segments: '+t.id+'/'+road);
+   const seen=new Set();
+   for(const i of indexes){
+    if(!Number.isInteger(i)||i<0||i>=points.length-1||seen.has(i))
+     throw Error('Bad blocked road segment index: '+t.id+'/'+road);
+    seen.add(i);
+   }
+  }
   tiles.set(t.id,t);
  }
  function key(id,p){return id+'@'+p[0].toFixed(3)+','+p[1].toFixed(3);}
@@ -116,6 +130,8 @@ function buildNetwork(plan,epsilon=EPS){
   if(points.length<2)continue;
   for(let i=1;i<points.length;i++){
    if(dist(points[i],points[i-1])<0.0001)throw Error('Duplicate road point: '+t.id+'/'+road);
+   // A raw-art mismatch closes this edge in BOTH directions; never bridge it.
+   if((t.blockedRoadSegments?.[road]??[]).includes(i-1))continue;
    const u=ensure(t.id,points[i-1]),v=ensure(t.id,points[i]);
    edge(u,v,dist(points[i-1],points[i]),'painted-road');
   }

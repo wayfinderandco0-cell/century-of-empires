@@ -138,41 +138,37 @@ async function buildLandscape(){
  g.globalCompositeOperation='source-over';g.globalAlpha=1;
  // Generate solely from original wild mountain/forest/meadow sampling spots.
  // Fixed geometric seed means neighboring territory is distinct yet stable.
- const sites=sourcePatchCandidates(Object.values(originalRoads||{}));
- if(sites.length<8){
-   // Verified safe fallback zones (mountains, woodland and rocky slopes)
-   // used only when the source road-exclusion scan is unusually restrictive.
-   for(const p of [[314,335],[350,220],[460,155],[630,160],[670,355],[910,240],
-                   [1165,155],[1275,205],[1245,730],[1090,825],[910,815],
-                   [520,820],[260,390],[700,265]]){
-     if(signedEdge(p[0],p[1])>68&&!sites.some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<35))
-       sites.push(p);
-   }
-  }
-  if(sites.length<5)throw Error('Photographic texture source insufficient: '+sites.length);
- // Do not choose the first 54 north-facing snow patches: shuffle the
- // available valley, hillside and high-Alpine material across ALL elevations.
- const randomize=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(rng()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;};
- const hi=randomize(sites.filter(q=>q[1]<320)).slice(0,22);
- const mid=randomize(sites.filter(q=>q[1]>=320&&q[1]<610)).slice(0,26);
- const low=randomize(sites.filter(q=>q[1]>=610)).slice(0,26);
- const selected=randomize([...hi,...mid,...low]);
- const patches=selected.map((q,i)=>photoStamp(art,q[0],q[1],i%3===0?116:142));
+ // Explicit natural-only source regions. The previous automated sampler
+ // replicated cottages, side roads and water fragments in surrounding tiles.
+ // These coordinates are isolated cliffs, spruce woods and grassy slopes
+ // from the uninhabited portions of the V121 source painting.
+ const zones={
+  rock:[[264,313],[342,180],[416,114],[570,128],[366,337]],
+  alpine:[[626,320],[657,395],[344,362],[1175,166],[1295,187]],
+  forest:[[1045,856],[1110,843],[1172,827],[1203,790],[980,805],[1117,760]]
+ };
+ const make=(zone)=>zones[zone].filter(q=>signedEdge(q[0],q[1])>65)
+   .map((q,i)=>({kind:zone,at:q,im:photoStamp(art,q[0],q[1],i%2?94:112)}));
+ const rock=make('rock'),alpine=make('alpine'),forest=make('forest');
+ const patches=[...rock,...alpine,...forest];
  photoPatchCount=patches.length;
- const cols=31,rows=23,cellW=lw/(cols-1),cellH=lh/(rows-1);
+ if(rock.length<3||alpine.length<3||forest.length<3)
+    throw Error('A wilderness texture source region is outside the painted Alpine polygon');
+ // More tiles of SMALL source crops rather than greatly enlarged mountains.
+ // Each background cell gets a reproducible but independently chosen image.
+ const cols=43,rows=31,cellW=lw/(cols-1),cellH=lh/(rows-1);
  for(let j=-1;j<=rows;j++)for(let i=-1;i<=cols;i++){
-  const x=i*cellW+(rng()-.5)*cellW*.72,y=j*cellH+(rng()-.5)*cellH*.72;
-  // Terrain gets greener approaching the valley floor rather than repeating
-  // cliffs and snow fields everywhere. Sampling stays within native scale.
-  const from=j<rows*.29?hi:j>rows*.54&&low.length?low:mid.length?mid:hi;
-  const reference=from.length?from:sites;
-  const q=reference[Math.floor(rng()*reference.length)];
-  const idx=selected.findIndex(p=>p===q);
-  const img=patches[Math.max(0,idx)],radius=76+rng()*83;
-  g.save();g.translate(x,y);g.rotate((rng()-.5)*1.65);
+  const x=i*cellW+(rng()-.5)*cellW*.58,y=j*cellH+(rng()-.5)*cellH*.58;
+  const mix=rng(),fy=j/rows;
+  const pool=fy<.27?(mix<.6?rock:alpine):
+    fy<.52?(mix<.2?rock:mix<.74?alpine:forest):
+    (mix<.13?rock:mix<.34?alpine:forest);
+  const patch=pool[Math.floor(rng()*pool.length)];
+  const radius=45+rng()*37;
+  g.save();g.translate(x,y);g.rotate((rng()-.5)*1.25);
   g.scale(rng()<.5?-1:1,1);
-  g.globalAlpha=.84+rng()*.13;
-  g.drawImage(img,-radius,-radius,radius*2,radius*2);
+  g.globalAlpha=.85+rng()*.13;
+  g.drawImage(patch.im,-radius,-radius,radius*2,radius*2);
   g.restore();photoStampCount++;
  }
  // Diffuse relief lighting, strongest on upper western ridges.

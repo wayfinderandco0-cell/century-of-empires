@@ -50,12 +50,13 @@ function paintTrack(pts,thick=19){
 }
 function paintNaturalTrailFinish(pts){
  // Only outer endpoints taper. The same unmodified pts remain the army graph.
- // A trail disappears into forest instead of a hard, full-width road cap.
+ // Taper width into wilderness, but keep the final navigable segment visible.
+ // A nearly transparent tail lets armies march beyond the visibly painted road.
  if(pts.length<5){paintTrack(pts,17);return;}
  paintTrack(pts.slice(0,-2),17);
  cx.save();
- cx.globalAlpha=.51;paintTrack(pts.slice(-3,-1),8);
- cx.globalAlpha=.13;paintTrack(pts.slice(-2),3);
+ cx.globalAlpha=.92;paintTrack(pts.slice(-3,-1),9);
+ cx.globalAlpha=.88;paintTrack(pts.slice(-2),3);
  cx.restore();
 }
 function distanceToRoad(p,roads){

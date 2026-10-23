@@ -1,7 +1,7 @@
 name: V132 Army Route Integrity And Mobile QA
 on:
   push:
-    branches: [terrain-v132-army-route-contract-20261023]
+    branches: [terrain-v132-army-route-contract-20261023, terrain-v133-atomic-halt-mobile-20261023]
     paths:
       - 'terrain-grid/**'
       - 'scripts/test_v12*.js'

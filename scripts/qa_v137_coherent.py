@@ -50,7 +50,7 @@ try:
                     # User's physical iPhone screenshot exposed flat neighbors
                     # although graph and nonblank canvas tests had passed.
                     assert page.evaluate("V137.detailMarkCount") >= 10000
-                    for region in ("west", "south"):
+                    for region in ("west", "matrei", "south"):
                         assert page.evaluate("(region) => V137.focusTile(region)",region)
                         page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
                         page.screenshot(path=str(out/f"{engine}-{orient}-{region}-terrain.png"),animations="disabled")

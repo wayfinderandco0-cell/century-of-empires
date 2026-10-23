@@ -47,6 +47,14 @@ try:
                     assert page.evaluate("V137.photoPatchCount") == 0
                     assert page.evaluate("V137.photoStampCount") == 0
                     assert page.evaluate("V137.valleyStampCount") >= 20
+                    # User's physical iPhone screenshot exposed flat neighbors
+                    # although graph and nonblank canvas tests had passed.
+                    assert page.evaluate("V137.detailMarkCount") >= 10000
+                    for region in ("west", "south"):
+                        assert page.evaluate("(region) => V137.focusTile(region)",region)
+                        page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
+                        page.screenshot(path=str(out/f"{engine}-{orient}-{region}-terrain.png"),animations="disabled")
+                    assert page.evaluate("(region) => V137.focusTile(region)", "matrei")
                     assert all(s["pass"] for s in page.evaluate("V137.seamStatus"))
                     assert not page.evaluate("V137.productionApproved")
                     assert page.evaluate("V137.roadNodeCount")>=90

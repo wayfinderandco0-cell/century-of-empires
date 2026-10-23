@@ -48,6 +48,10 @@ try:
                         assert before["route"], (key,before)
                         assert len(before["exits"])==2 and all(t["pass"] for t in before["exits"])
                         assert not before["production"] and before["experimental"]
+                        closed = page.evaluate("() => V123.testTapWorld([1536+1049,208.5])")
+                        assert not closed["ok"] and not closed["moving"], (key,closed)
+                        assert "Road closed" in closed["status"], (key,closed)
+                        assert math.dist(closed["point"],before["army"])<0.001,(key,closed)
                         page.screenshot(path=str(OUT/(key+"-opening.png")),animations="disabled")
                         assert page.evaluate("V123.orderTo('west')"),key
                         mid = page.evaluate("V123.progress(.38)")
@@ -66,7 +70,7 @@ try:
                         page.screenshot(path=str(OUT/(key+"-road-debug.png")),animations="disabled")
                         page.evaluate("V123.inspect()")
                         assert not errors,(key,errors)
-                        report[key]={"passed":True,"roadNodes":before["graphSize"],"paintedSource":before["dims"],"seams":len(before["exits"]),"midroadHaltPreserved":True}
+                        report[key]={"passed":True,"roadNodes":before["graphSize"],"paintedSource":before["dims"],"seams":len(before["exits"]),"midroadHaltPreserved":True,"closedRoadTapRejected":True}
                     finally:
                         page.close()
             finally:

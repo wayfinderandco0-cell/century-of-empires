@@ -23,7 +23,12 @@
   const engineering=opt.experimentalSeams===true;
   const tiles=[
    {id:'west',name:'Western pass',origin:[0,0],width:SIZE[0],height:SIZE[1],corner:CORNER,roads:{east:copy(westRoad)},artReviewed:engineering},
-   {id:'matrei',name:'Matrei',origin:[1536,0],width:SIZE[0],height:SIZE[1],corner:CORNER,roads:middle,artReviewed:engineering},
+   // V129 raw source crops identify candidate points near [1042,192] and
+   // [1089,138] as off the painted village cartway. Fail closed on the
+   // adjoining four source segments until independently re-authored/reviewed.
+   // These are zero-based START indices into middle.village; no geometry edits.
+   {id:'matrei',name:'Matrei',origin:[1536,0],width:SIZE[0],height:SIZE[1],corner:CORNER,roads:middle,
+    blockedRoadSegments:{village:[12,13,14,15]},artReviewed:engineering},
    {id:'south',name:'Southern valley',origin:[1536,1024],width:SIZE[0],height:SIZE[1],corner:CORNER,roads:{north:copy(southRoad)},artReviewed:engineering}
   ];
   const links=[

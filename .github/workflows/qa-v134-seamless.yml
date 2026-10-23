@@ -1,0 +1,29 @@
+name: V134 Seamless Terrain Mobile QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v134-seamless-terrain-preview.html'
+      - 'scripts/qa_v134_seamless.py'
+      - '.github/workflows/qa-v134-seamless.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seam-and-iphone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v134_seamless.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v134-mobile-terrain-screenshots
+          path: qa/v134-seamless/

@@ -1,0 +1,26 @@
+name: V143 Alpine Touch Gesture QA
+on:
+  push:
+    branches: [terrain-v143-mobile-pinch-pan-qa-20261023]
+    paths:
+      - 'scripts/qa_v143_touch_gestures.py'
+      - 'v137-coherent-alpine-preview.html'
+      - '.github/workflows/qa-v143-touch-gestures.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  camera-gestures:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install playwright==1.64.1
+      - run: python -m py_compile scripts/qa_v143_touch_gestures.py
+      - run: python scripts/qa_v143_touch_gestures.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v143-pan-pinch-iphone-sized-screenshots
+          path: qa/v143-gestures/

@@ -1,0 +1,40 @@
+{
+  "version": 123,
+  "preview": "v123-three-octagon-preview.html",
+  "basePrototype": "v121-octagon-1-painted-road.html",
+  "baseContract": "terrain-grid/v122-seam-engine.js",
+  "testManifest": "scripts/test_v123_atlas.js",
+  "browserQa": "scripts/qa_octagon_v123.py",
+  "visuals": {
+    "matrei": "V121 unchanged source image with only boundary road extension strokes",
+    "west": "distinct deterministic stylized Alpine placeholder",
+    "south": "distinct deterministic stylized Alpine placeholder",
+    "historicalAccuracyVerified": false,
+    "physicalIphoneApproved": false,
+    "roadsAndArtVectorCoLocated": true
+  },
+  "geometry": {
+    "tileDimensions": [
+      1536,
+      1024
+    ],
+    "corner": 256,
+    "connections": [
+      "west-matrei",
+      "matrei-south"
+    ],
+    "routesReference": "terrain-grid/v123-atlas.js",
+    "worldSpace": true,
+    "experimentalEnabledInIsolatedPreview": true,
+    "productionEnabled": false
+  },
+  "nextSteps": [
+    "Physical iPhone road overlay comparison under pan and zoom",
+    "Replace west/south placeholder art with realistic source-coordinated alpine paintings",
+    "Rework landscape seam blends and any river crossings",
+    "Verify Matrei V121 road extension visually fits original road at both endpoints",
+    "Add matching production-approved source-art hashes and move strict validation to campaign only after review"
+  ],
+  "campaignFilesTouched": [],
+  "savesTouched": false
+}

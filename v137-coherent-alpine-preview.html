@@ -27,8 +27,11 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <div class="actions"><button id="halt">Halt unit</button><button id="center">Center army</button><button id="options">Map options</button></div></footer>
 <script src="terrain-grid/v122-seam-engine.js"></script>
 <script src="terrain-grid/v123-atlas.js"></script>
+<script src="terrain-grid/v144-geo-material.js"></script>
 <script>
 'use strict';
+const sourceGeoMaterial=new URLSearchParams(location.search).has('geoMaterials');
+let geoCrop=null;
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});// One photographic terrain underlay, one masked center, no repeated tiles.
 const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
 let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2320,635],ready=false,debug=false;
@@ -221,13 +224,29 @@ async function buildLandscape(){
   // visible 9% multiply. This is modern Copernicus/WorldCover topography,
   // illustrative beneath V123's NOT-yet-geo-registered local routes. Do not
   // present it as a historical map or an orthophoto.
-  if(imgs[1]){
-    g.save();g.globalAlpha=.88;g.globalCompositeOperation='source-over';
-    g.drawImage(imgs[1],0,0,lw,lh);g.restore();
-  }
-  if(imgs[0]){
+  if(sourceGeoMaterial){
+    // V144: V97/V102 modern geographic rasters, not a V123 road survey.
+    const [v97m,v102m]=await Promise.all([
+      fetch('terrain-v97/manifest.json').then(r=>{if(!r.ok)throw Error('V97 manifest unavailable');return r.json();}),
+      fetch('terrain-v102/manifest.json').then(r=>{if(!r.ok)throw Error('V102 manifest unavailable');return r.json();})
+    ]);
+    if(JSON.stringify(v97m.boundsLonLat)!==JSON.stringify(v102m.broadBoundsLonLat))
+      throw Error('V97/V102 geographic extents differ');
+    if(!imgs[0]||!imgs[1])throw Error('V144 requires both original geographic materials');
+    geoCrop=V144GeoMaterial.fit(v102m.broadBoundsLonLat,groundBounds,imgs[1].naturalWidth,imgs[1].naturalHeight);
+    g.drawImage(imgs[1],geoCrop.sx,geoCrop.sy,geoCrop.sw,geoCrop.sh,0,0,lw,lh);
+    const shadeCrop=V144GeoMaterial.fit(v97m.boundsLonLat,groundBounds,imgs[0].naturalWidth,imgs[0].naturalHeight);
     g.save();g.globalAlpha=.30;g.globalCompositeOperation='multiply';
-    g.drawImage(imgs[0],0,0,lw,lh);g.restore();
+    g.drawImage(imgs[0],shadeCrop.sx,shadeCrop.sy,shadeCrop.sw,shadeCrop.sh,0,0,lw,lh);g.restore();
+  }else{
+    if(imgs[1]){
+      g.save();g.globalAlpha=.88;g.globalCompositeOperation='source-over';
+      g.drawImage(imgs[1],0,0,lw,lh);g.restore();
+    }
+    if(imgs[0]){
+      g.save();g.globalAlpha=.30;g.globalCompositeOperation='multiply';
+      g.drawImage(imgs[0],0,0,lw,lh);g.restore();
+    }
   }
   g.globalAlpha=1;g.globalCompositeOperation='source-over';
   photoPatchCount=0;photoStampCount=0;valleyStampCount=0;
@@ -270,7 +289,7 @@ async function buildLandscape(){
   // Rock strata and ridge edges are continuous strokes, not isolated ovals.
   // Contour lines are indexed to the same elevation model as ground albedo.
   const detailCell=11,cols=Math.ceil(dw/detailCell),rows=Math.ceil(dh/detailCell);
-  for(const cutoff of [.41,.53,.65,.76]){
+  if(!sourceGeoMaterial)for(const cutoff of [.41,.53,.65,.76]){
     dg.beginPath();
     for(let iy=0;iy<rows-1;iy++){
       if((iy%60)===0)await new Promise(resolve=>setTimeout(resolve,0));
@@ -297,7 +316,7 @@ async function buildLandscape(){
   // terrain needs naturally irregular, overlapping, directionally lit crowns.
   // The forest belt follows the continuous altitude and woodland habitat map.
   // Shapes are procedural illustrations and are not real tree geolocations.
-  for(let i=0;i<122000;i++){
+  if(!sourceGeoMaterial)for(let i=0;i<122000;i++){
     if((i%4600)===0)await new Promise(resolve=>setTimeout(resolve,0));
     const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
     const worldx=groundBounds[0]+x/dw*groundBounds[2],
@@ -344,7 +363,7 @@ async function buildLandscape(){
   }
   // Weathered scarps get geological striations with site-specific bearings.
   // Cliff bedding is illustration from elevation; it does not define travel.
-  for(let i=0;i<32000;i++){
+  if(!sourceGeoMaterial)for(let i=0;i<32000;i++){
     if((i%8500)===0)await new Promise(resolve=>setTimeout(resolve,0));
     const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
     if(h<.52||rnd()<.2)continue;
@@ -516,7 +535,7 @@ document.querySelector('#whole').onclick=()=>{cam=[1670,925];zoom=1;menu.classLi
 document.querySelector('#options').onclick=()=>menu.classList.toggle('open');
 document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';};
 window.V137=Object.freeze({
- get ready(){return ready},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
+ get ready(){return ready},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
  get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
  get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},
  get connectedRoute(){return atlas?!!graph.planRoute(V123Atlas.endpoints(atlas).west,V123Atlas.endpoints(atlas).south):false},
@@ -534,6 +553,7 @@ window.V137=Object.freeze({
 });
 async function boot(){
  try{
+  if(sourceGeoMaterial)document.querySelector('header small').textContent='V144 source-only geographic crop · no invented trees · routes unverified';
   const html=await(await fetch('v121-octagon-1-painted-road.html')).text();
   const artMatch=html.match(/source\.src='(data:image\/webp;base64,[^']+)'/);
   const roadMatch=html.match(/const ROADS=(\{[^\r\n]+\});/);

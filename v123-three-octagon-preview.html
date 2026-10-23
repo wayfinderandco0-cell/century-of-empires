@@ -28,6 +28,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <script src="terrain-grid/v122-seam-engine.js"></script>
 <script src="terrain-grid/v123-atlas.js"></script>
 <script src="terrain-grid/v131-road-hit-test.js"></script>
+<script src="terrain-grid/v132-route-contract.js"></script>
 <script>
 'use strict';
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});const tileTextures=new Map();
@@ -176,18 +177,19 @@ function issue(to){
  if(!ready)return false;
  const edge=moving?currentEdge():pausedEdge;
  const candidates=edge?[edge.a,edge.b]:[currentKey];
- let chosen=null;
+ let chosen=null,unsafe=false;
  for(const key of candidates){
   if(!key)continue;
   const found=graph.planRoute(key,to);
   if(!found)continue;
+  if(!V132RouteContract.validateRoute(graph,found).pass){unsafe=true;continue;}
   const start=graph.graph.get(key).world;
   const points=hypot(army,start)>1e-5?[army.slice(),...found.positions]:found.positions.slice();
   const keys=points.length===found.positions.length?found.keys.slice():[null,...found.keys];
   const cost=hypot(army,start)+found.distance;
   if(!chosen||cost<chosen.cost)chosen={cost,points,keys,found,entry:edge};
  }
- if(!chosen){statusEl.textContent='No connected road route';return false;}
+ if(!chosen){statusEl.textContent=unsafe?'Movement blocked: route integrity failure':'No connected road route';return false;}
  goal=to;path=chosen.points;pathKeys=chosen.keys;travel=0;distance=chosen.cost;startEdge=chosen.entry;pausedEdge=null;
  moving=distance>.001;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
  return true;

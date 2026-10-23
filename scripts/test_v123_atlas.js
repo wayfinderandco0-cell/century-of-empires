@@ -30,7 +30,7 @@ for(let i=1;i<route.keys.length;i++){
  assert(Math.hypot(a.world[0]-b.world[0],a.world[1]-b.world[1])<200,'Unpainted large jump');
 }
 let bad=api.create(roads,{experimentalSeams:true});
-bad.tiles[1].roads.west[0]=[99,478];
+bad.tiles[1].roads.west.shift();
 assert(buildNetwork(bad).seams.some(s=>s.errors.includes('from_road_ends_inside_tile')),'Off-edge road must be rejected');
 bad=api.create(roads,{experimentalSeams:true});bad.tiles[2].origin[0]+=12;
 assert(buildNetwork(bad).seams.some(s=>s.errors.includes('world_seam_gap')),'Drifted neighbor rejected');

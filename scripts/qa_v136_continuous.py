@@ -33,6 +33,7 @@ try:
                     assert page.evaluate("V136.continuousTerrain")
                     assert page.evaluate("V136.photoPatchCount") >= 5
                     assert page.evaluate("V136.photoStampCount") >= 200
+                    assert page.evaluate("V136.valleyStampCount") >= 20
                     assert all(s["pass"] for s in page.evaluate("V136.seamStatus"))
                     assert not page.evaluate("V136.productionApproved")
                     assert page.evaluate("V136.roadNodeCount")>=90
@@ -50,8 +51,14 @@ try:
                     }""")
                     assert scene_colors>40,(engine,orient,"blank scene",scene_colors)
                     page.screenshot(path=str(out/f"{engine}-{orient}-opening.png"),animations="disabled")
+                    page.locator("#options").click()
+                    page.locator("#whole").click()
+                    page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
+                    page.screenshot(path=str(out/f"{engine}-{orient}-whole-crossing.png"),animations="disabled")
+                    page.locator("#center").click()
                     assert page.evaluate("V136.orderTo('west')")
                     page.evaluate("V136.progress(.46)")
+                    page.screenshot(path=str(out/f"{engine}-{orient}-marching-west.png"),animations="disabled")
                     page.evaluate("V136.halt()")
                     assert not page.evaluate("V136.moving")
                     assert page.evaluate("V136.orderTo('west')")

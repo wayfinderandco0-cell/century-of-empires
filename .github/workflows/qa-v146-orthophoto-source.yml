@@ -1,0 +1,33 @@
+name: V146 official orthophoto geographic source sampling
+on:
+  push:
+    branches: [terrain-v146-official-orthophoto-sample-20261023]
+    paths:
+      - 'scripts/v146_orthophoto_sample.py'
+      - 'scripts/test_v146_orthophoto_sample.py'
+      - 'terrain-v102/manifest.json'
+      - '.github/workflows/qa-v146-orthophoto-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  orthophoto-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install Pillow==12.0.0
+      - name: Offline tile projection and provenance regression
+        run: python scripts/test_v146_orthophoto_sample.py -v
+      - name: Download three tiny source tiles (modern orthophotos only)
+        run: python scripts/v146_orthophoto_sample.py --download --output qa/v146-orthophoto-source
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v146-modern-orthophoto-source-and-geographic-bounds
+          path: qa/v146-orthophoto-source/
+          if-no-files-found: warn
+          retention-days: 14

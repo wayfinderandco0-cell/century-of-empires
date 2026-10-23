@@ -31,7 +31,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 'use strict';
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});// One photographic terrain underlay, one masked center, no repeated tiles.
 const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
-let width=0,height=0,dpr=1,scale=1,base=.12,zoom=1,cam=[1625,955],ready=false,debug=false;
+let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2320,635],ready=false,debug=false;
 let art=null,originalRoads=null,atlas=null,graph=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0;
 const pointers=new Map();let gesture=null,down=null;
 const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
@@ -70,8 +70,8 @@ function distanceToRoad(p,roads){
 
 // V137: a continuous, photo-textured Alpine surface. No repetition of villages,
 // buildings, existing cartways or bridges; V123 route geometry remains immutable.
-let sharedGround=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,valleyStampCount=0,continuousTerrain=false;
-const groundBounds=[-2600,-2500,9200,7500];
+let sharedGround=null,groundDetails=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,valleyStampCount=0,detailMarkCount=0,continuousTerrain=false;
+const groundBounds=[-1500,-1800,6200,5800];
 const clip01=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clip01(x);return x*x*(3-2*x);};
 const poly=[[386,6],[1150,6],[1444,283],[1444,675],[1150,968],[386,968],[91,675],[91,283]];
@@ -241,6 +241,79 @@ async function buildLandscape(){
       g.restore();valleyStampCount+=pts.length;
     }
   }
+  // V139 high-frequency, never-reused terrain detail on the two neighboring
+  // octagons. A single geological noise field alone looks like a flat carpet
+  // when enlarged from 1120px over several world kilometres. Make the
+  // photographic center a reference, not the only patch with visible detail.
+  // Draw *individual* terrain features at world-locked positions on a separate
+  // layer, never tiled or repeated photo cutouts and never game structures.
+  statusEl.textContent='Drawing continuous ridges and forest texture…';
+  const dw=2560,dh=2300;
+  const details=document.createElement('canvas');details.width=dw;details.height=dh;
+  const dg=details.getContext('2d');
+  const rnd=lcg(1372639);
+  const heightAt=(px,py)=>{
+    const tx=clip01(px/dw)*(nx-1),ty=clip01(py/dh)*(ny-1),
+      xi=Math.min(nx-2,Math.floor(tx)),yi=Math.min(ny-2,Math.floor(ty)),
+      xx=tx-xi,yy=ty-yi,j=yi*nx+xi,k=j+nx;
+    return altitude[j]*(1-xx)*(1-yy)+altitude[j+1]*xx*(1-yy)
+       +altitude[k]*(1-xx)*yy+altitude[k+1]*xx*yy;
+  };
+  // Rock strata and ridge edges are continuous strokes, not isolated ovals.
+  // Contour lines are indexed to the same elevation model as ground albedo.
+  const detailCell=11,cols=Math.ceil(dw/detailCell),rows=Math.ceil(dh/detailCell);
+  for(const cutoff of [.41,.53,.65,.76]){
+    dg.beginPath();
+    for(let iy=0;iy<rows-1;iy++){
+      if((iy%60)===0)await new Promise(resolve=>setTimeout(resolve,0));
+      for(let ix=0;ix<cols-1;ix++){
+        const x=ix*detailCell,y=iy*detailCell,s=detailCell;
+        const v0=heightAt(x,y)-cutoff,v1=heightAt(x+s,y)-cutoff,
+          v2=heightAt(x+s,y+s)-cutoff,v3=heightAt(x,y+s)-cutoff;
+        const cross=[];
+        const edge=(a,b,ax,ay,bx,by)=>{
+          if((a<0)===(b<0))return;
+          const t=a/(a-b);cross.push([ax+(bx-ax)*t,ay+(by-ay)*t]);
+        };
+        edge(v0,v1,x,y,x+s,y);edge(v1,v2,x+s,y,x+s,y+s);
+        edge(v2,v3,x+s,y+s,x,y+s);edge(v3,v0,x,y+s,x,y);
+        if(cross.length>=2){dg.moveTo(cross[0][0],cross[0][1]);dg.lineTo(cross[1][0],cross[1][1]);}
+        if(cross.length===4){dg.moveTo(cross[2][0],cross[2][1]);dg.lineTo(cross[3][0],cross[3][1]);}
+      }
+    }
+    dg.lineWidth=cutoff>=.65?2.0:1.35;
+    dg.strokeStyle=cutoff>=.65?'rgba(201,188,157,.17)':'rgba(20,32,26,.22)';
+    dg.stroke();
+  }
+  // Distinct canopy clumps: varied position, size, species and orientation,
+  // distributed according to moisture/elevation; no cloned houses/rivers.
+  for(let i=0;i<58000;i++){
+    if((i%6000)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
+    const wy=groundBounds[1]+y/dh*groundBounds[3];
+    if(h>.72||h<.15||rnd()>(.96-.62*Math.max(0,h-.34)))continue;
+    // Cut the number of forest clumps in the main crossing valley.
+    const worldx=groundBounds[0]+x/dw*groundBounds[2];
+    if(worldx>1510&&worldx<3110&&wy>0&&wy<1050)continue;
+    const z=.8+2.5*rnd(),w=z*(.65+.9*rnd());
+    dg.save();dg.translate(x,y);dg.rotate((rnd()-.5)*1.7);
+    const hue=rnd(),shade=.09+.28*rnd();
+    dg.fillStyle=hue>.5?'rgba(15,43,29,'+shade+')':'rgba(31,53,32,'+shade+')';
+    dg.beginPath();dg.ellipse(0,0,w,z,0,0,Math.PI*2);dg.fill();
+    if(rnd()>.5){dg.fillStyle='rgba(153,164,107,.08)';dg.beginPath();dg.ellipse(-w*.23,-z*.26,w*.45,z*.37,0,0,Math.PI*2);dg.fill();}
+    dg.restore();detailMarkCount++;
+  }
+  // Exposed ledges and rubble above the tree line emphasize relief in the
+  // western/southern tiles, without drawing roads or fake conquerable towns.
+  for(let i=0;i<20000;i++){
+    const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
+    if(h<.53||rnd()<.28)continue;
+    const z=.55+2.8*rnd();
+    dg.strokeStyle=rnd()>.4?'rgba(218,216,191,.24)':'rgba(24,28,28,.26)';
+    dg.lineWidth=.7+1.2*rnd();dg.beginPath();
+    dg.moveTo(x,y);dg.lineTo(x+z*3,y-z*(.3+rnd()));dg.stroke();detailMarkCount++;
+  }
+  groundDetails=details;
   statusEl.textContent='Fitting the Matrei road painting…';
   sharedGround=land;
   centerPhoto=document.createElement('canvas');centerPhoto.width=W;centerPhoto.height=H;
@@ -266,6 +339,7 @@ function render(){
  cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);
  cx.scale(scale,scale);
  if(sharedGround)cx.drawImage(sharedGround,...groundBounds);
+ if(groundDetails)cx.drawImage(groundDetails,...groundBounds);
  if(atlas){
   // The central painted Alpine artwork is unique; no village, bridge or river
   // photo is copied into western/southern tiles.
@@ -411,7 +485,7 @@ window.V137=Object.freeze({
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
- get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get valleyStampCount(){return valleyStampCount},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams}
+ get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get valleyStampCount(){return valleyStampCount},get detailMarkCount(){return detailMarkCount},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams}
 });
 async function boot(){
  try{

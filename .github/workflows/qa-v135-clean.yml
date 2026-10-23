@@ -1,0 +1,29 @@
+name: V135 Clean Terrain iPhone QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v135-clean-terrain-preview.html'
+      - 'scripts/qa_v135_clean.py'
+      - '.github/workflows/qa-v135-clean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  graphics-and-iphone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v135_clean.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v135-mobile-art-review
+          path: qa/v135-clean/

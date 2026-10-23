@@ -2,7 +2,7 @@
 /* No external dependencies. Guarantees off-road shortcuts are never auto-stitched. */
 'use strict';
 const assert=require('node:assert/strict');
-const {buildNetwork,validateSeam,octagon,boundaryDistance}=require('../terrain-grid/v122-seam-engine.js');
+const {buildNetwork,validateSeam,octagon,boundaryDistance,sharedSideLength}=require('../terrain-grid/v122-seam-engine.js');
 const existing=require('../terrain-grid/octagon-1-v121.manifest.json');
 const planned=require('../terrain-grid/octagon-network-v122.json');
 const W=1536,H=1024;
@@ -31,6 +31,12 @@ function fixture(){
   ]
  };
 }
+const geometry=fixture();
+assert(sharedSideLength(geometry.tiles[0],geometry.tiles[1])>400,'West cells share a real side');
+assert(sharedSideLength(geometry.tiles[0],geometry.tiles[2])>500,'South cells share a real side');
+const corner=fixture();
+corner.tiles[1].origin=[0,1024];
+assert.equal(sharedSideLength(corner.tiles[0],corner.tiles[1]),0,'Diagonal cells may not connect by a corner');
 const ok=fixture(),network=buildNetwork(ok);
 assert(network.seams.every(s=>s.pass),JSON.stringify(network.seams));
 const route=network.planRoute(network.key('western_neighbor',[1400,450]),network.key('southern_neighbor',[500,220]));

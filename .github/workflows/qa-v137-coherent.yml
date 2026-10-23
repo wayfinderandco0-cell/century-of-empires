@@ -5,6 +5,7 @@ on:
     paths:
       - 'v137-coherent-alpine-preview.html'
       - 'scripts/qa_v137_coherent.py'
+      - 'scripts/test_v138_matrei_mask.js'
       - '.github/workflows/qa-v137-coherent.yml'
   workflow_dispatch:
 permissions:
@@ -20,6 +21,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - run: node scripts/test_v138_matrei_mask.js
       - run: python -m pip install playwright==1.64.1
       - run: python scripts/qa_v137_coherent.py
       - uses: actions/upload-artifact@v4

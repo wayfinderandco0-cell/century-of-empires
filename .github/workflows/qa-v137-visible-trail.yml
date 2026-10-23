@@ -1,0 +1,30 @@
+name: V137 three-octagon visible-road QA
+on:
+  push:
+    branches:
+      - terrain-v137-visible-trail-endpoints-20261023
+  workflow_dispatch:
+jobs:
+  trail-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify route endpoints remain painted and geometry is immutable
+        run: node scripts/test_v137_trail_visibility.js
+  mobile-scene:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Playwright Python API
+        run: python -m pip install --disable-pip-version-check playwright==1.64.1
+      - name: Run V136 Chromium and WebKit mobile scene QA
+        run: python scripts/qa_v136_continuous.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v137-three-octagon-browser-evidence
+          path: qa/v136-clean/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -15,6 +15,10 @@ permissions:
 jobs:
   route-contract-and-mobile:
     runs-on: ubuntu-latest
+    # Official Playwright image includes Chromium, WebKit and shared libraries.
+    # The prior hosted-runner apt install exceeded 22 minutes; installing only
+    # browser binaries then failed because the runner lacked 30+ libraries.
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
     timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
@@ -34,15 +38,8 @@ jobs:
           node scripts/test_v130_blocked_road_segments.js
           node scripts/test_v131_road_hit_test.js
           node scripts/test_v132_route_contract.js
-      # V133 timed out while apt fetched ~85 OS packages via --with-deps;
-      # do not repeat that slow and uncontrolled system-wide install here.
-      # GitHub's hosted Ubuntu runner supplies common browser libraries.
-      # If a browser reports a missing shared library, fix that exact dependency
-      # rather than pulling the entire recommended apt package set.
-      - name: Install browser QA binaries (no apt upgrade)
-        run: |
-          python -m pip install playwright
-          python -m playwright install chromium webkit
+      - name: Install Python Playwright API matching preinstalled browsers
+        run: python -m pip install playwright==1.64.1
       - name: Verify portrait/landscape marching and closed-road rejection
         run: python scripts/qa_octagon_v123.py
       - uses: actions/upload-artifact@v4

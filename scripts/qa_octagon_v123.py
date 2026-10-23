@@ -54,11 +54,18 @@ try:
                         assert math.dist(closed["point"],before["army"])<0.001,(key,closed)
                         page.screenshot(path=str(OUT/(key+"-opening.png")),animations="disabled")
                         assert page.evaluate("V123.orderTo('west')"),key
-                        mid = page.evaluate("V123.progress(.38)")
-                        assert page.evaluate("V123.moving"),key
-                        page.evaluate("V123.halt()")
-                        halted = page.evaluate("V123.point")
-                        assert math.dist(mid,halted)<0.0001, (key,mid,halted)
+                        # The requestAnimationFrame loop may advance between separate
+                        # Playwright evaluate calls. Advance and halt atomically in one
+                        # browser task to assert halt preserves the *actual* stop point.
+                        stop = page.evaluate("""() => {
+                          const mid = V123.progress(.38);
+                          const movingBefore = V123.moving;
+                          V123.halt();
+                          return {mid, halted: V123.point, movingBefore, movingAfter: V123.moving};
+                        }""")
+                        assert stop["movingBefore"] and not stop["movingAfter"], (key,stop)
+                        halted = stop["halted"]
+                        assert math.dist(stop["mid"],halted)<0.0001, (key,stop)
                         assert page.evaluate("V123.orderTo('south')"),key
                         changed = page.evaluate("V123.route")
                         assert len(changed)>=4 and math.dist(changed[0],halted)<0.001,(key,changed[:2],halted)

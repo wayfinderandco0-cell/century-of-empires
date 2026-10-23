@@ -44,9 +44,19 @@ function polygon(ctx){ctx.beginPath();ctx.moveTo(256,0);ctx.lineTo(W-256,0);ctx.
 function paintTrack(pts,thick=19){
  cx.lineCap='round';cx.lineJoin='round';
  for(const [color,size] of [['#38372b',thick+10],['#655a41',thick+5],['#a28b63',thick],['#bca581',thick-10]]){
-  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.strokeStyle=color;cx.lineWidth=size;cx.stroke();
+  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.strokeStyle=color;cx.lineWidth=Math.max(.8,size);cx.stroke();
  }
  cx.strokeStyle='#61513b';cx.lineWidth=1.3;cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
+}
+function paintNaturalTrailFinish(pts){
+ // Only outer endpoints taper. The same unmodified pts remain the army graph.
+ // A trail disappears into forest instead of a hard, full-width road cap.
+ if(pts.length<5){paintTrack(pts,17);return;}
+ paintTrack(pts.slice(0,-2),17);
+ cx.save();
+ cx.globalAlpha=.51;paintTrack(pts.slice(-3,-1),8);
+ cx.globalAlpha=.13;paintTrack(pts.slice(-2),3);
+ cx.restore();
 }
 function distanceToRoad(p,roads){
  let best=Infinity;
@@ -243,7 +253,7 @@ function render(){
     // source-traced exit corridors so fading scenery never erases the roads.
     paintTrack([[0,478],...originalRoads.west.slice(0,6)],15);
     paintTrack([...originalRoads.south.slice(-8),[466,1024]],15);
-   }else for(const pts of Object.values(t.roads))paintTrack(pts,17);
+   }else for(const pts of Object.values(t.roads))paintNaturalTrailFinish(pts);
    if(debug){polygon(cx);cx.strokeStyle='#f4da92';cx.lineWidth=2;cx.stroke();}
    cx.restore();
   }

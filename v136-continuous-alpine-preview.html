@@ -60,7 +60,7 @@ function distanceToRoad(p,roads){
 
 // V136: a continuous, photo-textured Alpine surface. No repetition of villages,
 // buildings, existing cartways or bridges; V123 route geometry remains immutable.
-let sharedGround=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,continuousTerrain=false;
+let sharedGround=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,valleyStampCount=0,continuousTerrain=false;
 const groundBounds=[-1900,-1500,7600,5200];
 const clip01=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clip01(x);return x*x*(3-2*x);};
@@ -160,9 +160,9 @@ async function buildLandscape(){
  for(let j=-1;j<=rows;j++)for(let i=-1;i<=cols;i++){
   const x=i*cellW+(rng()-.5)*cellW*.58,y=j*cellH+(rng()-.5)*cellH*.58;
   const mix=rng(),fy=j/rows;
-  const pool=fy<.27?(mix<.6?rock:alpine):
-    fy<.52?(mix<.2?rock:mix<.74?alpine:forest):
-    (mix<.13?rock:mix<.34?alpine:forest);
+  const pool=fy<.27?(mix<.44?rock:alpine):
+    fy<.52?(mix<.06?rock:mix<.44?alpine:forest):
+    (mix<.04?alpine:forest);
   const patch=pool[Math.floor(rng()*pool.length)];
   const radius=45+rng()*37;
   g.save();g.translate(x,y);g.rotate((rng()-.5)*1.25);
@@ -170,6 +170,36 @@ async function buildLandscape(){
   g.globalAlpha=.85+rng()*.13;
   g.drawImage(patch.im,-radius,-radius,radius*2,radius*2);
   g.restore();photoStampCount++;
+ }
+ // The two traversable passes need valley floors physically supporting
+ // their cartways. Use natural grassy source material WITHOUT source roads,
+ // buildings or stream channels, in continuous, softly feathered strips.
+ // These stamps never change V123 navigation coordinates.
+ const meadow=[
+  photoStamp(art,1244,198,86),
+  photoStamp(art,1221,215,100),
+  photoStamp(art,1276,232,94)
+ ];
+ const groundAt=p=>[(p[0]-groundBounds[0])/groundBounds[2]*lw,
+                     (p[1]-groundBounds[1])/groundBounds[3]*lh];
+ for(const tile of atlas.tiles.filter(t=>t.id!=='matrei')){
+  for(const points of Object.values(tile.roads)){
+   for(let k=1;k<points.length;k++){
+    const a=points[k-1],b=points[k];
+    const dd=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    const steps=Math.max(1,Math.ceil(dd/77));
+    for(let n=0;n<steps;n++){
+     const t=n/steps;
+     const local=[a[0]*(1-t)+b[0]*t+tile.origin[0],a[1]*(1-t)+b[1]*t+tile.origin[1]];
+     const at=groundAt(local),patch=meadow[Math.floor(rng()*meadow.length)];
+     const radius=53+rng()*33;
+     g.save();g.translate(...at);g.rotate((rng()-.5)*.9);
+     g.globalAlpha=.56+rng()*.20;
+     g.drawImage(patch,-radius,-radius,radius*2,radius*2);
+     g.restore();valleyStampCount++;
+    }
+   }
+  }
  }
  // Diffuse relief lighting, strongest on upper western ridges.
  g.globalCompositeOperation='multiply';
@@ -346,7 +376,7 @@ window.V136=Object.freeze({
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
  get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
- get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams}
+ get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get valleyStampCount(){return valleyStampCount},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams}
 });
 async function boot(){
  try{

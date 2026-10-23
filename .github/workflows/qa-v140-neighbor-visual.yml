@@ -1,7 +1,7 @@
-name: V141 Alpine Neighbor Parity
+name: V141/V142 Alpine Neighbor Parity
 on:
   push:
-    branches: [terrain-v141-detail-parity-20261023]
+    branches: [terrain-v141-detail-parity-20261023, terrain-v142-conifer-forms-20261023]
     paths:
       - 'scripts/qa_v140_neighbor_detail.py'
       - 'scripts/test_v140_neighbor_detail.py'

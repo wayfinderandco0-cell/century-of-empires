@@ -1,0 +1,36 @@
+name: V126 Source Art Identity and Road QA
+on:
+  push:
+    branches: [terrain-v126-source-art-identity-gate-20261023]
+    paths:
+      - 'terrain-grid/**'
+      - 'v121-octagon-1-painted-road.html'
+      - 'scripts/test_v12*.js'
+      - '.github/workflows/qa-octagon-v126.yml'
+  pull_request:
+    paths:
+      - 'terrain-grid/**'
+      - 'v121-octagon-1-painted-road.html'
+      - 'scripts/test_v126_source_art_identity.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-asset-and-route-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: V122 existing seam contract
+        run: node scripts/test_v122_seams.js
+      - name: V123 engineering preview
+        run: node scripts/test_v123_atlas.js
+      - name: V124 polygon containment
+        run: node scripts/test_v124_octagon_containment.js
+      - name: V125 shared-border integrity
+        run: node scripts/test_v125_shared_border.js
+      - name: V126 source painting and bridge coordinate identity
+        run: node scripts/test_v126_source_art_identity.js

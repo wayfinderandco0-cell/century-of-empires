@@ -15,13 +15,27 @@ WIDTH, HEIGHT = 1100, 842
 FRACTIONS = (0.15, 0.50, 0.85)
 
 
+def source_coverage(box, width=WIDTH, height=HEIGHT):
+    """Fraction of crop pixels sourced from real art; padding is not evidence."""
+    left, top, right, bottom = box
+    if (any(type(v) not in (int, float) for v in box)
+            or not (right > left and bottom > top)
+            or width <= 0 or height <= 0):
+        raise ValueError("Invalid crop or source dimensions")
+    ix0, iy0 = max(0, left), max(0, top)
+    ix1, iy1 = min(width, right), min(height, bottom)
+    visible = max(0, ix1 - ix0) * max(0, iy1 - iy0)
+    return visible / ((right - left) * (bottom - top))
+
+
+
 def render_contact_sheet(source, routes, sampler, fractions=FRACTIONS, radius=92):
     """Render one unaltered-art crop per candidate route/sample position.
 
     `sampler` is injected so production can use the established raw-road
     arc-length sampler, while synthetic tests need no repository image.
     """
-    if source.size != (WIDTH, HEIGHT) or radius < 16 or not routes:
+    if source.size != (WIDTH, HEIGHT) or type(radius) is not int or radius < 16 or not routes:
         raise ValueError("Invalid source dimensions, crop radius, or routes")
     if not fractions or any(type(f) not in (int, float) or not 0 <= f <= 1
                             for f in fractions):
@@ -39,26 +53,35 @@ def render_contact_sheet(source, routes, sampler, fractions=FRACTIONS, radius=92
         for col, fraction in enumerate(fractions):
             sample = positions[round(fraction * (len(positions) - 1))]
             _, x, y, *_ = sample
-            if not all(isinstance(v, (int, float)) and -1e6 < v < 1e6
+            if not all(type(v) in (int, float) and -1e6 < v < 1e6
                        for v in (x, y)):
                 raise ValueError("Invalid sample coordinate")
             left, top = round(x) - radius, round(y) - radius
             box = (left, top, left + tile, top + tile)
+            coverage = source_coverage(box)
             crop = source.crop(box).convert("RGB")
             ox, oy = col * tile, row * (tile + footer)
             sheet.paste(crop, (ox, oy))
-            # A dot is the ONLY overlay: it represents a candidate army, not road paint.
+            if coverage < 1:
+                # Pillow pads out-of-image crops; do not confuse padding with terrain.
+                draw.rectangle((ox, oy, ox + tile - 1, oy + tile - 1),
+                               outline=(255, 85, 85), width=3)
+            # A dot is the ONLY in-art marker: it represents a candidate army, not road paint.
             cx, cy = ox + radius, oy + radius
             draw.ellipse((cx - 6, cy - 6, cx + 6, cy + 6),
                          fill=(252, 220, 125), outline=(25, 30, 26), width=2)
-            draw.text((ox + 5, oy + tile + 6),
-                      f"{name[:18]} {fraction:.0%} ({x:.0f},{y:.0f})",
-                      fill=(240, 230, 205))
+            label = f"{name[:18]} {fraction:.0%} ({x:.0f},{y:.0f})"
+            if coverage < 1:
+                label = f"PARTIAL {coverage:.0%} " + label
+            draw.text((ox + 5, oy + tile + 6), label,
+                      fill=(255, 120, 120) if coverage < 1 else (240, 230, 205))
             report.append({"segment": name, "fraction": fraction,
                            "source_xy": [round(x, 2), round(y, 2)],
                            "crop_xyxy": list(box),
-                           "crop_fully_in_source": (left >= 0 and top >= 0
-                               and box[2] <= WIDTH and box[3] <= HEIGHT)})
+                           "crop_fully_in_source": coverage == 1,
+                           "source_pixel_coverage_fraction": round(coverage, 6),
+                           "source_padding_present": coverage < 1,
+                           "candidate_center_in_source": 0 <= x < WIDTH and 0 <= y < HEIGHT)
     return sheet, report
 
 
@@ -89,9 +112,12 @@ def main():
               "historical_road_verified": False, "bridge_far_bank_verified": False,
               "neighbor_connection_verified": False, "production_ready": False,
               "sampling": "nearest established 16px arc-length sample",
+              "partial_source_frame_count": sum(f["source_padding_present"] for f in frames),
+              "unobservable_candidate_center_count": sum(not f["candidate_center_in_source"] for f in frames),
               "frames": frames}
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"frames": len(frames), "source_git_blob_sha": sha,
+                      "partial_source_frame_count": report["partial_source_frame_count"],
                       "production_ready": False}, indent=2))
 
 

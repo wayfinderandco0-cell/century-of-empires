@@ -20,6 +20,21 @@ function segmentDistance(p,a,b){
 function boundaryDistance(p,polygon){
  return Math.min(...polygon.map((a,i)=>segmentDistance(p,a,polygon[(i+1)%polygon.length])));
 }
+// A road is navigable only inside its actual convex octagon footprint.
+// A tile's rectangular image bounds are NOT sufficient near cut corners.
+function insideOctagon(point,polygon,epsilon=1e-7){
+ if(!Array.isArray(point)||point.length!==2||!point.every(Number.isFinite))return false;
+ let direction=0;
+ for(let i=0;i<polygon.length;i++){
+  const a=polygon[i],b=polygon[(i+1)%polygon.length];
+  const cross=(b[0]-a[0])*(point[1]-a[1])-(b[1]-a[1])*(point[0]-a[0]);
+  if(Math.abs(cross)<=epsilon)continue;
+  const sign=Math.sign(cross);
+  if(direction&&sign!==direction)return false;
+  direction=sign;
+ }
+ return true;
+}
 function sharedSideLength(a,b,epsilon=EPS){
  const pa=octagon(a.width,a.height,a.corner||256).map(p=>translate(p,a.origin));
  const pb=octagon(b.width,b.height,b.corner||256).map(p=>translate(p,b.origin));
@@ -70,7 +85,14 @@ function buildNetwork(plan,epsilon=EPS){
  if(!Array.isArray(plan.tiles)||!Array.isArray(plan.links))throw Error('Bad network plan');
  const tiles=new Map(),graph=new Map(),seams=[];
  for(const t of plan.tiles){
-  if(tiles.has(t.id)||!Array.isArray(t.origin)||!Number.isFinite(t.width)||!Number.isFinite(t.height))throw Error('Bad tile');
+  if(tiles.has(t.id)||!Array.isArray(t.origin)||t.origin.length!==2||!t.origin.every(Number.isFinite)||
+     !Number.isFinite(t.width)||!Number.isFinite(t.height)||
+     !Number.isFinite(t.corner??256)||(t.corner??256)<=0)throw Error('Bad tile');
+  const polygon=octagon(t.width,t.height,t.corner??256);
+  for(const [road,points] of Object.entries(t.roads||{})){
+   if(!Array.isArray(points))throw Error('Bad road: '+t.id+'/'+road);
+   for(const point of points)if(!insideOctagon(point,polygon))throw Error('Road leaves octagon: '+t.id+'/'+road);
+  }
   tiles.set(t.id,t);
  }
  function key(id,p){return id+'@'+p[0].toFixed(3)+','+p[1].toFixed(3);}
@@ -112,6 +134,6 @@ function buildNetwork(plan,epsilon=EPS){
  }
  return {tiles,graph,seams,planRoute,key};
 }
-const seamApi={octagon,boundaryDistance,sharedSideLength,endpoint,validateSeam,buildNetwork};
+const seamApi={octagon,boundaryDistance,insideOctagon,sharedSideLength,endpoint,validateSeam,buildNetwork};
 if(typeof module!=='undefined'&&module.exports)module.exports=seamApi;
 if(typeof window!=='undefined')window.V122Seam=seamApi;

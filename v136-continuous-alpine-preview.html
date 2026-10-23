@@ -64,7 +64,7 @@ let sharedGround=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,conti
 const groundBounds=[-1900,-1500,7600,5200];
 const clip01=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clip01(x);return x*x*(3-2*x);};
-const poly=[[256,0],[W-256,0],[W,256],[W,H-256],[W-256,H],[256,H],[0,H-256],[0,256]];
+const poly=[[386,6],[1150,6],[1444,283],[1444,675],[1150,968],[386,968],[91,675],[91,283]];
 function distanceSegment(p,a,b){
  const dx=b[0]-a[0],dy=b[1]-a[1],dd=dx*dx+dy*dy;
  const u=clip01(((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dd||1));
@@ -189,8 +189,10 @@ function render(){
   for(const t of atlas.tiles){
    cx.save();cx.translate(...t.origin);
    if(t.id==='matrei'){
-    paintTrack([[0,478],[99,478]],17);
-    paintTrack([[466,958],[466,1024]],17);
+    // The photograph is feathered at both shared exits. Overdraw only the
+    // source-traced exit corridors so fading scenery never erases the roads.
+    paintTrack([[0,478],...originalRoads.west.slice(0,6)],15);
+    paintTrack([...originalRoads.south.slice(-8),[466,1024]],15);
    }else for(const pts of Object.values(t.roads))paintTrack(pts,17);
    if(debug){polygon(cx);cx.strokeStyle='#f4da92';cx.lineWidth=2;cx.stroke();}
    cx.restore();

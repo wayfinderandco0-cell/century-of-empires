@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """V137 coherent-terrain preview regression (not production art approval)."""
 import http.server, json, threading, urllib.request
+from PIL import Image, ImageStat
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
@@ -54,6 +55,20 @@ try:
                         assert page.evaluate("(region) => V137.focusTile(region)",region)
                         page.evaluate("() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))")
                         page.screenshot(path=str(out/f"{engine}-{orient}-{region}-terrain.png"),animations="disabled")
+                        # Minimal photo-detail regression to catch flat west/south
+                        # backdrops seen in physical iPhone screenshots of V137/V139.
+                        # This is NOT a substitute for manual geographic/art review.
+                        if engine=="webkit" and orient=="portrait":
+                            pic=Image.open(out/f"{engine}-{orient}-{region}-terrain.png").convert("L")
+                            iw,ih=pic.size
+                            y0=.14 if region=="west" else .34
+                            patch=pic.crop((int(iw*.12),int(ih*y0),int(iw*.88),int(ih*.83)))
+                            contrast=ImageStat.Stat(patch).stddev[0]
+                            min_contrast=13.5 if region=="west" else 19.0
+                            print("V140 photograph-derived relief evidence",region,
+                                  round(contrast,2),">=",min_contrast,flush=True)
+                            assert contrast>=min_contrast,(
+                                "Neighbor terrain too flat",region,contrast,min_contrast)
                     assert page.evaluate("(region) => V137.focusTile(region)", "matrei")
                     assert all(s["pass"] for s in page.evaluate("V137.seamStatus"))
                     assert not page.evaluate("V137.productionApproved")

@@ -1,0 +1,45 @@
+name: V123 Three-Octagon Road And Mobile QA
+on:
+  push:
+    branches: [terrain-v123-three-octagon-engineering-preview]
+    paths:
+      - 'v123-three-octagon-preview.html'
+      - 'terrain-grid/v123-atlas.js'
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'scripts/test_v123_atlas.js'
+      - 'scripts/qa_octagon_v123.py'
+      - '.github/workflows/qa-octagon-v123.yml'
+  pull_request:
+    paths:
+      - 'v123-three-octagon-preview.html'
+      - 'terrain-grid/v123-atlas.js'
+      - 'terrain-grid/v122-seam-engine.js'
+      - 'scripts/test_v123_atlas.js'
+      - 'scripts/qa_octagon_v123.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  routes-and-iphone-browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          node scripts/test_v122_seams.js
+          node scripts/test_v123_atlas.js
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_octagon_v123.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v123-three-octagon-mobile-evidence
+          path: qa/v123-three-octagons/

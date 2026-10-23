@@ -80,14 +80,22 @@ function distanceSegment(p,a,b){
  const u=clip01(((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dd||1));
  return Math.hypot(p[0]-a[0]-u*dx,p[1]-a[1]-u*dy);
 }
+// Convex clockwise polygon: inside distance to the nearest boundary equals
+// the minimum inward supporting-line distance. Precompute 8 edge normals once
+// rather than creating ~13 million arrays / hypot calls while feathering the
+// 1536×1024 Matrei painting. Outside distances need only remain negative.
+const inwardEdges=poly.map((b,i)=>{
+ const a=poly[(i+poly.length-1)%poly.length],dx=b[0]-a[0],dy=b[1]-a[1];
+ const inv=1/Math.hypot(dx,dy);
+ return [-dy*inv,dx*inv,(dy*a[0]-dx*a[1])*inv];
+});
 function signedEdge(x,y){
- let inside=false,best=Infinity;
- for(let i=0,j=poly.length-1;i<poly.length;j=i++){
-  const a=poly[j],b=poly[i];
-  best=Math.min(best,distanceSegment([x,y],a,b));
-  if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))inside=!inside;
+ let nearest=Infinity;
+ for(const edge of inwardEdges){
+  const d=edge[0]*x+edge[1]*y+edge[2];
+  if(d<nearest)nearest=d;
  }
- return inside?best:-best;
+ return nearest;
 }
 async function loadGroundImage(path){
  const im=new Image();im.src=path;

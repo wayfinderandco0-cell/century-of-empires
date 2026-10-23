@@ -31,9 +31,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: |
-          node scripts/test_v122_seams.js
-          node scripts/test_v123_atlas.js
+      - name: V122 baseline seam safety
+        run: node scripts/test_v122_seams.js
+      - name: V123 three-tile road graph
+        run: node scripts/test_v123_atlas.js
       - run: |
           pip install playwright
           python -m playwright install --with-deps chromium webkit

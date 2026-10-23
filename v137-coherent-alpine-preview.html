@@ -365,7 +365,7 @@ C.addEventListener('pointermove',e=>{
  const before=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
  if(pointers.size===2){
   const a=[...pointers.values()],next={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};
-  if(gesture&&gesture.distance>5){const anchor=world(next.mid);
+  if(gesture&&gesture.distance>5){const anchor=world(gesture.mid);
    zoom=Math.max(.7,Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
    const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];}
   gesture=next;down=null;return;

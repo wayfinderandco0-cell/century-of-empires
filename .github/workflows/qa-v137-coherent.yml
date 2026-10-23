@@ -1,7 +1,7 @@
-name: V137 Continuous Alpine Mobile QA
+name: V137/V139 Continuous Alpine Mobile QA
 on:
   push:
-    branches: [terrain-v138-coherent-boot-ci-20261023]
+    branches: [terrain-v138-coherent-boot-ci-20261023, terrain-v139-neighbor-detail-20261023]
     paths:
       - 'v137-coherent-alpine-preview.html'
       - 'scripts/qa_v137_coherent.py'

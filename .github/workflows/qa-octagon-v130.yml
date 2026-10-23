@@ -5,6 +5,7 @@ on:
     paths:
       - 'terrain-grid/**'
       - 'scripts/test_v12*.js'
+      - 'scripts/test_v130_blocked_road_segments.js'
       - '.github/workflows/qa-octagon-v130.yml'
   workflow_dispatch:
 permissions:

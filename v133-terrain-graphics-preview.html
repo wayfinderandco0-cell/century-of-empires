@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Century of Empires · V133 Three-Octagon Route Preview</title>
+<style>
+:root{color-scheme:dark;font:13px -apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#14231d;color:#f3e8cd}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}canvas{width:100%;height:100%;touch-action:none;display:block}
+header{position:absolute;top:max(8px,env(safe-area-inset-top));left:9px;right:9px;pointer-events:none}
+header section{display:inline-block;background:#142920e9;border:1px solid #9b8564;border-radius:8px;padding:8px 10px;box-shadow:0 3px 10px #0006}
+header strong{font:700 13px Georgia;letter-spacing:.075em}header small{display:block;margin-top:3px;color:#c9c2a8;font-size:10px}
+footer{position:absolute;left:8px;bottom:max(8px,env(safe-area-inset-bottom));right:8px;max-width:570px;border:1px solid #997d4e;border-radius:8px;background:#11271feb;padding:6px 8px;box-shadow:0 2px 14px #0008}
+#status{font-size:12px;min-height:14px;color:#f4e2b4}#hint{color:#b8b8a0;font-size:10px;margin-top:4px}
+.actions{display:flex;gap:6px;margin-top:7px;align-items:center}
+button{border:1px solid #a18a63;background:#263a2e;color:#f2e1bc;border-radius:7px;padding:7px 9px;font-size:12px;min-height:34px}
+button:active{background:#5b5138}#options{margin-left:auto}
+#menu{display:none;position:absolute;right:8px;top:73px;background:#132a21ef;border:1px solid #a18a63;border-radius:8px;padding:8px;max-width:260px;box-shadow:0 3px 18px #0008}
+#menu.open{display:grid;gap:6px}#menu small{font-size:10px;color:#c6b89e;line-height:1.5}
+@media(max-height:440px){header section{padding:5px 8px}footer{padding:5px 7px;width:fit-content;max-width:95vw}footer .actions{margin-top:3px}button{padding:4px 7px;min-height:30px}}
+</style></head><body>
+<canvas id="map" aria-label="Three adjacent Alpine octagons; tap physical roads to march across borders"></canvas>
+<header><section><strong>CENTURY OF EMPIRES</strong> · V133
+<small>Realistic terrain graphics trial · roads unchanged</small></section></header>
+<div id="menu"><button id="whole">Whole crossing</button><button id="debug">Inspect exact roads</button>
+<small>Neighbor terrain now uses source-photo textures but remains a temporary graphics test, not surveyed historical artwork. The original campaign and saves are untouched.</small></div>
+<footer><div id="status">Loading original Matrei artwork…</div>
+<div id="hint">Tap a visible road to march · drag to pan · pinch to zoom</div>
+<div class="actions"><button id="halt">Halt unit</button><button id="center">Center army</button><button id="options">Map options</button></div></footer>
+<script src="terrain-grid/v122-seam-engine.js"></script>
+<script src="terrain-grid/v123-atlas.js"></script>
+<script>
+'use strict';
+const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});const tileTextures=new Map();let backdrop=null;
+const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
+let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2054,540],ready=false,debug=false;
+let art=null,atlas=null,graph=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0;
+const pointers=new Map();let gesture=null,down=null;
+const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const world=(p)=>[cam[0]+(p[0]-width/2)/scale,cam[1]+(p[1]-height/2)/scale];
+const screen=(p)=>[width/2+(p[0]-cam[0])*scale,height/2+(p[1]-cam[1])*scale];
+const nodes=()=>Array.from(graph.graph.entries());
+const tileColor=t=>t.id==='west'?'#365444':'#3a4d3c';
+function lcg(seed){let a=seed>>>0;return ()=>{a=(Math.imul(1664525,a)+1013904223)>>>0;return a/4294967296;};}
+function polygon(ctx){ctx.beginPath();ctx.moveTo(256,0);ctx.lineTo(W-256,0);ctx.lineTo(W,256);ctx.lineTo(W,H-256);ctx.lineTo(W-256,H);ctx.lineTo(256,H);ctx.lineTo(0,H-256);ctx.lineTo(0,256);ctx.closePath();}
+function paintTrack(pts,thick=19){
+ cx.lineCap='round';cx.lineJoin='round';
+ for(const [color,size] of [['#38372b',thick+10],['#655a41',thick+5],['#a28b63',thick],['#bca581',thick-10]]){
+  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.strokeStyle=color;cx.lineWidth=size;cx.stroke();
+ }
+ cx.strokeStyle='#61513b';cx.lineWidth=1.3;cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
+}
+function distanceToRoad(p,roads){
+ let best=Infinity;
+ for(const pts of Object.values(roads))for(let i=1;i<pts.length;i++){
+  const a=pts[i-1],b=pts[i],vx=b[0]-a[0],vy=b[1]-a[1];
+  const t=Math.max(0,Math.min(1,((p[0]-a[0])*vx+(p[1]-a[1])*vy)/(vx*vx+vy*vy)));
+  best=Math.min(best,Math.hypot(p[0]-a[0]-t*vx,p[1]-a[1]-t*vy));
+ }return best;
+}
+function conceptTile(t){
+ // Re-use original Alpine source photography as a temporary visual foundation,
+ // not flat concept-map patterns. Distinct crops and lighting avoid duplicate villages.
+ const rnd=lcg(t.id==='west'?125987:867414);
+ if(!art)throw Error('Painted reference must load before landscape generation');
+ if(t.id==='west'){
+  // Western crags, hillside and old woodland. Avoid central Matrei settlement.
+  cx.drawImage(art,20,25,765,925,0,0,W,H);
+ }else{
+  // Southern fields and tree-lined foothills, avoiding the central stone bridge.
+  cx.drawImage(art,10,465,760,540,0,0,W,H);
+ }
+ cx.fillStyle=t.id==='west'?'rgba(26,42,36,.10)':'rgba(44,55,30,.12)';
+ cx.fillRect(0,0,W,H);
+ // Soft terrain relief: keep the source photo legible instead of painting cartoon trees.
+ for(let band=0;band<12;band++){
+  const y=90+band*95+rnd()*34;
+  cx.beginPath();cx.moveTo(0,y);
+  for(let x=0;x<=W;x+=75)cx.lineTo(x,y+Math.sin(x/185+band)*18);
+  cx.strokeStyle=band%3===0?'rgba(218,206,159,.055)':'rgba(19,40,27,.075)';
+  cx.lineWidth=12+rnd()*22;cx.stroke();
+ }
+ // Hide older source-road fragments under irregular meadow/woodland color, away from the
+ // authored cartway. Do not place trees or buildings on top of our exact road centerline.
+ for(let i=0;i<640;i++){
+  const x=20+rnd()*(W-40),y=15+rnd()*(H-30),sz=3+rnd()*11;
+  if(distanceToRoad([x,y],t.roads)<44)continue;
+  cx.fillStyle=i%4===0?'rgba(100,112,75,.13)':i%3===0?'rgba(14,34,24,.14)':'rgba(38,70,48,.10)';
+  cx.beginPath();cx.ellipse(x,y,sz*1.3,sz*.75,rnd()*6.28,0,Math.PI*2);cx.fill();
+ }
+ for(const road of Object.values(t.roads))paintTrack(road,18);
+ // The few isolated roofs use smaller proportions than the old game-map icons.
+ const houses=t.id==='west'?[[1010,420],[1160,425],[350,625]]:
+ [[825,565],[945,615],[1120,435]];
+ for(const p of houses){
+  if(distanceToRoad(p,t.roads)<55)continue;
+  const [x,y]=p;cx.save();
+  cx.fillStyle='rgba(18,32,23,.4)';cx.fillRect(x-12,y+6,26,15);
+  cx.fillStyle='#bbad8c';cx.fillRect(x-11,y-2,23,18);
+  cx.fillStyle='#5e4533';cx.beginPath();cx.moveTo(x-17,y);cx.lineTo(x,y-11);cx.lineTo(x+17,y);cx.closePath();cx.fill();
+  cx.restore();
+ }
+}
+function cacheConceptTiles(){
+ for(const t of atlas.tiles)if(t.id!=='matrei'){
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const original=cx;cx=off.getContext('2d',{alpha:false});
+  try{conceptTile(t);}finally{cx=original;}
+  tileTextures.set(t.id,off);
+ }
+ // The atlas is only three octagons; fill the square-shaped interstitial corners
+ // with subdued real terrain rather than exposed black geometric wedges.
+ backdrop=document.createElement('canvas');backdrop.width=768;backdrop.height=512;
+ const bg=backdrop.getContext('2d');
+ bg.drawImage(art,0,0,W,H,0,0,768,512);
+ bg.fillStyle='rgba(21,49,34,.38)';bg.fillRect(0,0,768,512);
+}
+function render(){
+ if(!width||!height)return;
+ cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.fillStyle='#314f3c';cx.fillRect(0,0,width,height);
+ cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);
+ cx.scale(scale,scale);
+ if(backdrop)cx.drawImage(backdrop,-900,-700,4900,3500);
+ if(atlas){
+  for(const t of atlas.tiles){
+   cx.save();cx.translate(t.origin[0],t.origin[1]);polygon(cx);cx.clip();
+   if(t.id==='matrei'&&art) {
+    cx.drawImage(art,0,0,W,H);
+    // Only the two source-unpainted border extensions get new artwork.
+    paintTrack([[0,478],[99,478]],17);paintTrack([[466,958],[466,1024]],17);
+   }else {const tex=tileTextures.get(t.id);if(tex)cx.drawImage(tex,0,0,W,H);}
+   cx.restore();
+   polygonAt(t);
+   if(debug){cx.strokeStyle='#f0dc9e';cx.lineWidth=1.8;cx.stroke();}
+  }
+  cx.save();cx.font='600 21px Georgia';cx.textAlign='center';cx.fillStyle='#fff0c4';cx.shadowBlur=8;cx.shadowColor='#1a2218';
+  cx.fillText('WESTERN PASS',740,165);
+  cx.fillText('MATREI',2715,266);
+  cx.fillText('SOUTHERN VALLEY',2280,1250);
+  cx.restore();
+  if(debug)for(const t of atlas.tiles){
+   cx.save();cx.translate(...t.origin);
+   for(const pts of Object.values(t.roads)){cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#f9d84f';cx.lineWidth=2;cx.stroke();}
+   cx.restore();
+  }
+  if(path.length>1){cx.beginPath();path.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#efdc91c2';cx.lineWidth=3;cx.stroke();}
+  if(army){cx.save();cx.translate(...army);
+   const k=16/scale;cx.fillStyle='#172e26';cx.strokeStyle='#e7d087';cx.lineWidth=2/scale;
+   cx.beginPath();cx.arc(0,0,k,0,Math.PI*2);cx.fill();cx.stroke();
+   cx.font='bold '+Math.ceil(19/scale)+'px Georgia';cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='#f5e4b4';cx.fillText('⚔',0,-1/scale);
+   cx.fillStyle='#15291c';cx.fillRect(-22/scale,19/scale,44/scale,17/scale);
+   cx.fillStyle='#ead89e';cx.font='bold '+Math.ceil(11/scale)+'px sans-serif';cx.fillText('720',0,28/scale);
+   cx.fillStyle='#e4d19f';cx.fillRect(3/scale,-30/scale,2/scale,14/scale);
+   cx.fillStyle='#242529';cx.fillRect(5/scale,-30/scale,15/scale,5/scale);
+   cx.fillStyle='#d6ac47';cx.fillRect(5/scale,-25/scale,15/scale,5/scale);
+   cx.restore();}
+ }
+ cx.restore();
+}
+function polygonAt(t){cx.save();cx.translate(...t.origin);polygon(cx);cx.restore();}
+function resize(){width=C.clientWidth||window.innerWidth;height=C.clientHeight||window.innerHeight;
+ dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(width*dpr);C.height=Math.round(height*dpr);
+ base=Math.min(width/3200,height/2450);redraw();}
+function redraw(){scale=base*zoom;render();}
+function currentEdge(){
+ if(path.length<2||pathKeys.length!==path.length)return pausedEdge;
+ let remaining=travel;
+ for(let i=1;i<path.length;i++){
+  const len=hypot(path[i-1],path[i]);
+  if(remaining<=len+1e-5){
+   if(i===1&&pathKeys[0]===null)return startEdge;
+   return pathKeys[i-1]&&pathKeys[i]?{a:pathKeys[i-1],b:pathKeys[i]}:null;
+  }
+  remaining-=len;
+ }
+ return null;
+}
+function issue(to){
+ if(!ready)return false;
+ const edge=moving?currentEdge():pausedEdge;
+ const candidates=edge?[edge.a,edge.b]:[currentKey];
+ let chosen=null;
+ for(const key of candidates){
+  if(!key)continue;
+  const found=graph.planRoute(key,to);
+  if(!found)continue;
+  const start=graph.graph.get(key).world;
+  const points=hypot(army,start)>1e-5?[army.slice(),...found.positions]:found.positions.slice();
+  const keys=points.length===found.positions.length?found.keys.slice():[null,...found.keys];
+  const cost=hypot(army,start)+found.distance;
+  if(!chosen||cost<chosen.cost)chosen={cost,points,keys,found,entry:edge};
+ }
+ if(!chosen){statusEl.textContent='No connected road route';return false;}
+ goal=to;path=chosen.points;pathKeys=chosen.keys;travel=0;distance=chosen.cost;startEdge=chosen.entry;pausedEdge=null;
+ moving=distance>.001;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
+ return true;
+}
+function nearestRoadNode(p){
+ let closest=null,dd=Infinity;
+ for(const [key,n] of nodes()){
+  const d=hypot(n.world,p);if(d<dd){dd=d;closest=key;}
+ }return {key:closest,distance:dd};
+}
+function tap(pt){
+ const a=nearestRoadNode(world(pt));
+ if(a.distance>72){statusEl.textContent='Select an actual road, not a field or building';return;}
+ issue(a.key);
+}
+function sampleRoute(d){
+ let remaining=d;
+ for(let i=1;i<path.length;i++){
+  const a=path[i-1],b=path[i],len=hypot(a,b);
+  if(remaining<=len)return[a[0]+(b[0]-a[0])*remaining/len,a[1]+(b[1]-a[1])*remaining/len];
+  remaining-=len;
+ }return path.at(-1).slice();
+}
+function march(dt){if(!moving)return;
+ travel=Math.min(distance,travel+Math.max(0,dt)*215);
+ army=sampleRoute(travel);
+ if(travel>=distance-.01){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;statusEl.textContent='Unit arrived · tap a different road';}
+}
+function halt(){if(!moving)return;
+ pausedEdge=currentEdge();moving=false;path=[];pathKeys=[];goal=null;travel=0;distance=0;
+ statusEl.textContent='Unit halted on the exact painted cartway';}
+C.addEventListener('pointerdown',e=>{
+ C.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===1)down=[e.clientX,e.clientY];
+ if(pointers.size===2){const a=[...pointers.values()];gesture={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};down=null;}
+});
+C.addEventListener('pointermove',e=>{
+ if(!pointers.has(e.pointerId))return;
+ const before=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===2){
+  const a=[...pointers.values()],next={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};
+  if(gesture&&gesture.distance>5){const anchor=world(next.mid);
+   zoom=Math.max(.7,Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
+   const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];}
+  gesture=next;down=null;return;
+ }
+ if(down&&hypot(down,[e.clientX,e.clientY])>9)down=null;
+ cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;
+});
+function finish(e){
+ if(!pointers.has(e.pointerId))return;
+ if(pointers.size===1&&down&&hypot(down,[e.clientX,e.clientY])<9)tap([e.clientX,e.clientY]);
+ pointers.delete(e.pointerId);if(pointers.size<2)gesture=null;down=null;
+}
+for(const name of ['pointerup','pointercancel','lostpointercapture'])C.addEventListener(name,finish);
+window.addEventListener('resize',resize);
+document.querySelector('#halt').onclick=halt;
+document.querySelector('#center').onclick=()=>{if(army){cam=army.slice();zoom=2.5;redraw();}};
+document.querySelector('#whole').onclick=()=>{cam=[1670,925];zoom=1;menu.classList.remove('open');redraw();};
+document.querySelector('#options').onclick=()=>menu.classList.toggle('open');
+document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';};
+window.V133=Object.freeze({
+ get ready(){return ready},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
+ get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
+ get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},
+ get connectedRoute(){return atlas?!!graph.planRoute(V133Atlas.endpoints(atlas).west,V133Atlas.endpoints(atlas).south):false},
+ destinations(){return atlas?V133Atlas.endpoints(atlas):null},
+ orderTo(name){return atlas&&V133Atlas.endpoints(atlas)[name]?issue(V133Atlas.endpoints(atlas)[name]):false},
+ progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}return army.slice();},
+ halt,zoomTo(z){zoom=z;redraw();},inspect(){debug=!debug;redraw();},
+ get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
+ get experimental(){return !!atlas?.experimentalSeams}
+});
+async function boot(){
+ try{
+  const html=await(await fetch('v121-octagon-1-painted-road.html')).text();
+  const artMatch=html.match(/source\.src='(data:image\/webp;base64,[^']+)'/);
+  const roadMatch=html.match(/const ROADS=(\{[^\r\n]+\});/);
+  if(!artMatch||!roadMatch)throw Error('V121 source art/route declaration missing');
+  const v121Roads=JSON.parse(roadMatch[1]);
+  atlas=V133Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
+  if(!graph.seams.every(s=>s.pass))throw Error('Octagon seam integrity failed; movement blocked');
+  const source=new Image();source.src=artMatch[1];
+  await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
+  if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
+  art=source;cacheConceptTiles();currentKey=V133Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
+  ready=true;statusEl.textContent='Connected three-tile test · tap roads to move';
+ }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
+}
+function frame(t){if(last)march(Math.min(.04,(t-last)/1000));last=t;render();requestAnimationFrame(frame);}
+resize();boot();requestAnimationFrame(frame);
+</script></body></html>

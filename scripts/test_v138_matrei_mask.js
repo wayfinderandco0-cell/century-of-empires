@@ -6,7 +6,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const assert=require('node:assert/strict');
 const html=fs.readFileSync(path.join(__dirname,'..','v137-coherent-alpine-preview.html'),'utf8');
-const match=html.match(/const poly=(\\[[^\\n]+\\]);/);
+const match=html.match(/const poly=(\[[^\n]+\]);/);
 assert(match,'V137 Matrei polygon must exist');
 const poly=JSON.parse(match[1]);
 assert.equal(poly.length,8);
@@ -14,7 +14,7 @@ const start=html.indexOf('const inwardEdges=');
 const end=html.indexOf('async function loadGroundImage',start);
 assert(start>0&&end>start,'optimized mask code must be present');
 const optimized=html.slice(start,end);
-assert(!/Math\\.hypot/.test(optimized.slice(optimized.indexOf('function signedEdge'))),
+assert(!/Math\.hypot/.test(optimized.slice(optimized.indexOf('function signedEdge'))),
   'signedEdge must not call hypot for every pixel');
 const fast=vm.runInNewContext(optimized+'; signedEdge;', {poly,Math});
 function reference(x,y){

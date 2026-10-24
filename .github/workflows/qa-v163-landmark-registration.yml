@@ -1,0 +1,38 @@
+name: V163 fail-closed Alpine game-to-source landmark evidence
+on:
+  push:
+    branches: [terrain-v163-landmark-registration-gate-20261024]
+    paths:
+      - 'scripts/v163_landmark_registration.py'
+      - 'scripts/test_v163_landmark_registration.py'
+      - 'terrain-grid/v163-unverified-landmark-evidence.json'
+      - '.github/workflows/qa-v163-landmark-registration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  landmark-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin immutable V121/V123 routes and V97/V102 source identities
+        run: node scripts/test_v161_native_material.js
+      - name: Verify two-control/independent-holdout candidate registration (synthetic only)
+        run: python scripts/test_v163_landmark_registration.py
+      - name: Record REAL three-corridor evidence deficit without fabricating control points
+        run: |
+          python scripts/v163_landmark_registration.py --evidence terrain-grid/v163-unverified-landmark-evidence.json --report qa/v163/registration.json --allow-blocked
+          python - <<'PY'
+          import json
+          r=json.load(open('qa/v163/registration.json'))
+          assert not r['allThreeCandidateFitsValidated']
+          assert all(not v['candidateTransformValidated'] for v in r['corridors'].values())
+          assert not r['productionApproved'] and not r['gameRouteGeoregistered']
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v163-real-landmark-evidence-NOT-REGISTERED
+          path: qa/v163/registration.json
+          retention-days: 7

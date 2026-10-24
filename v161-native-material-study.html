@@ -103,43 +103,7 @@ async function loadGroundImage(path){
  const im=new Image();im.src=path;
  try {await im.decode();return im;}catch(e){console.warn('Optional Alpine material unavailable:',path);return null;}
 }
-function sourcePatchCandidates(roads){
- const c=document.createElement('canvas');c.width=W;c.height=H;
- const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(art,0,0);
- const rgba=g.getImageData(0,0,W,H).data;
- const samples=[];
- for(let y=125;y<900;y+=42)for(let x=145;x<1395;x+=42){
-  if(signedEdge(x,y)<92||distanceToRoad([x,y],roads)<78)continue;
-  // Avoid Matrei rooftops, original bridge, river crossing and baked-in labels.
-  if(y>555&&x>270&&x<1080)continue;
-  let roof=0,bright=0,dark=0,water=0,total=0;
-  for(let yy=y-60;yy<=y+60;yy+=12)for(let xx=x-60;xx<=x+60;xx+=12){
-   const k=(yy*W+xx)*4,r=rgba[k],v=rgba[k+1],b=rgba[k+2];
-   if(r>100&&r>v*1.22&&r>b*1.24)roof++;
-   if(r>220&&v>220&&b>220)bright++;
-   if(r<28&&v<28&&b<28)dark++;
-   if(b>r*1.17&&v>r*1.23&&b+v>200)water++;
-   total++;
-  }
-  if(roof/total>.075||bright/total>.75||dark/total>.10||water/total>.055)continue;
-  samples.push([x,y]);
- }
- return samples;
-}
-function photoStamp(source,x,y,span){
- const s=256,p=document.createElement('canvas');p.width=s;p.height=s;
- const g=p.getContext('2d');
- g.drawImage(source,x-span/2,y-span/2,span,span,0,0,s,s);
- g.globalCompositeOperation='destination-in';
- const mask=g.createRadialGradient(s/2,s/2,35,s/2,s/2,s*.495);
- mask.addColorStop(0,'rgba(0,0,0,1)');
- mask.addColorStop(.57,'rgba(0,0,0,.97)');
- mask.addColorStop(.84,'rgba(0,0,0,.72)');
- mask.addColorStop(1,'rgba(0,0,0,0)');
- g.fillStyle=mask;g.fillRect(0,0,s,s);
- return p;
-}
-async function buildLandscape(){
+// V161: deleted unused Matrei photo-crop candidate/stamping helpers.\n// No photographic cutouts can be recycled into neighboring game octagons.\nasync function buildLandscape(){
   // V161 SIDE-CAR STUDY: keep the original V121 Matrei painting and immutable
   // V123 roads. Use one un-tiled, native-resolution V102 material canvas for
   // all three game frames. This source-derived Navis/Brenner relief is modern,

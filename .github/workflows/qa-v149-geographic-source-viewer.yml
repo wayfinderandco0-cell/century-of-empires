@@ -1,0 +1,36 @@
+name: V149 authentic geographic source viewer phone QA (not game art)
+on:
+  push:
+    branches: [terrain-v149-source-image-iphone-viewer-20261023]
+    paths:
+      - 'v149-geographic-source-viewer.html'
+      - 'scripts/qa_v149_source_viewer.py'
+      - '.github/workflows/qa-v149-geographic-source-viewer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only-mobile:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image and browser clients
+        run: python -m pip install Pillow==12.0.0 playwright==1.64.1
+      - name: Acquire 9 real official orthophoto JPEGs with SHA and provenance
+        run: python scripts/v147_orthophoto_mosaic.py --download --output qa/v149-source
+      - name: Verify geographic source imagery in 4 phone configurations
+        run: python scripts/qa_v149_source_viewer.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v149-modern-source-iphone-views-not-game-art
+          path: |
+            qa/v149-source/manifest.json
+            qa/v149-source/geographic-source-mosaic.png
+            qa/v149-browser/
+          retention-days: 7

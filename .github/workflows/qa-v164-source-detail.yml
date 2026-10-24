@@ -1,0 +1,41 @@
+name: V164 source-derived Alpine relief detail — technical QA, RED art gate
+on:
+  push:
+    branches: [terrain-v164-source-derived-relief-detail-20261024]
+    paths:
+      - 'terrain-grid/v164-source-detail.js'
+      - 'v164-source-detail-study.html'
+      - 'scripts/test_v164_source_detail.js'
+      - 'scripts/qa_v164_source_detail.py'
+      - '.github/workflows/qa-v164-source-detail.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v164-source-detail:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin V121/V123 source geometry and original V97/V102 materials
+        run: node scripts/test_v161_native_material.js
+      - name: Test bounded source-only high-pass and immutable route behavior
+        run: node scripts/test_v164_source_detail.js
+      - name: Install pinned browser QA
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Capture actual V161 vs V164 three-game-octagon phone screenshots
+        run: python scripts/qa_v164_source_detail.py
+      - name: Preserve original strict visual-detail unit tests
+        run: python scripts/test_v140_neighbor_detail.py
+      - name: FAIL CLOSED unless unchanged V140 neighbor-art gate passes
+        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v164-source-detail --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v164-source-derived-relief-three-game-octagons-UNAPPROVED
+          path: qa/v164-source-detail/
+          retention-days: 7

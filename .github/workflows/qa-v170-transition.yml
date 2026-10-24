@@ -5,7 +5,7 @@ on:
     paths:
       - 'v170-terrain-transition-test.html'
       - 'scripts/qa_v170_transition.py'
-      - '.github/workflows/qa-v170-mobile.yml'
+      - '.github/workflows/qa-v170-transition.yml'
   workflow_dispatch:
 permissions:
   contents: read

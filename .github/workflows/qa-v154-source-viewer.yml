@@ -1,0 +1,40 @@
+name: V154 three-sector source-only four-zoom phone inspection (NOT game approval)
+on:
+  push:
+    branches: [terrain-v154-geographic-source-viewer-20261024]
+    paths:
+      - 'v154-geographic-source-review.html'
+      - 'scripts/qa_v154_source_viewer.py'
+      - '.github/workflows/qa-v154-source-viewer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modern-source-phone-qa:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned source and browser QA dependencies
+        run: python -m pip install Pillow==12.0.0 playwright==1.64.1
+      - name: Verify V153 geographic strip regression
+        run: python scripts/test_v153_geographic_strip.py
+      - name: Download authentic modern geographic source (27 original JPEGs)
+        run: python scripts/v153_geographic_strip.py --download
+      - name: Recheck source-image hashes and sector crop pixels
+        run: python scripts/v153_geographic_strip.py --verify
+      - name: Validate four zoom levels and three distinct sectors in 4 phone layouts
+        run: python scripts/qa_v154_source_viewer.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v154-modern-source-three-sector-phone-review-not-game-art
+          path: |
+            qa/v154-source-viewer/
+            qa/v153-geographic-strip/manifest.json
+            qa/v153-geographic-strip/modern-source-strip.png
+          retention-days: 7

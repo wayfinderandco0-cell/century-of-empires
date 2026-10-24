@@ -103,7 +103,9 @@ async function loadGroundImage(path){
  const im=new Image();im.src=path;
  try {await im.decode();return im;}catch(e){console.warn('Optional Alpine material unavailable:',path);return null;}
 }
-// V161: deleted unused Matrei photo-crop candidate/stamping helpers.\n// No photographic cutouts can be recycled into neighboring game octagons.\nasync function buildLandscape(){
+// V161: deleted unused Matrei photo-crop candidate/stamping helpers.
+// No photographic cutouts can be recycled into neighboring game octagons.
+async function buildLandscape(){
   // V161 SIDE-CAR STUDY: keep the original V121 Matrei painting and immutable
   // V123 roads. Use one un-tiled, native-resolution V102 material canvas for
   // all three game frames. This source-derived Navis/Brenner relief is modern,

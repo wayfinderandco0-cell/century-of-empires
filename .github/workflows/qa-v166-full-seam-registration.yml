@@ -1,0 +1,50 @@
+name: V166 full octagon border registration — real evidence still blocked
+on:
+  push:
+    branches: [terrain-v166-full-seam-registration-20261024]
+    paths:
+      - 'scripts/v166_full_seam_registration.py'
+      - 'scripts/test_v166_full_seam_registration.py'
+      - 'scripts/v165_three_frame_registration.py'
+      - 'scripts/v163_landmark_registration.py'
+      - 'terrain-grid/v163-unverified-landmark-evidence.json'
+      - '.github/workflows/qa-v166-full-seam-registration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  full-border-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve original V121/V123 road and V97/V102 material hashes
+        run: node scripts/test_v161_native_material.js
+      - name: Retain independent holdout and L-shaped V123 tests
+        run: |
+          python scripts/test_v163_landmark_registration.py
+          python scripts/test_v165_three_frame_registration.py
+      - name: Reject source drift anywhere on either full shared octagon border
+        run: python scripts/test_v166_full_seam_registration.py
+      - name: Audit missing REAL source controls without approving geography or art
+        run: |
+          python scripts/v166_full_seam_registration.py --evidence terrain-grid/v163-unverified-landmark-evidence.json --report qa/v166/registration.json --allow-blocked
+          python - <<'PY'
+          import json
+          r = json.load(open('qa/v166/registration.json'))
+          assert r['version'] == 166
+          assert not r['fullSharedBordersValidated']
+          assert not r['gameRouteGeoregistered']
+          assert not r['historicalRoadsVerified']
+          assert not r['bridgeBanksVerified']
+          assert not r['productionApproved']
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v166-full-octagon-borders-NO-REAL-LANDMARKS-NOT-APPROVED
+          path: qa/v166/registration.json
+          retention-days: 7

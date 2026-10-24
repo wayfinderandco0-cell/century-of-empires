@@ -37,7 +37,7 @@ class V169ModernExclusionTests(unittest.TestCase):
 
     def test_visible_modern_roofs_excluded(self):
         for pt in ((1000,550),(1400,386),(1110,925),
-                   (1450,862),(210,26),(410,35)):
+                   (1450,862),(210,26),(410,35),\n                   (1418,91),(815,588),(825,795),(267,455)):
             self.assertEqual(self.mask.getpixel(pt),0,pt)
 
     def test_observed_2023_labels_excluded(self):

@@ -1,0 +1,39 @@
+name: V160 Matrei feather tonal study — technical and RED art gate
+on:
+  push:
+    branches: [terrain-v160-matrei-seam-tonal-study-20261024]
+    paths:
+      - 'v160-matrei-seam-study.html'
+      - 'terrain-grid/v160-seam-tone.js'
+      - 'scripts/test_v160_seam_tone.js'
+      - 'scripts/qa_v160_seam_tone.py'
+      - '.github/workflows/qa-v160-seam-tone.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v160-seam-study-iphone:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test tonal correction and source/route nonmutation
+        run: node scripts/test_v160_seam_tone.js
+      - name: Install pinned phone QA
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Compare original and V160 in Chromium/WebKit phone layouts
+        run: python scripts/qa_v160_seam_tone.py
+      - name: Preserve existing strict V140 detail-parity test
+        run: python scripts/test_v140_neighbor_detail.py
+      - name: FAIL CLOSED until both actual game neighbors meet detail parity
+        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v160-seam --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v160-original-vs-tonal-study-three-game-octagons-UNAPPROVED
+          path: qa/v160-seam/
+          retention-days: 7

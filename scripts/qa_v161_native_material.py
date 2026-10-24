@@ -86,7 +86,6 @@ summary = {"technicalPassed": len(results) == 4, "configurations": results,
            "historicalGeoregistration": False, "threeGameOctagonsVisuallyApproved": False,
            "physicalIPhoneApproved": False, "productionApproved": False,
            "note": "Native V102 source-derived material only, unregistered to V123; V140 detail parity remains a separate fail-closed acceptance gate."}
-(out / "report.json").write_text(json.dumps(summary, indent=2) + "
-")
+(out / "report.json").write_text(json.dumps(summary, indent=2) + chr(10))
 print(json.dumps(summary, indent=2))
 assert summary["technicalPassed"]

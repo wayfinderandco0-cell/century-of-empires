@@ -1,0 +1,47 @@
+name: V165 Alpine three-frame registration integrity — source evidence RED
+on:
+  push:
+    branches: [terrain-v165-three-frame-registration-integrity-20261024]
+    paths:
+      - 'scripts/v165_three_frame_registration.py'
+      - 'scripts/test_v165_three_frame_registration.py'
+      - 'scripts/v163_landmark_registration.py'
+      - 'terrain-grid/v163-unverified-landmark-evidence.json'
+      - '.github/workflows/qa-v165-three-frame-registration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  three-frame-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin original V121/V123 routes and V97/V102 source identities
+        run: node scripts/test_v161_native_material.js
+      - name: Preserve V163 individual candidate/holdout tests
+        run: python scripts/test_v163_landmark_registration.py
+      - name: Verify L-shaped V123 corridor footprints and shared-source transform
+        run: python scripts/test_v165_three_frame_registration.py
+      - name: Audit actual empty landmark evidence without inventing source controls
+        run: |
+          python scripts/v165_three_frame_registration.py --evidence terrain-grid/v163-unverified-landmark-evidence.json --report qa/v165/registration.json --allow-blocked
+          python - <<'PY'
+          import json
+          r=json.load(open('qa/v165/registration.json'))
+          assert r['version']==165
+          assert not r['allThreeCandidateFitsValidated']
+          assert not r['sharedSourceFrameCoherent']
+          assert not r['gameRouteGeoregistered']
+          assert not r['bridgeBanksVerified']
+          assert not r['productionApproved']
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v165-three-game-frame-registration-evidence-NOT-APPROVED
+          path: qa/v165/registration.json
+          retention-days: 7

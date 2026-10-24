@@ -46,7 +46,7 @@ jobs:
           assert all(m[k] is v for k,v in FLAGS.items())
           assert m["sourceVersion"]==168
           assert len(m["modernRoadObservations"])==3
-          assert len(m["developedObservations"])==6
+          assert len(m["developedObservations"])==10
           assert m["dateStampObservationCount"]==12
           assert all(c["excludedPixels"]>0 for c in m["sourceSectorCoverage"].values())
           print("V169 source-only exclusions verified; no historical/game approval")

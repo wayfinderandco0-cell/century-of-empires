@@ -1,0 +1,27 @@
+name: V148 source orthophoto pixel/geography consistency
+on:
+  push:
+    branches: [terrain-v148-orthophoto-pixel-crosswalk-20261023]
+    paths:
+      - 'terrain-grid/v148-orthophoto-pixels.js'
+      - 'scripts/test_v148_orthophoto_pixels.js'
+      - 'scripts/v147_orthophoto_mosaic.py'
+      - 'scripts/v146_orthophoto_sample.py'
+      - '.github/workflows/qa-v148-orthophoto-pixels.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-pixel-crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Plan official V147 source grid without downloads
+        run: python scripts/v147_orthophoto_mosaic.py --output /tmp/v148-source-grid
+      - name: Test nine exact source tile coordinate mappings, crops, and fail-closed flags
+        run: node scripts/test_v148_orthophoto_pixels.js /tmp/v148-source-grid/manifest.json
+      # Modern geographic source pixels only; no gameplay roads or 1780 claims.

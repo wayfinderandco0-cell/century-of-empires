@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "sourceFrame": {
+    "id": "v102-alpine-material-modern-reference-UNREGISTERED",
+    "width": 1536,
+    "height": 1536,
+    "referenceUrl": "https://github.com/wayfinderandco0-cell/century-of-empires/blob/terrain-v161-native-relief-material-study-20261024/terrain-v102/alpine-material.webp",
+    "modernReferenceOnly": true
+  },
+  "corridors": {
+    "western_pass": [],
+    "matrei": [],
+    "southern_valley": []
+  }
+}

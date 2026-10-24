@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Century of Empires · V149 Georeferenced Source Viewer (not game art)</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#18241f;color:#f1ead6;font:13px -apple-system,BlinkMacSystemFont,system-ui,sans-serif}
+*{box-sizing:border-box}canvas{display:block;width:100vw;height:100vh;touch-action:none}
+header,footer{position:absolute;left:10px;right:10px;pointer-events:none}
+header{top:max(10px,env(safe-area-inset-top))}footer{bottom:max(10px,env(safe-area-inset-bottom))}
+.panel{display:inline-block;max-width:95%;padding:8px 10px;border-radius:8px;background:#12231de8;border:1px solid #a79570;line-height:1.4}
+strong{font-family:Georgia,serif;letter-spacing:.03em}small{display:block;color:#e0d2b4}
+button{pointer-events:auto;border:1px solid #aa9873;border-radius:6px;background:#2b4036;color:#fff;padding:7px;margin:3px 4px 0 0}
+</style></head><body>
+<canvas id="terrain" aria-label="Authentic modern orthophoto, geographic source inspection only"></canvas>
+<header><div class="panel"><strong>CENTURY OF EMPIRES · SOURCE INSPECTION</strong>
+<small>Real modern Navis-region aerial imagery · NOT Matrei/West/South game octagons</small>
+<small id="status">Loading 9 official geographic source tiles…</small></div></header>
+<footer><div class="panel"><small>Drag to pan · pinch to zoom · No game routes certified</small>
+<button id="reset">Fit imagery</button><button id="plus">Zoom +</button><button id="minus">Zoom −</button>
+<small>Datenquelle: basemap.at · CC BY 4.0 · Modern imagery, not a historical survey</small></div></footer>
+<script>
+'use strict';
+(() => {
+  const canvas=document.getElementById('terrain'),ctx=canvas.getContext('2d');
+  const status=document.getElementById('status');
+  const center=[11.520,47.130],z=17,n=2**z,rad=Math.PI/180;
+  const x0=Math.floor((center[0]+180)/360*n)-1;
+  const y0=Math.floor((1-Math.asinh(Math.tan(center[1]*rad))/Math.PI)/2*n)-1;
+  const base='https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857';
+  const useLocal=new URLSearchParams(location.search).get('local')==='1';
+  const DIM=768,MIN_SCALE=.25,MAX_SCALE=8;
+  const mosaic=document.createElement('canvas');mosaic.width=DIM;mosaic.height=DIM;
+  const mctx=mosaic.getContext('2d',{willReadFrequently:true});
+  const tiles=[];let loaded=0,failed=0,ready=false;
+  let scale=1,tx=0,ty=0,cssWidth=0,cssHeight=0;
+  const pointers=new Map();let lastGesture=null;
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function fit(){scale=clamp(Math.min(cssWidth/DIM,cssHeight/DIM)*.92,MIN_SCALE,MAX_SCALE);
+    tx=(cssWidth-DIM*scale)/2;ty=(cssHeight-DIM*scale)/2;draw();}
+  function resize(){cssWidth=window.innerWidth;cssHeight=window.innerHeight;
+    const dpr=Math.min(window.devicePixelRatio||1,3);
+    canvas.width=Math.round(cssWidth*dpr);canvas.height=Math.round(cssHeight*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    if(!ready && loaded===0)fit();else draw();}
+  function draw(){ctx.fillStyle='#1b2b24';ctx.fillRect(0,0,cssWidth,cssHeight);
+    if(ready){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+      // One original-pixel mosaic prevents tile-edge subpixel seams during pinch.
+      ctx.drawImage(mosaic,tx,ty,DIM*scale,DIM*scale);
+    }}
+  function zoomAt(factor,sx,sy){const newScale=clamp(scale*factor,MIN_SCALE,MAX_SCALE);
+    const x=(sx-tx)/scale,y=(sy-ty)/scale;
+    scale=newScale;tx=sx-x*scale;ty=sy-y*scale;draw();}
+  function lonlatAtPixel(x,y){const gx=(x0*256+x)/(n*256),gy=(y0*256+y)/(n*256);
+    return [gx*360-180,Math.atan(Math.sinh(Math.PI*(1-2*gy)))/rad];}
+  function pointerXY(e){return [e.clientX,e.clientY];}
+  function gesture(){const a=[...pointers.values()];
+    if(a.length===1)return {mid:a[0],distance:0,count:1};
+    if(a.length===2)return {mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2],
+      distance:Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]),count:2};
+    return null;}
+  canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId,pointerXY(e));lastGesture=gesture();});
+  canvas.addEventListener('pointermove',e=>{
+    if(!pointers.has(e.pointerId))return;
+    const old=lastGesture;pointers.set(e.pointerId,pointerXY(e));const now=gesture();
+    if(old&&now&&old.count===now.count){
+      if(now.count===1){tx+=now.mid[0]-old.mid[0];ty+=now.mid[1]-old.mid[1];}
+      else if(old.distance>1&&now.distance>1){
+        const prevScale=scale;const sx=(old.mid[0]-tx)/prevScale,sy=(old.mid[1]-ty)/prevScale;
+        scale=clamp(prevScale*now.distance/old.distance,MIN_SCALE,MAX_SCALE);
+        tx=now.mid[0]-sx*scale;ty=now.mid[1]-sy*scale;
+      }draw();
+    }lastGesture=now;
+  });
+  function release(e){pointers.delete(e.pointerId);lastGesture=gesture();}
+  canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+  document.getElementById('reset').onclick=fit;
+  document.getElementById('plus').onclick=()=>zoomAt(1.5,cssWidth/2,cssHeight/2);
+  document.getElementById('minus').onclick=()=>zoomAt(1/1.5,cssWidth/2,cssHeight/2);
+  window.addEventListener('resize',resize);resize();
+  for(let r=0;r<3;r++)for(let c=0;c<3;c++){
+    const x=x0+c,y=y0+r,img=new Image();
+    const src=useLocal?'qa/v149-source/r'+r+'c'+c+'.jpeg':base+'/'+z+'/'+y+'/'+x+'.jpeg';
+    tiles.push({r,c,x,y,src});
+    img.onload=()=>{if(img.naturalWidth!==256||img.naturalHeight!==256){failed++;status.textContent='Source tile dimensions invalid';return;}
+      mctx.drawImage(img,c*256,r*256,256,256);loaded++;
+      if(loaded===9){ready=true;fit();status.textContent='9/9 genuine tiles loaded · source frame only';}
+      else status.textContent=loaded+'/9 geographic source tiles loaded';
+    };
+    img.onerror=()=>{failed++;status.textContent='Source unavailable ('+failed+' failed) — no synthetic fallback';};
+    img.src=src;
+  }
+  window.V149={get ready(){return ready},get loaded(){return loaded},get failed(){return failed},
+    sourceOnly:true,gameRouteGeoregistered:false,historic1780Certified:false,
+    gameOctagonCentersCertified:false,navigableRouteCertified:false,productionApproved:false,
+    tileXYZ:tiles.map(({r,c,x,y})=>({r,c,x,y,z})),
+    boundsLonLat:(()=>{const nw=lonlatAtPixel(0,0),se=lonlatAtPixel(DIM,DIM);
+      return [nw[0],se[1],se[0],nw[1]];})(),
+    get transform(){return {scale,tx,ty}},
+    screenToGeo:(sx,sy)=>lonlatAtPixel((sx-tx)/scale,(sy-ty)/scale),
+    sourcePixelToGeo:lonlatAtPixel,
+    focusSourceColumn:c=>{if(!ready||!Number.isInteger(c)||c<0||c>2)return false;
+      scale=clamp(Math.min(cssWidth/256,cssHeight/768)*1.25,MIN_SCALE,MAX_SCALE);
+      tx=cssWidth/2-(c*256+128)*scale;ty=cssHeight/2-384*scale;draw();return true;},
+    zoomAt,panBy:(dx,dy)=>{tx+=dx;ty+=dy;draw();}
+  };
+})();
+</script></body></html>

@@ -21,7 +21,13 @@ function sliceBetween(source,a,b){
  assert(start>=0&&end>start,'Missing reviewed source section: '+a);
  return source.slice(start,end);
 }
+function checkInlineSyntax(html){
+ const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+ assert.equal(scripts.length,1,'Expected exactly one reviewed inline game script');
+ assert.doesNotThrow(()=>new Function(scripts[0][1]),'Invalid V161 inline browser JavaScript');
+}
 function checkPreview(v160,v161){
+ checkInlineSyntax(v161);
  for(const [start,end] of [
   ['function paintTrack(', 'function paintNaturalTrailFinish('],
   ['function render(){','function polygonAt('],

@@ -69,9 +69,9 @@ def lonlat_to_pixel(lon, lat, size, extent):
 
 def original_matrei(html):
     raw = html.encode("utf-8")
-    blob = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\\0" + raw).hexdigest()
+    blob = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
     require(blob == V121_GIT_BLOB, "original V121 HTML git blob changed")
-    found = re.findall(r"""src\\s*=\\s*["']data:image/webp;base64,([A-Za-z0-9+/=]+)["']""", html)
+    found = re.findall(r"""src\s*=\s*["']data:image/webp;base64,([A-Za-z0-9+/=]+)["']""", html)
     require(len(found) == 1, "expected exactly one V121 embedded painting")
     binary = base64.b64decode(found[0], validate=True)
     with Image.open(io.BytesIO(binary)) as im:
@@ -149,7 +149,7 @@ def produce(root, out):
             "image": path, "size": list(expected), "boundsLonLat": list(extent),
             "boundsType": scope, "reviewSheet": filename,
             "imageGitBlobSha1": hashlib.sha1(
-                b"blob " + str((root / path).stat().st_size).encode() + b"\\0" +
+                b"blob " + str((root / path).stat().st_size).encode() + b"\0" +
                 (root / path).read_bytes()).hexdigest(),
             "sourcePixelsGeographicallyLocated": True,
             "matchedGameLandmarks": 0,
@@ -166,7 +166,7 @@ def produce(root, out):
         "productionApproved": False,
         "warning": "V102 alpine uses BROAD V97 extent; V102 navis uses NARROW Navis extent. Never conflate their pixels or treat modern geography as 1780 game art."
     }
-    (out / "report.json").write_text(json.dumps(report, indent=2) + "\\n")
+    (out / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     return report
 
 def main():

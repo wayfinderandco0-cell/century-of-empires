@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>V154 geographic source review — NOT GAME ART</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#101b20;color:#edf4f4;font:13px system-ui,sans-serif}
+#top{height:80px;box-sizing:border-box;padding:7px 10px;background:#14252b;display:flex;flex-direction:column;gap:5px}
+#top strong{font-size:13px} #top small{font-size:10px;color:#ffcf92}
+#tools{display:flex;gap:5px;align-items:center}button{background:#2c4851;color:#fff;border:1px solid #70949b;border-radius:5px;padding:5px 9px;touch-action:manipulation}
+button[aria-pressed="true"]{background:#40776c}#status{margin-left:auto;font-size:10px;max-width:44vw;text-align:right}
+#map{display:block;width:100%;height:calc(100% - 104px);touch-action:none;background:#18282e}
+#foot{height:24px;box-sizing:border-box;background:#14252b;padding:4px 8px;font-size:10px;display:flex;justify-content:space-between}
+#error{color:#ffb4a9}
+</style></head><body>
+<div id="top"><strong>Geographic source inspection · three adjacent sectors</strong><small>MODERN aerial imagery (2023) — NOT 1780–1880 game art, roads, bridge or octagon registration</small>
+<div id="tools"><button data-tier="0">1</button><button data-tier="1">2</button><button data-tier="2">3</button><button data-tier="3">4</button><span id="status">Verifying source…</span></div></div>
+<canvas id="map" aria-label="Geographic source imagery, pan and pinch to inspect"></canvas>
+<div id="foot"><span>Datenquelle: basemap.at · CC BY 4.0</span><span id="error">No game navigation certified</span></div>
+<script>
+'use strict';
+(() => {
+const W=2304,H=768,TIERS=[1,1.65,2.8,5],canvas=document.getElementById('map'),ctx=canvas.getContext('2d',{alpha:false});
+const status=document.getElementById('status'),err=document.getElementById('error');
+const state={ready:false,sourceOnly:true,gameRouteGeoregistered:false,historic1780Certified:false,bridgeBanksVerified:false,productionApproved:false,
+  tier:1,camera:[W/2,H/2],scale:1,fit:1,pointers:new Map(),image:null,manifest:null};
+window.V154=state;
+function assertManifest(m){
+ if(!m||m.version!==153||m.crs!=='EPSG:3857'||m.provider!=='basemap.at'||m.requiredAttribution!=='Datenquelle: basemap.at'||
+    JSON.stringify(m.grid)!=='[3,9]'||JSON.stringify(m.pixelDimensions)!=='[2304,768]'||
+    !Array.isArray(m.sectors)||m.sectors.length!==3||!Array.isArray(m.samples)||m.samples.length!==27||
+    !/^[a-f0-9]{64}$/.test(m.mosaicSha256||'')||m.mosaicFile!=='modern-source-strip.png')throw Error('Unverified V153 source manifest');
+ for(const k of ['gameOctagonCentersCertified','gameRouteGeoregistered','historic1780Certified','navigableRouteCertified','bridgeBanksVerified','productionApproved'])
+   if(m[k]!==false)throw Error('Source cannot certify '+k);
+ for(let i=0;i<3;i++){
+   const s=m.sectors[i];if(s.name!==['source-west','source-center','source-east'][i]||
+     JSON.stringify(s.pixelBounds)!==JSON.stringify([i*768,0,(i+1)*768,768]))throw Error('Invalid sector geometry');
+ }
+ const first=m.samples[0].tileXYZ;
+ if(!Array.isArray(first)||first.length!==3)throw Error('Invalid XYZ origin');
+ for(let r=0;r<3;r++)for(let c=0;c<9;c++){
+   const s=m.samples[r*9+c];if(!s||s.gridRow!==r||s.gridCol!==c||
+      JSON.stringify(s.tileXYZ)!==JSON.stringify([first[0]+c,first[1]+r,first[2]]))throw Error('Source tile gap');
+ }
+ return true;
+}
+function fit(){const w=canvas.clientWidth,h=canvas.clientHeight;state.fit=Math.min(w/W,h/H);state.scale=state.fit*TIERS[state.tier];}
+function clamp(){const s=state.scale,w=canvas.clientWidth,h=canvas.clientHeight;
+ const halfX=w/(2*s),halfY=h/(2*s);
+ state.camera[0]=halfX>=W/2?W/2:Math.min(W-halfX,Math.max(halfX,state.camera[0]));
+ state.camera[1]=halfY>=H/2?H/2:Math.min(H-halfY,Math.max(halfY,state.camera[1]));
+}
+function screenToSource(x,y){return [state.camera[0]+(x-canvas.clientWidth/2)/state.scale,
+                                    state.camera[1]+(y-canvas.clientHeight/2)/state.scale];}
+function draw(){const dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;
+ const pxW=Math.round(w*dpr),pxH=Math.round(h*dpr);
+ if(canvas.width!==pxW||canvas.height!==pxH){canvas.width=pxW;canvas.height=pxH;}
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#18282e';ctx.fillRect(0,0,w,h);
+ if(!state.image)return;
+ ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ ctx.save();ctx.translate(w/2,h/2);ctx.scale(state.scale,state.scale);
+ ctx.drawImage(state.image,-state.camera[0],-state.camera[1]);ctx.restore();
+ const mid=state.camera[0]<768?'SOURCE WEST':state.camera[0]<1536?'SOURCE CENTER':'SOURCE EAST';
+ status.textContent=mid+' · '+(state.tier+1)+'/4 · modern source';
+ document.querySelectorAll('[data-tier]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.tier===state.tier)));
+}
+function setTier(tier,anchorX=canvas.clientWidth/2,anchorY=canvas.clientHeight/2){
+ if(!Number.isInteger(tier)||tier<0||tier>=TIERS.length)throw Error('Invalid zoom tier');
+ const before=screenToSource(anchorX,anchorY);state.tier=tier;fit();
+ state.camera=[before[0]-(anchorX-canvas.clientWidth/2)/state.scale,
+               before[1]-(anchorY-canvas.clientHeight/2)/state.scale];clamp();draw();
+}
+function focusSector(n,tier=3){if(!state.ready||!Number.isInteger(n)||n<0||n>2)return false;
+ state.tier=tier;fit();state.camera=[384+n*768,384];clamp();draw();return true;}
+function pointerXY(e){const b=canvas.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top];}
+let gesture=null;
+canvas.addEventListener('pointerdown',e=>{if(!state.ready)return;canvas.setPointerCapture(e.pointerId);state.pointers.set(e.pointerId,pointerXY(e));gesture=null;});
+canvas.addEventListener('pointermove',e=>{
+ if(!state.pointers.has(e.pointerId))return;
+ const before=state.pointers.get(e.pointerId),now=pointerXY(e);state.pointers.set(e.pointerId,now);
+ const points=[...state.pointers.values()];
+ if(points.length===1){state.camera[0]-=(now[0]-before[0])/state.scale;state.camera[1]-=(now[1]-before[1])/state.scale;clamp();draw();}
+ else if(points.length===2){
+   const mid=[(points[0][0]+points[1][0])/2,(points[0][1]+points[1][1])/2];
+   const distance=Math.hypot(points[0][0]-points[1][0],points[0][1]-points[1][1]);
+   if(gesture&&distance>2){
+     const wanted=gesture.scale*distance/gesture.distance;
+     const min=state.fit*TIERS[0],max=state.fit*TIERS[3];
+     state.scale=Math.min(max,Math.max(min,wanted));
+     state.camera=[gesture.world[0]-(mid[0]-canvas.clientWidth/2)/state.scale,
+                   gesture.world[1]-(mid[1]-canvas.clientHeight/2)/state.scale];clamp();draw();
+   }else if(distance>2)gesture={distance,scale:state.scale,world:screenToSource(...mid)};
+ }
+});
+for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{state.pointers.delete(e.pointerId);gesture=null;});
+canvas.addEventListener('wheel',e=>{e.preventDefault();setTier(Math.max(0,Math.min(3,state.tier+(e.deltaY<0?1:-1))),...pointerXY(e));},{passive:false});
+document.querySelectorAll('[data-tier]').forEach(b=>b.addEventListener('click',()=>setTier(+b.dataset.tier)));
+window.addEventListener('resize',()=>{fit();clamp();draw();});
+state.focusSector=focusSector;state.setTier=setTier;state.screenToSource=screenToSource;state.assertManifest=assertManifest;
+async function boot(){
+ const base='qa/v153-geographic-strip/';
+ const response=await fetch(base+'manifest.json',{cache:'no-store'});if(!response.ok)throw Error('Missing source provenance');
+ const m=await response.json();assertManifest(m);
+ const img=await fetch(base+m.mosaicFile,{cache:'no-store'});if(!img.ok)throw Error('Missing verified source raster');
+ const bytes=await img.arrayBuffer(),digest=await crypto.subtle.digest('SHA-256',bytes);
+ const hash=[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');
+ if(hash!==m.mosaicSha256)throw Error('Source raster SHA-256 mismatch');
+ const bitmap=await createImageBitmap(new Blob([bytes],{type:'image/png'}));
+ if(bitmap.width!==W||bitmap.height!==H)throw Error('Source raster dimensions changed');
+ state.image=bitmap;state.manifest=m;state.ready=true;fit();clamp();draw();
+}
+boot().catch(e=>{state.ready=false;state.failure=String(e);err.textContent='SOURCE REJECTED: '+e.message;status.textContent='Cannot display unverified source';});
+})();
+</script></body></html>

@@ -47,7 +47,10 @@ try:
                             assert report["syntheticTreeMarks"] == 0
                             assert report["originalPhotoUnchanged"] is True
                             assert report["routeGraphUnchanged"] is True
-                            assert report["productionApproved"] is False and report["v123ToMaterialGeoregistered"] is False\n                            assert page.evaluate("V137.detailMarkCount") == 0\n                            assert page.evaluate("V137.photoStampCount") == 0\n                            assert page.evaluate("V137.seamToneReport === null")
+                            assert report["productionApproved"] is False and report["v123ToMaterialGeoregistered"] is False
+                            assert page.evaluate("V137.detailMarkCount") == 0
+                            assert page.evaluate("V137.photoStampCount") == 0
+                            assert page.evaluate("V137.seamToneReport === null")
                         else:
                             assert page.evaluate("V137.seamToneReport === undefined")
                         for region in (("matrei",) if variant == "original"
@@ -83,6 +86,7 @@ summary = {"technicalPassed": len(results) == 4, "configurations": results,
            "historicalGeoregistration": False, "threeGameOctagonsVisuallyApproved": False,
            "physicalIPhoneApproved": False, "productionApproved": False,
            "note": "Native V102 source-derived material only, unregistered to V123; V140 detail parity remains a separate fail-closed acceptance gate."}
-(out / "report.json").write_text(json.dumps(summary, indent=2) + "\n")
+(out / "report.json").write_text(json.dumps(summary, indent=2) + "
+")
 print(json.dumps(summary, indent=2))
 assert summary["technicalPassed"]

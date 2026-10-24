@@ -131,8 +131,7 @@ def muted_study(source,mask):
                for v in range(256)]
         out.append(ch.point(table))
     styled=Image.merge("RGB",tuple(out)).convert("RGBA")
-    return clean_rgba(styled,mask) if False else Image.composite(
-        styled,Image.new("RGBA",SIZE,(0,0,0,0)),mask)
+    return Image.composite(styled,Image.new("RGBA",SIZE,(0,0,0,0)),mask)
 
 def coverage(source,mask):
     original=source_mask(source)

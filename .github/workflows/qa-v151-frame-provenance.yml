@@ -1,0 +1,34 @@
+name: V151 original-art versus modern-orthophoto frame guard
+on:
+  push:
+    branches: [terrain-v151-art-source-frame-guard-20261023]
+    paths:
+      - 'terrain-grid/v151-frame-provenance.js'
+      - 'scripts/test_v151_frame_provenance.js'
+      - '.github/workflows/qa-v151-frame-provenance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reject-unmatched-game-orthophoto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned source image decoder
+        run: python -m pip install Pillow==12.0.0
+      - name: Download and verify nine genuine modern orthophoto source tiles
+        run: python scripts/v147_orthophoto_mosaic.py --download --output qa/v151-source
+      - name: Verify ORIGINAL Matrei artwork identity and prevent false game registration
+        run: node scripts/test_v151_frame_provenance.js v121-octagon-1-painted-road.html qa/v151-source/manifest.json qa/v150-source-observations.json qa/v151-source/frame-compatibility.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v151-unmatched-original-art-versus-modern-source
+          path: |
+            qa/v151-source/manifest.json
+            qa/v151-source/frame-compatibility.json
+          retention-days: 7

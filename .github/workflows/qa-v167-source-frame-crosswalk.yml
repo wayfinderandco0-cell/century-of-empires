@@ -1,0 +1,49 @@
+name: V167 geographic source pixel crosswalk — NO game registration
+on:
+  push:
+    branches: [terrain-v167-source-frame-crosswalk-20261024]
+    paths:
+      - 'scripts/v167_source_frame_crosswalk.py'
+      - 'scripts/test_v167_source_frame_crosswalk.py'
+      - '.github/workflows/qa-v167-source-frame-crosswalk.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-coordinate-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image reader
+        run: python -m pip install Pillow
+      - name: Verify V121 original and retained V97/V102 source hashes
+        run: node scripts/test_v161_native_material.js
+      - name: Validate broad-vs-narrow source geography and review output
+        run: python scripts/test_v167_source_frame_crosswalk.py
+      - name: Export four coordinate-labelled source/game review sheets
+        run: python scripts/v167_source_frame_crosswalk.py --output qa/v167-source-crosswalk
+      - name: Explicitly prohibit accidental game or art approval
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('qa/v167-source-crosswalk/report.json'))
+          assert r['version']==167
+          assert len(r['sourceFrames'])==3
+          assert r['gameSourceTiePoints']==[]
+          for k in ('gamePaintingGeographicallyRegistered','historicalRoadsVerified',
+                    'bridgeBanksVerified','westSouthGameArtComplete',
+                    'physicalIPhoneApproved','productionApproved'):
+              assert r[k] is False
+          assert r['sourceFrames']['v102-alpine']['boundsType']=='broad'
+          assert r['sourceFrames']['v102-navis']['boundsType']=='narrow'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v167-source-pixel-review-NOT-registered-NOT-game-art
+          path: qa/v167-source-crosswalk/
+          retention-days: 7

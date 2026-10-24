@@ -1,0 +1,38 @@
+name: V152 surveyed-road terminal visual integrity (NOT art approval)
+on:
+  push:
+    branches: [terrain-v152-survey-limit-markers-20261024]
+    paths:
+      - 'terrain-grid/v152-survey-limits.js'
+      - 'v137-coherent-alpine-preview.html'
+      - 'scripts/test_v152_survey_limits.js'
+      - 'scripts/qa_v152_survey_limits.py'
+      - '.github/workflows/qa-v152-survey-limits.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  terminal-road-iphone-qa:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check immutable V121/V123 endpoint topology
+        run: node scripts/test_v152_survey_limits.js
+      - name: Install pinned browser QA dependencies
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Prove marker pixels on actual Chromium/WebKit phone-sized renderings
+        run: python scripts/qa_v152_survey_limits.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v152-survey-limit-marker-proof-not-art-approval
+          path: qa/v152-survey-limits/
+          retention-days: 7

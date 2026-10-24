@@ -18,7 +18,7 @@ url=f"http://127.0.0.1:{server.server_port}/v170-terrain-transition-test.html"+o
 # spending a minute waiting on an empty 404 document.
 with urllib.request.urlopen(url,timeout=5) as response:
     source=response.read()
-    assert response.status==200 and b"V170 Three-Octagon Mobile Playtest" in source, "Wrong V170 QA target"
+    assert response.status==200 and b"V170 Terrain-Transition Test" in source, "Wrong V170 QA target"
 results={}
 try:
     with sync_playwright() as playwright:

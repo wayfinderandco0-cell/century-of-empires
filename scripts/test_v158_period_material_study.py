@@ -58,7 +58,7 @@ with tempfile.TemporaryDirectory() as t:
     assert report["sourceSectorRetainedFractions"] == m["sourceSectorRetainedFractions"]
     with Image.open(output/report["studyFile"]) as image:
         assert image.getchannel("A").tobytes() == mask.tobytes()
-        assert image.getpixel((90,100))[3] == 0
+        assert image.getpixel((90,100)) == (0, 0, 0, 0)
         assert image.getpixel((400,400))[3] == 255
         assert image.getpixel((400,400))[:3] != rgba.getpixel((400,400))[:3]
     # Synthetic three sectors must remain distinct; no copied source tile.

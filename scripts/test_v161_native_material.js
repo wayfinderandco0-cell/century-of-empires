@@ -36,7 +36,7 @@ function checkPreview(v160,v161){
   "const poly=[[386,6],[1150,6],[1444,283],[1444,675],[1150,968],[386,968],[91,675],[91,283]]",
   "atlas=V123Atlas.create(v121Roads,{experimentalSeams:true})",
   "surveyLimits=V152Survey.inspect(atlas)",
-  "g.drawImage(material,0,0,2048,2048)",
+  "g.drawImage(material,0,0,1536,1536)",
   "groundDetails=null",
   "syntheticTreeMarks:0,materialTilesDrawn:1",
   "v123ToMaterialGeoregistered:false",
@@ -59,7 +59,7 @@ checkPreview(old,study);
 let negatives=0;
 function rejects(fn){assert.throws(fn);negatives++;}
 rejects(()=>checkPreview(old,study.replace('bridgeBanksVerified:false','bridgeBanksVerified:true')));
-rejects(()=>checkPreview(old,study.replace('g.drawImage(material,0,0,2048,2048)','g.drawImage(material,0,0,1024,1024)')));
+rejects(()=>checkPreview(old,study.replace('g.drawImage(material,0,0,1536,1536)','g.drawImage(material,0,0,1024,1024)')));
 rejects(()=>checkPreview(old,study.replace('atlas=V123Atlas.create(v121Roads,{experimentalSeams:true})','atlas=V123Atlas.create({}, {experimentalSeams:true})')));
 rejects(()=>checkPreview(old,study.replace('get productionApproved(){return false}','get productionApproved(){return true}')));
 rejects(()=>checkSources(path=>path==='terrain-v97/brenner-relief.webp'?Buffer.from('fake'):fs.readFileSync(path)));

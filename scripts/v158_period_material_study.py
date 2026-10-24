@@ -99,8 +99,10 @@ def period_palette_study(rgba, mask):
                for value in range(256)]
         out.append(channel.point(lut))
     styled = Image.merge("RGB", tuple(out)).convert("RGBA")
-    styled.putalpha(mask)  # unknown is still unknown; NEVER paint it in
-    return styled
+    styled.putalpha(mask)
+    # Transparent RGB must also be zero: some PNG viewers ignore alpha, and
+    # concealed modern roads/roofs must never leak into an art-study export.
+    return Image.composite(styled, Image.new("RGBA", SIZE, (0, 0, 0, 0)), mask)
 
 def expected_manifest(source):
     return {

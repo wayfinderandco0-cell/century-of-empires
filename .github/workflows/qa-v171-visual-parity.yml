@@ -1,0 +1,32 @@
+name: V171 V170 three-tile visual parity (fail closed)
+on:
+  push:
+    branches: [terrain-v171-v170-visual-rejection-gate-20261024]
+    paths:
+      - 'scripts/qa_v171_neighbor_detail.py'
+      - 'scripts/test_v171_neighbor_detail.py'
+      - '.github/workflows/qa-v171-visual-parity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v170-neighbor-art:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install QA dependencies
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Synthetic fail-closed regression tests
+        run: python -m unittest discover -s scripts -p test_v171_neighbor_detail.py -v
+      - name: Generate real V170 Chromium and WebKit phone screenshots
+        run: python scripts/qa_v170_transition.py
+      - name: Reject west/south Matrei-detail mismatch (V140 floors unchanged)
+        run: python scripts/qa_v171_neighbor_detail.py --screenshots qa/v170-mobile --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v171-V170-real-phone-art-detail-REJECTED-until-fixed
+          path: qa/v170-mobile/
+          retention-days: 7

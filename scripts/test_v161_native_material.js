@@ -5,7 +5,7 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const shaBlob=data=>crypto.createHash('sha1').update(Buffer.concat([
- Buffer.from('blob '+data.length+'\\0'),data])).digest('hex');
+ Buffer.from('blob '+data.length),Buffer.from([0]),data])).digest('hex');
 const pins=Object.freeze({
  'terrain-v102/alpine-material.webp':'a6f9ef315d2a34766d1ed4e3be2cabb47c23473a',
  'terrain-v97/brenner-relief.webp':'fb8301549db4735db321150929d32b6e7f3d5344',

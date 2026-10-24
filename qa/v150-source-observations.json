@@ -1,0 +1,32 @@
+[
+  {
+    "id": "source-road-hairpin-01",
+    "type": "modern-road-bend",
+    "pixel": [
+      529,
+      288
+    ],
+    "description": "Visible paved-road hairpin in 2023 source image; not a historic road match.",
+    "status": "unverified-observation"
+  },
+  {
+    "id": "source-farm-roof-02",
+    "type": "modern-building",
+    "pixel": [
+      284,
+      490
+    ],
+    "description": "Roof next to modern road in source image; not a game settlement or conquest node.",
+    "status": "unverified-observation"
+  },
+  {
+    "id": "source-forest-edge-03",
+    "type": "forest-edge",
+    "pixel": [
+      432,
+      445
+    ],
+    "description": "Visible modern woodland and pasture transition; historic landcover unverified.",
+    "status": "unverified-observation"
+  }
+]

@@ -53,10 +53,10 @@ try:
                         with_marker=OUT/f'{prefix}-with-marker.png'
                         without_marker=OUT/f'{prefix}-without-marker.png'
                         page.screenshot(path=str(with_marker),animations='disabled')
-                        page.evaluate('window.__v152OriginalPaint=V152Survey.paint;V152Survey.paint=()=>{}')
+                        page.evaluate('() => { window.__v152OriginalPaint=V152Survey.paint;V152Survey.paint=()=>{}; }')
                         page.evaluate('()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)))')
                         page.screenshot(path=str(without_marker),animations='disabled')
-                        page.evaluate('V152Survey.paint=window.__v152OriginalPaint')
+                        page.evaluate('() => { V152Survey.paint=window.__v152OriginalPaint; }')
                         scale=min(w/3200,h/2450)*2.4
                         sx=(w/2+(endpoint[0]-camera[0])*scale)*2
                         sy=(h/2+(endpoint[1]-camera[1])*scale)*2

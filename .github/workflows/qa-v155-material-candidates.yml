@@ -1,0 +1,40 @@
+name: V155 provenance-locked modern Alpine material candidates (NOT game art)
+on:
+  push:
+    branches: [terrain-v155-material-source-candidates-20261024]
+    paths:
+      - 'scripts/v155_material_candidates.py'
+      - 'scripts/test_v155_material_candidates.py'
+      - '.github/workflows/qa-v155-material-candidates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  material-source-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image dependency
+        run: python -m pip install Pillow==12.0.0
+      - name: Test geometry, provenance and negative cases offline
+        run: python scripts/test_v155_material_candidates.py
+      - name: Rebuild V153 source strip from 27 genuine official JPEGs
+        run: python scripts/v153_geographic_strip.py --download
+      - name: Independently verify all source JPEGs and sectors
+        run: python scripts/v153_geographic_strip.py --verify
+      - name: Extract six exact original-pixel canopy and meadow candidates
+        run: python scripts/v155_material_candidates.py
+      - name: Reverify source-pixel identity and provenance
+        run: python scripts/v155_material_candidates.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v155-modern-source-material-candidates-NOT-game-art
+          path: |
+            qa/v155-material-candidates/
+            qa/v153-geographic-strip/manifest.json
+          retention-days: 7

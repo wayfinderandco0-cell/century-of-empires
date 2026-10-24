@@ -42,6 +42,10 @@ DEVELOPED=(
     ("south-road-houses-east", (1292,795,1535,949)),
     ("west-north-rooflets", (126,0,259,54)),
     ("west-north-small-roof", (392,15,432,57)),
+    ("center-northeast-roof", (1398,69,1440,112)),
+    ("center-west-roadside-barn", (783,565,850,622)),
+    ("south-west-meadow-sheds", (794,768,883,823)),
+    ("west-meadow-shed", (247,438,287,474)),
 )
 # Visible 2023 source date stamps, including partial stamps at the west edge.
 # These are individual observed labels, not an OCR-based completeness claim.

@@ -1,0 +1,33 @@
+name: V153 authentic three-sector geographic source strip (NOT game octagons)
+on:
+  push:
+    branches: [terrain-v153-three-sector-source-study-20261024]
+    paths:
+      - 'scripts/v153_geographic_strip.py'
+      - 'scripts/test_v153_geographic_strip.py'
+      - '.github/workflows/qa-v153-geographic-strip.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-three-sector-mosaic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install Pillow==12.0.0
+      - name: Verify 27-tile geographic layout and tamper rejections offline
+        run: python scripts/test_v153_geographic_strip.py
+      - name: Download and stitch 27 authentic basemap.at orthophoto tiles (modern source only)
+        run: python scripts/v153_geographic_strip.py --download
+      - name: Independently verify all 27 JPEG hashes and 3 sector PNG pixels
+        run: python scripts/v153_geographic_strip.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v153-three-modern-geographic-source-sectors-not-game-art
+          path: qa/v153-geographic-strip/
+          retention-days: 7

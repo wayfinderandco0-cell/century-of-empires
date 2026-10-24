@@ -114,16 +114,16 @@ async function loadGroundImage(path){
     loadGroundImage('terrain-v102/alpine-material.webp'),
     loadGroundImage('terrain-v97/brenner-relief.webp')
   ]);
-  if(!material||!relief||material.naturalWidth!==2048||material.naturalHeight!==2048)
-    throw Error('V161 requires original 2048px V102 material and V97 relief');
+  if(!material||!relief||material.naturalWidth!==1536||material.naturalHeight!==1536)
+    throw Error('V161 requires original 1536px V102 broad relief material and V97 relief');
   const land=document.createElement('canvas');
-  land.width=2048;land.height=2048;
+  land.width=1536;land.height=1536;
   const g=land.getContext('2d',{alpha:false});
   // A single continuous source-material draw: no tile stamping or procedural
   // green-dot forests. The 6200x5800 game bounds are not claimed as WGS84.
-  g.drawImage(material,0,0,2048,2048);
+  g.drawImage(material,0,0,1536,1536);
   g.save();g.globalAlpha=.15;g.globalCompositeOperation='multiply';
-  g.drawImage(relief,0,0,2048,2048);g.restore();
+  g.drawImage(relief,0,0,1536,1536);g.restore();
   sharedGround=land;groundDetails=null;
   detailMarkCount=0;photoStampCount=0;photoPatchCount=0;valleyStampCount=0;
   statusEl.textContent='Fitting the unchanged Matrei source painting…';
@@ -140,7 +140,7 @@ async function loadGroundImage(path){
   }
   center.putImageData(im,0,0);
   materialStudyReport=Object.freeze({
-    version:161,material:'V102 source-derived Navis relief, 2048x2048',
+    version:161,material:'V102 source-derived broad Alpine relief, 1536x1536',
     originalPhotoUnchanged:true,routeGraphUnchanged:true,
     syntheticTreeMarks:0,materialTilesDrawn:1,
     v123ToMaterialGeoregistered:false,bridgeBanksVerified:false,

@@ -1,0 +1,38 @@
+name: V161 native Alpine relief material study — phone QA, RED art gate
+on:
+  push:
+    branches: [terrain-v161-native-relief-material-study-20261024]
+    paths:
+      - 'v161-native-material-study.html'
+      - 'scripts/test_v161_native_material.js'
+      - 'scripts/qa_v161_native_material.py'
+      - '.github/workflows/qa-v161-native-material.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v161-native-material-iphone:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin real V97/V102 source material and immutable V121/V123 route geometry
+        run: node scripts/test_v161_native_material.js
+      - name: Install pinned mobile QA
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Compare original and native-source game-frame study in Chromium/WebKit
+        run: python scripts/qa_v161_native_material.py
+      - name: Preserve existing strict neighbor-detail unit tests
+        run: python scripts/test_v140_neighbor_detail.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v161-native-material-three-game-octagon-phone-UNAPPROVED
+          path: qa/v161-native/
+          retention-days: 7
+      - name: FAIL CLOSED until west and south meet existing visual parity
+        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v161-native --enforce

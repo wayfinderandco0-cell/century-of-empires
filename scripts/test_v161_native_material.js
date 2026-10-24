@@ -22,9 +22,10 @@ function sliceBetween(source,a,b){
  return source.slice(start,end);
 }
 function checkInlineSyntax(html){
- const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
- assert.equal(scripts.length,1,'Expected exactly one reviewed inline game script');
- assert.doesNotThrow(()=>new Function(scripts[0][1]),'Invalid V161 inline browser JavaScript');
+ const open=html.indexOf('<script>'),close=html.indexOf('</script>',open+8);
+ assert(open>=0&&close>open,'Missing inline browser script');
+ assert.equal(html.indexOf('<script>',open+8),-1,'Unexpected extra inline script');
+ assert.doesNotThrow(()=>new Function(html.slice(open+8,close)),'Invalid V161 browser JavaScript');
 }
 function checkPreview(v160,v161){
  checkInlineSyntax(v161);

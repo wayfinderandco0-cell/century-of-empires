@@ -27,6 +27,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <div class="actions"><button id="halt">Halt unit</button><button id="center">Center army</button><button id="options">Map options</button></div></footer>
 <script src="terrain-grid/v122-seam-engine.js"></script>
 <script src="terrain-grid/v123-atlas.js"></script>
+<script src="terrain-grid/v152-survey-limits.js"></script>
 <script src="terrain-grid/v144-geo-material.js"></script>
 <script>
 'use strict';
@@ -35,7 +36,7 @@ let geoCrop=null;
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});// One photographic terrain underlay, one masked center, no repeated tiles.
 const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
 let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2320,635],ready=false,debug=false;
-let art=null,originalRoads=null,atlas=null,graph=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0;
+let art=null,originalRoads=null,atlas=null,graph=null,surveyLimits=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0;
 const pointers=new Map();let gesture=null,down=null;
 const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const world=(p)=>[cam[0]+(p[0]-width/2)/scale,cam[1]+(p[1]-height/2)/scale];
@@ -425,6 +426,8 @@ function render(){
    for(const pts of Object.values(t.roads)){cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#f9d84f';cx.lineWidth=2;cx.stroke();}
    cx.restore();
   }
+  // World-locked, degree-one termini: not imaginary road continuations.
+  if(surveyLimits)V152Survey.paint(cx,scale,surveyLimits,debug);
   if(path.length>1){cx.beginPath();path.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#efdc91c2';cx.lineWidth=3;cx.stroke();}
   if(army){cx.save();cx.translate(...army);
    const k=16/scale;cx.fillStyle='#172e26';cx.strokeStyle='#e7d087';cx.lineWidth=2/scale;
@@ -535,7 +538,7 @@ document.querySelector('#whole').onclick=()=>{cam=[1670,925];zoom=1;menu.classLi
 document.querySelector('#options').onclick=()=>menu.classList.toggle('open');
 document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';};
 window.V137=Object.freeze({
- get ready(){return ready},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
+ get ready(){return ready},get surveyLimits(){return surveyLimits},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
  get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
  get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},
  get connectedRoute(){return atlas?!!graph.planRoute(V123Atlas.endpoints(atlas).west,V123Atlas.endpoints(atlas).south):false},
@@ -561,6 +564,7 @@ async function boot(){
   const v121Roads=JSON.parse(roadMatch[1]);originalRoads=v121Roads;
   atlas=V123Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
   if(!graph.seams.every(s=>s.pass))throw Error('Octagon seam integrity failed; movement blocked');
+  surveyLimits=V152Survey.inspect(atlas); // Exact V123 graph endpoints, no extra edges.
   const source=new Image();source.src=artMatch[1];
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');

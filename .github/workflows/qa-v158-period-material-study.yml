@@ -1,0 +1,47 @@
+name: V158 period-palette source study (NOT game art)
+on:
+  push:
+    branches: [terrain-v158-source-period-palette-20261024]
+    paths:
+      - 'scripts/v158_period_material_study.py'
+      - 'scripts/test_v158_period_material_study.py'
+      - '.github/workflows/qa-v158-period-material-study.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-period-palette:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image dependency
+        run: python -m pip install Pillow==12.0.0
+      - name: Offline fail-closed palette/source/alpha tests
+        run: python scripts/test_v158_period_material_study.py
+      - name: Download and verify 27 authentic modern source JPEGs
+        run: |
+          python scripts/v153_geographic_strip.py --download
+          python scripts/v153_geographic_strip.py --verify
+      - name: Rebuild verified modern-source exclusion masks
+        run: |
+          python scripts/v156_modern_exclusion.py
+          python scripts/v156_modern_exclusion.py --verify
+          python scripts/v157_residual_modern_audit.py
+          python scripts/v157_residual_modern_audit.py --verify
+      - name: Generate three continuous source-frame muted-palette sectors
+        run: python scripts/v158_period_material_study.py
+      - name: Verify output pixel identity, unknown alpha and no game claims
+        run: python scripts/v158_period_material_study.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v158-source-palette-three-sectors-NOT-game-art
+          path: |
+            qa/v158-period-material-study/
+            qa/v157-residual-modern/manifest.json
+            qa/v153-geographic-strip/manifest.json
+          retention-days: 7

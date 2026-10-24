@@ -1,0 +1,36 @@
+name: V169 three-octagon iPhone mobile route playtest
+on:
+  push:
+    branches: [terrain-v169-iphone-three-octagon-playtest-20261024]
+    paths:
+      - 'v169-three-octagon-playtest.html'
+      - 'scripts/qa_v169_playable.py'
+      - '.github/workflows/qa-v169-mobile.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  iphone-playable-octagons:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preserve exact V121 and V123 road identities
+        run: node scripts/test_v161_native_material.js
+      - name: Install QA dependencies
+        run: python -m pip install playwright==1.64.1 pillow==12.0.0
+      - name: Verify new iPhone playable preview in Chromium and WebKit
+        run: python scripts/qa_v169_playable.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v169-iphone-playable-3-octagon-screenshots-NOT-approved-art
+          path: qa/v169-mobile/
+          retention-days: 7

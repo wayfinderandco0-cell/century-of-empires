@@ -1,0 +1,33 @@
+name: V159 actual three-game-octagon art source coverage (NOT approval)
+on:
+  push:
+    branches: [terrain-v159-game-art-coverage-audit-20261024]
+    paths:
+      - 'scripts/v159_game_art_coverage.js'
+      - 'scripts/test_v159_game_art_coverage.js'
+      - '.github/workflows/qa-v159-game-art-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v159-game-art-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail-closed photo footprint and source provenance tests
+        run: node scripts/test_v159_game_art_coverage.js
+      - name: Audit ACTUAL V137 preview and V123 game atlas, not source-sector study
+        run: node scripts/v159_game_art_coverage.js v137-coherent-alpine-preview.html terrain-grid/v123-atlas.js qa/v159-game-art-coverage/report.json
+      - name: Explicitly verify no art approval was inferred
+        run: |
+          node -e "const r=require('./qa/v159-game-art-coverage/report.json');if(r.productionApproved||r.threeGameOctagonsVisuallyApproved||r.tiles.west.meanOriginalPhotoAlpha!==0||r.tiles.south.meanOriginalPhotoAlpha!==0)process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v159-game-art-photo-footprint-UNAPPROVED
+          path: qa/v159-game-art-coverage/
+          retention-days: 7

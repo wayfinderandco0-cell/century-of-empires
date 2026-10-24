@@ -36,7 +36,16 @@ try:
                         errors = []
                         page.on("pageerror", lambda error: errors.append(str(error)))
                         page.goto(base_url + filename, wait_until="domcontentloaded", timeout=30000)
-                        page.wait_for_function("window.V137?.ready === true", timeout=60000)
+                        try:
+                            page.wait_for_function("window.V137?.ready === true", timeout=60000)
+                        except Exception as boot_error:
+                            try:
+                                stage = page.locator("#status").text_content(timeout=2500)
+                            except Exception as probe_error:
+                                stage = "<DOM unresponsive: " + type(probe_error).__name__ + ">"
+                            print("V161 boot diagnostic:", prefix, variant, repr(stage),
+                                  "page errors:", errors, "cause:", repr(boot_error), flush=True)
+                            raise
                         assert page.evaluate("V137.artDimensions") == [1536, 1024]
                         assert page.evaluate("V137.connectedRoute")
                         assert page.evaluate("V137.productionApproved") is False

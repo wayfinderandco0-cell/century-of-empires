@@ -1,0 +1,51 @@
+name: V168 real-geographic L source mosaic — NOT game art
+on:
+  push:
+    branches: [terrain-v168-source-first-L-20261024]
+    paths:
+      - 'scripts/v168_source_first_l_octagons.py'
+      - 'scripts/test_v168_source_first_l_octagons.py'
+      - '.github/workflows/qa-v168-source-first-L.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-first-L:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image validation dependency
+        run: python -m pip install Pillow
+      - name: Preserve original V121 painting and V123 graph identities
+        run: node scripts/test_v161_native_material.js
+      - name: Run source-geography and negative integrity tests
+        run: python scripts/test_v168_source_first_l_octagons.py -v
+      - name: Download 18 independent original-pixel modern orthophoto sources
+        run: python scripts/v168_source_first_l_octagons.py --download --output qa/v168-source-L
+      - name: Verify full L and all three source sectors against original JPEG pixels
+        run: python scripts/v168_source_first_l_octagons.py --verify --output qa/v168-source-L
+      - name: Ensure NO false historical or game approvals
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from sys import path
+          path.insert(0, 'scripts')
+          from v168_source_first_l_octagons import NO_APPROVAL
+          m=json.loads(Path('qa/v168-source-L/manifest.json').read_text())
+          assert len(m['samples'])==18
+          assert len(m['sourceImageSeamDiagnostics'])==2
+          assert all(m[k] is False for k in NO_APPROVAL)
+          assert m['unobservedSouthwestBoundsPixels']==[0,512,768,1024]
+          assert all(s['visualSeamAccepted'] is False for s in m['sourceImageSeamDiagnostics'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v168-18-modern-source-tiles-L-shape-NOT-game-art
+          path: qa/v168-source-L/
+          retention-days: 7

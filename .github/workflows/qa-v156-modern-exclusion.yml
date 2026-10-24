@@ -1,0 +1,40 @@
+name: V156 modern infrastructure exclusion review (NOT historical game art)
+on:
+  push:
+    branches: [terrain-v156-modern-exclusion-study-20261024]
+    paths:
+      - 'scripts/v156_modern_exclusion.py'
+      - 'scripts/test_v156_modern_exclusion.py'
+      - '.github/workflows/qa-v156-modern-exclusion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modern-source-exclusion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image dependency
+        run: python -m pip install Pillow==12.0.0
+      - name: Validate modern-source exclusion geometry and fail-closed approvals offline
+        run: python scripts/test_v156_modern_exclusion.py
+      - name: Download authentic V153 geographic source from official tiles
+        run: python scripts/v153_geographic_strip.py --download
+      - name: Reverify original source JPEG hashes, geography and seams
+        run: python scripts/v153_geographic_strip.py --verify
+      - name: Generate transparent modern-exclusion source reference
+        run: python scripts/v156_modern_exclusion.py
+      - name: Independently verify exact exclusion mask and original pixels
+        run: python scripts/v156_modern_exclusion.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v156-modern-exclusion-candidates-NOT-game-art
+          path: |
+            qa/v156-modern-exclusion/
+            qa/v153-geographic-strip/manifest.json
+          retention-days: 7

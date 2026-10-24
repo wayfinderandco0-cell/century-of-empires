@@ -31,11 +31,11 @@ jobs:
         run: python scripts/qa_v162_photo_boundary.py --screenshots qa/v161-native
       - name: Preserve strict V140 visual gate unit tests
         run: python scripts/test_v140_neighbor_detail.py
+      - name: FAIL CLOSED on existing West/South visual detail gate
+        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v161-native --enforce
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: v162-matrei-photo-island-boundary-UNAPPROVED
           path: qa/v161-native/
           retention-days: 7
-      - name: FAIL CLOSED on existing West/South visual detail gate
-        run: python scripts/qa_v140_neighbor_detail.py --screenshots qa/v161-native --enforce

@@ -634,8 +634,16 @@ async function buildLandscape(){
   center.putImageData(im,0,0);
   continuousTerrain=true;
 }
+// Camera-stable terrain is drawn once; moving army/route redraw separately.
+// A viewport-sized snapshot costs one extra screen buffer, not another atlas.
+let staticFrame=null,staticDirty=true,staticBuilds=0,cacheHits=0,dynamicFrames=0;
+const renderTimings=[];
 function render(){
  if(!width||!height)return;
+ if(!staticFrame||staticFrame.width!==C.width||staticFrame.height!==C.height){
+   staticFrame=document.createElement('canvas');staticFrame.width=C.width;staticFrame.height=C.height;staticDirty=true;
+ }
+ if(staticDirty){
  cx.setTransform(dpr,0,0,dpr,0,0);
  cx.fillStyle='#627559';cx.fillRect(0,0,width,height);
  cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);
@@ -674,6 +682,17 @@ function render(){
   }
   // World-locked, degree-one termini: not imaginary road continuations.
   if(surveyLimits)V152Survey.paint(cx,scale,surveyLimits,debug);
+ }
+ cx.restore();
+ const cached=staticFrame.getContext('2d');
+ cached.setTransform(1,0,0,1,0,0);cached.clearRect(0,0,staticFrame.width,staticFrame.height);
+ cached.drawImage(C,0,0);staticBuilds++;staticDirty=false;
+ }else{
+ cx.setTransform(1,0,0,1,0,0);cx.drawImage(staticFrame,0,0);cacheHits++;
+ }
+ cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);cx.scale(scale,scale);
+ if(atlas){
   if(path.length>1){cx.beginPath();path.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#efdc91c2';cx.lineWidth=3;cx.stroke();}
   if(army){cx.save();cx.translate(...army);
    const k=16/scale;cx.fillStyle='#172e26';cx.strokeStyle='#e7d087';cx.lineWidth=2/scale;
@@ -687,12 +706,14 @@ function render(){
    cx.restore();}
  }
  cx.restore();
+ dynamicFrames++;
 }
 function polygonAt(t){cx.save();cx.translate(...t.origin);polygon(cx);cx.restore();}
 function resize(){width=C.clientWidth||window.innerWidth;height=C.clientHeight||window.innerHeight;
  dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(width*dpr);C.height=Math.round(height*dpr);
  base=Math.min(width/3200,height/2450);redraw();}
 function redraw(){
+ staticDirty=true;
  zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom));
  scale=base*zoom;clampCamera();renderDirty=true;
 }
@@ -809,8 +830,9 @@ for(const [button,destination] of [['gotoWest','west'],['gotoMatrei','matrei'],[
   menu.classList.remove('open');
  };
 }
-document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';};
+document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';;staticDirty=true;renderDirty=true;};
 window.V192=Object.freeze({
+ get renderStats(){const t=renderTimings.slice().sort((a,b)=>a-b);return {staticBuilds,cacheHits,dynamicFrames,cacheBytes:staticFrame?staticFrame.width*staticFrame.height*4:0,renderSamples:t.length,renderP95Ms:t.length?t[Math.ceil(t.length*.95)-1]:null,staticDirty};},
  get terrainCamera(){return {center:cam.slice(),scale,zoom,minZoom:minimumTerrainZoom(),
    viewport:[width,height],groundBounds:groundBounds.slice(),visible:visibleTerrainBounds()};},
  get seamTone(){return toneReport},get ready(){return ready},get surveyLimits(){return surveyLimits},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
@@ -846,12 +868,12 @@ async function boot(){
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
   art=source;await buildLandscape();currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
-  ready=true;renderDirty=true;statusEl.textContent='Connected three-tile test · tap roads to move';
+  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='Connected three-tile test · tap roads to move';
  }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
 }
 // Static landscape is cached. Repaint only while marching or when camera/UI
 // changes; prevents continuously redrawing a large terrain layer on iPhone.
 function frame(t){if(last&&moving){march(Math.min(.04,(t-last)/1000));renderDirty=true;}
- last=t;if(renderDirty){render();renderDirty=false;}requestAnimationFrame(frame);}
+ last=t;if(renderDirty){const t0=performance.now();render();renderTimings.push(performance.now()-t0);if(renderTimings.length>240)renderTimings.shift();renderDirty=false;}requestAnimationFrame(frame);}
 resize();boot();requestAnimationFrame(frame);
 </script></body></html>

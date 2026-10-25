@@ -53,32 +53,20 @@ function paintTrack(pts,thick=19){
  cx.strokeStyle='#61513b';cx.lineWidth=1.3;cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
 }
 function paintNaturalTrailFinish(pts){
- // V192 historical cartway MATERIAL ONLY: all road strokes are centered on
- // exact, unchanged V123 graph edges. Even the last dead-end remains visible.
- // Do not spline or geometrically smooth this road: troops would leave it.
+ // V194: soften the V192's highway-like parallel stripes into a weathered
+ // single cartway. ONLY pigments and road-edge flecks change: every painted
+ // cartway still follows the exact original V123 navigation polyline.
  if(!pts||pts.length<2)return;
  cx.save();cx.lineCap='round';cx.lineJoin='round';
  const trace=(width,color)=>{
   cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));
   cx.strokeStyle=color;cx.lineWidth=width;cx.stroke();
  };
- trace(27,'rgba(47,47,37,.91)');  // compacted boundary and drainage
- trace(22,'#675b45');              // broken gravel margins
- trace(18,'#897657');              // wheel-worn mineral surface
- trace(13,'#947f60');              // subdued center, not bright highway stripes
- // Parallel ruts hug the FIXED route, with at most 4.6 world-pixel offset.
- for(const side of [-4.6,4.6]){
-  cx.beginPath();
-  for(let i=0;i<pts.length;i++){
-   const prev=pts[Math.max(0,i-1)],next=pts[Math.min(pts.length-1,i+1)];
-   const dx=next[0]-prev[0],dy=next[1]-prev[1],ll=Math.hypot(dx,dy)||1;
-   const x=pts[i][0]-dy/ll*side,y=pts[i][1]+dx/ll*side;
-   if(i)cx.lineTo(x,y);else cx.moveTo(x,y);
-  }
-  cx.strokeStyle='rgba(57,46,32,.52)';cx.lineWidth=1.45;cx.stroke();
- }
- // Individual dust/scree flecks are material, never branch roads. Seed
- // from existing world-local points so redrawing/panning cannot move them.
+ // One continuous, narrower walkable roadbed. Never curve or offset it.
+ trace(22,'rgba(47,46,37,.86)');
+ trace(18,'#675b45');
+ trace(14,'#897657');
+ trace(10,'#988263');
  const hash=(ix,iy,n)=>{
   let k=(Math.imul(ix,1103515245)+Math.imul(iy,12345)+Math.imul(n,2654435761))|0;
   k=Math.imul(k^(k>>>15),2246822519);return ((k^(k>>>13))>>>0)/4294967295;
@@ -87,16 +75,44 @@ function paintNaturalTrailFinish(pts){
   const a=pts[i-1],b=pts[i],dx=b[0]-a[0],dy=b[1]-a[1];
   const length=Math.hypot(dx,dy);if(length<.01)continue;
   const tx=dx/length,ty=dy/length,nx=-ty,ny=tx;
-  const count=Math.floor(length/4.5);
+  const count=Math.max(1,Math.floor(length/4.1));
   for(let k=0;k<count;k++){
-   const p=(k+.35+.3*hash(i,k,31))/(count||1);
-   const h=hash(i,k,53),offset=(hash(i,k,97)-.5)*13.8;
-   const x=a[0]+p*dx+nx*offset,y=a[1]+p*dy+ny*offset;
-   cx.strokeStyle=h>.55?'rgba(190,174,137,.55)':'rgba(48,43,33,.40)';
-   cx.lineWidth=.7+1.1*hash(i,k,7);
-   const z=.8+1.7*hash(i,k,17);
-   cx.beginPath();cx.moveTo(x,y);
-   cx.lineTo(x+tx*z,y+ty*z);cx.stroke();
+   const p=(k+.24+.5*hash(i,k,31))/count;
+   const x=a[0]+p*dx,y=a[1]+p*dy;
+   // Irregular, broken mineral shoulders: not another parallel highway lane.
+   for(const side of [-1,1]){
+    if(hash(i,k,side+17)>.42){
+     const offset=side*(10.2+2.0*hash(i,k,side+51));
+     const len=1.4+4.1*hash(i,k,side+73);
+     cx.beginPath();cx.moveTo(x+nx*offset-tx*len*.5,y+ny*offset-ty*len*.5);
+     cx.lineTo(x+nx*offset+tx*len*.5,y+ny*offset+ty*len*.5);
+     cx.strokeStyle=hash(i,k,side+91)>.55?'rgba(124,109,78,.78)':'rgba(69,65,47,.70)';
+     cx.lineWidth=.8+1.7*hash(i,k,side+111);cx.stroke();
+    }
+    // Broken wheel marks; deliberate gaps avoid the two-railroad-track look.
+    if(hash(i,k,side+141)>.34){
+     const rut=side*(3.1+.65*hash(i,k,side+157));
+     const len=1.2+2.8*hash(i,k,side+171);
+     cx.beginPath();cx.moveTo(x+nx*rut-tx*len*.5,y+ny*rut-ty*len*.5);
+     cx.lineTo(x+nx*rut+tx*len*.5,y+ny*rut+ty*len*.5);
+     cx.strokeStyle='rgba(58,49,37,.34)';cx.lineWidth=.8;cx.stroke();
+    }
+   }
+   // Noncontinuous gravel and leaf litter, confined to the painted roadbed.
+   const off=(hash(i,k,97)-.5)*13.4;
+   const h=hash(i,k,53),z=.6+1.5*hash(i,k,7);
+   cx.strokeStyle=h>.55?'rgba(194,176,138,.48)':'rgba(46,43,34,.38)';
+   cx.lineWidth=.65+.95*hash(i,k,17);
+   cx.beginPath();cx.moveTo(x+nx*off,y+ny*off);
+   cx.lineTo(x+nx*off+tx*z,y+ny*off+ty*z);cx.stroke();
+   // Sparse verge grasses stop the road looking mechanically extruded.
+   if(hash(i,k,201)>.86){
+    const side=hash(i,k,211)>.5?1:-1;
+    const verge=side*(13.0+3.0*hash(i,k,223));
+    cx.beginPath();cx.moveTo(x+nx*verge,y+ny*verge);
+    cx.lineTo(x+nx*(verge+side*1.7)-tx*1.2,y+ny*(verge+side*1.7)-ty*1.2);
+    cx.strokeStyle='rgba(73,86,53,.55)';cx.lineWidth=1.1;cx.stroke();
+   }
   }
  }
  cx.restore();

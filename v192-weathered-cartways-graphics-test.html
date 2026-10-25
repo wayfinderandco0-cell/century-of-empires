@@ -46,11 +46,14 @@ const tileColor=t=>t.id==='west'?'#365444':'#3a4d3c';
 function lcg(seed){let a=seed>>>0;return ()=>{a=(Math.imul(1664525,a)+1013904223)>>>0;return a/4294967296;};}
 function polygon(ctx){ctx.beginPath();ctx.moveTo(256,0);ctx.lineTo(W-256,0);ctx.lineTo(W,256);ctx.lineTo(W,H-256);ctx.lineTo(W-256,H);ctx.lineTo(256,H);ctx.lineTo(0,H-256);ctx.lineTo(0,256);ctx.closePath();}
 function paintTrack(pts,thick=19){
- cx.lineCap='round';cx.lineJoin='round';
- for(const [color,size] of [['#38372b',thick+10],['#655a41',thick+5],['#a28b63',thick],['#bca581',thick-10]]){
+ // V195: the Matrei border extensions now use the SAME roadbed widths and
+ // pigment as the adjoining V194 cartways. No path geometry or source art moves.
+ // The only callers use thick=15; these widths then equal 22/18/14/10.
+ cx.save();cx.lineCap='round';cx.lineJoin='round';
+ for(const [color,size] of [['rgba(47,46,37,.86)',thick+7],['#675b45',thick+3],['#897657',thick-1],['#988263',thick-5]]){
   cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.strokeStyle=color;cx.lineWidth=Math.max(.8,size);cx.stroke();
  }
- cx.strokeStyle='#61513b';cx.lineWidth=1.3;cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
+ cx.restore();
 }
 function paintNaturalTrailFinish(pts){
  // V194: soften the V192's highway-like parallel stripes into a weathered

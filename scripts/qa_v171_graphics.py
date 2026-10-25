@@ -11,7 +11,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(("127.0.0.1",0),Handler)
 threading.Thread(target=server.serve_forever,daemon=True).start()
-url=f"http://127.0.0.1:{server.server_port}/v171-continuous-alpine-preview.html"
+url=f"http://127.0.0.1:{server.server_port}/v171-directional-army-road-test.html"
 results={}
 try:
     with sync_playwright() as playwright:

@@ -76,6 +76,7 @@ def plan():
         'doesNotProveHistoricalOrTraversableRoadCorridor':True,
         'doesNotReplaceHighResolutionGameTerrain':True,
         'modernInfrastructureRequiresExclusion':True,
+        'modernSourceCoverageComplete':False,
         'provider':'basemap.at', 'sourceUrl':'https://basemap.at/orthofoto/',
         'license':'CC BY 4.0','licenseUrl':'https://creativecommons.org/licenses/by/4.0/',
         'requiredAttribution':'Datenquelle: basemap.at',
@@ -83,7 +84,7 @@ def plan():
 
 def validate(m):
     expected=plan()
-    require(set(m)-set(expected) <= {'mosaicFile','mosaicSha256','seamDiagnostics'},
+    require(set(m)-set(expected) <= {'mosaicFile','mosaicSha256','seamDiagnostics','coverageAudit'},
             'unexpected source or approval metadata')
     for key,value in expected.items():
         if key!='samples':
@@ -167,7 +168,32 @@ def seams(image,grid):
             'verticalTilePairs':width*(height-1),
             'horizontalMeanRGBDifference':round(sum(horizontal)/len(horizontal),4),
             'verticalMeanRGBDifference':round(sum(vertical)/len(vertical),4),
-            'nativeRasterFullyObserved':True,'gameArtSeamApproved':False}
+            'nativeJPEGsFullyPresent':True,'gameArtSeamApproved':False}
+
+def coverage_audit(image):
+    """Flag large near-white SOUTH-edge areas as suspect, never certify coverage.
+
+    A white boundary might be provider no-data, snow, or a source defect.
+    Detection only requests review; it does NOT silently replace image pixels.
+    """
+    rgb=image.convert('RGB')
+    pixels=rgb.load()
+    width,height=rgb.size
+    def nearwhite(p):
+        return min(p)>=248 and max(p)-min(p)<=7
+    border=sum(nearwhite(pixels[x,height-1]) for x in range(width))
+    start=height-height//5
+    sampled=sum(nearwhite(pixels[x,y])
+                for y in range(start,height,4) for x in range(0,width,4))
+    total=len(range(start,height,4))*len(range(0,width,4))
+    suspected=(border>=max(64,width//20) and sampled>=total//50)
+    return {'southBorderNearWhitePixels':border,
+            'southFifthNearWhiteSampled':sampled,
+            'southFifthSampleCount':total,
+            'suspectedProviderNoData':bool(suspected),
+            'requiresVisualCoverageReview':True,
+            'geographicSourceCoverageApproved':False,
+            'gameArtCoverageApproved':False}
 
 def produce(m,folder):
     folder=Path(folder);folder.mkdir(parents=True,exist_ok=True)
@@ -175,7 +201,8 @@ def produce(m,folder):
     name='matrei-brenner-modern-overview.png'
     image.save(folder/name,optimize=True)
     m.update(mosaicFile=name,mosaicSha256=sha(folder/name),
-             seamDiagnostics=seams(image,m['gridTiles']))
+             seamDiagnostics=seams(image,m['gridTiles']),
+             coverageAudit=coverage_audit(image))
     (folder/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
     verify(folder)
     return m
@@ -192,6 +219,8 @@ def verify(folder):
                 saved.tobytes()==image.tobytes(),'mosaic source pixels altered')
     require(m.get('seamDiagnostics')==seams(image,m['gridTiles']),
             'seam diagnostics altered')
+    require(m.get('coverageAudit')==coverage_audit(image),
+            'source no-data coverage audit altered')
     return True
 
 def main():

@@ -31,7 +31,10 @@ jobs:
           const {validateEvidence}=require('./terrain-grid/v172-registration');
           if(m.controls.length||m.holdouts.length||m.productionApproved||m.v123RoadsGeoregistered)
             throw Error('V172 source-to-game correspondence was silently asserted');
-          try {validateEvidence(m);throw Error('Missing evidence was accepted');}
+          try {validateEvidence(m);throw Error('Unpinned identities were accepted');}
+          catch(e){if(!/SHA256 identities required/.test(e.message))throw e;}
+          const syntheticPins={...m,sourceMosaicSha256:'a'.repeat(64),gameArtSha256:'b'.repeat(64)};
+          try {validateEvidence(syntheticPins);throw Error('Missing landmark controls were accepted');}
           catch(e){if(!/four reviewed controls/.test(e.message))throw e;}
           console.log('PASS: no invented landmark controls; registration remains blocked');
           JS

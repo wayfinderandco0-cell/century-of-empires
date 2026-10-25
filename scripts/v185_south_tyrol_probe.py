@@ -116,7 +116,7 @@ def audit(original, alternative):
 
 
 def inspect_jpeg(data):
-    require(data.startswith(b'\\xff\\xd8') and len(data) < 1024 * 1024,
+    require(data.startswith(b'\xff\xd8') and len(data) < 1024 * 1024,
             'WMS did not return native-sized JPEG bytes')
     with Image.open(io.BytesIO(data)) as im:
         require(im.format == 'JPEG' and im.size == (256, 256),
@@ -147,7 +147,7 @@ def produce(parent_folder, out_folder, alternative_bytes):
     m.update(alternativeFile=name, alternativeSha256=sha(alternative_bytes),
              alternativeByteCount=len(alternative_bytes),
              originalSourceSha256=sha(source_bytes), coverageAudit=coverage)
-    (out_folder / 'manifest.json').write_text(json.dumps(m, indent=2) + '\\n')
+    (out_folder / 'manifest.json').write_text(json.dumps(m, indent=2) + '\n')
     verify(parent_folder, out_folder)
     return m
 

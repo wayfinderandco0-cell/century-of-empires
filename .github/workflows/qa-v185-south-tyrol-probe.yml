@@ -1,0 +1,58 @@
+name: V185 South Tyrol cross-border source probe — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v185-south-tyrol-crossborder-probe-20261025]
+    paths:
+      - 'scripts/v185_south_tyrol_probe.py'
+      - 'scripts/test_v185_south_tyrol_probe.py'
+      - '.github/workflows/qa-v185-south-tyrol-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  cross-border-source-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image dependency
+        run: python -m pip install Pillow
+      - name: Run V184 source guards and new V185 tests
+        run: |
+          python scripts/test_v184_matrei_brenner_overview.py
+          python scripts/test_v185_south_tyrol_probe.py
+      - name: Download previously verified V184 source artifact (no re-fetch of 60 tiles)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 40193742019 -R "$GITHUB_REPOSITORY" \
+            -n v184-60tile-modern-geographic-overview-NOT-GAME-ART \
+            -D qa/v184-matrei-brenner-overview
+          python scripts/v184_matrei_brenner_overview.py --verify \
+            --output qa/v184-matrei-brenner-overview
+      - name: Probe independent South Tyrol WMS over the white V184 border gap
+        run: |
+          python scripts/v185_south_tyrol_probe.py --fetch
+          python scripts/v185_south_tyrol_probe.py --verify
+          python - <<'PY'
+          import json
+          m=json.load(open('qa/v185-south-tyrol-probe/manifest.json'))
+          a=m['coverageAudit']
+          assert a['candidateSupplementalPixels'] > 10000
+          assert a['candidateOnlyNotStitched']
+          assert not a['geographicSourceCoverageApproved']
+          assert all(m[k] is False for k in ('historicalRoadsVerified',
+              'bridgeBanksVerified', 'historic1780Certified',
+              'periodArtComplete', 'productionApproved'))
+          print('Candidate modern source pixels:',a['candidateSupplementalPixels'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v185-south-tyrol-source-probe-NOT-GAME-ART
+          path: qa/v185-south-tyrol-probe/
+          retention-days: 7

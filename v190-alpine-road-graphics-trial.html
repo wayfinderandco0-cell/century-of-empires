@@ -511,12 +511,12 @@ async function buildLandscape(){
         // Meadow foliage: broad shadows with tiny high-contrast needle/grass
         // surfaces. Rock: sharply edged shale flecks and directional bedding.
         const material=rock>.5?1.14:(.72+.42*forest);
-        const light=(broad*17+needles*28+small*25+flecks*21)*material;
+        const light=(broad*22+needles*38+small*38+flecks*32)*material;
         const moss=forest*(needles*9+small*8);
         rgba[i]=clip255(red+light-moss*.32);
         rgba[i+1]=clip255(green+light+moss*.65);
         rgba[i+2]=clip255(blue+light-moss*.35);
-        rgba[i+3]=Math.round(235*coverage);
+        rgba[i+3]=Math.round(255*coverage);
       }
     }
     mg.putImageData(bitmap,0,0);

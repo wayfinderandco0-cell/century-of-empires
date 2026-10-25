@@ -1,0 +1,59 @@
+name: V173 residual modern roof exclusions — source-only, not game art
+on:
+  push:
+    branches: [terrain-v173-residual-modern-roofs-20261024]
+    paths:
+      - 'scripts/v169_source_l_modern_exclusion.py'
+      - 'scripts/test_v169_source_l_modern_exclusion.py'
+      - '.github/workflows/qa-v173-residual-modern-roofs.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-L-modern-exclusions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source-image validation dependency
+        run: python -m pip install Pillow
+      - name: Preserve V121 painting and V123 graph
+        run: node scripts/test_v161_native_material.js
+      - name: V168 original geographic L topology and source integrity
+        run: python scripts/test_v168_source_first_l_octagons.py -v
+      - name: V169 exclusion geometry, unknown alpha and no-false-approval tests
+        run: python scripts/test_v169_source_l_modern_exclusion.py -v
+      - name: Acquire and verify the exact 18 native V168 source JPEGs
+        run: |
+          python scripts/v168_source_first_l_octagons.py --download --output qa/v168-source-L
+          python scripts/v168_source_first_l_octagons.py --verify --output qa/v168-source-L
+      - name: Produce and verify source-registered modern exclusion and material study
+        run: |
+          python scripts/v169_source_l_modern_exclusion.py --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v169_source_l_modern_exclusion.py --verify --source qa/v168-source-L --output qa/v169-modern-source-L
+      - name: Fail closed on historical, game, or modern-clearance approval
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from sys import path
+          path.insert(0,"scripts")
+          from v169_source_l_modern_exclusion import FLAGS
+          m=json.loads(Path("qa/v169-modern-source-L/manifest.json").read_text())
+          assert all(m[k] is v for k,v in FLAGS.items())
+          assert m["sourceVersion"]==168
+          assert len(m["modernRoadObservations"])==3
+          assert len(m["developedObservations"])==11
+          assert m["dateStampObservationCount"]==12
+          assert all(c["excludedPixels"]>0 for c in m["sourceSectorCoverage"].values())
+          print("V173 residual modern roof exclusions verified; no historical/game approval")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v173-residual-modern-roofs-NOT-game-art
+          path: qa/v169-modern-source-L/
+          retention-days: 7

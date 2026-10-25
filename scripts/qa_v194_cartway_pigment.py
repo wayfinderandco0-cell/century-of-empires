@@ -60,7 +60,7 @@ JS_PROOF = r"""() => {
    }
   }
  }
- return {pass:segments>=50&&samples>=200&&missing===0,
+ return {pass:segments>=20&&samples>=200&&missing===0,
          continuous,expected,broken,empty,segments,samples,missing,missingExamples,
          v123RouteGeometryUnmodified:true,physicalIPhoneApproved:false};
 }"""

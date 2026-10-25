@@ -41,6 +41,7 @@ def not_game():
     assert m['doesNotProveHistoricalOrTraversableRoadCorridor']
     assert m['doesNotReplaceHighResolutionGameTerrain']
     assert m['modernInfrastructureRequiresExclusion']
+    assert m['modernSourceCoverageComplete'] is False
 
 def immutable():
     for edit in (
@@ -68,7 +69,11 @@ def roundtrip():
             assert image.getpixel((1200,3000))[3]==255
         s=json.loads((folder/'manifest.json').read_text())['seamDiagnostics']
         assert s['horizontalTilePairs']==48 and s['verticalTilePairs']==55
-        assert s['nativeRasterFullyObserved'] and not s['gameArtSeamApproved']
+        assert s['nativeJPEGsFullyPresent'] and not s['gameArtSeamApproved']
+        audit=json.loads((folder/'manifest.json').read_text())['coverageAudit']
+        assert audit['requiresVisualCoverageReview']
+        assert audit['geographicSourceCoverageApproved'] is False
+        assert audit['suspectedProviderNoData'] is False
 
 def tamper_source():
     with tempfile.TemporaryDirectory() as d:
@@ -103,6 +108,23 @@ def forged_seams():
         data['seamDiagnostics']['gameArtSeamApproved']=True
         path.write_text(json.dumps(data));reject(lambda:v.verify(folder))
 
+def white_south_edge_audit():
+    image=Image.new('RGBA',(1280,3072),(35,70,50,255))
+    from PIL import ImageDraw
+    ImageDraw.Draw(image).rectangle((390,2780,1100,3071),fill=(255,255,255,255))
+    a=v.coverage_audit(image)
+    assert a['suspectedProviderNoData'] is True
+    assert a['southBorderNearWhitePixels']==711
+    assert not a['geographicSourceCoverageApproved']
+    assert a['requiresVisualCoverageReview']
+
+def forged_coverage_audit():
+    with tempfile.TemporaryDirectory() as d:
+        folder=Path(d);m=fixture(folder);v.produce(m,folder)
+        path=folder/'manifest.json';data=json.loads(path.read_text())
+        data['coverageAudit']['geographicSourceCoverageApproved']=True
+        path.write_text(json.dumps(data));reject(lambda:v.verify(folder))
+
 for name,fn in [
     ('two independent anchors inside 60 native contiguous zoom14 tiles',geometry),
     ('no historic, road, bridge or GAME approvals',not_game),
@@ -113,5 +135,7 @@ for name,fn in [
     ('missing center tile rejected',missing_tile),
     ('forged historic approval rejected',forged_manifest),
     ('forged GAME-art seam approval rejected',forged_seams),
+    ('suspected southern provider no-data flagged without altering pixels',white_south_edge_audit),
+    ('forged geographic coverage approval rejected',forged_coverage_audit),
 ]:check(name,fn)
 print(f'V184 {passed} tests passed; modern SOURCE coverage only')

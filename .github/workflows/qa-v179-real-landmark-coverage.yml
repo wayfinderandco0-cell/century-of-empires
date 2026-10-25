@@ -1,0 +1,36 @@
+name: V179 independent geographic anchor coverage — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v179-real-landmark-coverage-20261025]
+    paths:
+      - 'terrain-grid/v179-real-landmark-coverage.js'
+      - 'scripts/test_v179_real_landmark_coverage.js'
+      - '.github/workflows/qa-v179-real-landmark-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-anchor-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: V172 registration remains evidence gated
+        run: node scripts/test_v172_registration.js
+      - name: V178 exact source geographic crosswalk
+        run: node scripts/test_v178_geographic_crosswalk.js
+      - name: V179 independent geographic anchor/source-coverage tests
+        run: node scripts/test_v179_real_landmark_coverage.js
+      - name: Export unresolved GAME footprint and coverage report
+        run: |
+          mkdir -p qa/v179-landmark-coverage
+          node -e "const fs=require('fs');const p=require('./terrain-grid/v179-real-landmark-coverage.js').coveragePlan();if(p.productionApproved!==false||p.proposedThreeGameCellFootprintApproved!==false||p.allThreeGameCellsCoveredByHighResSource!==false)process.exit(1);fs.writeFileSync('qa/v179-landmark-coverage/manifest.json',JSON.stringify(p,null,2)+'\n')"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v179-real-anchor-source-coverage-NOT-GAME-ART
+          path: qa/v179-landmark-coverage/
+          retention-days: 7

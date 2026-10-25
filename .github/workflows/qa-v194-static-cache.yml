@@ -1,0 +1,35 @@
+name: V194 Alpine Static Terrain Cache and Mobile Route Regression
+on:
+  push:
+    branches: ['terrain-v194-static-frame-cache-20261025']
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v193_camera_coverage.py'
+      - 'scripts/qa_v194_static_cache.py'
+      - '.github/workflows/qa-v194-static-cache.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v194-phone-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve V193 camera, gesture and source-blob checks
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Verify V194 static-cache reuse and world-coordinate route movement
+        run: python scripts/qa_v194_static_cache.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v194-mobile-cache-and-three-center-evidence
+          path: |
+            qa/v193-camera-coverage/
+            qa/v194-static-cache/

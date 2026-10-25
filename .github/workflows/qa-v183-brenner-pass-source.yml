@@ -1,0 +1,60 @@
+name: V183 Brenner Pass native SOURCE — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v183-brenner-pass-source-20261025]
+    paths:
+      - 'scripts/v183_brenner_pass_source.py'
+      - 'scripts/test_v183_brenner_pass_source.py'
+      - '.github/workflows/qa-v183-brenner-pass-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  brenner-pass-native-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install open-source image dependency
+        run: python -m pip install Pillow
+      - name: Preserve original registration and geographic guards
+        run: |
+          node scripts/test_v172_registration.js
+          node scripts/test_v178_geographic_crosswalk.js
+          node scripts/test_v179_real_landmark_coverage.js
+          python scripts/test_v180_matrei_source.py
+      - name: Test V183 native geometry, seam and provenance guards
+        run: python scripts/test_v183_brenner_pass_source.py
+      - name: Acquire nine authentic Brenner Pass modern source tiles
+        run: |
+          python scripts/v183_brenner_pass_source.py --download
+          python scripts/v183_brenner_pass_source.py --verify
+      - name: Fail closed on historic/game/production claims
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('qa/v183-brenner-pass-source/manifest.json').read_text())
+          assert len(m['samples'])==9
+          assert len({s['sha256'] for s in m['samples']})==9
+          assert m['doesNotProveContinuousTerrainCoverage'] is True
+          assert m['sourceRoadsNotPeriodRoutes'] is True
+          assert all(m[k] is False for k in ('sourceSectorsAreGameOctagons',
+              'v121ToGeographyRegistered','v123RoadsGeoregistered',
+              'historicalRoadsVerified','bridgeBanksVerified',
+              'historic1780Certified','periodArtComplete',
+              'physicalIPhoneApproved','productionApproved'))
+          print('Nine native Brenner Pass SOURCE tiles; no historical GAME approval')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v183-brenner-pass-modern-SOURCE-NOT-GAME-ART
+          path: qa/v183-brenner-pass-source/
+          retention-days: 7

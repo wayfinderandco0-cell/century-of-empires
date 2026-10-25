@@ -52,13 +52,13 @@ def geometry():
 
 def false_approvals():
     m = v.plan()
-    assert not m['alternativeCoverageObserved'] and not m['alternativeUsableForPeriodArt']
+    assert not m['alternativeCoverageApproved'] and not m['alternativeUsableForPeriodArt']
     assert all(m[k] is False for k in v.FALSE_FLAGS)
     for change in (
         lambda x: x.update(productionApproved=True),
         lambda x: x.update(historicalRoadsVerified=True),
         lambda x: x.update(bridgeBanksVerified=True),
-        lambda x: x.update(alternativeCoverageObserved=True),
+        lambda x: x.update(alternativeCoverageApproved=True),
         lambda x: x.update(wmsCRS='EPSG:4326'),
         lambda x: x.update(wmsLayer='invented-road'),
         lambda x: x.update(wmsBoundsEPSG3857=[0, 0, 1, 1]),

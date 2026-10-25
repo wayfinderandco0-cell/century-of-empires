@@ -656,8 +656,10 @@ function render(){
    if(t.id==='matrei'){
     // The photograph is feathered at both shared exits. Overdraw only the
     // source-traced exit corridors so fading scenery never erases the roads.
-    paintTrack([[0,478],...originalRoads.west.slice(0,6)],15);
-    paintTrack([...originalRoads.south.slice(-8),[466,1024]],15);
+    // V196: continue the neighbor's broken wheel marks and gravel shoulders
+    // across both Matrei exits, without shifting any V123 road coordinates.
+    paintNaturalTrailFinish([[0,478],...originalRoads.west.slice(0,6)]);
+    paintNaturalTrailFinish([...originalRoads.south.slice(-8),[466,1024]]);
    }else for(const pts of Object.values(t.roads))paintNaturalTrailFinish(pts);
    if(debug){polygon(cx);cx.strokeStyle='#f4da92';cx.lineWidth=2;cx.stroke();}
    cx.restore();

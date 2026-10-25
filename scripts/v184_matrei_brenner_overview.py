@@ -9,6 +9,8 @@ import hashlib
 import io
 import json
 import math
+import time
+from urllib.error import URLError
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -104,9 +106,16 @@ def download(m,folder):
     folder=Path(folder);folder.mkdir(parents=True,exist_ok=True)
     for item in m['samples']:
         req=Request(item['url'],headers={'User-Agent':'CenturyOfEmpires-SourceAudit/1.0'})
-        with urlopen(req,timeout=25) as response:
-            data=response.read(1024*1024+1)
-            mime=response.headers.get('Content-Type','')
+        for attempt in range(4):
+            try:
+                with urlopen(req,timeout=20) as response:
+                    data=response.read(1024*1024+1)
+                    mime=response.headers.get('Content-Type','')
+                break
+            except (URLError, TimeoutError):
+                if attempt==3:
+                    raise
+                time.sleep(1.5*(attempt+1))
         require(len(data)<=1024*1024 and data.startswith(b'\xff\xd8') and
                 'image' in mime.lower(),'invalid source response')
         with Image.open(io.BytesIO(data)) as im:

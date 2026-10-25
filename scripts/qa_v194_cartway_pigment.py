@@ -170,6 +170,42 @@ JS_WORLD_SEAMS = r"""() => {
          townBridgeArtApproved:false,physicalIPhoneApproved:false};
 }"""
 
+
+# V197: test the FINAL composited screen pixels, not just offscreen painters.
+# A source photo, label, clip or later layer could conceal a correct offscreen
+# stroke. Sample both real seams at close phone zoom with the debug overlay off.
+JS_COMPOSITED_SEAMS = r"""() => {
+ const priorCam=cam.slice(),priorZoom=zoom,expected=[152,130,99];
+ const sample=p=>{
+  const s=screen(p),x=Math.round(s[0]*dpr),y=Math.round(s[1]*dpr);
+  if(x<0||y<0||x>=C.width||y>=C.height)return null;
+  return Array.from(cx.getImageData(x,y,1,1).data);
+ };
+ const reports={};
+ try{
+  for(const [name,anchor,axis] of [['west',[1536,478],0],['south',[2002,1024],1]]){
+   cam=anchor.slice();zoom=6;redraw();render();
+   let missingCore=0,paintBeyondVerge=0;
+   const coreExamples=[];
+   for(let d=-48;d<=48;d+=8){
+    const p=anchor.slice();p[axis]+=d;
+    const rgba=sample(p);
+    if(!rgba||rgba[3]!==255||expected.some((v,i)=>Math.abs(v-rgba[i])>1)){
+     missingCore++;if(coreExamples.length<4)coreExamples.push({offset:d,rgba});
+    }
+    const off=p.slice();off[1-axis]+=35;
+    const far=sample(off);
+    if(!far||far.slice(0,3).every((v,i)=>Math.abs(v-expected[i])<=1))
+     paintBeyondVerge++;
+   }
+   reports[name]={pass:missingCore===0&&paintBeyondVerge===0,
+    missingCore,paintBeyondVerge,coreExamples,samples:13};
+  }
+ }finally{cam=priorCam;zoom=priorZoom;redraw();render();}
+ return {pass:reports.west.pass&&reports.south.pass,regions:reports,
+  actualCompositedCanvas:true,debugOverlay:false,artApproved:false};
+}"""
+
 def main():
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -195,6 +231,8 @@ def main():
                             assert seam["pass"], (engine,orient,seam)
                             world_seams=page.evaluate(JS_WORLD_SEAMS)
                             assert world_seams["pass"], (engine,orient,world_seams)
+                            composite_seams=page.evaluate(JS_COMPOSITED_SEAMS)
+                            assert composite_seams["pass"], (engine,orient,composite_seams)
                             assert not errors,(engine,orient,errors)
                             page.evaluate("V192.focusTile('west')")
                             page.evaluate("V192.zoomTo(6)")
@@ -206,6 +244,7 @@ def main():
                                             animations="disabled")
                             result["matreiNeighborSeams"]=seam
                             result["worldPositionedSeams"]=world_seams
+                            result["compositedSeams"]=composite_seams
                             results[f"{engine}-{orient}"]=result
                         finally:page.close()
                 finally:browser.close()

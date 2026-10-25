@@ -1,0 +1,53 @@
+name: V182 Matrei source date imprints — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v182-matrei-date-imprints-20261025]
+    paths:
+      - 'scripts/v182_matrei_imprints.py'
+      - 'scripts/test_v182_matrei_imprints.py'
+      - '.github/workflows/qa-v182-matrei-imprints.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-date-imprints:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install open-source image dependency
+        run: python -m pip install Pillow
+      - name: Preserve original registration and geographic safeguards
+        run: |
+          node scripts/test_v172_registration.js
+          node scripts/test_v178_geographic_crosswalk.js
+          node scripts/test_v179_real_landmark_coverage.js
+          python scripts/test_v180_matrei_source.py
+      - name: Reacquire and verify V180 Matrei modern source
+        run: |
+          python scripts/v180_matrei_source.py --download
+          python scripts/v180_matrei_source.py --verify
+      - name: Verify V181 exclusions before building V182
+        run: |
+          python scripts/test_v181_matrei_exclusions.py
+          python scripts/v181_matrei_exclusions.py
+          python scripts/v181_matrei_exclusions.py --verify
+      - name: V182 fail-closed source date imprint regression tests
+        run: python scripts/test_v182_matrei_imprints.py
+      - name: Regenerate and independently verify date-imprint SOURCE pixels
+        run: |
+          python scripts/v182_matrei_imprints.py
+          python scripts/v182_matrei_imprints.py --verify
+      - name: Retain source-only inspection artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v182-matrei-date-imprints-SOURCE-ONLY-NOT-GAME-ART
+          path: qa/v182-matrei-imprints/
+          retention-days: 7

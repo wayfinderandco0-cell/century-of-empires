@@ -1,0 +1,33 @@
+name: V192 Painted Cartway and Terrain QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v192_cartways.py'
+      - 'scripts/qa_v192_terrain_parity.py'
+      - '.github/workflows/qa-v192-cartways.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v192-phone-cartways:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v192_cartways.py
+      - run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v192-cartways-graphics-phone-screenshots
+          path: |
+            qa/v192-road-graphics/
+            qa/v192-three-centers/

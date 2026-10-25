@@ -28,4 +28,4 @@ jobs:
         if: always()
         with:
           name: v188-terrain-four-browser-captures
-          path: qa/v188-edge-tone/
+          path: qa/v188-terrain/

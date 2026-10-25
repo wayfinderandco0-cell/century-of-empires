@@ -1,0 +1,34 @@
+name: V178 verified geographic source crosswalk — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v178-geographic-crosswalk-20261025]
+    paths:
+      - 'terrain-grid/v178-source-geographic-crosswalk.js'
+      - 'scripts/test_v178_geographic_crosswalk.js'
+      - '.github/workflows/qa-v178-geographic-crosswalk.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: V172 game/source registration must remain evidence-gated
+        run: node scripts/test_v172_registration.js
+      - name: V178 actual V94/V97/V102/V168 source coordinate and seam regression
+        run: node scripts/test_v178_geographic_crosswalk.js
+      - name: Export reviewable source-only sector bounds
+        run: |
+          mkdir -p qa/v178-source-crosswalk
+          node -e "const fs=require('fs'); const x=require('./terrain-grid/v178-source-geographic-crosswalk.js').crosswalk(); fs.writeFileSync('qa/v178-source-crosswalk/manifest.json',JSON.stringify(x,null,2)+'\n'); if(x.v123RoadsGeoregistered!==false || x.productionApproved!==false)process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v178-exact-source-geographic-bounds-NOT-GAME-ART
+          path: qa/v178-source-crosswalk/
+          retention-days: 7

@@ -1,0 +1,61 @@
+name: V186 South Tyrol source candidates — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v186-south-border-source-candidates-20261025]
+    paths:
+      - 'scripts/v186_south_border_candidates.py'
+      - 'scripts/test_v186_south_border_candidates.py'
+      - '.github/workflows/qa-v186-south-border-candidates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  candidate-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image dependency
+        run: python -m pip install Pillow
+      - name: Run inherited source and new fail-closed tests
+        run: |
+          python scripts/test_v184_matrei_brenner_overview.py
+          python scripts/test_v185_south_tyrol_probe.py
+          python scripts/test_v186_south_border_candidates.py
+      - name: Verify real V184 60-tile source or independently reacquire after artifact expiry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh run download 40193742019 -R "$GITHUB_REPOSITORY" \
+            -n v184-60tile-modern-geographic-overview-NOT-GAME-ART \
+            -D qa/v184-matrei-brenner-overview; then
+            echo 'V184 artifact unavailable: reacquiring verified 60-tile original SOURCE'
+            python scripts/v184_matrei_brenner_overview.py --download
+          fi
+          python scripts/v184_matrei_brenner_overview.py --verify
+      - name: Acquire 10 independent South Tyrol candidate sources; never paint observed Austria
+        run: |
+          python scripts/v186_south_border_candidates.py --fetch
+          python scripts/v186_south_border_candidates.py --verify
+          python - <<'PY'
+          import json
+          m=json.load(open('qa/v186-south-border-candidates/manifest.json'))
+          assert m['sampleCount'] == 10 and len(m['samples']) == 10
+          assert m['candidateAudit']['candidatePixels'] > 10000
+          assert not m['candidateAudit']['geographicSourceCoverageApproved']
+          assert all(m[k] is False for k in (
+              'historicalRoadsVerified', 'bridgeBanksVerified',
+              'crossBorderSeamsApproved', 'physicalIPhoneApproved',
+              'productionApproved'))
+          print('SOURCE-only candidate pixels:',m['candidateAudit']['candidatePixels'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v186-south-border-candidates-NOT-GAME-ART
+          path: qa/v186-south-border-candidates/
+          retention-days: 7

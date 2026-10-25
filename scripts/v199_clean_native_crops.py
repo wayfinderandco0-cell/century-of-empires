@@ -196,8 +196,7 @@ def produce(v197_dir, v198_dir, output):
     sheet.save(output/sheet_name)
     m['contactSheet'] = sheet_name
     m['contactSheetSha256'] = sha(output/sheet_name)
-    (output/'manifest.json').write_text(json.dumps(m, indent=2)+'
-')
+    (output/'manifest.json').write_text(json.dumps(m, indent=2)+'\n')
     verify(v197_dir, v198_dir, output)
     return m
 

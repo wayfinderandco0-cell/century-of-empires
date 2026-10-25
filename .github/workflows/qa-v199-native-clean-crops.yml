@@ -1,0 +1,48 @@
+name: V199 Native Clean Alpine Source Crops (NOT GAME ART)
+on:
+  push:
+    branches: ['terrain-v199-native-clean-crops-20261025']
+    paths:
+      - 'scripts/v199_clean_native_crops.py'
+      - 'scripts/test_v199_clean_native_crops.py'
+      - '.github/workflows/qa-v199-native-clean-crops.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v199-source-crops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Inherited V197 source-provenance tests
+        run: python scripts/test_v197_highres_material_samples.py
+      - name: Inherited V198 quarantine tests
+        run: python scripts/test_v198_period_exclusion_masks.py
+      - name: V199 fail-closed crop/projection/approval tests
+        run: python scripts/test_v199_clean_native_crops.py
+      - name: Reacquire and independently verify 12 native modern-source JPEGs
+        run: |
+          python scripts/v197_highres_material_samples.py --download
+          python scripts/v197_highres_material_samples.py --verify
+      - name: Regenerate V198 quarantined regions; do not inpaint
+        run: |
+          python scripts/v198_period_exclusion_masks.py
+          python scripts/v198_period_exclusion_masks.py --verify
+      - name: Extract 9 real, zero-mask native source crops with EPSG:3857 bounds
+        run: python scripts/v199_clean_native_crops.py
+      - name: Independently recheck every original pixel, mask margin and provenance
+        run: python scripts/v199_clean_native_crops.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v199-nine-real-clean-source-crops-NOT-GAME-ART
+          path: |
+            qa/v199-clean-native-crops/
+            qa/v198-source-exclusions/manifest.json
+            qa/v197-highres-source-materials/manifest.json
+          retention-days: 7

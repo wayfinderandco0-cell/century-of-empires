@@ -44,6 +44,9 @@ def fixture(root):
             ImageDraw.Draw(im).rectangle((20, 20, 210, 210), fill=(255, 255, 255))
         if item['name'] == previous.TARGET:
             ImageDraw.Draw(im).rectangle((0, 0, 255, 229), fill='white')
+        # Unique, observable tile identity; V184 intentionally rejects duplicate JPEGs.
+        ImageDraw.Draw(im).rectangle((0, 0, 15, 15),
+                                    fill=((i * 37) % 256, (i * 73) % 256, (i * 131) % 256))
         path = root / (item['name'] + '.jpeg')
         path.write_bytes(jpeg(im))
         item.update(imageFile=path.name, sha256=parent.sha(path),

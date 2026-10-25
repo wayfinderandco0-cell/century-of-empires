@@ -46,15 +46,19 @@ jobs:
           assert len({s['sha256'] for s in m['samples']})==60
           assert m['seamDiagnostics']['horizontalTilePairs']==48
           assert m['seamDiagnostics']['verticalTilePairs']==55
-          assert m['seamDiagnostics']['nativeRasterFullyObserved'] is True
+          assert m['seamDiagnostics']['nativeJPEGsFullyPresent'] is True
           assert m['seamDiagnostics']['gameArtSeamApproved'] is False
           assert m['doesNotProveHistoricalOrTraversableRoadCorridor'] is True
+          assert m['modernSourceCoverageComplete'] is False
+          assert m['coverageAudit']['suspectedProviderNoData'] is True
+          assert m['coverageAudit']['requiresVisualCoverageReview'] is True
+          assert m['coverageAudit']['geographicSourceCoverageApproved'] is False
           assert all(m[k] is False for k in ('sourceSectorsAreGameOctagons',
               'v121ToGeographyRegistered','v123RoadsGeoregistered',
               'historicalRoadsVerified','bridgeBanksVerified',
               'historic1780Certified','periodArtComplete',
               'physicalIPhoneApproved','productionApproved'))
-          print('60 continuous modern SOURCE tiles; no historical/game claims')
+          print('60 native JPEGs; suspected white provider no-data wedge; source/GAME approval FALSE')
           PY
       - uses: actions/upload-artifact@v4
         if: always()

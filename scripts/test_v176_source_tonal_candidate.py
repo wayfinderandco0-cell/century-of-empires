@@ -25,6 +25,8 @@ class V176Tests(unittest.TestCase):
           **{k:False for k in v.FALSE_FLAGS}}
         cls.lod={"version":174,"sourceMosaicSha256":"a"*64,
           "sourceMaskSha256":"b"*64,"sourceReferenceSha256":"c"*64,
+          "sourceToV123TransformVerified":False,
+          **{k:False for k in v.FALSE_FLAGS},
           "blockGrid":[48,32],"tiers":[{"gameArtEligible":False,
           "playableRoadsEligible":False,"deepZoomEligible":False} for _ in range(4)],
           "sectorCoverage":{k:{"retainedPixels":n} for k,n in cls.counts.items()},
@@ -53,6 +55,10 @@ class V176Tests(unittest.TestCase):
                 v.validate_source(m,self.lod,self.study,self.mask)
     def test_reject_lod_game_eligibility(self):
         l=copy.deepcopy(self.lod);l['tiers'][2]['deepZoomEligible']=True
+        with self.assertRaisesRegex(ValueError,'untrusted LOD'):
+            v.validate_source(self.meta,l,self.study,self.mask)
+    def test_reject_forged_lod_approval(self):
+        l=copy.deepcopy(self.lod);l['productionApproved']=True
         with self.assertRaisesRegex(ValueError,'untrusted LOD'):
             v.validate_source(self.meta,l,self.study,self.mask)
     def test_reject_mask_fill(self):

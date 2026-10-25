@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>V175 masked geographic source inspection — NOT GAME ART</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#121b21;color:#f2f5f5;font:12px system-ui,sans-serif}
+header{box-sizing:border-box;height:104px;padding:6px 9px;background:#192a30}
+header strong{display:block;font-size:13px}header small{display:block;color:#ffd19a;font-size:10px;margin:3px 0}
+nav{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+button{background:#31525b;color:white;border:1px solid #7099a2;border-radius:4px;padding:4px 8px;touch-action:manipulation}
+button[aria-pressed=true]{background:#568677}#status{font-size:10px;margin-left:auto}
+canvas{display:block;width:100%;height:calc(100% - 130px);touch-action:none}
+footer{height:26px;box-sizing:border-box;padding:5px 8px;background:#192a30;font-size:10px;display:flex;justify-content:space-between}
+#error{color:#ffb2a8}
+</style></head><body>
+<header><strong>Alpine source L · West / Center / South</strong>
+<small>Modern aerial material with roofs/asphalt excluded. Transparent gaps are UNKNOWN. NOT 1780–1880 game art or verified roads.</small>
+<nav><button data-focus="0">West</button><button data-focus="1">Center</button><button data-focus="2">South</button>
+<button data-tier="0">1</button><button data-tier="1">2</button><button data-tier="2">3</button><button data-tier="3">4</button><span id="status">Checking evidence…</span></nav></header>
+<canvas id="map" aria-label="Masked modern geographic source material; inspect by pan and pinch"></canvas>
+<footer><span>Datenquelle: basemap.at · CC BY 4.0</span><span id="error">Not playable · No historic route certification</span></footer>
+<script>
+'use strict';
+(() => {
+const W=1536,H=1024,TIERS=[1,2.5,4,7],CENTERS=[[384,256],[1152,256],[1152,768]];
+const canvas=document.getElementById('map'),ctx=canvas.getContext('2d',{alpha:false});
+const status=document.getElementById('status'),error=document.getElementById('error');
+const state={ready:false,sourceOnly:true,productionApproved:false,periodArtComplete:false,
+  historic1780Certified:false,v123RoadsGeoregistered:false,bridgeBanksVerified:false,
+  physicalIPhoneApproved:false,scale:1,fit:1,tier:0,camera:[768,512],pointers:new Map(),
+  image:null,mask:null,manifest:null,lod:null};
+window.V175=state;
+const requiredFalse=['productionApproved','periodArtComplete','historic1780Certified',
+  'v123RoadsGeoregistered','bridgeBanksVerified','physicalIPhoneApproved',
+  'historicalRoadsVerified','v121ToGeographyRegistered'];
+function rejectUnless(ok,msg){if(!ok)throw Error(msg);}
+function validate(m,lod){
+ rejectUnless(m.version===169&&m.sourceVersion===168&&m.sourceCrs==='EPSG:3857'&&
+  m.requiredAttribution==='Datenquelle: basemap.at'&&m.sourceLicense==='CC BY 4.0',
+  'Invalid modern source provenance');
+ rejectUnless(JSON.stringify(m.pixelDimensions)==='[1536,1024]'&&
+  m.studyFile==='source-L-muted-material-study.png'&&m.maskFile==='source-L-modern-exclusion-mask.png',
+  'Wrong L footprint');
+ for(const k of requiredFalse)rejectUnless(m[k]===false,'Unapproved claim: '+k);
+ rejectUnless(m.modernInfrastructureCleared===false&&m.sourceSectorsAreNotGameOctagons===true,
+  'False period/geometry claim');
+ rejectUnless(lod.version===174&&lod.sourceMosaicSha256===m.sourceMosaicSha256&&
+  lod.sourceMaskSha256===m.maskSha256&&lod.sourceReferenceSha256===m.referenceSha256,
+  'LOD does not match masked geographic source');
+ rejectUnless(JSON.stringify(lod.blockGrid)==='[48,32]'&&
+  lod.retainedPixelsByBlockRowMajor.length===1536&&
+  lod.tiers.length===4&&lod.tiers.every(t=>!t.gameArtEligible&&!t.deepZoomEligible&&!t.playableRoadsEligible),
+  'Unapproved LOD');
+ for(let row=16;row<32;row++)for(let col=0;col<24;col++)
+  rejectUnless(lod.retainedPixelsByBlockRowMajor[row*48+col]===0,'Unobserved source quadrant filled');
+ for(const k of requiredFalse)rejectUnless(lod[k]===false,'Unapproved LOD claim: '+k);
+ return true;
+}
+async function verifiedFile(url,expected){
+ rejectUnless(/^[a-f0-9]{64}$/.test(expected||''),'Missing source SHA256');
+ const r=await fetch(url,{cache:'no-store'});rejectUnless(r.ok,'Missing source material: '+url);
+ const bytes=await r.arrayBuffer(),digest=await crypto.subtle.digest('SHA-256',bytes);
+ const hash=[...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
+ rejectUnless(hash===expected,'Source SHA256 mismatch: '+url);
+ return createImageBitmap(new Blob([bytes],{type:'image/png'}));
+}
+function fit(){state.fit=Math.min(canvas.clientWidth/W,canvas.clientHeight/H);state.scale=state.fit*TIERS[state.tier];}
+function clamp(){
+ const dx=canvas.clientWidth/(2*state.scale),dy=canvas.clientHeight/(2*state.scale);
+ state.camera[0]=dx>=W/2?W/2:Math.max(dx,Math.min(W-dx,state.camera[0]));
+ state.camera[1]=dy>=H/2?H/2:Math.max(dy,Math.min(H-dy,state.camera[1]));
+}
+function screenToSource(x,y){return [state.camera[0]+(x-canvas.clientWidth/2)/state.scale,
+ state.camera[1]+(y-canvas.clientHeight/2)/state.scale];}
+function draw(){
+ const dpr=devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;
+ if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+ }
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#17242c';ctx.fillRect(0,0,w,h);
+ if(!state.image)return;
+ ctx.save();ctx.translate(w/2,h/2);ctx.scale(state.scale,state.scale);
+ ctx.translate(-state.camera[0],-state.camera[1]);
+ // Explicit world-locked unknown checkerboard; never paint terrain into alpha holes.
+ for(let y=0;y<H;y+=32)for(let x=0;x<W;x+=32){
+  ctx.fillStyle=(x/32+y/32)%2===0?'#432b3c':'#2b2433';ctx.fillRect(x,y,32,32);
+ }
+ ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ ctx.drawImage(state.image,0,0);
+ ctx.restore();
+ const sector=state.camera[0]<768?'WEST':state.camera[1]<512?'CENTER':'SOUTH';
+ status.textContent=sector+' · '+(state.tier+1)+'/4 · SOURCE ONLY';
+ document.querySelectorAll('[data-tier]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.tier===state.tier)));
+}
+function setTier(t,ax=canvas.clientWidth/2,ay=canvas.clientHeight/2){
+ rejectUnless(Number.isInteger(t)&&t>=0&&t<4,'Invalid tier');
+ const before=screenToSource(ax,ay);state.tier=t;fit();
+ state.camera=[before[0]-(ax-canvas.clientWidth/2)/state.scale,
+               before[1]-(ay-canvas.clientHeight/2)/state.scale];
+ clamp();draw();
+}
+function focusSector(i,t=3){
+ if(!state.ready||!Number.isInteger(i)||i<0||i>2||!Number.isInteger(t)||t<0||t>3)return false;
+ state.tier=t;fit();state.camera=CENTERS[i].slice();clamp();draw();return true;
+}
+function sampleAlpha(x,y){
+ if(!state.ready||!Number.isInteger(x)||!Number.isInteger(y)||x<0||y<0||x>=W||y>=H)return null;
+ const c=document.createElement('canvas');c.width=W;c.height=H;
+ const p=c.getContext('2d',{willReadFrequently:true});p.drawImage(state.image,0,0);
+ return p.getImageData(x,y,1,1).data[3];
+}
+function xy(e){const r=canvas.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+let gesture=null;
+canvas.addEventListener('pointerdown',e=>{if(!state.ready)return;canvas.setPointerCapture(e.pointerId);state.pointers.set(e.pointerId,xy(e));gesture=null;});
+canvas.addEventListener('pointermove',e=>{
+ if(!state.pointers.has(e.pointerId))return;
+ const old=state.pointers.get(e.pointerId),now=xy(e);state.pointers.set(e.pointerId,now);
+ const points=[...state.pointers.values()];
+ if(points.length===1){
+  state.camera[0]-=(now[0]-old[0])/state.scale;state.camera[1]-=(now[1]-old[1])/state.scale;clamp();draw();
+ }else if(points.length===2){
+  const mid=[(points[0][0]+points[1][0])/2,(points[0][1]+points[1][1])/2];
+  const dist=Math.hypot(points[0][0]-points[1][0],points[0][1]-points[1][1]);
+  if(gesture&&dist>2){
+   state.scale=Math.max(state.fit*TIERS[0],Math.min(state.fit*TIERS[3],gesture.scale*dist/gesture.distance));
+   state.camera=[gesture.world[0]-(mid[0]-canvas.clientWidth/2)/state.scale,
+                 gesture.world[1]-(mid[1]-canvas.clientHeight/2)/state.scale];clamp();draw();
+  }else if(dist>2)gesture={distance:dist,scale:state.scale,world:screenToSource(...mid)};
+ }
+});
+for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{state.pointers.delete(e.pointerId);gesture=null;});
+canvas.addEventListener('wheel',e=>{e.preventDefault();setTier(Math.max(0,Math.min(3,state.tier+(e.deltaY<0?1:-1))),...xy(e));},{passive:false});
+document.querySelectorAll('[data-tier]').forEach(b=>b.addEventListener('click',()=>setTier(+b.dataset.tier)));
+document.querySelectorAll('[data-focus]').forEach(b=>b.addEventListener('click',()=>focusSector(+b.dataset.focus)));
+window.addEventListener('resize',()=>{fit();clamp();draw();});
+Object.assign(state,{focusSector,setTier,screenToSource,sampleAlpha,validate});
+(async()=>{
+ const base='qa/v169-modern-source-L/',lodBase='qa/v174-source-lod/';
+ const [mr,lr]=await Promise.all([fetch(base+'manifest.json',{cache:'no-store'}),fetch(lodBase+'manifest.json',{cache:'no-store'})]);
+ rejectUnless(mr.ok&&lr.ok,'Missing verified source manifests');
+ const m=await mr.json(),lod=await lr.json();validate(m,lod);
+ const [image,mask]=await Promise.all([verifiedFile(base+m.studyFile,m.studySha256),
+  verifiedFile(base+m.maskFile,m.maskSha256)]);
+ rejectUnless(image.width===W&&image.height===H&&mask.width===W&&mask.height===H,
+  'Wrong source image dimensions');
+ state.image=image;state.mask=mask;state.manifest=m;state.lod=lod;state.ready=true;
+ fit();clamp();draw();
+})().catch(e=>{state.ready=false;state.failure=String(e);status.textContent='Source rejected';error.textContent='SOURCE REJECTED: '+e.message;});
+})();
+</script></body></html>

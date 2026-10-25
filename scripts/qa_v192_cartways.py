@@ -52,12 +52,36 @@ try:
                     page.evaluate("() => new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)))")
                     page.screenshot(path=str(out/f"{engine}-{orient}-v192-whole.png"),animations="disabled")
                     assert page.evaluate("V192.orderTo('west')")
+                    assert page.evaluate("""() => {
+                        const route=V192.route;
+                        if(route.length<2)return false;
+                        for(let i=1;i<route.length;i++){
+                          const a=route[i-1],b=route[i];
+                          for(const t of [0,.25,.5,.75,1]){
+                            const p=[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])];
+                            if(V192.roadDistance(p)>1.5)return false;
+                          }
+                        }
+                        return true;
+                    }"""),"Graph path strays from painted cartway"
                     page.evaluate("V192.progress(.6)")
                     west=page.evaluate("V192.point")
                     assert len(west)==2 and all(isinstance(x,(int,float)) for x in west)
                     page.evaluate("V192.halt()")
                     assert not page.evaluate("V192.moving")
                     assert page.evaluate("V192.orderTo('south')")
+                    assert page.evaluate("""() => {
+                        const route=V192.route;
+                        if(route.length<2)return false;
+                        for(let i=1;i<route.length;i++){
+                          const a=route[i-1],b=route[i];
+                          for(const t of [0,.25,.5,.75,1]){
+                            const p=[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])];
+                            if(V192.roadDistance(p)>1.5)return false;
+                          }
+                        }
+                        return true;
+                    }"""),"Graph path strays from painted cartway"
                     page.evaluate("V192.progress(1)")
                     assert not errors,(engine,orient,errors)
                     results[f"{engine}-{orient}"]={"pass":True,"sampled_edge_colors":report["samples"],

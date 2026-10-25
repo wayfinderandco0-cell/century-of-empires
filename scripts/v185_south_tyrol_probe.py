@@ -70,7 +70,7 @@ def plan():
             'license': LICENSE,
             'requiredAttribution': 'Autonome Provinz Bozen / Provincia Autonoma di Bolzano; basemap.at for original Austrian source',
             'sourceTileWhiteMayIndicateOutsideAustria': True,
-            'alternativeCoverageObserved': False,
+            'alternativeCoverageApproved': False,
             'alternativeUsableForPeriodArt': False,
             'doesNotCertifyModernOrHistoricalRoads': True,
             **{k: False for k in FALSE_FLAGS}}

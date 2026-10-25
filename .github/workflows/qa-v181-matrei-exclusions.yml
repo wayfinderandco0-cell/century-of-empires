@@ -1,0 +1,48 @@
+name: V181 Matrei modern-source exclusion — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v181-matrei-modern-exclusions-20261025]
+    paths:
+      - 'scripts/v181_matrei_exclusions.py'
+      - 'scripts/test_v181_matrei_exclusions.py'
+      - '.github/workflows/qa-v181-matrei-exclusions.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modern-source-exclusions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install open-source image dependency
+        run: python -m pip install Pillow
+      - name: Preserve source/geographic registration safeguards
+        run: |
+          node scripts/test_v172_registration.js
+          node scripts/test_v178_geographic_crosswalk.js
+          node scripts/test_v179_real_landmark_coverage.js
+          python scripts/test_v180_matrei_source.py
+      - name: Reacquire and verify V180 native Matrei source
+        run: |
+          python scripts/v180_matrei_source.py --download
+          python scripts/v180_matrei_source.py --verify
+      - name: V181 real-source fail-closed exclusion regression tests
+        run: python scripts/test_v181_matrei_exclusions.py
+      - name: Regenerate and independently verify exclusion pixels
+        run: |
+          python scripts/v181_matrei_exclusions.py
+          python scripts/v181_matrei_exclusions.py --verify
+      - name: Retain source-only inspection artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v181-matrei-modern-exclusions-SOURCE-ONLY-NOT-GAME-ART
+          path: qa/v181-matrei-exclusions/
+          retention-days: 7

@@ -1,0 +1,38 @@
+name: V189 three Alpine centers phone art parity (fail closed)
+on:
+  push:
+    branches: [terrain-v189-three-center-phone-art-gate-20261025]
+    paths:
+      - 'scripts/qa_v189_three_center_art.py'
+      - 'scripts/test_v189_three_center_art.py'
+      - '.github/workflows/qa-v189-three-center-art.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  phone-art-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install mobile browser and screenshot QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Test V189 strict gate on synthetic positive and negative cases
+        run: python -m unittest discover -s scripts -p 'test_v189_three_center_art.py' -v
+      - name: Preserve V188 route and halt/reorder technical gate
+        run: python scripts/qa_v188_terrain.py
+      - name: Capture 12 real phone screenshots and enforce unchanged V171 art thresholds
+        run: python scripts/qa_v189_three_center_art.py --capture --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v189-three-center-real-phone-visual-gate
+          path: |
+            qa/v189-three-centers/
+            qa/v188-terrain/
+          retention-days: 7

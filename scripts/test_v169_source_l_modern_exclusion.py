@@ -41,6 +41,16 @@ class V169ModernExclusionTests(unittest.TestCase):
                    (1418,91),(815,588),(825,795),(267,455)):
             self.assertEqual(self.mask.getpixel(pt),0,pt)
 
+    def test_v173_residual_roofs_fail_closed(self):
+        # Residual roofs were visibly retained in real V169 source artifact
+        # 12577237697; they must not leak into candidate period materials.
+        for pt in ((1090,397),(268,484),(407,64)):
+            self.assertEqual(self.mask.getpixel(pt),0,pt)
+        # Preserve adjacent source terrain rather than blanking whole sectors.
+        for pt in ((980,330),(350,460),(1150,340)):
+            self.assertEqual(self.mask.getpixel(pt),255,pt)
+        self.assertEqual(len(v.DEVELOPED),11)
+
     def test_observed_2023_labels_excluded(self):
         for pt in v.DATE_STAMPS:
             self.assertEqual(self.mask.getpixel(pt),0,pt)

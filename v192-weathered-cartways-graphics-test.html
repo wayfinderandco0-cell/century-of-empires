@@ -82,12 +82,12 @@ function paintNaturalTrailFinish(pts){
    // Irregular, broken mineral shoulders: not another parallel highway lane.
    for(const side of [-1,1]){
     if(hash(i,k,side+17)>.42){
-     const offset=side*(10.2+2.0*hash(i,k,side+51));
+     const offset=side*(11.5+2.5*hash(i,k,side+51));
      const len=1.4+4.1*hash(i,k,side+73);
      cx.beginPath();cx.moveTo(x+nx*offset-tx*len*.5,y+ny*offset-ty*len*.5);
      cx.lineTo(x+nx*offset+tx*len*.5,y+ny*offset+ty*len*.5);
      cx.strokeStyle=hash(i,k,side+91)>.55?'rgba(124,109,78,.78)':'rgba(69,65,47,.70)';
-     cx.lineWidth=.8+1.7*hash(i,k,side+111);cx.stroke();
+     cx.lineWidth=1.0+2.4*hash(i,k,side+111);cx.stroke();
     }
     // Broken wheel marks; deliberate gaps avoid the two-railroad-track look.
     if(hash(i,k,side+141)>.34){

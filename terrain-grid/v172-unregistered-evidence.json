@@ -10,7 +10,7 @@
     3072,
     2048
   ],
-  "sourceMosaicSha256": null,
+  "sourceMosaicSha256": "7360fcb88a2325791aaeb16fbfd3a8b4c24289752c0d1b67c99ba3b42de11756",
   "gameArtSha256": null,
   "controls": [],
   "holdouts": [],
@@ -20,6 +20,6 @@
   "bridgeBanksVerified": false,
   "physicalIPhoneApproved": false,
   "historic1780Certified": false,
-  "reason": "No independently corroborated V121 illustrative painting-to-V168 modern geographic landmark correspondence. Source mosaic and game art identities must be pinned before fitting. Do not infer a bridge or roads.",
+  "reason": "V169 original geographic source SHA256 pinned from verified CI artifact 12577237697; V121 GAME art SHA256 and independent landmark correspondences remain unpinned. No bridge or roads inferred.",
   "sourceSectorsAreNotGameOctagons": true
 }

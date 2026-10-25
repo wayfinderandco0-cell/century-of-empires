@@ -1,0 +1,53 @@
+name: V175 masked modern SOURCE L iPhone visual inspection (NOT GAME ART)
+on:
+  push:
+    branches: [terrain-v175-masked-source-phone-review-20261024]
+    paths:
+      - 'v175-masked-source-review.html'
+      - 'scripts/qa_v175_masked_source_phone.py'
+      - '.github/workflows/qa-v175-masked-source-phone.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  masked-source-phone:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright/python:v1.64.1-noble
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned source and browser QA dependencies
+        run: python -m pip install Pillow==12.0.0 playwright==1.64.1
+      - name: Verify immutable Matrei and V123 road identities
+        run: node scripts/test_v161_native_material.js
+      - name: Test real geographic source, exclusions, and LOD logic
+        run: |
+          python scripts/test_v168_source_first_l_octagons.py -v
+          python scripts/test_v169_source_l_modern_exclusion.py -v
+          python scripts/test_v174_source_l_lod.py -v
+      - name: Acquire and verify the original 18 geographic JPEGs
+        run: |
+          python scripts/v168_source_first_l_octagons.py --download --output qa/v168-source-L
+          python scripts/v168_source_first_l_octagons.py --verify --output qa/v168-source-L
+      - name: Exclude modern infrastructure; keep unknown pixels transparent
+        run: |
+          python scripts/v169_source_l_modern_exclusion.py --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v169_source_l_modern_exclusion.py --verify --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v174_source_l_lod.py --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+          python scripts/v174_source_l_lod.py --verify --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+      - name: Inspect three source centers and whole L in four mobile browser configurations
+        run: python scripts/qa_v175_masked_source_phone.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v175-real-masked-source-iphone-layouts-NOT-GAME-ART
+          path: |
+            qa/v175-masked-source-phone/
+            qa/v169-modern-source-L/manifest.json
+            qa/v169-modern-source-L/source-L-muted-material-study.png
+            qa/v169-modern-source-L/source-L-modern-exclusion-mask.png
+            qa/v174-source-lod/manifest.json
+          retention-days: 7

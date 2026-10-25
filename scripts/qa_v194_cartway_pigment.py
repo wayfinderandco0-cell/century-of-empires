@@ -110,6 +110,66 @@ JS_SEAMS = r"""() => {
          townAndBridgeGeographyApproved:false};
 }"""
 
+
+# V196: inspect the *actual world-positioned* V123 road exits, not just
+# synthetic straight-line painter samples. This catches seam gaps caused by
+# incorrect tile origins, path endpoints, or a different Matrei road finish.
+JS_WORLD_SEAMS = r"""() => {
+ const probe=(orientation)=>{
+  const c=document.createElement('canvas');c.width=240;c.height=240;
+  const g=c.getContext('2d',{willReadFrequently:true}),previous=cx;
+  const west=atlas.tiles.find(t=>t.id==='west');
+  const matrei=atlas.tiles.find(t=>t.id==='matrei');
+  const south=atlas.tiles.find(t=>t.id==='south');
+  const seam=orientation==='west'?[1536,478]:[2002,1024];
+  const worldPoint=(tile,point)=>[tile.origin[0]+point[0],tile.origin[1]+point[1]];
+  const a=orientation==='west'?worldPoint(west,west.roads.east[0]):
+                                  worldPoint(matrei,matrei.roads.south.at(-1));
+  const b=orientation==='west'?worldPoint(matrei,matrei.roads.west[0]):
+                                  worldPoint(south,south.roads.north[0]);
+  if(a.some((v,i)=>v!==seam[i])||b.some((v,i)=>v!==seam[i]))
+   return {pass:false,reason:'V123 world seam coordinates do not coincide',a,b,seam};
+  try{
+   cx=g;g.save();g.translate(120-seam[0],120-seam[1]);
+   if(orientation==='west'){
+    g.save();g.translate(...west.origin);paintNaturalTrailFinish(west.roads.east);g.restore();
+    g.save();g.translate(...matrei.origin);
+    paintNaturalTrailFinish([[0,478],...originalRoads.west.slice(0,6)]);g.restore();
+   }else{
+    g.save();g.translate(...matrei.origin);
+    paintNaturalTrailFinish([...originalRoads.south.slice(-8),[466,1024]]);g.restore();
+    g.save();g.translate(...south.origin);
+    paintNaturalTrailFinish(south.roads.north);g.restore();
+   }
+   g.restore();
+  }finally{cx=previous;}
+  const rgba=g.getImageData(0,0,240,240).data;
+  const at=(x,y)=>Array.from(rgba.slice((y*240+x)*4,(y*240+x)*4+4));
+  const median=arr=>{arr.sort((x,y)=>x-y);return arr[Math.floor(arr.length/2)];};
+  const left=[],right=[];
+  for(let d=15;d<=25;d++){
+   left.push(orientation==='west'?at(120-d,120):at(120,120-d));
+   right.push(orientation==='west'?at(120+d,120):at(120,120+d));
+  }
+  const before=[0,1,2].map(k=>median(left.map(p=>p[k])));
+  const after=[0,1,2].map(k=>median(right.map(p=>p[k])));
+  const channelDeltas=before.map((v,k)=>Math.abs(v-after[k]));
+  let missing=0,outerPaint=0;
+  for(let d=-65;d<=65;d+=2){
+   const x=orientation==='west'?120+d:120;
+   const y=orientation==='west'?120:120+d;
+   if(at(x,y)[3]<200)missing++;
+   const outer=orientation==='west'?at(x,155):at(155,y);
+   if(outer[3]>0)outerPaint++;
+  }
+  return {pass:missing===0&&outerPaint===0&&Math.max(...channelDeltas)<=26,
+          seam,before,after,channelDeltas,missing,outerPaint};
+ };
+ const west=probe('west'),south=probe('south');
+ return {pass:west.pass&&south.pass,west,south,originalRoutesPreserved:true,
+         townBridgeArtApproved:false,physicalIPhoneApproved:false};
+}"""
+
 def main():
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -133,6 +193,8 @@ def main():
                             assert result["pass"], (engine,orient,result)
                             seam=page.evaluate(JS_SEAMS)
                             assert seam["pass"], (engine,orient,seam)
+                            world_seams=page.evaluate(JS_WORLD_SEAMS)
+                            assert world_seams["pass"], (engine,orient,world_seams)
                             assert not errors,(engine,orient,errors)
                             page.evaluate("V192.focusTile('west')")
                             page.evaluate("V192.zoomTo(6)")
@@ -143,6 +205,7 @@ def main():
                             page.screenshot(path=str(OUT/f"{engine}-{orient}-south.png"),
                                             animations="disabled")
                             result["matreiNeighborSeams"]=seam
+                            result["worldPositionedSeams"]=world_seams
                             results[f"{engine}-{orient}"]=result
                         finally:page.close()
                 finally:browser.close()

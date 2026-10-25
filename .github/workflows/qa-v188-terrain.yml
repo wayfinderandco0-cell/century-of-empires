@@ -1,0 +1,31 @@
+name: V188 Matrei scenic terrain continuity mobile QA
+on:
+  push:
+    branches: [terrain-v188-matrei-scene-mask-20261025]
+    paths:
+      - 'v188-terrain-continuity-trial.html'
+      - 'scripts/qa_v188_terrain.py'
+      - '.github/workflows/qa-v188-terrain.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  terrain-continuity-mobile-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install phone browser emulators
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Test terrain and immutable movement on Chromium and WebKit
+        run: python scripts/qa_v188_terrain.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v188-terrain-four-browser-captures
+          path: qa/v188-edge-tone/

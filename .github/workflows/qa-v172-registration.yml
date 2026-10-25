@@ -5,6 +5,7 @@ on:
     paths:
       - 'terrain-grid/v172-registration.js'
       - 'scripts/test_v172_registration.js'
+      - 'terrain-grid/v172-unregistered-evidence.json'
       - '.github/workflows/qa-v172-registration.yml'
   workflow_dispatch:
 permissions:

@@ -48,6 +48,8 @@ def bounds_and_review():
     assert v198.exclusion_mask("western_forest_reference").getpixel((10, 30)) == 255
     assert v198.exclusion_mask("eastern_ridge_reference").getpixel((250, 158)) == 255
     assert v198.exclusion_mask("southern_forest_reference").getpixel((195, 325)) == 255
+    assert v198.exclusion_mask("western_forest_reference").getpixel((393, 500)) == 255
+    assert v198.exclusion_mask("southern_forest_reference").getpixel((362, 451)) == 255
     assert v198.exclusion_mask("southern_forest_reference").getpixel((40, 100)) == 0
 
 def source_pixels_unchanged():

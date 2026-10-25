@@ -1,0 +1,75 @@
+name: V187 cross-border source seam audit — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v187-crossborder-seam-audit-20261025]
+    paths:
+      - 'scripts/v187_crossborder_seam_audit.py'
+      - 'scripts/test_v187_crossborder_seam_audit.py'
+      - '.github/workflows/qa-v187-crossborder-seams.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-seam-evidence-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image dependency
+        run: python -m pip install Pillow
+      - name: Run inherited source and new seam tamper tests
+        run: |
+          python scripts/test_v184_matrei_brenner_overview.py
+          python scripts/test_v185_south_tyrol_probe.py
+          python scripts/test_v186_south_border_candidates.py
+          python scripts/test_v187_crossborder_seam_audit.py
+      - name: Restore independently verified Austrian 60-tile source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh run download 40193742019 -R "$GITHUB_REPOSITORY" \
+            -n v184-60tile-modern-geographic-overview-NOT-GAME-ART \
+            -D qa/v184-matrei-brenner-overview; then
+            echo 'Source artifact expired; reacquire the same 60 native geographic JPEGs'
+            python scripts/v184_matrei_brenner_overview.py --download
+          fi
+          python scripts/v184_matrei_brenner_overview.py --verify
+      - name: Restore ten independent South Tyrol source candidates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh run download 40202212082 -R "$GITHUB_REPOSITORY" \
+            -n v186-south-border-candidates-NOT-GAME-ART \
+            -D qa/v186-south-border-candidates; then
+            echo 'Candidate artifact expired; reacquire independent WMS sources'
+            python scripts/v186_south_border_candidates.py --fetch
+          fi
+          python scripts/v186_south_border_candidates.py --verify
+      - name: Compute and independently verify source-only seam and overlap audit
+        run: |
+          python scripts/v187_crossborder_seam_audit.py
+          python scripts/v187_crossborder_seam_audit.py --verify
+          python - <<'PY'
+          import json
+          p='qa/v187-crossborder-seam-audit/source-seam-audit-NOT-GAME.json'
+          r=json.load(open(p))
+          assert r['boundaryRGBDifference']['count'] > 0
+          assert r['overlapRGBDifference']['count'] > 0
+          assert r['sourceMosaicNotComposited']
+          assert all(r[k] is False for k in (
+            'crossBorderSeamsApproved', 'historicalRoadsVerified',
+            'bridgeBanksVerified', 'gameArtCoverageApproved',
+            'physicalIPhoneApproved', 'productionApproved'))
+          print('SOURCE seam pairs:', r['boundaryRGBDifference'])
+          print('SOURCE overlap:', r['overlapRGBDifference'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v187-crossborder-seam-audit-NOT-GAME-ART
+          path: qa/v187-crossborder-seam-audit/
+          retention-days: 7

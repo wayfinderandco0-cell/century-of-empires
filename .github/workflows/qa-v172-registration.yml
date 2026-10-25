@@ -21,6 +21,8 @@ jobs:
           node-version: '22'
       - name: Preserve V121 original painting and immutable V123 graph
         run: node scripts/test_v161_native_material.js
+      - name: Pin exact original game-art and graph bytes for future evidence review
+        run: sha256sum v121-octagon-1-painted-road.html terrain-grid/v123-atlas.js
       - name: Candidate fit with independent holdouts and fail-closed negative tests
         run: node scripts/test_v172_registration.js
       - name: No real game-to-source tie points are approved

@@ -1,0 +1,41 @@
+name: V198 Conservative Modern Source Exclusion (NOT GAME ART)
+on:
+  push:
+    branches: ['terrain-v198-source-exclusion-review-20261025']
+    paths:
+      - 'scripts/v198_period_exclusion_masks.py'
+      - 'scripts/test_v198_period_exclusion_masks.py'
+      - '.github/workflows/qa-v198-source-exclusion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v198-source-quarantine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: V197 inherited source/provenance tests
+        run: python scripts/test_v197_highres_material_samples.py
+      - name: V198 fail-closed exclusion tests
+        run: python scripts/test_v198_period_exclusion_masks.py
+      - name: Download 12 real source JPEGs and verify V197 pixels
+        run: |
+          python scripts/v197_highres_material_samples.py --download
+          python scripts/v197_highres_material_samples.py --verify
+      - name: Generate transparent quarantine and red review overlays, never inpaint
+        run: python scripts/v198_period_exclusion_masks.py
+      - name: Independently regenerate and verify exact source RGB, alpha and hashes
+        run: python scripts/v198_period_exclusion_masks.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v198-modern-source-quarantine-NOT-HISTORIC-GAME-ART
+          path: |
+            qa/v198-source-exclusions/
+            qa/v197-highres-source-materials/manifest.json
+          retention-days: 7

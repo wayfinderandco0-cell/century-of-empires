@@ -1,0 +1,25 @@
+{
+  "version": 172,
+  "sourceVersion": 169,
+  "sourceCrs": "EPSG:3857",
+  "sourceImageSize": [
+    1536,
+    1024
+  ],
+  "gameImageSize": [
+    3072,
+    2048
+  ],
+  "sourceMosaicSha256": null,
+  "gameArtSha256": null,
+  "controls": [],
+  "holdouts": [],
+  "productionApproved": false,
+  "v123RoadsGeoregistered": false,
+  "historicalRoadsVerified": false,
+  "bridgeBanksVerified": false,
+  "physicalIPhoneApproved": false,
+  "historic1780Certified": false,
+  "reason": "No independently corroborated V121 illustrative painting-to-V168 modern geographic landmark correspondence. Source mosaic and game art identities must be pinned before fitting. Do not infer a bridge or roads.",
+  "sourceSectorsAreNotGameOctagons": true
+}

@@ -85,7 +85,7 @@ function checkAlphaAndHoles(source,candidate,mask){
  const a=pixels(source),b=pixels(candidate),m=pixels(mask);
  let altered=0,retained=0;
  for(let i=0;i<a.length;i+=4){
-  if(a[i+3]!==b[i+3]||a[i+3]!==m[i]||a[i+3]!==m[i+3])throw Error('Source alpha mismatch at pixel '+i/4);
+  if(a[i+3]!==b[i+3]||a[i+3]!==m[i]||m[i+3]!==255)throw Error('Source alpha mismatch at pixel '+i/4);
   if(!a[i+3]&&(b[i]||b[i+1]||b[i+2]))throw Error('Unknown pixels contain candidate RGB');
   if(a[i+3]){retained++;if(a[i]!==b[i]||a[i+1]!==b[i+1]||a[i+2]!==b[i+2])altered++;}
  }

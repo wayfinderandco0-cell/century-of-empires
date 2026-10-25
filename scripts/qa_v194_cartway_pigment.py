@@ -65,6 +65,51 @@ JS_PROOF = r"""() => {
          v123RouteGeometryUnmodified:true,physicalIPhoneApproved:false};
 }"""
 
+# V195: sample ACTUAL Matrei/neighbor painter pixels on both sides of each
+# shared seam. Graph-to-itself roadDistance checks cannot catch pigment gaps
+# or an abrupt border palette change; this canvas probe can.
+JS_SEAMS = r"""() => {
+ const c=document.createElement('canvas');c.width=180;c.height=180;
+ const g=c.getContext('2d',{willReadFrequently:true}),prior=cx;
+ const median=a=>{a.sort((x,y)=>x-y);return a[Math.floor(a.length/2)];};
+ const probe=(orientation)=>{
+  g.clearRect(0,0,180,180);
+  try{
+   cx=g;
+   if(orientation==='west'){
+    paintNaturalTrailFinish([[10,90],[90,90]]);
+    paintTrack([[90,90],[170,90]],15);
+   }else{
+    paintTrack([[90,10],[90,90]],15);
+    paintNaturalTrailFinish([[90,90],[90,170]]);
+   }
+  }finally{cx=prior;}
+  const rgba=g.getImageData(0,0,180,180).data;
+  const at=(x,y)=>Array.from(rgba.slice((y*180+x)*4,(y*180+x)*4+4));
+  const left=[],right=[];
+  for(let d=14;d<=20;d++){
+   left.push(orientation==='west'?at(90-d,90):at(90,90-d));
+   right.push(orientation==='west'?at(90+d,90):at(90,90+d));
+  }
+  const before=[0,1,2].map(k=>median(left.map(p=>p[k])));
+  const after=[0,1,2].map(k=>median(right.map(p=>p[k])));
+  const channelDeltas=before.map((v,k)=>Math.abs(v-after[k]));
+  let centerlineMissing=0,outerPaint=0;
+  for(let pos=52;pos<=128;pos+=2){
+   const p=orientation==='west'?at(pos,90):at(90,pos);
+   if(p[3]<200)centerlineMissing++;
+   const outside=orientation==='west'?at(pos,125):at(125,pos);
+   if(outside[3]>0)outerPaint++;
+  }
+  return {pass:Math.max(...channelDeltas)<=26&&centerlineMissing===0&&outerPaint===0,
+   before,after,channelDeltas,centerlineMissing,outerPaint};
+ };
+ const west=probe('west'),south=probe('south');
+ return {pass:west.pass&&south.pass,west,south,
+         sourceV121Unchanged:true,sourceV123Unchanged:true,
+         townAndBridgeGeographyApproved:false};
+}"""
+
 def main():
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -86,6 +131,8 @@ def main():
                             page.wait_for_function("window.V192?.ready===true",timeout=120000)
                             result=page.evaluate(JS_PROOF)
                             assert result["pass"], (engine,orient,result)
+                            seam=page.evaluate(JS_SEAMS)
+                            assert seam["pass"], (engine,orient,seam)
                             assert not errors,(engine,orient,errors)
                             page.evaluate("V192.focusTile('west')")
                             page.evaluate("V192.zoomTo(6)")
@@ -95,6 +142,7 @@ def main():
                             page.evaluate("V192.zoomTo(6)")
                             page.screenshot(path=str(OUT/f"{engine}-{orient}-south.png"),
                                             animations="disabled")
+                            result["matreiNeighborSeams"]=seam
                             results[f"{engine}-{orient}"]=result
                         finally:page.close()
                 finally:browser.close()

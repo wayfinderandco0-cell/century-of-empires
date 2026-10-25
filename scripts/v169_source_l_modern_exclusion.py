@@ -35,17 +35,21 @@ MODERN_ROADS=(
 )
 # Broad visual-review exclusions for visible contemporary roofs and paved
 # yards, with original source coordinates (inclusive bounds).
+# V173: expanded two residual roof masks and added a center-upper meadow roof
+# after inspecting original V169 CI artifact 12577237697 at native source pixels.
+# These are conservative MODERN exclusions, not proof of historic settlement.
 DEVELOPED=(
     ("center-road-farm-buildings", (880,457,1134,637)),
     ("center-east-roof-cluster", (1318,337,1535,440)),
+    ("center-upper-meadow-modern-roof", (1066,377,1138,424)),
     ("south-road-houses-west", (1030,854,1207,1023)),
     ("south-road-houses-east", (1292,795,1535,949)),
     ("west-north-rooflets", (126,0,259,54)),
-    ("west-north-small-roof", (392,15,432,57)),
+    ("west-north-small-roof", (389,15,438,79)),
     ("center-northeast-roof", (1398,69,1440,112)),
     ("center-west-roadside-barn", (783,565,850,622)),
     ("south-west-meadow-sheds", (794,768,883,823)),
-    ("west-meadow-shed", (247,438,287,474)),
+    ("west-meadow-shed", (247,438,291,496)),
 )
 # Visible 2023 source date stamps, including partial stamps at the west edge.
 # These are individual observed labels, not an OCR-based completeness claim.

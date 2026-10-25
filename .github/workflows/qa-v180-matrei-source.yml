@@ -1,0 +1,58 @@
+name: V180 real Matrei source acquisition — NOT GAME ART
+on:
+  push:
+    branches: [terrain-v180-matrei-native-source-20261025]
+    paths:
+      - 'scripts/v180_matrei_source.py'
+      - 'scripts/test_v180_matrei_source.py'
+      - '.github/workflows/qa-v180-matrei-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  matrei-native-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install open-source image dependency
+        run: python -m pip install Pillow
+      - name: Preserve original V172 registration restrictions
+        run: node scripts/test_v172_registration.js
+      - name: Preserve V178 and V179 exact geographic/source checks
+        run: |
+          node scripts/test_v178_geographic_crosswalk.js
+          node scripts/test_v179_real_landmark_coverage.js
+      - name: Matrei 18-tile source geometry and synthetic integrity tests
+        run: python scripts/test_v180_matrei_source.py
+      - name: Acquire 18 real Matrei-area modern orthophoto JPEGs and verify native pixels
+        run: |
+          python scripts/v180_matrei_source.py --download
+          python scripts/v180_matrei_source.py --verify
+      - name: Fail closed on any GAME/historic/bridge approval
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('qa/v180-matrei-source/manifest.json').read_text())
+          assert len(m['samples'])==18
+          assert all(len(t['sha256'])==64 for t in m['samples'])
+          assert all(m[k] is False for k in ('sourceSectorsAreGameOctagons',
+              'v121ToGeographyRegistered','v123RoadsGeoregistered',
+              'historicalRoadsVerified','bridgeBanksVerified',
+              'historic1780Certified','periodArtComplete',
+              'physicalIPhoneApproved','productionApproved'))
+          print('Verified 18 distinct Matrei source JPEGs; no GAME approval.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v180-real-matrei-modern-source-L-NOT-GAME-ART
+          path: qa/v180-matrei-source/
+          retention-days: 7

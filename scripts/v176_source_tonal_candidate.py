@@ -43,6 +43,8 @@ def validate_source(meta, lod, study, mask):
             lod.get("blockGrid") == [48,32] and
             len(lod.get("retainedPixelsByBlockRowMajor", [])) == 1536 and
             len(lod.get("tiers", [])) == 4 and
+            all(lod.get(k) is False for k in FALSE_FLAGS) and
+            lod.get("sourceToV123TransformVerified") is False and
             all(not t.get("gameArtEligible", True) and
                     not t.get("playableRoadsEligible", True) and
                     not t.get("deepZoomEligible", True) for t in lod["tiers"]),
@@ -82,7 +84,7 @@ def expected_manifest(meta,lod):
     return {"version":176,"purpose":"SOURCE-ONLY interpretive tonal candidate, NOT historical game art",
             "sourceStudySha256":meta["studySha256"],
             "sourceMaskSha256":meta["maskSha256"],
-            "sourceLodSha256":lod["sourceMosaicSha256"],
+            "sourceMosaicSha256":lod["sourceMosaicSha256"],
             "sourceCrs":"EPSG:3857","pixelDimensions":list(SIZE),
             "sourceSectors":{k:list(v) for k,v in SECTORS.items()},
             "tonalLut":[list(x) for x in LUT],

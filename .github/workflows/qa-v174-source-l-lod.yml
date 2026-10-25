@@ -1,0 +1,64 @@
+name: V174 source LOD coverage — reject unknown/modern as game art
+on:
+  push:
+    branches: [terrain-v174-source-l-lod-eligibility-20261024]
+    paths:
+      - 'scripts/v174_source_l_lod.py'
+      - 'scripts/test_v174_source_l_lod.py'
+      - '.github/workflows/qa-v174-source-l-lod.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-lod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source-image dependency
+        run: python -m pip install Pillow
+      - name: Preserve V121 painting and V123 route graph
+        run: node scripts/test_v161_native_material.js
+      - name: Verify original L geography and source exclusion regressions
+        run: |
+          python scripts/test_v168_source_first_l_octagons.py -v
+          python scripts/test_v169_source_l_modern_exclusion.py -v
+      - name: V174 exact alpha coverage, unknown block and no-game-approval tests
+        run: python scripts/test_v174_source_l_lod.py -v
+      - name: Rebuild authentic 18-tile L and audited modern exclusions
+        run: |
+          python scripts/v168_source_first_l_octagons.py --download --output qa/v168-source-L
+          python scripts/v168_source_first_l_octagons.py --verify --output qa/v168-source-L
+          python scripts/v169_source_l_modern_exclusion.py --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v169_source_l_modern_exclusion.py --verify --source qa/v168-source-L --output qa/v169-modern-source-L
+      - name: Build and independently reverify real three-sector source LOD
+        run: |
+          python scripts/v174_source_l_lod.py --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+          python scripts/v174_source_l_lod.py --verify --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+      - name: Reject fabricated playable or deep-zoom claims
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path("qa/v174-source-lod/manifest.json").read_text())
+          assert m["blockGrid"] == [48,32]
+          assert len(m["retainedPixelsByBlockRowMajor"]) == 1536
+          assert all(m["retainedPixelsByBlockRowMajor"][r*48+c] == 0
+                     for r in range(16,32) for c in range(24))
+          assert len(m["sectorCoverage"]) == 3 and len(m["tiers"]) == 4
+          assert all(not t["gameArtEligible"] and not t["playableRoadsEligible"]
+                     and not t["deepZoomEligible"] for t in m["tiers"])
+          assert all(m[k] is False for k in ("productionApproved",
+                      "gameTerrainEligible","gameDeepZoomEligible",
+                      "sourceToV123TransformVerified","physicalIPhoneApproved"))
+          print("PASS: 1536 source blocks; 3 distinct sectors; unknown holes stay closed")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v174-modern-source-lod-NOT-game-art
+          path: qa/v174-source-lod/
+          retention-days: 7

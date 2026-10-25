@@ -396,24 +396,32 @@ async function buildLandscape(){
   }
   g.globalAlpha=1;g.globalCompositeOperation='source-over';
   photoPatchCount=0;photoStampCount=0;valleyStampCount=0;
-  const toLand=p=>[(p[0]-groundBounds[0])/groundBounds[2]*lw,
-                   (p[1]-groundBounds[1])/groundBounds[3]*lh];
-  // A grassy, feathered natural depression follows the SAME immutable roads
-  // as troop navigation, while the actual cartway is painted during rendering.
+  // V199: the land raster is only 1120x830 for a 7000x9000-world area.
+  // Stroke widths used to be interpreted as RASTER pixels (54px = 338-585
+  // world units), producing unnaturally broad flat-green road corridors.
+  // Draw in WORLD coordinates, scaling each axis back to the terrain raster.
+  // This leaves the immutable V123 polylines and the later 22-unit cartway
+  // paint completely untouched; only the grassy roadside material narrows.
+  g.save();
+  g.scale(lw/groundBounds[2],lh/groundBounds[3]);
+  g.translate(-groundBounds[0],-groundBounds[1]);
   for(const t of atlas.tiles.filter(t=>t.id!=='matrei')){
     for(const pts of Object.values(t.roads)){
       if(pts.length<2)continue;
       g.save();g.beginPath();
       pts.forEach((p,i)=>{
-        const q=toLand([p[0]+t.origin[0],p[1]+t.origin[1]]);
-        i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);
+        const x=p[0]+t.origin[0],y=p[1]+t.origin[1];
+        i?g.lineTo(x,y):g.moveTo(x,y);
       });
       g.strokeStyle='rgba(138,145,92,.24)';g.lineCap='round';g.lineJoin='round';
-      g.lineWidth=54;g.shadowColor='rgba(100,125,81,.55)';g.shadowBlur=48;g.stroke();
+      g.lineWidth=54;g.shadowColor='rgba(100,125,81,.55)';
+      // Canvas shadowBlur is measured in raster pixels, not world units.
+      g.shadowBlur=8;g.stroke();
       g.shadowBlur=0;g.lineWidth=19;g.strokeStyle='rgba(140,135,91,.15)';g.stroke();
       g.restore();valleyStampCount+=pts.length;
     }
   }
+  g.restore();
   // V139 high-frequency, never-reused terrain detail on the two neighboring
   // octagons. A single geological noise field alone looks like a flat carpet
   // when enlarged from 1120px over several world kilometres. Make the

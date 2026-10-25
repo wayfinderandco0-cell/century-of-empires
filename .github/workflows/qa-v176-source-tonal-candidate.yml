@@ -1,0 +1,54 @@
+name: V176 source-first tonal candidate (NOT GAME ART)
+on:
+  push:
+    branches: [terrain-v176-source-first-tonal-candidate-20261025]
+    paths:
+      - 'scripts/v176_source_tonal_candidate.py'
+      - 'scripts/test_v176_source_tonal_candidate.py'
+      - '.github/workflows/qa-v176-source-tonal-candidate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-tonal-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image dependency
+        run: python -m pip install Pillow==12.0.0
+      - name: Protect original Matrei painting and V123 roads
+        run: node scripts/test_v161_native_material.js
+      - name: Test source integrity, exclusions, LOD and new tonal candidate
+        run: |
+          python scripts/test_v168_source_first_l_octagons.py -v
+          python scripts/test_v169_source_l_modern_exclusion.py -v
+          python scripts/test_v174_source_l_lod.py -v
+          python scripts/test_v176_source_tonal_candidate.py -v
+      - name: Acquire verified original 18 source JPEGs
+        run: |
+          python scripts/v168_source_first_l_octagons.py --download --output qa/v168-source-L
+          python scripts/v168_source_first_l_octagons.py --verify --output qa/v168-source-L
+      - name: Generate modern exclusions and source-only LOD
+        run: |
+          python scripts/v169_source_l_modern_exclusion.py --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v169_source_l_modern_exclusion.py --verify --source qa/v168-source-L --output qa/v169-modern-source-L
+          python scripts/v174_source_l_lod.py --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+          python scripts/v174_source_l_lod.py --verify --source qa/v168-source-L --modern qa/v169-modern-source-L --output qa/v174-source-lod
+      - name: Render and byte-verify source-only tonal candidate
+        run: |
+          python scripts/v176_source_tonal_candidate.py
+          python scripts/v176_source_tonal_candidate.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v176-tonal-source-candidate-NOT-GAME-ART
+          path: |
+            qa/v176-tonal-candidate/
+            qa/v169-modern-source-L/manifest.json
+            qa/v169-modern-source-L/source-L-modern-exclusion-mask.png
+            qa/v174-source-lod/manifest.json
+          retention-days: 7

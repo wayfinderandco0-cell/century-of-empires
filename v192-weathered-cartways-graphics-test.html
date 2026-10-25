@@ -118,6 +118,25 @@ let sharedGround=null,groundDetails=null,centerPhoto=null,photoStampCount=0,phot
 // Overscan the full three-octagon phone camera (including portrait whole view).
 // Previously exposed a featureless flat-green band along the northern horizon.
 const groundBounds=[-1900,-3000,7000,9000];
+// V193: keep the iPhone viewport inside the existing terrain canvas.
+// This changes no roads, settlements, original source pixels or army routing.
+function minimumTerrainZoom(){
+ const b=Math.max(base,1e-6);
+ return Math.max(.7,width/(groundBounds[2]*b),height/(groundBounds[3]*b));
+}
+function clampCamera(){
+ if(!width||!height||!scale)return;
+ for(let axis=0;axis<2;axis++){
+  const span=groundBounds[axis+2],start=groundBounds[axis];
+  const half=(axis===0?width:height)/(2*scale);
+  const low=start+half,high=start+span-half;
+  cam[axis]=low<=high?Math.max(low,Math.min(high,cam[axis])):start+span/2;
+ }
+}
+function visibleTerrainBounds(){
+ return [cam[0]-width/(2*scale),cam[1]-height/(2*scale),
+         cam[0]+width/(2*scale),cam[1]+height/(2*scale)];
+}
 const clip01=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clip01(x);return x*x*(3-2*x);};
 const poly=[[386,6],[1150,6],[1444,283],[1444,675],[1150,968],[386,968],[91,675],[91,283]];
@@ -654,7 +673,10 @@ function polygonAt(t){cx.save();cx.translate(...t.origin);polygon(cx);cx.restore
 function resize(){width=C.clientWidth||window.innerWidth;height=C.clientHeight||window.innerHeight;
  dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(width*dpr);C.height=Math.round(height*dpr);
  base=Math.min(width/3200,height/2450);redraw();}
-function redraw(){scale=base*zoom;renderDirty=true;}
+function redraw(){
+ zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom));
+ scale=base*zoom;clampCamera();renderDirty=true;
+}
 function currentEdge(){
  if(path.length<2||pathKeys.length!==path.length)return pausedEdge;
  let remaining=travel;
@@ -744,12 +766,12 @@ C.addEventListener('pointermove',e=>{
  if(pointers.size===2){
   const a=[...pointers.values()],next={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};
   if(gesture&&gesture.distance>5){const anchor=world(gesture.mid);
-   zoom=Math.max(.7,Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
-   const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];}
+   zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
+   const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];clampCamera();}
   gesture=next;down=null;renderDirty=true;return;
  }
  if(down&&hypot(down,[e.clientX,e.clientY])>9)down=null;
- cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;renderDirty=true;
+ cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;clampCamera();renderDirty=true;
 });
 function finish(e){
  if(!pointers.has(e.pointerId))return;
@@ -770,6 +792,8 @@ for(const [button,destination] of [['gotoWest','west'],['gotoMatrei','matrei'],[
 }
 document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';};
 window.V192=Object.freeze({
+ get terrainCamera(){return {center:cam.slice(),scale,zoom,minZoom:minimumTerrainZoom(),
+   viewport:[width,height],groundBounds:groundBounds.slice(),visible:visibleTerrainBounds()};},
  get seamTone(){return toneReport},get ready(){return ready},get surveyLimits(){return surveyLimits},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
  get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
  get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},

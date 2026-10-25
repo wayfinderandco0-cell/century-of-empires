@@ -1,0 +1,48 @@
+name: V196 Cartway and Static Cache Integration QA
+on:
+  push:
+    branches: ['terrain-v196-cartway-cache-integration-20261025']
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v196_integrated_cache.py'
+      - 'scripts/qa_v194_cartway_pigment.py'
+      - 'scripts/qa_v192_cartways.py'
+      - 'scripts/qa_v192_terrain_parity.py'
+      - 'scripts/qa_v193_camera_coverage.py'
+      - '.github/workflows/qa-v196-integrated-cartway-cache.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v196-phone-cartway-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Independent painted road pixel evidence
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Cross-octagon army route and halt
+        run: python scripts/qa_v192_cartways.py
+      - name: Existing three-center screenshot detail gate (not human approval)
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Four-browser camera pinch and overscroll regression
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Four-browser static cache and movement integration
+        run: python scripts/qa_v196_integrated_cache.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v196-cartway-cache-and-visual-evidence
+          path: |
+            qa/v194-cartway-material/
+            qa/v192-road-graphics/
+            qa/v192-three-centers/
+            qa/v193-camera-coverage/
+            qa/v196-integrated-cache/
+          retention-days: 7

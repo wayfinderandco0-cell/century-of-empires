@@ -1,0 +1,36 @@
+name: V172 candidate geographic registration - NO historical approval
+on:
+  push:
+    branches: [terrain-v172-evidence-gated-registration-20261024]
+    paths:
+      - 'terrain-grid/v172-registration.js'
+      - 'scripts/test_v172_registration.js'
+      - '.github/workflows/qa-v172-registration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-gated-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve V121 original painting and immutable V123 graph
+        run: node scripts/test_v161_native_material.js
+      - name: Candidate fit with independent holdouts and fail-closed negative tests
+        run: node scripts/test_v172_registration.js
+      - name: No real game-to-source tie points are approved
+        run: |
+          node - <<'JS'
+          const fs=require('fs');
+          const m=JSON.parse(fs.readFileSync('terrain-grid/v172-unregistered-evidence.json','utf8'));
+          const {validateEvidence}=require('./terrain-grid/v172-registration');
+          if(m.controls.length||m.holdouts.length||m.productionApproved||m.v123RoadsGeoregistered)
+            throw Error('V172 source-to-game correspondence was silently asserted');
+          try {validateEvidence(m);throw Error('Missing evidence was accepted');}
+          catch(e){if(!/four reviewed controls/.test(e.message))throw e;}
+          console.log('PASS: no invented landmark controls; registration remains blocked');
+          JS

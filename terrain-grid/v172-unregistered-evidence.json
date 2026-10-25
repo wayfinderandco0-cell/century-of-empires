@@ -11,7 +11,7 @@
     2048
   ],
   "sourceMosaicSha256": "7360fcb88a2325791aaeb16fbfd3a8b4c24289752c0d1b67c99ba3b42de11756",
-  "gameArtSha256": null,
+  "gameArtSha256": "883630e3553b3b95d7bcd3c3748ddba0c7b7546227f9c7b56b957aff5143fa08",
   "controls": [],
   "holdouts": [],
   "productionApproved": false,
@@ -20,6 +20,7 @@
   "bridgeBanksVerified": false,
   "physicalIPhoneApproved": false,
   "historic1780Certified": false,
-  "reason": "V169 original geographic source SHA256 pinned from verified CI artifact 12577237697; V121 GAME art SHA256 and independent landmark correspondences remain unpinned. No bridge or roads inferred.",
-  "sourceSectorsAreNotGameOctagons": true
+  "reason": "Real V169 mosaic, original V121 HTML and immutable V123 graph SHA256 identities pinned from verified CI artifacts. No independently matched source-to-game landmarks; registration, bridge banks and historic roads remain unverified.",
+  "sourceSectorsAreNotGameOctagons": true,
+  "gameGraphSha256": "c58c935d9e2a29451e74fde08fb01c5ff5a7d2855ff871faad0f3ac6c997caef"
 }

@@ -15,7 +15,8 @@
     'source-south': [768, 512, 1536, 1024]
   });
   const V97 = { bounds: [11.26, 46.80, 11.80, 47.42], size: [1552, 1782] };
-  const V102 = { bounds: [11.43, 47.075, 11.625, 47.19], size: [257, 257] };
+  // V102 is a 257x257 point grid: last grid index is 256, unlike raster-edge extents.
+  const V102 = { bounds: [11.43, 47.075, 11.625, 47.19], size: [256, 256] };
   const V94 = { bounds: [-14, 26, 49, 75], game: [1448, 1086], atlas: [8192, 6144] };
   function requireOK(ok, message) { if (!ok) throw new Error(message); }
   function mercator(lon, lat) {

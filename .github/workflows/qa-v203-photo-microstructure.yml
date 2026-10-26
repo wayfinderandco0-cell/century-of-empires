@@ -1,0 +1,51 @@
+name: V203 Real-Phone-Layout Photographic Microstructure Gate
+on:
+  push:
+    branches: ['terrain-v203-photo-microstructure-gate-20261025']
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v203_canopy_structure.py'
+      - 'scripts/test_v203_canopy_structure.py'
+      - '.github/workflows/qa-v203-photo-microstructure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v203-photo-microstructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing free browser QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve immutable V123 painted road pixel checks
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Preserve road crossing, halt and route geometry
+        run: python scripts/qa_v192_cartways.py
+      - name: Preserve strict three-center image detail gate and capture real browser frames
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve mobile camera coverage and anchored pinch
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Preserve static landscape caching during army motion
+        run: python scripts/qa_v196_integrated_cache.py
+      - name: Preserve real pan and pinch static cache invalidation
+        run: python scripts/qa_v201_touch_camera_cache.py
+      - name: Preserve V202 bridge-neighborhood and nearest-segment tap safety
+        run: python scripts/qa_v202_road_segment_taps.py
+      - name: Verify V203 synthetic blur/missing-frame negative controls
+        run: python scripts/test_v203_canopy_structure.py
+      - name: Fail closed on photographic fine-structure disparity in real screenshots
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v203-three-center-photographic-structure-evidence
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+          retention-days: 7

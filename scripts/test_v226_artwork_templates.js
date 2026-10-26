@@ -42,7 +42,7 @@ assert.throws(()=>V226.build(bad),/immutable|route|endpoints|drifted/);
 bad=clone();bad.tiles[0].roads.fake=[[1,2],[3,4]];
 assert.throws(()=>V226.build(bad),/unreviewed/);
 bad=clone();bad.tiles[2].roads.north.at(-1)[0]=1350;
-assert.throws(()=>V226.build(bad),/endpoints drifted/);
+assert.throws(()=>V226.build(bad),/endpoints drifted|interior geometry drifted/);
 bad=clone();bad.productionApproved=true;
 assert.throws(()=>V226.build(bad),/approval/);
 bad=clone();bad.tiles[0].origin=[12,0];

@@ -750,11 +750,33 @@ function issue(to){
  moving=distance>.001;renderDirty=true;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
  return true;
 }
-function nearestRoadNode(p){
+// V202: select the nearest painted segment before choosing an original V123
+// vertex. Global nearest-vertex snapping can choose the wrong road at bends
+// or crossings. No graph edges, bridge banks or onward roads are invented.
+function nearestPaintedRoadNode(p){
+ if(!atlas||!graph)return null;
  let closest=null,dd=Infinity;
- for(const [key,n] of nodes()){
-  const d=hypot(n.world,p);if(d<dd){dd=d;closest=key;}
- }return {key:closest,distance:dd};
+ for(const tile of atlas.tiles){
+  for(const points of Object.values(tile.roads)){
+   for(let i=1;i<points.length;i++){
+    const a=points[i-1],b=points[i];
+    const ax=a[0]+tile.origin[0],ay=a[1]+tile.origin[1];
+    const bx=b[0]+tile.origin[0],by=b[1]+tile.origin[1];
+    const dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+    if(den<1e-9)continue;
+    const t=Math.max(0,Math.min(1,((p[0]-ax)*dx+(p[1]-ay)*dy)/den));
+    const ex=p[0]-ax-t*dx,ey=p[1]-ay-t*dy;
+    const d=Math.hypot(ex,ey);
+    if(d<dd){
+     const key=graph.key(tile.id,t<=.5?a:b);
+     if(!graph.graph.has(key))throw Error('Painted road vertex missing from V123 graph');
+     closest={key,distance:d,tile:tile.id,roadSegment:i-1};
+     dd=d;
+    }
+   }
+  }
+ }
+ return closest;
 }
 // Tap tolerance follows the V123 *painted polylines*, not a circular bubble
 // around graph nodes. Long segments and bridge banks are selectable, while a
@@ -775,7 +797,11 @@ function tapWorld(p){
   statusEl.textContent='Tap the visible road, not a field or building';
   return false;
  }
- const near=nearestRoadNode(p);
+ const near=nearestPaintedRoadNode(p);
+ if(!near||near.distance>tolerance){
+  statusEl.textContent='No surveyed road segment at that location';
+  return false;
+ }
  return issue(near.key);
 }
 function tap(pt){return tapWorld(world(pt));}

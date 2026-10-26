@@ -34,7 +34,7 @@ class NativeSourceStudyTests(unittest.TestCase):
             "broadBoundsLonLat": [11.26, 46.8, 11.8, 47.42],
             "sources": {"art": "Original deterministic material and tree crowns",
                         "path": "Illustrative pack trail, NOT surveyed"}}))
-        Image.new("RGB", (1448, 1086), (66, 71, 88)).save(root / "terrain-v94/overview.webp")
+        Image.new("RGB", (4096, 3072), (66, 71, 88)).save(root / "terrain-v94/overview.webp")
         Image.new("RGB", (1552, 1782), (88, 83, 76)).save(root / "terrain-v97/brenner-relief.webp")
         Image.new("RGB", (2048, 2048), (62, 95, 53)).save(root / "terrain-v102/navis-material.webp")
         modern = Image.new("RGBA", (1024, 1024), (75, 99, 67, 255))

@@ -1,0 +1,74 @@
+name: V217 Nearby Native Alpine Source Scout (game artwork remains RED)
+on:
+  push:
+    branches: ['terrain-v217-matrei-nearby-native-scout-20261026']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  nine-native-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Original geographic-source negative controls and V217 tests
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          node scripts/test_v213_source_geodesy.js
+          python scripts/test_v214_source_native_material_bank.py
+          python scripts/test_v215_native_source_seam_atlas.py
+          python scripts/test_v216_material_provenance_review.py
+          python scripts/test_v217_matrei_nearby_native_scout.py
+      - name: Acquire and independently verify 36 original native aerial JPEGs
+        run: |
+          python scripts/v217_matrei_nearby_native_scout.py --output qa/v217-matrei-nearby
+          python scripts/v217_matrei_nearby_native_scout.py --output qa/v217-matrei-nearby --verify
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v217-registration/report.json
+          python -c "import json; r=json.load(open('qa/v217-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v217-nine-native-modern-near-matrei-NOT-game-art
+          path: |
+            qa/v217-matrei-nearby/
+            qa/v217-registration/
+          retention-days: 7
+  unchanged-original-game-phone-and-strict-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Original Chromium WebKit portrait landscape roads bridges armies camera
+        run: |
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+          python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Enforce original strict V203 photographic microstructure unchanged
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v217-unchanged-real-phone-art-RED
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

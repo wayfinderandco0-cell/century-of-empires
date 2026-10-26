@@ -38,29 +38,9 @@ jobs:
           name: v210-source-evidence-deficit-NOT-APPROVED
           path: qa/v210-source-intake/
           retention-days: 7
-  mobile-review-ui:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install free Chromium and WebKit test dependencies
-        run: |
-          python -m pip install playwright pillow
-          python -m playwright install --with-deps chromium webkit
-      - name: Test actual V192 camera capture and source coordinate intake in four mobile layouts
-        run: python scripts/qa_v210_landmark_review_ui.py
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: v210-mobile-UI-SYNTHETIC-SOURCE-TEST-ONLY
-          path: qa/v210-review-ui/
-          retention-days: 7
   existing-game-art-fail-closed:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -79,6 +59,8 @@ jobs:
           python scripts/qa_v202_road_segment_taps.py
       - name: Capture real three-center browser screenshots and preserve old detail gate
         run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Verify V210 live camera review in all four mobile configurations
+        run: python scripts/qa_v210_landmark_review_ui.py
       - name: Preserve strict V203 photographic microstructure gate (expected RED until art fixed)
         run: python scripts/qa_v203_canopy_structure.py --enforce
       - uses: actions/upload-artifact@v4
@@ -89,4 +71,5 @@ jobs:
             qa/v192-three-centers/
             qa/v203-canopy-structure/
             qa/v202-road-segment-taps/
+            qa/v210-review-ui/
           retention-days: 7

@@ -8,8 +8,8 @@ on:
       - 'scripts/test_v213_source_geodesy.js'
       - 'terrain-grid/v213-source-geodesy.js'
       - 'v213-landmark-geographic-review.html'
-      - '.github/workflows/qa-v213-authentic-source-mobile.yml'
-      - 'docs/v213-authentic-source-mobile-evidence.md'
+      - '.github/workflows/qa-v213-native-source-geodesy.yml'
+      - 'docs/v213-native-source-geodesy-evidence.md'
   workflow_dispatch:
 permissions:
   contents: read

@@ -193,8 +193,7 @@ def main():
     p.add_argument("--require-registered", action="store_true",
                    help="Fail closed until independent tie points actually establish registration")
     args = p.parse_args()
-    report = (audit() if args.verify and not args.output.exists() else
-              (verify(args.output) and audit()) if args.verify else build(args.output))
+    report = (audit() if verify(args.output) else None) if args.verify else build(args.output)
     print(json.dumps({"sourceRegisteredToV123": report["sourceRegisteredToV123"],
                       "anchorSeparationKilometres": report["anchorSeparationKilometres"],
                       "directStretchAnisotropy": [c["directStretchAnisotropy"] for c in report["gameCells"]]}, indent=2))

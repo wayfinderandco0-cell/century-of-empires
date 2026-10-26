@@ -1,0 +1,90 @@
+name: V220 Contiguous Whole-Cell Native Source Art Trial (human approval gate RED)
+on:
+  push:
+    branches: ['terrain-v220-contiguous-native-cell-art-study-20261026']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-whole-cell-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve source and geography integrity tests
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          python scripts/test_v217_matrei_nearby_native_scout.py
+          python scripts/test_v218_reviewed_modern_quarantine.py
+          python scripts/test_v220_contiguous_native_cells.py
+      - name: Rebuild verified V218 source and two complete native V220 orthophoto mosaics
+        run: |
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine --verify
+          python scripts/v220_contiguous_native_cells.py --source qa/v218-modern-quarantine --output terrain-v220/assets
+          python scripts/v220_contiguous_native_cells.py --source qa/v218-modern-quarantine --output terrain-v220/assets --verify
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v220-registration/report.json
+          python -c "import json; r=json.load(open('qa/v220-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v220-two-full-native-photo-cells-unregistered
+          path: |
+            terrain-v220/assets/
+            qa/v220-registration/
+          retention-days: 7
+      - name: Publish generated native assets ONLY to isolated V220 branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v220/assets/
+          if ! git diff --cached --quiet; then
+            git commit -m "V220: pin two complete native modern orthophoto cells for isolated playable art trial"
+            git push origin HEAD:refs/heads/terrain-v220-contiguous-native-cell-art-study-20261026
+          fi
+  four-browser-native-art-trial:
+    needs: source-whole-cell-art
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - uses: actions/download-artifact@v4
+        with:
+          name: v220-two-full-native-photo-cells-unregistered
+          path: .
+      - name: Preserve original V137 road/seam and V202 tap regression gates
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: Four actual Chromium/WebKit phone layouts of V220 two whole cells versus unchanged V192
+        run: python scripts/qa_v220_contiguous_native_game_art.py
+      - name: Strict unchanged V203 screenshot art thresholds - NEVER waive for noise
+        run: |
+          python scripts/qa_v203_canopy_structure.py --screenshots qa/v220-contiguous-native-game-art --output qa/v220-contiguous-native-game-art/strict-enforced --enforce
+      - name: Human approval remains fail-closed even if microstructure eventually passes
+        run: |
+          python -c "import json; m=json.load(open('terrain-v220/assets/manifest.json')); assert m['gameArtApproved'] is True and m['physicalIPhoneApproved'] is True, 'V220 NOT APPROVED: modern 2023 source, unregistered to V123, human visual acceptance missing'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v220-actual-phone-full-cells-and-RED-art-gate
+          path: |
+            qa/v220-contiguous-native-game-art/
+            qa/v137-clean/
+            qa/v202-road-segment-taps/
+          retention-days: 7

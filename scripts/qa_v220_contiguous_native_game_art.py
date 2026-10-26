@@ -81,6 +81,14 @@ def main():
                                 page.evaluate('()=>V192.zoomTo(6)')
                                 assert page.evaluate('()=>V192.snapshotForReview()')
                                 page.screenshot(path=str(OUT/f'{key}-{region}-close.png'),animations='disabled')
+                                if region in ('west','south'):
+                                    assert page.evaluate('V192.toggleNative()') is False
+                                    assert page.evaluate('V192.snapshotForReview()')
+                                    original=OUT/f'{key}-{region}-toggle-original.png'
+                                    page.screenshot(path=str(original),animations='disabled')
+                                    assert difference(original,OUT/f'{key}-{region}-close.png')>200
+                                    assert page.evaluate('V192.toggleNative()') is True
+                                    assert page.evaluate('V192.snapshotForReview()')
                             # Matrei screenshot is pixel-identical in center, even
                             # though candidate West/South art and page chrome differ.
                             baseline=browser.new_page(viewport={'width':w,'height':h},

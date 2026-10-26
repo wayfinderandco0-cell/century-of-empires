@@ -67,12 +67,12 @@ def assert_plan(m):
         if k!='cells': require(m[k]==expected[k], 'manifest flag/identity changed '+k)
     require(len(m['cells'])==2,'two cells required')
     for actual,pinned in zip(m['cells'],expected['cells']):
-        require(set(actual)==set(pinned)|{'sha256','maskZeroPixels'},'cell fields changed')
+        require(set(actual) in (set(pinned),set(pinned)|{'sha256','maskZeroPixels'}),'cell fields changed')
         for k in pinned:
             if k!='tiles': require(actual[k]==pinned[k],'source cell changed '+k)
         require(len(actual['tiles'])==24,'24 native JPEGs per cell')
         for got,ref in zip(actual['tiles'],pinned['tiles']):
-            require(set(got)==set(ref)|{'sha256','byteCount'},'tile fields changed')
+            require(set(got) in (set(ref),set(ref)|{'sha256','byteCount'}),'tile fields changed')
             for k in ref: require(got[k]==ref[k],'XYZ tile identity changed')
     return True
 

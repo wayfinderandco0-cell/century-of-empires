@@ -160,9 +160,15 @@ def verify(folder,quarantine_folder):
         with Image.open(path) as im:
             require(im.size==(W,H),'mosaic not native 1536x1024')
             actual=im.convert('RGBA')
-        require(ImageChops.difference(actual.convert('RGB'),expected.convert('RGB')).getbbox() is None and
-                ImageChops.difference(actual.getchannel('A'),expected.getchannel('A')).getbbox() is None,
-                'mosaic RGB/alpha changed, source tampered or resampled')
+        # Lossless WebP is permitted to discard hidden RGB under alpha=0.
+        # Verify every visible native source RGB channel and ALL alpha exactly.
+        diff=ImageChops.difference(actual.convert('RGB'),expected.convert('RGB'))
+        visible=expected.getchannel('A').point(lambda a:255 if a else 0)
+        rgb_ok=all(ImageChops.multiply(diff.getchannel(channel),visible).getbbox() is None
+                   for channel in range(3))
+        alpha_ok=ImageChops.difference(actual.getchannel('A'),expected.getchannel('A')).getbbox() is None
+        require(rgb_ok and alpha_ok,
+                'visible native RGB/alpha changed, source tampered or resampled')
         require(cell['maskZeroPixels']==sum(1 for a in expected.getchannel('A').getdata() if a==0),
                 'quarantine mask coverage changed')
     return True

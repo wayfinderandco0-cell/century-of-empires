@@ -1,0 +1,86 @@
+{
+  "version": 224,
+  "kind": "ISOLATED_LICENSED_OBLIQUE_NATURAL_COVER_ART_STUDY",
+  "nativeCellPixels": [
+    1536,
+    1024
+  ],
+  "twoIndependentPhotoSources": true,
+  "originalMatreiArtworkUnchanged": true,
+  "V123MovementGraphUnchanged": true,
+  "sourceMaterialNotGeography": true,
+  "actualSourceRegion": "Sharr Mountains, Kosovo (NOT Austrian Alps)",
+  "historicDate": "NOT 1780",
+  "modernFeaturesFullyExcluded": false,
+  "humanVisualApproval": false,
+  "knownModernRoadVisibleInSouth": true,
+  "sources": [
+    {
+      "tile": "west",
+      "original": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "sourceDimensions": [
+        3072,
+        2304
+      ],
+      "sourceRect": [
+        280,
+        850,
+        1816,
+        1874
+      ],
+      "output": "terrain-v224/assets/west.webp",
+      "outputSha256": "0b4696649628f67c09d22bce472f96bc32fa70115da68242693e32d7fdf40e2e",
+      "dataFile": "terrain-v224/assets/west-data.js",
+      "nativeOutputPixels": [
+        1536,
+        1024
+      ],
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "sourceTitle": "Drone image of Sharr Mountains during Spring Season.jpg",
+      "transformation": "Wikimedia 3072px thumbnail re-encoded as JPEG quality 62; native 1536x1024 crop, color saturation x0.84, brightness x0.84, WebP quality 88",
+      "knownModernRoadInCrop": false,
+      "historicalGeographyVerified": false
+    },
+    {
+      "tile": "south",
+      "original": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "sourceDimensions": [
+        3072,
+        2304
+      ],
+      "sourceRect": [
+        0,
+        950,
+        1536,
+        1974
+      ],
+      "output": "terrain-v224/assets/south.webp",
+      "outputSha256": "f3d91a68832bece892c2beeb8f0714883a839171e8d1a706c0b1c9cf382b4296",
+      "dataFile": "terrain-v224/assets/south-data.js",
+      "nativeOutputPixels": [
+        1536,
+        1024
+      ],
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "sourceTitle": "Aerial photo of Sharr Mountains in Kosovo.jpg",
+      "transformation": "Wikimedia 3072px thumbnail re-encoded as JPEG quality 62; native 1536x1024 crop, color saturation x0.84, brightness x0.84, WebP quality 88",
+      "knownModernRoadInCrop": true,
+      "historicalGeographyVerified": false
+    }
+  ],
+  "sourceRegisteredToV123": false,
+  "historicRoadsVerified": false,
+  "periodSafe": false,
+  "gameArtApproved": false,
+  "physicalIPhoneApproved": false,
+  "productionApproved": false,
+  "bridgeBanksVerified": false
+}

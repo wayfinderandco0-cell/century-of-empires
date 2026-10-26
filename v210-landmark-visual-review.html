@@ -167,6 +167,11 @@ A visual resemblance is NOT proof these are the same location. Do not copy pixel
  window.V210=Object.freeze({get ready(){return gameReady&&loaded===4&&!!camera;},get cell(){return cell;},
   get loadedTiles(){return loaded;},get camera(){return camera?JSON.parse(JSON.stringify(camera)):null;},
   get pending(){return pending?JSON.parse(JSON.stringify(pending)):null;},get observations(){return exportDraft();},
+  get diagnostics(){return {gameReady,loadedTiles:loaded,epoch,hasCamera:!!camera,
+    status:state.textContent,frameReady:!!frame.contentWindow?.V192?.ready,
+    frameStatus:frame.contentDocument?.querySelector('#status')?.textContent||'',
+    images:[...source.querySelectorAll('img')].map(i=>({complete:i.complete,
+      width:i.naturalWidth,src:i.currentSrc||i.src}))};},
   inside,polygon,worldAt,sourceAt,setCell});
  async function boot(){
   const start=Date.now();
@@ -177,6 +182,14 @@ A visual resemblance is NOT proof these are the same location. Do not copy pixel
   }
   status('Game camera unavailable; no landmark coordinates will be recorded.');
  }
- frame.addEventListener('load',boot,{once:true});setCell(cell);
+ // An iframe can complete its load before this listener is attached, especially
+ // when its heavy game assets are cached. Start the readiness probe immediately.
+ // Both paths share one promise, so duplicate initialization is impossible.
+ let bootPromise=null;
+ const originalBoot=boot;
+ function startBoot(){if(!bootPromise)bootPromise=originalBoot();return bootPromise;}
+ frame.addEventListener('load',startBoot,{once:true});
+ setCell(cell);
+ startBoot();
 })();
 </script></body></html>

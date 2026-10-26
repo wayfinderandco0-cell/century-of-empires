@@ -1,0 +1,63 @@
+name: V205 Adjacent Forest Source Materials (GAME ART NOT APPROVED)
+on:
+  push:
+    branches: ['terrain-v205-adjacent-forest-material-source-20261025']
+    paths:
+      - 'scripts/v204_contiguous_matrei_sources.py'
+      - 'scripts/test_v204_contiguous_matrei_sources.py'
+      - 'scripts/test_v205_adjacent_forest_materials.py'
+      - '.github/workflows/qa-v205-adjacent-forest-materials.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contiguous-forest-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free image verification dependency
+        run: python -m pip install pillow
+      - name: Preserve V204 source geometry and pixel-integrity negative controls
+        run: python scripts/test_v204_contiguous_matrei_sources.py
+      - name: Test V205 forest reference site and false-approval blockers
+        run: python scripts/test_v205_adjacent_forest_materials.py
+      - name: Fetch 12 real adjacent forest-area source JPEGs
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --download --output qa/v205-adjacent-forest-source
+      - name: Independently reconstruct and verify every native source RGB pixel
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --verify --output qa/v205-adjacent-forest-source
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v205-contiguous-forest-modern-source-evidence
+          path: qa/v205-adjacent-forest-source/
+          retention-days: 7
+  unchanged-game-art-still-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing free mobile-browser QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve immutable road and bridge tap regression
+        run: python scripts/qa_v202_road_segment_taps.py
+      - name: Capture all 12 real phone-layout game frames without modifying art
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Strict V203 game-art photographic gate must fail until real game visuals improve
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v205-unchanged-game-strict-art-rejection
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+          retention-days: 7

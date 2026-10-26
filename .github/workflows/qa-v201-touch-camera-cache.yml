@@ -1,0 +1,48 @@
+name: V201 Touch Pan Pinch Static Terrain Cache QA
+on:
+  push:
+    branches: ['terrain-v201-touch-pan-pinch-cache-20261025']
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v201_touch_camera_cache.py'
+      - '.github/workflows/qa-v201-touch-camera-cache.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v201-mobile-touch-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing free browser QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve independent V123 painted road pixel QA
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Preserve crossing army route and halt QA
+        run: python scripts/qa_v192_cartways.py
+      - name: Preserve existing three-center strict screenshot detail gate
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve four-browser camera coverage and anchored pinch QA
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Preserve four-browser army static-cache regression
+        run: python scripts/qa_v196_integrated_cache.py
+      - name: Reject stale static terrain on actual pointer pan and pinch
+        run: python scripts/qa_v201_touch_camera_cache.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v201-touch-camera-cache-and-original-art-evidence
+          path: |
+            qa/v194-cartway-material/
+            qa/v192-road-graphics/
+            qa/v192-three-centers/
+            qa/v193-camera-coverage/
+            qa/v196-integrated-cache/
+            qa/v201-touch-camera-cache/
+          retention-days: 7

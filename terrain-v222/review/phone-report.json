@@ -1,0 +1,199 @@
+{
+  "configurations": {
+    "chromium-portrait": {
+      "routeGraphPreserved": true,
+      "twoDistinctNativePaintingMaterialCells": true,
+      "unverifiedRoadEndsRemainBlocked": true,
+      "changedPixelsVsOriginal": {
+        "west": 1041671,
+        "matrei": 120512,
+        "south": 1050348
+      },
+      "MatreiCenterUnchanged": true
+    },
+    "chromium-landscape": {
+      "routeGraphPreserved": true,
+      "twoDistinctNativePaintingMaterialCells": true,
+      "unverifiedRoadEndsRemainBlocked": true,
+      "changedPixelsVsOriginal": {
+        "west": 1077626,
+        "matrei": 89411,
+        "south": 1107771
+      },
+      "MatreiCenterUnchanged": true
+    },
+    "webkit-portrait": {
+      "routeGraphPreserved": true,
+      "twoDistinctNativePaintingMaterialCells": true,
+      "unverifiedRoadEndsRemainBlocked": true,
+      "changedPixelsVsOriginal": {
+        "west": 1041189,
+        "matrei": 116963,
+        "south": 1049682
+      },
+      "MatreiCenterUnchanged": true
+    },
+    "webkit-landscape": {
+      "routeGraphPreserved": true,
+      "twoDistinctNativePaintingMaterialCells": true,
+      "unverifiedRoadEndsRemainBlocked": true,
+      "changedPixelsVsOriginal": {
+        "west": 1081436,
+        "matrei": 90178,
+        "south": 1110404
+      },
+      "MatreiCenterUnchanged": true
+    }
+  },
+  "productionApproved": false,
+  "historicalRoadsVerified": false,
+  "sourceRegisteredToV123": false,
+  "humanArtApproved": false,
+  "physicalIPhoneApproved": false,
+  "strictV203": {
+    "passed": true,
+    "missing_screenshots": [],
+    "results": {
+      "chromium-portrait": {
+        "scores": {
+          "west": {
+            "mean_fine_luma": 14.954,
+            "fine_area_fraction": 0.45684,
+            "pixels": 428085
+          },
+          "matrei": {
+            "mean_fine_luma": 16.4049,
+            "fine_area_fraction": 0.46573,
+            "pixels": 428085
+          },
+          "south": {
+            "mean_fine_luma": 15.0214,
+            "fine_area_fraction": 0.46128,
+            "pixels": 428085
+          }
+        },
+        "neighbors": {
+          "west": {
+            "relative_fine_luma": 0.9116,
+            "relative_fine_area": 0.9809,
+            "passes_necessary_structure": true
+          },
+          "south": {
+            "relative_fine_luma": 0.9157,
+            "relative_fine_area": 0.9904,
+            "passes_necessary_structure": true
+          }
+        },
+        "necessary_structure_gate_pass": true
+      },
+      "chromium-landscape": {
+        "scores": {
+          "west": {
+            "mean_fine_luma": 12.9891,
+            "fine_area_fraction": 0.39355,
+            "pixels": 427823
+          },
+          "matrei": {
+            "mean_fine_luma": 15.6908,
+            "fine_area_fraction": 0.462,
+            "pixels": 427823
+          },
+          "south": {
+            "mean_fine_luma": 12.4123,
+            "fine_area_fraction": 0.3779,
+            "pixels": 427823
+          }
+        },
+        "neighbors": {
+          "west": {
+            "relative_fine_luma": 0.8278,
+            "relative_fine_area": 0.8518,
+            "passes_necessary_structure": true
+          },
+          "south": {
+            "relative_fine_luma": 0.7911,
+            "relative_fine_area": 0.818,
+            "passes_necessary_structure": true
+          }
+        },
+        "necessary_structure_gate_pass": true
+      },
+      "webkit-portrait": {
+        "scores": {
+          "west": {
+            "mean_fine_luma": 14.95,
+            "fine_area_fraction": 0.45681,
+            "pixels": 428085
+          },
+          "matrei": {
+            "mean_fine_luma": 16.397,
+            "fine_area_fraction": 0.46606,
+            "pixels": 428085
+          },
+          "south": {
+            "mean_fine_luma": 15.0104,
+            "fine_area_fraction": 0.46103,
+            "pixels": 428085
+          }
+        },
+        "neighbors": {
+          "west": {
+            "relative_fine_luma": 0.9118,
+            "relative_fine_area": 0.9802,
+            "passes_necessary_structure": true
+          },
+          "south": {
+            "relative_fine_luma": 0.9154,
+            "relative_fine_area": 0.9892,
+            "passes_necessary_structure": true
+          }
+        },
+        "necessary_structure_gate_pass": true
+      },
+      "webkit-landscape": {
+        "scores": {
+          "west": {
+            "mean_fine_luma": 13.0025,
+            "fine_area_fraction": 0.39368,
+            "pixels": 427823
+          },
+          "matrei": {
+            "mean_fine_luma": 15.6851,
+            "fine_area_fraction": 0.4622,
+            "pixels": 427823
+          },
+          "south": {
+            "mean_fine_luma": 12.4035,
+            "fine_area_fraction": 0.37728,
+            "pixels": 427823
+          }
+        },
+        "neighbors": {
+          "west": {
+            "relative_fine_luma": 0.829,
+            "relative_fine_area": 0.8518,
+            "passes_necessary_structure": true
+          },
+          "south": {
+            "relative_fine_luma": 0.7908,
+            "relative_fine_area": 0.8163,
+            "passes_necessary_structure": true
+          }
+        },
+        "necessary_structure_gate_pass": true
+      }
+    },
+    "minimum_relative_fine_luma": 0.7,
+    "minimum_relative_fine_area": 0.7,
+    "blur_radius_native_screenshot_pixels": 3,
+    "fine_edge_threshold": 12,
+    "geographicRegistrationVerified": false,
+    "periodSafeArtworkVerified": false,
+    "historicRoadsAndBridgeBanksVerified": false,
+    "humanArtApproved": false,
+    "physicalIPhoneApproved": false,
+    "productionApproved": false,
+    "note": "A passing numeric microstructure test is NEVER artwork approval; artificial noise can also pass. Inspect actual screenshot and independently verify source/registration."
+  },
+  "technicalPassed": true
+}

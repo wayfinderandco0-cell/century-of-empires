@@ -1,0 +1,708 @@
+{
+  "version": 220,
+  "kind": "OPT_IN_CONTIGUOUS_MODERN_ORTHOPHOTO_ART_STUDY",
+  "attribution": "Datenquelle: basemap.at | CC BY 4.0",
+  "sourceUrl": "https://basemap.at/orthofoto/",
+  "sourceYear": 2023,
+  "projection": "EPSG:3857",
+  "nativeTilePixels": 256,
+  "nativeCellPixels": [
+    1536,
+    1024
+  ],
+  "contiguousWithinEachSourceCell": true,
+  "contiguousBetweenGameCells": false,
+  "sourceAreasNotGameGeography": true,
+  "sourceModernRoadsMayRemain": true,
+  "unreviewedModernFeaturesMayRemain": true,
+  "sourceQuarantineStillUnknown": true,
+  "noUpscaling": true,
+  "noDuplicatedSourceTiles": true,
+  "centerMatreiArtworkUnchanged": true,
+  "roadGraphUnchanged": true,
+  "cells": [
+    {
+      "cell": "west",
+      "reviewedV218Site": 5,
+      "originXYZ": [
+        139418,
+        92062,
+        18
+      ],
+      "footprintLonLat": [
+        11.46148681640625,
+        47.12714777724864,
+        11.471099853515625,
+        47.13181932754412
+      ],
+      "file": "west-full-native-2023.webp",
+      "tiles": [
+        {
+          "xyz": [
+            139418,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 0,
+          "name": "west-r0c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139418.jpeg",
+          "sha256": "a6705aae72024d43c9e1278facd73524b323df98374e5dd0caa32093538de5ba",
+          "byteCount": 10267
+        },
+        {
+          "xyz": [
+            139419,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 1,
+          "name": "west-r0c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139419.jpeg",
+          "sha256": "0354fdb55cb71ecfa0a58a4c21a16390f1f8775ed84ba9e0fbfdf46e975eeb97",
+          "byteCount": 11775
+        },
+        {
+          "xyz": [
+            139420,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 2,
+          "name": "west-r0c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139420.jpeg",
+          "sha256": "4bc363d4f1ca016912f163433cf34d6ff91c3ec1557045b311292525c75706bd",
+          "byteCount": 12505
+        },
+        {
+          "xyz": [
+            139421,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 3,
+          "name": "west-r0c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139421.jpeg",
+          "sha256": "0209dbe09e6e4414f5375ae2ee8a417b48f7f7725634e3a5d3052ac6bb8e1fa6",
+          "byteCount": 12096
+        },
+        {
+          "xyz": [
+            139422,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 4,
+          "name": "west-r0c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139422.jpeg",
+          "sha256": "d678528a256c2f487d5bf01c749632c07aac1768ad5012bfbbf2193b2eb89b4a",
+          "byteCount": 13094
+        },
+        {
+          "xyz": [
+            139423,
+            92062,
+            18
+          ],
+          "row": 0,
+          "col": 5,
+          "name": "west-r0c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92062/139423.jpeg",
+          "sha256": "c6ed4607eadb8a8638893418fb5d0bfe22041c16c2f7738b9ac475595e161e18",
+          "byteCount": 13371
+        },
+        {
+          "xyz": [
+            139418,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 0,
+          "name": "west-r1c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139418.jpeg",
+          "sha256": "f974b4fc38a7654361a20ab80e70b8ba529c8e35856dfd48816a90229c76b9c9",
+          "byteCount": 11025
+        },
+        {
+          "xyz": [
+            139419,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 1,
+          "name": "west-r1c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139419.jpeg",
+          "sha256": "5d018b2795f76c405be6778078393ae6426992fd869289ea1664eeca7bbc7004",
+          "byteCount": 12248
+        },
+        {
+          "xyz": [
+            139420,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 2,
+          "name": "west-r1c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139420.jpeg",
+          "sha256": "77b192158a74093fce3adcf43908e585e1ed972b9a0849a5790ff0775d9bec70",
+          "byteCount": 11110
+        },
+        {
+          "xyz": [
+            139421,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 3,
+          "name": "west-r1c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139421.jpeg",
+          "sha256": "6a1be2baea2deb31c81b81970a06e39f739a3113b5270b8a3bfb1c26b0a78fbd",
+          "byteCount": 10084
+        },
+        {
+          "xyz": [
+            139422,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 4,
+          "name": "west-r1c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139422.jpeg",
+          "sha256": "db96ff584cd5dde4a38c805f3c1b0730e676630d3f556886e879326832b35cf2",
+          "byteCount": 12205
+        },
+        {
+          "xyz": [
+            139423,
+            92063,
+            18
+          ],
+          "row": 1,
+          "col": 5,
+          "name": "west-r1c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92063/139423.jpeg",
+          "sha256": "a5f1e45c6e34a8794796335fe57f84693471cdb41ea093c5a0d4d5d01adea092",
+          "byteCount": 11539
+        },
+        {
+          "xyz": [
+            139418,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 0,
+          "name": "west-r2c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139418.jpeg",
+          "sha256": "e2453d9bec5c899a99dc68c3f7a1d5a28722cdbab6512434ea09f4f2b8e63035",
+          "byteCount": 10663
+        },
+        {
+          "xyz": [
+            139419,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 1,
+          "name": "west-r2c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139419.jpeg",
+          "sha256": "624003010d8524a692c9d28a833a160cc16d6ae4df4c4f3d43fd95f735d99a78",
+          "byteCount": 11690
+        },
+        {
+          "xyz": [
+            139420,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 2,
+          "name": "west-r2c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139420.jpeg",
+          "sha256": "eb2a50f1fbb98067d382506c632f7d1eefb35204b458d65b01f952dd3fe6fc32",
+          "byteCount": 12669
+        },
+        {
+          "xyz": [
+            139421,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 3,
+          "name": "west-r2c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139421.jpeg",
+          "sha256": "fa70e1713177c7a4efd7d6652a75cfe21cbf7b915046cccee692725624e88930",
+          "byteCount": 13758
+        },
+        {
+          "xyz": [
+            139422,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 4,
+          "name": "west-r2c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139422.jpeg",
+          "sha256": "521f18133b2a5af92d38c73c1565ca9c7d1284622869d9de29adc57626001803",
+          "byteCount": 12115
+        },
+        {
+          "xyz": [
+            139423,
+            92064,
+            18
+          ],
+          "row": 2,
+          "col": 5,
+          "name": "west-r2c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92064/139423.jpeg",
+          "sha256": "6535515d59eabc262034e899ad905a5fc913eada3a0edaab6b31c1c0dc32a7ca",
+          "byteCount": 12808
+        },
+        {
+          "xyz": [
+            139418,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 0,
+          "name": "west-r3c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139418.jpeg",
+          "sha256": "62786089ec5633e385e4c82949615592f253d11cf307116a58ba1f4c2e38d3b6",
+          "byteCount": 12571
+        },
+        {
+          "xyz": [
+            139419,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 1,
+          "name": "west-r3c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139419.jpeg",
+          "sha256": "015aa0843193aad989104e46ad0acf5f811a49081f1a53ba9c1a64e162349aaf",
+          "byteCount": 13106
+        },
+        {
+          "xyz": [
+            139420,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 2,
+          "name": "west-r3c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139420.jpeg",
+          "sha256": "9e5ff869a2ce3c72d883a4c7de90ef299016c3828b9db84117664c8c1cf8f3aa",
+          "byteCount": 12768
+        },
+        {
+          "xyz": [
+            139421,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 3,
+          "name": "west-r3c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139421.jpeg",
+          "sha256": "9a6fe44fece3ddf5d98fc3bf1dd66e7224d7b35478953ea6543eae70b5c00f70",
+          "byteCount": 13225
+        },
+        {
+          "xyz": [
+            139422,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 4,
+          "name": "west-r3c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139422.jpeg",
+          "sha256": "e76f438d72fa5cafaa9631284b608a8742bb3777d7b71927998c898c622f6912",
+          "byteCount": 13533
+        },
+        {
+          "xyz": [
+            139423,
+            92065,
+            18
+          ],
+          "row": 3,
+          "col": 5,
+          "name": "west-r3c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92065/139423.jpeg",
+          "sha256": "3970e127da6120d5a772cdf0b60787dfb100c175dd0b4705173437d234b659a3",
+          "byteCount": 12132
+        }
+      ],
+      "nativePixels": [
+        1536,
+        1024
+      ],
+      "reviewedMaskOnlyAtOrigin512": true,
+      "artisticPlacementNotGeoregistration": true,
+      "maskZeroPixels": 79925,
+      "sha256": "91bb12751d60d7483bc98290b10e5b58caf3b33ff0b70762ebf2c26b9514cd07"
+    },
+    {
+      "cell": "south",
+      "reviewedV218Site": 8,
+      "originXYZ": [
+        139418,
+        92070,
+        18
+      ],
+      "footprintLonLat": [
+        11.46148681640625,
+        47.11967244332479,
+        11.471099853515625,
+        47.1243446501219
+      ],
+      "file": "south-full-native-2023.webp",
+      "tiles": [
+        {
+          "xyz": [
+            139418,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 0,
+          "name": "south-r0c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139418.jpeg",
+          "sha256": "7541400c9b87175bcd5c492aef61e7f1bb80acd3c131b44641f98c88653bd03b",
+          "byteCount": 10704
+        },
+        {
+          "xyz": [
+            139419,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 1,
+          "name": "south-r0c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139419.jpeg",
+          "sha256": "e5c9a480327620ea004ccdedc722c2e85f1bb69538727ceb8e81cef6dd1aa0cd",
+          "byteCount": 10318
+        },
+        {
+          "xyz": [
+            139420,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 2,
+          "name": "south-r0c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139420.jpeg",
+          "sha256": "66777490ccb562edf36ffae8cc33cd6cdcc74057d83a143cf5adfc78102a8a96",
+          "byteCount": 10005
+        },
+        {
+          "xyz": [
+            139421,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 3,
+          "name": "south-r0c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139421.jpeg",
+          "sha256": "9a106c445f6df87007490ebfefe661236f511c0ad3d34ed9e5e20a4b55190b6b",
+          "byteCount": 12019
+        },
+        {
+          "xyz": [
+            139422,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 4,
+          "name": "south-r0c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139422.jpeg",
+          "sha256": "302997830c6d7cce712342019a0feda248cf1a01281865371c420b8376784ba1",
+          "byteCount": 13272
+        },
+        {
+          "xyz": [
+            139423,
+            92070,
+            18
+          ],
+          "row": 0,
+          "col": 5,
+          "name": "south-r0c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92070/139423.jpeg",
+          "sha256": "eb6ae73f3039401d546b439e3bc9627cabe32f3459c19a03359d0a194475b58c",
+          "byteCount": 11810
+        },
+        {
+          "xyz": [
+            139418,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 0,
+          "name": "south-r1c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139418.jpeg",
+          "sha256": "558d38ec7b2648dfb0146b54e14fc83f15175b04d207f69f0ade6114840a2c77",
+          "byteCount": 9345
+        },
+        {
+          "xyz": [
+            139419,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 1,
+          "name": "south-r1c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139419.jpeg",
+          "sha256": "f154f7d6f355f13dd55ad3a8590db28170dd5aca62cb3223c326a9f3c4180544",
+          "byteCount": 12196
+        },
+        {
+          "xyz": [
+            139420,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 2,
+          "name": "south-r1c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139420.jpeg",
+          "sha256": "2dff3425152afe57517d1fa6ca5073a05c00a9ec9ffbd5730afdfc6e66f851cf",
+          "byteCount": 11860
+        },
+        {
+          "xyz": [
+            139421,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 3,
+          "name": "south-r1c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139421.jpeg",
+          "sha256": "983f4c9dbaa5ae4cf64f281f894a5203d00af34e8763c731f86a269c4d8e3482",
+          "byteCount": 12294
+        },
+        {
+          "xyz": [
+            139422,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 4,
+          "name": "south-r1c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139422.jpeg",
+          "sha256": "59fb3373c00c49980cb51c8360885aa06d6e68234d62af3357365d7ab0bd2d36",
+          "byteCount": 13186
+        },
+        {
+          "xyz": [
+            139423,
+            92071,
+            18
+          ],
+          "row": 1,
+          "col": 5,
+          "name": "south-r1c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92071/139423.jpeg",
+          "sha256": "e1e84d7f703934b83c07254c07e47e46d4af39fcd9ae2fb23206614b616f0c27",
+          "byteCount": 12732
+        },
+        {
+          "xyz": [
+            139418,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 0,
+          "name": "south-r2c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139418.jpeg",
+          "sha256": "ef125d3d4d98d094db7ed6f7cc2cb4325a1e9f927ed4799c9f0b9b0bcbade909",
+          "byteCount": 12619
+        },
+        {
+          "xyz": [
+            139419,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 1,
+          "name": "south-r2c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139419.jpeg",
+          "sha256": "8a7333892552c2dac9578a380ec0f313a39f9f20a59be688e6057e5ede41a663",
+          "byteCount": 14669
+        },
+        {
+          "xyz": [
+            139420,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 2,
+          "name": "south-r2c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139420.jpeg",
+          "sha256": "d55461e7407c72163f3075396815ba2607c7e574ba75da618a7b3abe2261660c",
+          "byteCount": 12637
+        },
+        {
+          "xyz": [
+            139421,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 3,
+          "name": "south-r2c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139421.jpeg",
+          "sha256": "59656254e537167e0b7a4334485bb4dd6db0975d1ec73c8300b511d03919bfee",
+          "byteCount": 9854
+        },
+        {
+          "xyz": [
+            139422,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 4,
+          "name": "south-r2c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139422.jpeg",
+          "sha256": "d496cdbd9f5291aaec343574440ddb4e70c005ba629a55c4af1dcfd8b755fbe1",
+          "byteCount": 11341
+        },
+        {
+          "xyz": [
+            139423,
+            92072,
+            18
+          ],
+          "row": 2,
+          "col": 5,
+          "name": "south-r2c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92072/139423.jpeg",
+          "sha256": "53cef7c28960150b99f8d7fa473859669c03a48cf6af01d78a7dcbe95a6f61db",
+          "byteCount": 11535
+        },
+        {
+          "xyz": [
+            139418,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 0,
+          "name": "south-r3c0.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139418.jpeg",
+          "sha256": "544029380b6fdd78d14346079326e85eefc261270249e0f1e4a4d4d825b0ddb3",
+          "byteCount": 15264
+        },
+        {
+          "xyz": [
+            139419,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 1,
+          "name": "south-r3c1.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139419.jpeg",
+          "sha256": "13824f6abb83de8504727737671e6fecc3c1db8c1147151b469904b7252b5b9f",
+          "byteCount": 13290
+        },
+        {
+          "xyz": [
+            139420,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 2,
+          "name": "south-r3c2.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139420.jpeg",
+          "sha256": "e786ec1b1736d8875013380f74c3b693f0a881ef241acfb0b829e2122fc31fc4",
+          "byteCount": 12375
+        },
+        {
+          "xyz": [
+            139421,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 3,
+          "name": "south-r3c3.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139421.jpeg",
+          "sha256": "06099dc64dc41aaa41538ef2a04f41b0279de9cb8e85289885ace78fc730f514",
+          "byteCount": 10354
+        },
+        {
+          "xyz": [
+            139422,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 4,
+          "name": "south-r3c4.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139422.jpeg",
+          "sha256": "d2f7e9173449cd689c5d7e76f989415d57652d727911d2613d4204f0fb6456ff",
+          "byteCount": 11842
+        },
+        {
+          "xyz": [
+            139423,
+            92073,
+            18
+          ],
+          "row": 3,
+          "col": 5,
+          "name": "south-r3c5.jpeg",
+          "url": "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/92073/139423.jpeg",
+          "sha256": "9f6e05aef40f331f448cd70b1d9303d2f53c55f09ea9c7d83b0415fcaa8c9126",
+          "byteCount": 11291
+        }
+      ],
+      "nativePixels": [
+        1536,
+        1024
+      ],
+      "reviewedMaskOnlyAtOrigin512": true,
+      "artisticPlacementNotGeoregistration": true,
+      "maskZeroPixels": 28958,
+      "sha256": "7490b591541498dad1dd5d2a40844be36202671f192f500a7bd72679c16ed138"
+    }
+  ],
+  "sourceRegisteredToV123": false,
+  "historicRoadsVerified": false,
+  "allModernFeaturesExcluded": false,
+  "periodSafe": false,
+  "gameArtApproved": false,
+  "physicalIPhoneApproved": false,
+  "productionApproved": false
+}

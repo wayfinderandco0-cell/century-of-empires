@@ -1,0 +1,77 @@
+name: V218 Reviewed Modern Feature Quarantine (game artwork remains RED)
+on:
+  push:
+    branches: ['terrain-v218-reviewed-modern-feature-quarantine-20261026']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-reviewed-quarantine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve original source and geographic fail-closed negative controls
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          node scripts/test_v213_source_geodesy.js
+          python scripts/test_v214_source_native_material_bank.py
+          python scripts/test_v215_native_source_seam_atlas.py
+          python scripts/test_v216_material_provenance_review.py
+          python scripts/test_v217_matrei_nearby_native_scout.py
+          python scripts/test_v218_reviewed_modern_quarantine.py
+      - name: Fetch 16 original source JPEGs and verify untouched RGB versus excluded pixels
+        run: |
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine --verify
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v218-registration/report.json
+          python -c "import json; r=json.load(open('qa/v218-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v218-real-native-original-vs-quarantined-NOT-game-art
+          path: |
+            qa/v218-modern-quarantine/
+            qa/v218-registration/
+          retention-days: 7
+  original-phone-geometry-and-strict-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve four-browser V137 roads/seams and V192-V202 army/camera/taps
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+          python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Strict V203 actual game-art gate remains fail-closed
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v218-unchanged-actual-phone-screenshots-and-strict-art-RED
+          path: |
+            qa/v137-clean/
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

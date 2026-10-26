@@ -60,6 +60,7 @@ def main():
                             assert len(sources)==2 and {s['tile'] for s in sources}=={'west','south'}
                             assert {(s['x'],s['y']) for s in sources}=={(0,0),(1536,1024)}
                             assert page.evaluate('V192.roadNodeCount')>=90
+                            page.wait_for_function('window.V192?.v225GroundContact?.painted===true',timeout=180000)
                             bank=page.evaluate('V192.v225GroundContact')
                             assert bank['painted'] and len(bank['cells'])==2 and bank['roads']>=2 and bank['segments']>=4,bank
                             assert bank['productionApproved'] is False and bank['bridgeBanksVerified'] is False

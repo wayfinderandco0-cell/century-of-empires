@@ -1,0 +1,100 @@
+{
+  "version": 219,
+  "kind": "OPT_IN_UNREGISTERED_PHOTO_MATERIAL_ART_STUDY",
+  "attribution": "Datenquelle: basemap.at | CC BY 4.0",
+  "sourceYear": 2023,
+  "nativePixels": [
+    512,
+    512
+  ],
+  "alphaFeatherPixels": 58,
+  "sourceQuarantineStillUnknown": true,
+  "noUpscaling": true,
+  "noDuplicatedSourcePanels": true,
+  "centerMatreiArtworkUnchanged": true,
+  "roadGraphUnchanged": true,
+  "entries": [
+    {
+      "siteIndex": 5,
+      "tile": "west",
+      "x": 110,
+      "y": 90,
+      "width": 512,
+      "height": 512,
+      "file": "site-05-native-feather.webp",
+      "sha256": "d9da721975ba1a3a95c5b372b594e1ce9b939ea33721b335ce12de7e6078683b",
+      "originalSha256": "f854e33637cc3524892f6cde34df8567c85dba9208938f2394e57897f2ec2ecb",
+      "quarantineSha256": "6f1d17108ef0c61d1edf37235482f1a4a7b61beaaf71772d339c26d16c54b6a4",
+      "sourceFootprintLonLat": [
+        11.46148681640625,
+        47.12995075666306,
+        11.4642333984375,
+        47.13181932754412
+      ],
+      "artisticPlacementNotGeoregistration": true
+    },
+    {
+      "siteIndex": 6,
+      "tile": "west",
+      "x": 835,
+      "y": 360,
+      "width": 512,
+      "height": 512,
+      "file": "site-06-native-feather.webp",
+      "sha256": "0cdf2e6bb8fe3c2155be82518d57147f16811d56bcb08cbd9afe30bd394ffcb6",
+      "originalSha256": "eec5451ddfaece1cc36214c07adb8d37d31dd45ea9f3ebcb2180edb776d54844",
+      "quarantineSha256": "af6533c5823aeb933eb86845df527a0c5595fe6686bc3c4ba810d2ccff664f95",
+      "sourceFootprintLonLat": [
+        11.43951416015625,
+        47.12247581664114,
+        11.4422607421875,
+        47.1243446501219
+      ],
+      "artisticPlacementNotGeoregistration": true
+    },
+    {
+      "siteIndex": 3,
+      "tile": "south",
+      "x": 135,
+      "y": 105,
+      "width": 512,
+      "height": 512,
+      "file": "site-03-native-feather.webp",
+      "sha256": "a96860eb5c064fd1befa2239c9dffd177febff1cd012bd60ce3ce09a95e74b2e",
+      "originalSha256": "a887b604c744b6fe61aab19f8f16e6fe5ab8f389f47c6f6248941e31a16614ed",
+      "quarantineSha256": "7b4fb27c9046ce522a88cb764f4f1dee3a8a630e9f21abd2dedc8b5aa971e044",
+      "sourceFootprintLonLat": [
+        11.43951416015625,
+        47.12995075666306,
+        11.4422607421875,
+        47.13181932754412
+      ],
+      "artisticPlacementNotGeoregistration": true
+    },
+    {
+      "siteIndex": 8,
+      "tile": "south",
+      "x": 845,
+      "y": 390,
+      "width": 512,
+      "height": 512,
+      "file": "site-08-native-feather.webp",
+      "sha256": "3851824cfe08c33a9be859e7562475e78a4d7a0ddc096e04bcdd41e4b3f07fae",
+      "originalSha256": "c65ff480b45b33e4cd6c2b42fe078d8808b62bd7930256a245253f622b1372f3",
+      "quarantineSha256": "1a701d623fa675ff4763456074a7b1b3337f1fb111ee6fb1e2bb720325807fdc",
+      "sourceFootprintLonLat": [
+        11.46148681640625,
+        47.12247581664114,
+        11.4642333984375,
+        47.1243446501219
+      ],
+      "artisticPlacementNotGeoregistration": true
+    }
+  ],
+  "sourceRegisteredToV123": false,
+  "historicRoadsVerified": false,
+  "periodSafe": false,
+  "gameArtApproved": false,
+  "physicalIPhoneApproved": false,
+  "productionApproved": false
+}

@@ -79,6 +79,7 @@ try:
                             page.screenshot(path=str(OUT / f"{key}-LOAD-FAILURE.png"),
                                             animations="disabled", full_page=True)
                             raise AssertionError(f"{key} review UI not ready: {diagnostics}") from exc
+                        assert page.evaluate("document.querySelector(\'#gameFrame\').contentWindow.V192.reviewCapture") is True
                         assert page.evaluate("V210.cell") == "matrei"
                         assert page.evaluate("V210.loadedTiles") == 4
                         assert page.evaluate("V210.inside([1537,1],V210.polygon([1536,0]))") is False

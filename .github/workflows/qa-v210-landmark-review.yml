@@ -1,0 +1,92 @@
+name: V210 Mobile Landmark Review (UNVERIFIED; art must remain RED)
+on:
+  push:
+    branches: ['terrain-v210-landmark-visual-review-20261026']
+    paths:
+      - 'v210-landmark-visual-review.html'
+      - 'scripts/qa_v210_landmark_review_ui.py'
+      - '.github/workflows/qa-v210-landmark-review.yml'
+      - 'docs/v210-landmark-review-evidence.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-landmark-invariants:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve V204-V209 native source, mask, polygon and evidence gates
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+      - name: Verify real tiepoint evidence still missing
+        run: |
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v210-source-intake/report.json
+          python -c "import json; r=json.load(open('qa/v210-source-intake/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS' and not r['sourceRegisteredToV123']"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v210-source-evidence-deficit-NOT-APPROVED
+          path: qa/v210-source-intake/
+          retention-days: 7
+  mobile-review-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free Chromium and WebKit test dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Test actual V192 camera capture and source coordinate intake in four mobile layouts
+        run: python scripts/qa_v210_landmark_review_ui.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v210-mobile-UI-SYNTHETIC-SOURCE-TEST-ONLY
+          path: qa/v210-review-ui/
+          retention-days: 7
+  existing-game-art-fail-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free browser QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve original V121/V123 route and bridge QA
+        run: |
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: Capture real three-center browser screenshots and preserve old detail gate
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve strict V203 photographic microstructure gate (expected RED until art fixed)
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v210-inherited-REAL-game-art-quality-evidence-RED
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

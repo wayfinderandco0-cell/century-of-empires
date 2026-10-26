@@ -1,10 +1,10 @@
-name: V225 Graph-Locked Ground Contact (ART NOT APPROVED) (ART NOT APPROVED)
+name: V225 Graph-Locked Ground Contact (ART NOT APPROVED)
 on:
   push:
-    branches: ['terrain-v225-cc0-oblique-scene-trial-20261026']
+    branches: ['terrain-v225-graph-locked-ground-contact-20261026']
   workflow_dispatch:
 concurrency:
-  group: v225-licensed-oblique
+  group: v225-ground-contact
   cancel-in-progress: true
 permissions:
   contents: read

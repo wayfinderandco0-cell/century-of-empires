@@ -11,8 +11,10 @@
   'use strict';
   const SIZE=[1536,1024];
   const SPECS=Object.freeze({
-    west:{origin:[0,0],road:'east',join:[1536,478],unverified:[275,550],points:13},
-    south:{origin:[1536,1024],road:'north',join:[466,0],unverified:[1270,605],points:12}
+    west:{origin:[0,0],road:'east',join:[1536,478],unverified:[275,550],points:13,
+      geometry:[[1536,478],[1450,478],[1320,480],[1210,490],[1085,507],[980,515],[890,535],[784,551],[680,560],[570,540],[470,520],[370,522],[275,550]]},
+    south:{origin:[1536,1024],road:'north',join:[466,0],unverified:[1270,605],points:12,
+      geometry:[[466,0],[466,74],[470,160],[488,235],[540,310],[620,350],[700,400],[805,442],[930,510],[1050,550],[1140,585],[1270,605]]}
   });
   function insist(ok,msg){if(!ok)throw Error('V226 artwork contract: '+msg);}
   function point(p){return Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)
@@ -31,6 +33,7 @@
         'unreviewed '+id+' road');
       const pts=t.roads[s.road];
       insist(pts.length===s.points&&pts.every(point),'invalid '+id+' route points');
+      insist(JSON.stringify(pts)===JSON.stringify(s.geometry),'immutable '+id+' interior geometry drifted');
       insist(same(pts[0],s.join)&&same(pts[pts.length-1],s.unverified),
         'immutable '+id+' endpoints drifted');
       const clean=pts.map(p=>Object.freeze(p.slice()));

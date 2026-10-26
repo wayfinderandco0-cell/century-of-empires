@@ -14,4 +14,12 @@ New `scripts/test_v205_adjacent_forest_materials.py` rejects source-site swaps, 
 
 ## Verification
 
-Pending CI and actual artifact inspection; no success or visual acceptance claim before evidence.
+[V205 run 40269057347](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40269057347): **contiguous-forest-source job SUCCESS**. Both V204 and V205 offline negative-control test suites passed; 12 real native JPEGs were acquired and independently re-verified. Actual [artifact 12627508315](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40269057347/artifacts/12627508315) was downloaded and its contact image opened for visual review.
+
+**Actual source visual finding:** all three panels contain genuinely detailed Alpine conifer canopy and terrain shadows, substantially more natural than the game's painted oval trees. However, the WEST reference visibly contains a wide pale modern track, the SOUTH reference has multiple hairpin roads, and all panels have embedded 2023 date imprints. This **disqualifies the raw mosaic from historical game placement**; natural forest pixels are potential materials only after audited exclusions. The panels are geographically adjacent to each other, NOT registered to the V121 original Matrei painting or V123 playable cells.
+
+Native zoom-18 source origins: WEST [139398,92095,18], CENTER [139400,92095,18], SOUTH [139400,92097,18]. No-data/near-white fraction = **0** in all three panels. Source-edge diagnostic mean RGB deltas: WEST→CENTER **8.1947**, CENTER→SOUTH **8.0208**; these are not V123 game border seam measurements.
+
+The second V205 workflow job independently enforces the unchanged V203 strict game-art screenshot gate; it must remain RED until the playable WEST/SOUTH images genuinely improve. **No approval flags were changed.**
+
+**Next code task:** source-native, manually auditable exclusion masks for the visible modern tracks and date stamps; harvest only clean natural-cover RGB patches, retain their real coordinates and source hashes, and never inpaint or assign them false V123 positions.

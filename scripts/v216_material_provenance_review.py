@@ -99,7 +99,7 @@ def draw_contact(root, atlas):
         with Image.open(path) as im:
             original_size = list(im.size)
             if idx == 0:
-                require(im.size == (1448, 1086), "V94 overview pixels changed")
+                require(im.size == (4096, 3072), "V94 overview pixels changed")
             if idx == 1:
                 require(im.size == (1552, 1782), "V97 relief pixels changed")
             if idx == 2:

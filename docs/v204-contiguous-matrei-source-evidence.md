@@ -29,4 +29,10 @@ Immutable V121 original painting and V123 road/bridge/army geometry remain pinne
 
 ## CI and visual inspection
 
-Pending source/visual CI verification; do not claim a pass until completed run artifacts are inspected.
+[Run 40268827843](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40268827843): **source-native-geometry job SUCCESS**; all four offline positive/negative unit tests passed, 12 actual native JPEGs downloaded and re-verified, artifact **12626758814** produced. The full workflow also contains a separate existing-game-visual-gate job; do not mistake source success for game-art approval.
+
+Downloaded and opened the actual 1024×1086 source contact image from artifact 12626758814, not merely its manifest. The geographically contiguous Matrei anchor is **visibly unsuitable for direct historical game artwork**: the WEST source panel contains a major paved highway and 2023 date imprint; MATREI and SOUTH panels contain extensive modern buildings, a sports field/courts and urban streets. This is a useful **source exclusion finding**, not a playable terrain improvement. No inpainting or imaginary 1780 infrastructure was performed. Original RGB panels remain intact.
+
+Manifest verification: WEST origin XYZ [139408,92062,18], MATREI [139410,92062,18], SOUTH [139410,92064,18]. All three real source footprints share exact edges; near-white fractions are 0.00012, 0.00055 and 0.00110. Source-edge RGB seam diagnostics are 7.9089 (west→center) and 4.6582 (center→south); these do **not** validate the original Matrei painting/game road seams. All geographic, period, historic-road, user-art and production approval flags remain FALSE.
+
+**Next source decision (not user approval request):** exclude this built-up reference from candidate game terrain. Acquire an equally contiguous natural-cover reference around an already verified V197 forest source site, and independently survey actual game-to-geography tie points before any historical integration.

@@ -52,11 +52,33 @@ try:
                                             is_mobile=True, has_touch=True, device_scale_factor=2)
                     errors = []
                     page.on("pageerror", lambda err: errors.append(str(err)))
-                    page.route("**/mapsneu.wien.gv.at/**",
-                               lambda route: route.fulfill(status=200, content_type="image/jpeg", body=STUB_JPEG))
+                    # Match by hostname, not a fragile URL glob. Never allow a
+                    # synthetic test tile to be mistaken for a real source.
+                    page.route("**/*", lambda route: (
+                        route.fulfill(status=200, content_type="image/jpeg", body=STUB_JPEG)
+                        if route.request.url.startswith("https://mapsneu.wien.gv.at/")
+                        else route.continue_()))
                     try:
                         page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                        page.wait_for_function("window.V210 && V210.ready", timeout=150000)
+                        try:
+                            page.wait_for_function("window.V210 && V210.ready", timeout=45000)
+                        except Exception as exc:
+                            # Preserve actionable evidence even when the review
+                            # UI fails to initialize. This is NOT a passing test.
+                            diagnostics = page.evaluate("""() => ({
+                                href: location.href,
+                                title: document.title,
+                                v210: window.V210 ? V210.diagnostics : null,
+                                frameHref: document.querySelector('#gameFrame')?.contentWindow?.location?.href,
+                                frameAPI: !!document.querySelector('#gameFrame')?.contentWindow?.V192,
+                                body: document.querySelector('#state')?.textContent
+                            })""")
+                            diagnostics["pageErrors"] = errors
+                            (OUT / f"{key}-LOAD-FAILURE.json").write_text(
+                                json.dumps(diagnostics, indent=2) + "\\n")
+                            page.screenshot(path=str(OUT / f"{key}-LOAD-FAILURE.png"),
+                                            animations="disabled", full_page=True)
+                            raise AssertionError(f"{key} review UI not ready: {diagnostics}") from exc
                         assert page.evaluate("V210.cell") == "matrei"
                         assert page.evaluate("V210.loadedTiles") == 4
                         assert page.evaluate("V210.inside([1537,1],V210.polygon([1536,0]))") is False

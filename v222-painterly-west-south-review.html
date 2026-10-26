@@ -921,7 +921,7 @@ async function boot(){
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
   art=source;await buildLandscape();currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
-  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='V220 SOURCE ART STUDY · modern 2023 photo, NOT 1780 · tap original graph roads';
+  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='V222 ART STUDY · original Matrei-derived scenic material, NOT geographic history · tap original graph roads';
  }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
 }
 // Static landscape is cached. Repaint only while marching or when camera/UI

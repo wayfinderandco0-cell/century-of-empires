@@ -142,7 +142,7 @@ def main():
         raw=(OUT/'webkit-portrait-review.jpg').read_bytes()
         (OUT/'webkit-portrait-review-data.js').write_text(
             'window.V222PhoneReview="data:image/jpeg;base64,'+
-            base64.b64encode(raw).decode('ascii')+'";\\n')
+            base64.b64encode(raw).decode('ascii')+'";\n')
     # Preserve original strict V203 thresholds, without treating a numeric
     # pass as photographic human approval. Its report is still fail-closed.
     visual=strict.audit(OUT,OUT/'strict-v203',make_contact=True)

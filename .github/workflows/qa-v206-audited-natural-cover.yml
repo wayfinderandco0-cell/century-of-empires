@@ -1,0 +1,92 @@
+name: V206 Audited Native Canopy Samples (GAME ART STILL UNAPPROVED)
+on:
+  push:
+    branches: ['terrain-v206-audited-natural-cover-patches-20261025']
+    paths:
+      - 'scripts/v206_audited_natural_cover.py'
+      - 'scripts/test_v206_audited_natural_cover.py'
+      - '.github/workflows/qa-v206-audited-natural-cover.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-candidate-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve native source and false-approval controls
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+      - name: Acquire exactly 12 native modern reference JPEGs
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --download --output qa/v206-forest-source
+      - name: Verify source pixel identity before extraction
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --verify --output qa/v206-forest-source
+      - name: Export only visually selected source-native RGB candidate patches
+        run: python scripts/v206_audited_natural_cover.py --source qa/v206-forest-source --output qa/v206-native-candidates
+      - name: Independently verify all crop RGB pixels and source pins
+        run: python scripts/v206_audited_natural_cover.py --source qa/v206-forest-source --output qa/v206-native-candidates --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v206-real-source-and-audited-native-candidates
+          path: |
+            qa/v206-forest-source/
+            qa/v206-native-candidates/
+          retention-days: 7
+  existing-mobile-route-and-terrain-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Existing strict road pigment and Matrei border tests
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Existing fixed graph and painted road alignment
+        run: python scripts/qa_v192_cartways.py
+      - name: Existing three-center terrain and 12 phone frames
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Existing camera coverage
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Existing road/bridge tap movement safety
+        run: python scripts/qa_v202_road_segment_taps.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v206-unchanged-game-chromium-webkit-regression-evidence
+          path: qa/v192-three-centers/
+          retention-days: 7
+  strict-unapproved-game-art-must-stay-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Capture real Chromium and WebKit phone-layout game frames
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Enforce strict V203 photographic detail gate without relaxing it
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v206-strict-game-art-rejection
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+          retention-days: 7

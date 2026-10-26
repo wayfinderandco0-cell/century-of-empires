@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Century of Empires V213 | Unverified Alpine Landmark Review</title>
+<style>
+:root{color-scheme:dark;font:14px system-ui,-apple-system,sans-serif;background:#13221d;color:#f5e8ce}
+*{box-sizing:border-box}body{margin:0;padding:12px;max-width:1200px;margin-inline:auto}
+h1{font:700 22px Georgia,serif;margin:6px 0}p{line-height:1.45;margin:8px 0}
+.warning{background:#4a2c20;border:1px solid #d69c65;border-radius:9px;padding:10px;color:#ffe1b2}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+button{border:1px solid #b7a079;border-radius:7px;padding:10px 12px;background:#304a3c;color:#fff3d9;min-height:42px}
+button.active{background:#8c6836}button:disabled{opacity:.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+section{min-width:0;border:1px solid #667b6a;border-radius:9px;padding:9px;background:#1c3027}
+h2{font-size:15px;margin:3px 0 8px}
+#gameCanvas{display:block;width:100%;height:auto;aspect-ratio:640/450;border:1px solid #a4aa92;touch-action:manipulation}
+#sourcePanel{position:relative;width:100%;max-width:512px;aspect-ratio:1;background:#344137;border:1px solid #a4aa92;overflow:hidden;touch-action:manipulation}
+#sourcePanel img{position:absolute;width:50%;height:50%;object-fit:fill;pointer-events:none}
+#sourcePanel .mark{position:absolute;border:2px solid #fff3b3;border-radius:50%;background:#e03e34;width:12px;height:12px;transform:translate(-50%,-50%);pointer-events:none}
+small{display:block;color:#cfc9b4;line-height:1.5;margin-top:7px}
+#state{padding:8px;background:#263f32;border-radius:7px;min-height:44px}
+#records{white-space:pre-wrap;overflow-wrap:anywhere;background:#15271f;padding:9px;border-radius:7px;font-size:12px;max-height:180px;overflow:auto}
+label{display:inline-flex;gap:7px;align-items:center}
+select{padding:8px;background:#263b31;color:#fff;border:1px solid #b7a079}
+iframe{position:absolute;left:-10000px;top:0;width:640px;height:450px;border:0;pointer-events:none}
+@media(max-width:760px){.grid{grid-template-columns:1fr}body{padding:9px}}
+</style></head><body>
+<h1>Century of Empires · V213 landmark review</h1>
+<div class="warning"><strong>UNVERIFIED · NOT GAME ART · NOT 1780 GEOGRAPHY.</strong>
+The left panel is the actual V192 test game camera, including artificial West/South terrain.
+The right panel is a geographically separate <strong>modern</strong> forest reference.
+A visual resemblance is NOT proof these are the same location. Do not copy pixels into game terrain or extend roads based on this screen.</div>
+<div class="controls">
+<button data-cell="west">Western Pass</button><button data-cell="matrei">Matrei</button><button data-cell="south">Southern Valley</button>
+</div>
+<div class="grid">
+<section><h2>Playable octagon · actual preview rendering</h2>
+<canvas id="gameCanvas" width="640" height="450" aria-label="Game camera; select a possible natural landmark"></canvas>
+<small>Tap a stable natural feature here first. World coordinates are computed from the actual camera, not estimated from a stretched image.</small></section>
+<section><h2>Separate modern aerial reference · native XYZ pixels</h2>
+<div id="sourcePanel" role="img" aria-label="Four native modern aerial tiles; select the visually corresponding feature"></div>
+<small>Datenquelle: basemap.at · CC BY 4.0 · 2023-era aerial imagery. Original 256px XYZ tiles; no resampling to the 1536×1024 game frame. Tracks and dates may be modern.</small><small id="geoReadout" aria-live="polite">Modern source geographic position unavailable until tiles load. This is NOT the game's geographic location.</small></section>
+</div>
+<div class="controls">
+<label>Feature <select id="feature"><option value="bedrock_outcrop">Bedrock outcrop</option><option value="ridge_saddle">Ridge saddle</option><option value="river_confluence">River confluence</option><option value="valley_junction">Valley junction</option></select></label>
+<button id="export" disabled>Export UNVERIFIED observations</button>
+<button id="clear">Clear observations</button>
+</div>
+<div id="state" role="status">Loading the original Matrei preview…</div>
+<pre id="records">No visual observations. Four independently evidenced matches per cell would be needed before even a mathematical candidate review.</pre>
+<iframe id="gameFrame" src="v192-weathered-cartways-graphics-test.html?reviewCapture=1" title="Unmodified V192 three-octagon test camera"></iframe>
+<script src="terrain-grid/v213-source-geodesy.js"></script>
+<script>
+'use strict';
+(function(){
+ const names=['west','matrei','south'], offsets={west:[0,0],matrei:[512,0],south:[512,512]};
+ const sourceTileOrigin={west:[139398,92095],matrei:[139400,92095],south:[139400,92097]};
+ const gameOrigin={west:[0,0],matrei:[1536,0],south:[1536,1024]};
+ const game=document.getElementById('gameCanvas'),source=document.getElementById('sourcePanel');
+ const frame=document.getElementById('gameFrame'),state=document.getElementById('state');
+ const records=document.getElementById('records'),buttons=[...document.querySelectorAll('[data-cell]')];
+ const observations={west:[],matrei:[],south:[]};
+ const geodesy=window.V213Geo;
+ if(!geodesy)throw Error('Native geographic source module unavailable; no landmark intake permitted');
+ let cell='matrei',camera=null,pending=null,loaded=0,epoch=0,gameReady=false;
+ const finite=(n)=>typeof n==='number'&&Number.isFinite(n);
+ function polygon(origin){const x=origin[0],y=origin[1];return [[256,0],[1280,0],[1536,256],[1536,768],[1280,1024],[256,1024],[0,768],[0,256]].map(p=>[p[0]+x,p[1]+y]);}
+ function inside(point,vertices){
+  let inside=false;
+  for(let i=0;i<vertices.length;i++){
+   const a=vertices[i],b=vertices[(i+1)%vertices.length],cross=(point[0]-a[0])*(b[1]-a[1])-(point[1]-a[1])*(b[0]-a[0]);
+   if(Math.abs(cross)<1e-7&&point[0]>=Math.min(a[0],b[0])&&point[0]<=Math.max(a[0],b[0])&&point[1]>=Math.min(a[1],b[1])&&point[1]<=Math.max(a[1],b[1]))return true;
+   if((a[1]>point[1])!==(b[1]>point[1])){
+    const crossing=a[0]+(point[1]-a[1])*(b[0]-a[0])/(b[1]-a[1]);
+    if(point[0]<crossing)inside=!inside;
+   }
+  }
+  return inside;
+ }
+ function worldAt(local,cam){
+  if(!cam||!finite(cam.scale)||cam.scale<=0)throw Error('Game camera unavailable');
+  return [cam.center[0]+(local[0]-cam.viewport[0]/2)/cam.scale,
+          cam.center[1]+(local[1]-cam.viewport[1]/2)/cam.scale];
+ }
+ function sourceAt(local,name){return [Math.round((offsets[name][0]+local[0])*100)/100,
+                                    Math.round((offsets[name][1]+local[1])*100)/100];}
+ function localPoint(event,element,w,h){
+  const rect=element.getBoundingClientRect();
+  return [(event.clientX-rect.left)*w/rect.width,(event.clientY-rect.top)*h/rect.height];
+ }
+ function status(msg){state.textContent=msg;}
+ function drawRecords(){
+  const counts=names.map(n=>n+': '+observations[n].length+'/4').join(' · ');
+  records.textContent=counts+'\n'+names.flatMap(n=>observations[n].map((o,i)=>n+' '+(i<2?'control':'holdout')+
+    ' '+o.feature+' game='+JSON.stringify(o.gameWorldXY)+' source='+JSON.stringify(o.sourceContactXY)+
+    ' modern WGS84='+o.sourceGeo.lat.toFixed(6)+','+o.sourceGeo.lon.toFixed(6))).join('\n');
+  document.getElementById('export').disabled=!names.some(n=>observations[n].length);
+  source.querySelectorAll('.mark').forEach(n=>n.remove());
+  for(const row of observations[cell]){
+   const mark=document.createElement('div');mark.className='mark';
+   mark.style.left=((row.sourceContactXY[0]-offsets[cell][0])/512*100)+'%';
+   mark.style.top=((row.sourceContactXY[1]-offsets[cell][1])/512*100)+'%';
+   source.appendChild(mark);
+  }
+ }
+ function showTiles(name){
+  const token=++epoch;loaded=0;source.replaceChildren();
+  const origin=sourceTileOrigin[name];
+  const center=geodesy.toGeo(name,[offsets[name][0]+256,offsets[name][1]+256]);
+  document.getElementById('geoReadout').textContent='MODERN SOURCE ONLY · WGS84 center '+center.lat.toFixed(6)+'° N, '+center.lon.toFixed(6)+'° E · native XYZ '+center.nativeXYZ.join('/')+'. No game-photo registration or historical approval.';
+  for(let row=0;row<2;row++)for(let col=0;col<2;col++){
+   const img=document.createElement('img');
+   img.style.left=(col*50)+'%';img.style.top=(row*50)+'%';
+   img.alt='Modern aerial source tile';
+   img.onload=()=>{if(epoch===token){loaded++;if(loaded===4)status('Modern source loaded. Tap a natural landmark in the game image, then the corresponding modern image. Unverified observation only.');}};
+   img.onerror=()=>{if(epoch===token)status('Modern source unavailable; source matching disabled. No coordinates will be recorded.');};
+   img.src='https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/18/'+(origin[1]+row)+'/'+(origin[0]+col)+'.jpeg';
+   source.appendChild(img);
+  }
+ }
+ async function capture(){
+  if(!gameReady)return;
+  const api=frame.contentWindow.V192;
+  if(!api||!api.focusTile(cell))throw Error('V192 camera missing');
+  // The review iframe sits offscreen, where WebKit/Chromium may suspend rAF.
+  // Render the actual V192 camera synchronously rather than waiting forever.
+  if(!api.snapshotForReview())throw Error('Real game snapshot unavailable');
+  const c=frame.contentDocument.querySelector('#map');
+  camera=api.terrainCamera;
+  if(!c||!camera||!finite(camera.scale)||camera.viewport[0]<=0||camera.viewport[1]<=0)throw Error('Cannot verify live game camera');
+  game.getContext('2d').drawImage(c,0,0,game.width,game.height);
+ }
+ async function setCell(name){
+  if(!names.includes(name))throw Error('Unknown octagon');
+  cell=name;pending=null;camera=null;buttons.forEach(b=>b.classList.toggle('active',b.dataset.cell===name));
+  showTiles(name);drawRecords();
+  if(gameReady){try{await capture();}catch(e){status('Game capture failed: '+e.message);}}
+ }
+ buttons.forEach(b=>b.addEventListener('click',()=>setCell(b.dataset.cell)));
+ game.addEventListener('click',event=>{
+  if(!gameReady||!camera){status('Game preview has not loaded; no coordinate recorded.');return;}
+  if(observations[cell].length>=4){status('Four draft pairs already present for '+cell+'. Export or clear first.');return;}
+  const local=localPoint(event,game,camera.viewport[0],camera.viewport[1]);
+  const world=worldAt(local,camera);
+  if(!inside(world,polygon(gameOrigin[cell]))){status('Point is outside the real clipped '+cell+' octagon; ignored.');return;}
+  pending={gameWorldXY:world.map(n=>Math.round(n*100)/100),feature:document.getElementById('feature').value};
+  status('Game candidate '+JSON.stringify(pending.gameWorldXY)+' selected. Now inspect the modern source and tap only if the same stable feature is genuinely identifiable.');
+ });
+ source.addEventListener('click',event=>{
+  if(loaded!==4){status('All four authentic modern source tiles must load before recording a source point.');return;}
+  if(!pending){status('Select a natural feature on the game image first.');return;}
+  const local=localPoint(event,source,512,512);
+  if(local.some(n=>n<0||n>=512)){status('Outside native source panel.');return;}
+  const contact=sourceAt(local,cell);
+  let sourceGeo;
+  try{sourceGeo=geodesy.toGeo(cell,contact);}catch(e){status('Native source coordinate rejected: '+e.message);return;}
+  observations[cell].push({gameWorldXY:pending.gameWorldXY,sourceContactXY:contact,sourceGeo:sourceGeo,feature:pending.feature,
+   evidenceStatus:'UNVERIFIED_VISUAL_OBSERVATION_NOT_INDEPENDENTLY_MATCHED'});
+  pending=null;drawRecords();
+  status('UNVERIFIED modern source '+sourceGeo.lat.toFixed(6)+'° N, '+sourceGeo.lon.toFixed(6)+'° E. This is NOT a verified game landmark, historical road or approved art.');
+ });
+ document.getElementById('clear').onclick=()=>{
+  names.forEach(n=>observations[n]=[]);pending=null;drawRecords();status('All draft observations cleared.');
+ };
+ function exportDraft(){
+  return {schemaVersion:213,sourceSite:'forest',status:'UNVERIFIED_VISUAL_OBSERVATIONS_ONLY',
+   sourceCoordinates:'MODERN_WGS84_FROM_NATIVE_XYZ_ONLY_NOT_REGISTERED_TO_V123',
+   reference:'V205 modern forest, EPSG:3857, basemap.at CC BY 4.0',
+   matches:JSON.parse(JSON.stringify(observations)),
+   sourceRegisteredToV123:false,historicalRoadsVerified:false,bridgeBanksVerified:false,
+   gameArtApproved:false,physicalIPhoneApproved:false,productionApproved:false};
+ }
+ document.getElementById('export').onclick=()=>{
+  const blob=new Blob([JSON.stringify(exportDraft(),null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='v213-UNVERIFIED-landmark-observations.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+ };
+ window.V213=Object.freeze({get ready(){return gameReady&&loaded===4&&!!camera;},get cell(){return cell;},
+  get loadedTiles(){return loaded;},get camera(){return camera?JSON.parse(JSON.stringify(camera)):null;},
+  get pending(){return pending?JSON.parse(JSON.stringify(pending)):null;},get observations(){return exportDraft();},
+  get diagnostics(){return {gameReady,loadedTiles:loaded,epoch,hasCamera:!!camera,
+    status:state.textContent,frameReady:!!frame.contentWindow?.V192?.ready,
+    frameStatus:frame.contentDocument?.querySelector('#status')?.textContent||'',
+    images:[...source.querySelectorAll('img')].map(i=>({complete:i.complete,
+      width:i.naturalWidth,src:i.currentSrc||i.src}))};},
+  inside,polygon,worldAt,sourceAt,setCell});
+ async function boot(){
+  const start=Date.now();
+  while(Date.now()-start<90000){
+   try{if(frame.contentWindow.V192&&frame.contentWindow.V192.ready){gameReady=true;await setCell(cell);return;}}
+   catch(e){status('Game camera failed: '+e.message);return;}
+   await new Promise(r=>setTimeout(r,250));
+  }
+  status('Game camera unavailable; no landmark coordinates will be recorded.');
+ }
+ // An iframe can complete its load before this listener is attached, especially
+ // when its heavy game assets are cached. Start the readiness probe immediately.
+ // Both paths share one promise, so duplicate initialization is impossible.
+ let bootPromise=null;
+ const originalBoot=boot;
+ function startBoot(){if(!bootPromise)bootPromise=originalBoot();return bootPromise;}
+ frame.addEventListener('load',startBoot,{once:true});
+ setCell(cell);
+ startBoot();
+})();
+</script></body></html>

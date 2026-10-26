@@ -137,7 +137,11 @@ try:
                             assert geo["sourceStatus"] == "MODERN_NATIVE_XYZ_NOT_REGISTERED_TO_GAME"
                             assert geo["gameGeographyVerified"] is False
                             assert geo["historicalGeographyVerified"] is False
-                            assert geo["nativeXYZ"] == [origin[0] + 1, origin[1] + 1, 18]
+                            offset = {"west": [0, 0], "matrei": [512, 0],
+                                      "south": [512, 512]}[cell]
+                            assert geo["nativeXYZ"] == [
+                                origin[0] + int((actual[0] - offset[0]) // 256),
+                                origin[1] + int((actual[1] - offset[1]) // 256), 18]
                             centers = {"west": [11.435394287109375, 47.1000446940252],
                                        "matrei": [11.438140869140625, 47.1000446940252],
                                        "south": [11.438140869140625, 47.09817500706038]}

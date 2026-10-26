@@ -800,6 +800,9 @@ C.addEventListener('pointerdown',e=>{
  if(pointers.size===1)down=[e.clientX,e.clientY];
  if(pointers.size===2){const a=[...pointers.values()];gesture={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};down=null;}
 });
+// V201: real touch gestures must invalidate the STATIC terrain snapshot as well
+// as the moving-army overlay. Otherwise camera coordinates change while the
+// previous landscape stays frozen on screen (not covered by zoomTo QA).
 C.addEventListener('pointermove',e=>{
  if(!pointers.has(e.pointerId))return;
  const before=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
@@ -808,10 +811,10 @@ C.addEventListener('pointermove',e=>{
   if(gesture&&gesture.distance>5){const anchor=world(gesture.mid);
    zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
    const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];clampCamera();}
-  gesture=next;down=null;renderDirty=true;return;
+  gesture=next;down=null;staticDirty=true;renderDirty=true;return;
  }
  if(down&&hypot(down,[e.clientX,e.clientY])>9)down=null;
- cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;clampCamera();renderDirty=true;
+ cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;clampCamera();staticDirty=true;renderDirty=true;
 });
 function finish(e){
  if(!pointers.has(e.pointerId))return;

@@ -139,7 +139,8 @@ def verify(folder,quarantine_folder):
         with Image.open(path) as im:
             require(im.size==(W,H),'mosaic not native 1536x1024')
             actual=im.convert('RGBA')
-        require(ImageChops.difference(actual,expected).getbbox() is None,
+        require(ImageChops.difference(actual.convert('RGB'),expected.convert('RGB')).getbbox() is None and
+                ImageChops.difference(actual.getchannel('A'),expected.getchannel('A')).getbbox() is None,
                 'mosaic RGB/alpha changed, source tampered or resampled')
         require(cell['maskZeroPixels']==sum(1 for a in expected.getchannel('A').getdata() if a==0),
                 'quarantine mask coverage changed')

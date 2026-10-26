@@ -111,8 +111,14 @@ try:
                             }""")
                             report = page.evaluate("V210.observations")
                             assert len(report["matches"][cell]) == 1, (key, cell, report)
-                            assert report["matches"][cell][0]["sourceContactXY"] == {
-                                "west": [256, 256], "matrei": [768, 256], "south": [768, 768]}[cell]
+                            actual = report["matches"][cell][0]["sourceContactXY"]
+                            expected = {"west": [256, 256], "matrei": [768, 256],
+                                        "south": [768, 768]}[cell]
+                            # Browser CSS subpixel layout may introduce hundredths
+                            # of a native tile pixel. Never accept a whole-pixel
+                            # or wrong-cell coordinate displacement.
+                            assert all(abs(a - b) <= 0.05 for a, b in zip(actual, expected)), (
+                                key, cell, actual, expected)
                             assert report["matches"][cell][0]["evidenceStatus"] == (
                                 "UNVERIFIED_VISUAL_OBSERVATION_NOT_INDEPENDENTLY_MATCHED")
                             assert all(report[flag] is False for flag in (

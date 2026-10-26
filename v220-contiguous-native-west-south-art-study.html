@@ -20,7 +20,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <canvas id="map" aria-label="Three adjacent Alpine octagons; tap physical roads to march across borders"></canvas>
 <header><section><strong>CENTURY OF EMPIRES</strong> · V220 CONTIGUOUS SOURCE ART STUDY
 <small>2023 whole-cell aerial study · modern roads NOT playable · NOT 1780</small></section></header>
-<div id="menu"><button id="whole">Whole crossing</button><button id="gotoWest">March to Western Pass</button><button id="gotoMatrei">March to Matrei</button><button id="gotoSouth">March to Southern Valley</button><button id="debug">Inspect exact roads</button>
+<div id="menu"><button id="whole">Whole crossing</button><button id="gotoWest">March to Western Pass</button><button id="gotoMatrei">March to Matrei</button><button id="gotoSouth">March to Southern Valley</button><button id="debug">Inspect exact roads</button><button id="compare">Show original neighbor art</button>
 <small>2023 basemap.at CC BY 4.0, artistically placed whole native orthophoto cells; modern tracks/dates may remain. Reviewed masked pixels are unknown. NOT geographically registered, NOT 1780 roads, NOT approved game art. Original Matrei, graph, army and saves untouched.</small></div>
 <footer><div id="status">Loading original Matrei artwork…</div>
 <div id="hint">Datenquelle: basemap.at · CC BY 4.0 · MODERN 2023 SOURCE STUDY ONLY · tap original roads</div>
@@ -33,7 +33,7 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <script>
 'use strict';
 const sourceGeoMaterial=false; // V220 full-cell source study, not V144 relief
-let v220Trial=null;
+let v220Trial=null,showNative=true;
 // The offscreen landmark review iframe can have setTimeout(0) clamped to
 // 1s or more. Preserve identical terrain math/pixels but use microtask yields
 // only for review captures; ordinary interactive game scheduling is unchanged.
@@ -664,7 +664,7 @@ function render(){
  if(groundDetails)cx.drawImage(groundDetails,...groundBounds);
   // Two complete native 1536x1024 modern-source mosaics; unreviewed 2023 infrastructure may remain.
   // Original Matrei and exact road cartways render above this artistic study.
-  if(v220Trial)V220NativeCells.paint(cx,v220Trial);
+  if(v220Trial&&showNative)V220NativeCells.paint(cx,v220Trial);
  if(atlas){
   // The central painted Alpine artwork is unique; no village, bridge or river
   // photo is copied into western/southern tiles.
@@ -870,12 +870,14 @@ for(const [button,destination] of [['gotoWest','west'],['gotoMatrei','matrei'],[
   menu.classList.remove('open');
  };
 }
+document.querySelector('#compare').onclick=()=>{showNative=!showNative;document.querySelector('#compare').textContent=showNative?'Show original neighbor art':'Show 2023 full-cell photo study';staticDirty=true;renderDirty=true;};
 document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';;staticDirty=true;renderDirty=true;};
 window.V192=Object.freeze({
  get reviewCapture(){return reviewCapture},
  get renderStats(){const t=renderTimings.slice().sort((a,b)=>a-b);return {staticBuilds,cacheHits,dynamicFrames,cacheBytes:staticFrame?staticFrame.width*staticFrame.height*4:0,renderSamples:t.length,renderP95Ms:t.length?t[Math.ceil(t.length*.95)-1]:null,staticDirty};},
  get terrainCamera(){return {center:cam.slice(),scale,zoom,minZoom:minimumTerrainZoom(),
    viewport:[width,height],groundBounds:groundBounds.slice(),visible:visibleTerrainBounds()};},
+ get nativeVisible(){return showNative},toggleNative(){showNative=!showNative;staticDirty=true;renderDirty=true;return showNative;},
  get v220Trial(){return !!v220Trial},get v220Sources(){return v220Trial?.images.map(p=>({tile:p.tile,x:p.x,y:p.y}))||[]},
  get seamTone(){return toneReport},get ready(){return ready},get surveyLimits(){return surveyLimits},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
  get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
@@ -919,7 +921,7 @@ async function boot(){
   await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
   if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
   art=source;await buildLandscape();currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
-  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='V219 ART STUDY · 2023 source, NOT historic/georegistered · tap graph roads';
+  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='V220 SOURCE ART STUDY · modern 2023 photo, NOT 1780 · tap original graph roads';
  }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
 }
 // Static landscape is cached. Repaint only while marching or when camera/UI

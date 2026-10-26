@@ -67,6 +67,11 @@ class ModernQuarantineTests(unittest.TestCase):
             self.assertEqual(mask.getpixel(date), 0, site["siteId"])
             self.assertEqual(mask.getpixel(modern), 0, site["siteId"])
             self.assertEqual(mask.getpixel(natural), 255, site["siteId"])
+            # Secondary modern artifacts spotted in the first REAL CI contact.
+            secondary = {3: (470, 341), 5: (62, 278),
+                         6: (425, 207), 8: (12, 12)}
+            self.assertEqual(mask.getpixel(secondary[site["siteIndex"]]), 0,
+                             site["siteId"] + " secondary track/structure")
             original = Image.new("RGB", (512, 512), (47, 121, 73))
             quarantined = q.quarantined(original, mask)
             self.assertEqual(quarantined.getpixel(date), (0, 0, 0, 0))

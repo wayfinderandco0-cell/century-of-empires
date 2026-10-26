@@ -874,6 +874,15 @@ window.V192=Object.freeze({
  orderTo(name){return atlas&&V123Atlas.endpoints(atlas)[name]?issue(V123Atlas.endpoints(atlas)[name]):false},
  progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}renderDirty=true;return army.slice();},
  halt,zoomTo(z){zoom=z;redraw();},
+ // Read-only snapshot hook for V211's OFFSCREEN landmark-review iframe.
+ // Browsers may throttle requestAnimationFrame in offscreen iframes, so a
+ // camera capture must explicitly render after focusTile rather than hang.
+ // This uses the existing exact game renderer; no roads or units are moved.
+ snapshotForReview(){
+   if(!ready)return false;
+   render();renderDirty=false;
+   return true;
+ },
  focusTile(name){
    const centers={west:[790,510],matrei:[2350,530],south:[2300,1580]};
    if(!centers[name])return false;

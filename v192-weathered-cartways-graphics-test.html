@@ -413,11 +413,18 @@ async function buildLandscape(){
         const x=p[0]+t.origin[0],y=p[1]+t.origin[1];
         i?g.lineTo(x,y):g.moveTo(x,y);
       });
-      g.strokeStyle='rgba(138,145,92,.24)';g.lineCap='round';g.lineJoin='round';
-      g.lineWidth=54;g.shadowColor='rgba(100,125,81,.55)';
-      // Canvas shadowBlur is measured in raster pixels, not world units.
-      g.shadowBlur=8;g.stroke();
-      g.shadowBlur=0;g.lineWidth=19;g.strokeStyle='rgba(140,135,91,.15)';g.stroke();
+      // V200: avoid the V199 raster-pixel shadow halo (8 raster px =
+      // 50-87 world units in each axis). Paint subtle, tapered grass and
+      // dust shoulders in world units so the verge stays proportional to
+      // the immutable V123 cartway regardless of the land-raster scale.
+      // These strokes are scenic underlay only, never navigation paths.
+      g.lineCap='round';g.lineJoin='round';
+      for(const [width,color] of [
+        [92,'rgba(100,125,81,.055)'],
+        [70,'rgba(119,137,87,.085)'],
+        [54,'rgba(138,145,92,.24)'],
+        [19,'rgba(140,135,91,.15)']
+      ]){g.lineWidth=width;g.strokeStyle=color;g.stroke();}
       g.restore();valleyStampCount+=pts.length;
     }
   }

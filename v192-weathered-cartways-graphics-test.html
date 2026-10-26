@@ -32,6 +32,11 @@ button:active{background:#5b5138}#options{margin-left:auto}
 <script>
 'use strict';
 const sourceGeoMaterial=new URLSearchParams(location.search).has('geoMaterials');
+// The offscreen landmark review iframe can have setTimeout(0) clamped to
+// 1s or more. Preserve identical terrain math/pixels but use microtask yields
+// only for review captures; ordinary interactive game scheduling is unchanged.
+const reviewCapture=new URLSearchParams(location.search).has('reviewCapture');
+const terrainYield=()=>reviewCapture?Promise.resolve():new Promise(resolve=>setTimeout(resolve,0));
 let geoCrop=null;
 const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});// One photographic terrain underlay, one masked center, no repeated tiles.
 const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
@@ -329,7 +334,7 @@ async function buildLandscape(){
   const texture=document.createElement('canvas');texture.width=lw;texture.height=lh;
   const tg=texture.getContext('2d',{alpha:false}),image=tg.createImageData(lw,lh),pixels=image.data;
   for(let y=0;y<lh;y++){
-    if((y%24)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    if((y%24)===0)await terrainYield();
     const vy=y*(ny-1)/(lh-1),iy=Math.min(ny-2,Math.floor(vy)),fy=vy-iy;
     for(let x=0;x<lw;x++){
       const vx=x*(nx-1)/(lw-1),ix=Math.min(nx-2,Math.floor(vx)),fx=vx-ix;
@@ -438,7 +443,7 @@ async function buildLandscape(){
   if(!sourceGeoMaterial)for(const cutoff of [.41,.53,.65,.76]){
     dg.beginPath();
     for(let iy=0;iy<rows-1;iy++){
-      if((iy%60)===0)await new Promise(resolve=>setTimeout(resolve,0));
+      if((iy%60)===0)await terrainYield();
       for(let ix=0;ix<cols-1;ix++){
         const x=ix*detailCell,y=iy*detailCell,s=detailCell;
         const v0=heightAt(x,y)-cutoff,v1=heightAt(x+s,y)-cutoff,
@@ -490,7 +495,7 @@ async function buildLandscape(){
   // The forest belt follows the continuous altitude and woodland habitat map.
   // Shapes are procedural illustrations and are not real tree geolocations.
   if(!sourceGeoMaterial)for(let i=0;i<104000;i++){
-    if((i%4600)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    if((i%4600)===0)await terrainYield();
     const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
     const worldx=groundBounds[0]+x/dw*groundBounds[2],
           worldy=groundBounds[1]+y/dh*groundBounds[3];
@@ -543,7 +548,7 @@ async function buildLandscape(){
   // Weathered scarps get geological striations with site-specific bearings.
   // Cliff bedding is illustration from elevation; it does not define travel.
   if(!sourceGeoMaterial)for(let i=0;i<32000;i++){
-    if((i%8500)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    if((i%8500)===0)await terrainYield();
     const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
     if(h<.52||rnd()<.2)continue;
     const z=2.5+6*rnd(),lean=(rnd()-.5)*1.5;
@@ -573,7 +578,7 @@ async function buildLandscape(){
     // but deterministic per WORLD coordinate, so adjacent tiles cannot repeat.
     // Feather edges avoids exposing a rectangular extra-detail island.
     for(let y=0;y<H;y++){
-      if((y%48)===0)await new Promise(resolve=>setTimeout(resolve,0));
+      if((y%48)===0)await terrainYield();
       const wy=y+tile.origin[1];
       const edgeY=Math.min(y,H-1-y);
       for(let x=0;x<W;x++){
@@ -612,7 +617,7 @@ async function buildLandscape(){
   // Suppress the painted octagon border; soften authentic art into the larger
   // unique relief surface. Original imagery and road coordinates remain intact.
   for(let y=0;y<H;y++){
-    if((y%28)===0)await new Promise(resolve=>setTimeout(resolve,0));
+    if((y%28)===0)await terrainYield();
     for(let x=0;x<W;x++){
     const k=(y*W+x)*4,d=signedEdge(x,y);
     // Widen the irregular transition: no hard rectangular/straight bevel.
@@ -861,6 +866,7 @@ for(const [button,destination] of [['gotoWest','west'],['gotoMatrei','matrei'],[
 }
 document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';;staticDirty=true;renderDirty=true;};
 window.V192=Object.freeze({
+ get reviewCapture(){return reviewCapture},
  get renderStats(){const t=renderTimings.slice().sort((a,b)=>a-b);return {staticBuilds,cacheHits,dynamicFrames,cacheBytes:staticFrame?staticFrame.width*staticFrame.height*4:0,renderSamples:t.length,renderP95Ms:t.length?t[Math.ceil(t.length*.95)-1]:null,staticDirty};},
  get terrainCamera(){return {center:cam.slice(),scale,zoom,minZoom:minimumTerrainZoom(),
    viewport:[width,height],groundBounds:groundBounds.slice(),visible:visibleTerrainBounds()};},

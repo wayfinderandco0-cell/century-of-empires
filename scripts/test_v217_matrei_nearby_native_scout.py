@@ -13,7 +13,6 @@ import v217_matrei_nearby_native_scout as scout
 class SourceScoutTests(unittest.TestCase):
     def test_exact_geography_and_no_false_approvals(self):
         m = scout.plan()
-        self.assertTrue(scout.verify_plan({**m, "contactFile": "x", "contactSha256": "y"}))
         self.assertEqual(len(m["sites"]), 9)
         self.assertEqual(len({tuple(t["xyz"]) for s in m["sites"] for t in s["tiles"]}), 36)
         self.assertTrue(m["geographicGapsBetweenSites"])

@@ -100,7 +100,7 @@ class LandmarkIntakeTests(unittest.TestCase):
         ):
             data = synthetic()
             data["matches"]["west"][0][key] = val
-            with self.assertRaises(ValueError, key):
+            with self.assertRaises(ValueError, msg=key):
                 reg.audit(data)
         data = synthetic()
         data["matches"]["south"][0]["sourceEvidenceUrl"] = data["matches"]["west"][0]["sourceEvidenceUrl"]

@@ -22,3 +22,12 @@ The modern V205 source is not registered to V123 playable cells. No independentl
 `sourceRegisteredToV123=false; historicalRoadsVerified=false; bridgeBanksVerified=false; gameArtApproved=false; physicalIPhoneApproved=false; productionApproved=false`.
 
 CI: Initial diagnostic run [40301156199](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40301156199) confirmed the blocked V192 terrain build (source integrity GREEN, mobile review RED with captured diagnostics). Later runs include the synchronous snapshot and the offscreen-yield scheduling fix. Do not infer a pass until the final run completes and actual screenshots are inspected.
+
+
+## Final V211 CI verification and actual image inspection
+
+- **Final full workflow:** [40302601505](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40302601505) on implementation commit `6c5bf66e`. Source/landmark invariant job **SUCCESS**; original V121/V123 road, bridge, camera, and screenshot capture stages **SUCCESS**.
+- **V211 mobile review QA: SUCCESS 4/4**: Chromium portrait and landscape, WebKit portrait and landscape; all three real game camera centers, clipped-octagon checks, source coordinate mapping, and no-approval assertions. The WebKit synthetic `MouseEvent` rounds CSS client coordinates to integers; QA now validates the exact actual dispatched event against native XYZ coordinates rather than falsely assuming a fractional ideal center. No geographic threshold or art QA loosened.
+- **Strict V203 real artwork QA: FAILED 4/4 as required.** WEST relative fine-luminance 0.533–0.553; SOUTH 0.504–0.528 vs Matrei and 0.70 floor. This is the remaining real visual defect, not a V211 regression.
+- Downloaded actual [CI screenshot artifact 12641501516](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40302601505/artifacts/12641501516) and opened all three **WebKit portrait** review captures. The game panel shows actual WEST/MATREI/SOUTH V192 rendering; the source panel visibly says **SYNTHETIC TEST TILE / NOT REAL ALPINE SOURCE** and is never presented as real aerial imagery. WEST/SOUTH still look visibly simplified compared with original Matrei.
+- The overall workflow status is **RED intentionally**, because the unchanged strict art-quality gate fails after all functional QA succeeds. The review tool is functional, not a completed geographic registration or artwork approval.

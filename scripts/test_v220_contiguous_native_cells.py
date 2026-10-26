@@ -46,6 +46,7 @@ def test():
             raw=buff.getvalue()
             (folder/t['name']).write_bytes(raw)
             t['sha256']=v.sha(raw);t['byteCount']=len(raw)
+        v.acquire_native_tiles(cell,folder)  # 24 cached originals: no network permitted
         out=v.source_image(cell,folder)
         assert out.size==(1536,1024)
         assert out.getpixel((5,5))!=out.getpixel((261,5))

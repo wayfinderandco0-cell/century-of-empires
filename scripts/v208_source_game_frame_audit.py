@@ -54,6 +54,8 @@ def polygon(origin):
 
 def panel_geometry(panel):
     west, south, east, north = panel["footprintLonLat"]
+    require(panel["footprintLonLat"] == source.footprint(*panel["nativeOriginXYZ"][:2]),
+            "native EPSG:3857 tile footprint does not match XYZ origin")
     require(-180 < west < east < 180 and -85 < south < north < 85,
             "invalid modern source geographic footprint")
     middle_lat = (south+north)/2

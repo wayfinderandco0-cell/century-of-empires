@@ -21,7 +21,12 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parents[1]
 ZOOM, TILE, SIDE = 18, 256, 2
 PATCH = TILE * SIDE
-ANCHOR = (11.45306, 47.13083)  # V180 modern Matrei-area geographic anchor
+ANCHORS = {
+    "matrei": ((11.45306, 47.13083), "V180 independent modern Matrei-area reference"),
+    "forest": ((11.43950, 47.10000),
+               "V197 western forest source vicinity, approximate; not a surveyed V197 crop center"),
+}
+ANCHOR = ANCHORS["matrei"][0]  # Preserve V204 default for existing callers
 BASE = "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857"
 PINNED = {
     "v121-octagon-1-painted-road.html": "4c6aa5cda9e7c359b6d2a49d5b5fe8a597346382",
@@ -58,8 +63,10 @@ def footprint(x, y, span=SIDE):
             (x + span) / n * 360 - 180, latitude(y)]
 
 
-def plan():
-    fx, fy = xyz(*ANCHOR)
+def plan(site="matrei"):
+    require(site in ANCHORS, "unrecognized geographic reference site")
+    anchor, anchor_source = ANCHORS[site]
+    fx, fy = xyz(*anchor)
     # The anchor lies within the central 2x2 source panel.
     x0, y0 = math.floor(fx) - 1, math.floor(fy) - 1
     require(x0 < fx < x0 + SIDE and y0 < fy < y0 + SIDE, "anchor outside central panel")
@@ -100,7 +107,7 @@ def plan():
     require(len(ids) == len(set(ids)) == 12, "source XYZ tiles overlap or are missing")
     return {
         "version": 204, "purpose": "Contiguous modern Alpine SOURCE geometry; NOT V123 GAME geography",
-        "anchorLonLat": list(ANCHOR), "anchorSource": "V180 independent modern Matrei-area reference",
+        "site": site, "anchorLonLat": list(anchor), "anchorSource": anchor_source,
         "projection": "EPSG:3857", "nativeZoom": ZOOM,
         "nativeTilePixels": TILE, "sourcePanelPixels": [PATCH, PATCH],
         "contactLayout": "L: WEST at top-left, MATREI at top-right, SOUTH at bottom-right; southwest unfilled",
@@ -117,7 +124,7 @@ def plan():
 
 
 def validate(manifest):
-    expected = plan()
+    expected = plan(manifest.get("site"))
     require(set(manifest) - set(expected) <= {"contactImage", "contactSha256", "seamDiagnostics"},
             "unexpected top-level manifest fields")
     for key, value in expected.items():
@@ -140,7 +147,7 @@ def validate(manifest):
     return True
 
 
-def verify_source_invariants():
+def verify_source_invariants(site="matrei"):
     for path, expected in PINNED.items():
         actual = subprocess.check_output(["git", "hash-object", path],
                                          cwd=ROOT, text=True).strip()
@@ -153,7 +160,8 @@ def verify_source_invariants():
     require(v94["projection"] == "equirectangular"
             and v94["extent"] == [-14.0, 26.0, 49.0, 75.0],
             "V94 Europe atlas projection changed")
-    lon, lat = ANCHOR
+    require(site in ANCHORS, "unknown geographic source site")
+    lon, lat = ANCHORS[site][0]
     require(v97["boundsLonLat"][0] < lon < v97["boundsLonLat"][2]
             and v97["boundsLonLat"][1] < lat < v97["boundsLonLat"][3],
             "source anchor outside geographic relief coverage")
@@ -301,20 +309,21 @@ def verify(folder):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=ROOT / "qa/v204-contiguous-matrei-source")
+    parser.add_argument("--site", choices=tuple(ANCHORS), default="matrei")
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--verify", action="store_true")
     args = parser.parse_args()
-    verify_source_invariants()
+    verify_source_invariants(args.site)
     if args.verify:
         verify(args.output)
     elif args.download:
-        manifest = plan()
+        manifest = plan(args.site)
         download(manifest, args.output)
         render(manifest, args.output)
     else:
         args.output.mkdir(parents=True, exist_ok=True)
-        (args.output / "manifest.json").write_text(json.dumps(plan(), indent=2) + "\n")
-    print("V204 source geography only; V123 GAME registration, historic roads and art approval FALSE")
+        (args.output / "manifest.json").write_text(json.dumps(plan(args.site), indent=2) + "\n")
+    print("V204/V205 source geography only; V123 GAME registration, historic roads and art approval FALSE")
 
 
 if __name__ == "__main__":

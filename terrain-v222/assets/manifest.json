@@ -1,0 +1,5492 @@
+{
+  "version": 222,
+  "kind": "ISOLATED_ORIGINAL_MATREI_MATERIAL_QUILT_STUDY",
+  "originalMatreiSource": "v121-octagon-1-painted-road.html",
+  "originalMatreiGitBlob": "4c6aa5cda9e7c359b6d2a49d5b5fe8a597346382",
+  "materialAttribution": "Original V121 Century of Empires painting; reuse within this game only",
+  "noModernOrthophotoUsed": true,
+  "noNoiseAdded": true,
+  "noUpscaling": true,
+  "patchSize": 128,
+  "step": 112,
+  "overlap": 16,
+  "nativeCellPixels": [
+    1536,
+    1024
+  ],
+  "sourceRectsGloballyUnique": true,
+  "sourceMaterialNotGeography": true,
+  "westSouthTerrainNotSurveyed": true,
+  "bridgeAndRoadGeometryUnchanged": true,
+  "centerMatreiArtworkUnchanged": true,
+  "allManmadeSourcePixelsExcluded": false,
+  "humanVisualApproval": false,
+  "areas": {
+    "rock": [
+      [
+        165,
+        100,
+        380,
+        320
+      ],
+      [
+        355,
+        35,
+        565,
+        205
+      ],
+      [
+        550,
+        65,
+        715,
+        215
+      ],
+      [
+        565,
+        250,
+        720,
+        390
+      ],
+      [
+        190,
+        220,
+        355,
+        390
+      ]
+    ],
+    "forest": [
+      [
+        150,
+        300,
+        350,
+        445
+      ],
+      [
+        625,
+        195,
+        770,
+        405
+      ],
+      [
+        945,
+        700,
+        1125,
+        900
+      ],
+      [
+        700,
+        785,
+        850,
+        960
+      ],
+      [
+        990,
+        100,
+        1155,
+        270
+      ],
+      [
+        975,
+        600,
+        1135,
+        765
+      ]
+    ],
+    "meadow": [
+      [
+        150,
+        565,
+        350,
+        710
+      ],
+      [
+        350,
+        570,
+        540,
+        715
+      ],
+      [
+        1115,
+        170,
+        1290,
+        300
+      ],
+      [
+        1110,
+        690,
+        1285,
+        850
+      ],
+      [
+        410,
+        780,
+        590,
+        940
+      ]
+    ]
+  },
+  "cells": [
+    {
+      "tile": "west",
+      "file": "west-quilt.webp",
+      "dataFile": "west-data.js",
+      "sha256": "9e1a7802762f3994750190a218e55cf99f76d86c5c23e3344fde436ccfc02cf1",
+      "patches": [
+        {
+          "category": "rock",
+          "source": [
+            565,
+            251
+          ],
+          "sourceRect": [
+            565,
+            251,
+            693,
+            379
+          ],
+          "destinationRect": [
+            0,
+            0,
+            128,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            227,
+            240
+          ],
+          "sourceRect": [
+            227,
+            240,
+            355,
+            368
+          ],
+          "destinationRect": [
+            112,
+            0,
+            240,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            590,
+            259
+          ],
+          "sourceRect": [
+            590,
+            259,
+            718,
+            387
+          ],
+          "destinationRect": [
+            224,
+            0,
+            352,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            207,
+            260
+          ],
+          "sourceRect": [
+            207,
+            260,
+            335,
+            388
+          ],
+          "destinationRect": [
+            336,
+            0,
+            464,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            636,
+            238
+          ],
+          "sourceRect": [
+            636,
+            238,
+            764,
+            366
+          ],
+          "destinationRect": [
+            448,
+            0,
+            576,
+            128
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            213,
+            578
+          ],
+          "sourceRect": [
+            213,
+            578,
+            341,
+            706
+          ],
+          "destinationRect": [
+            560,
+            0,
+            688,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            711,
+            811
+          ],
+          "sourceRect": [
+            711,
+            811,
+            839,
+            939
+          ],
+          "destinationRect": [
+            672,
+            0,
+            800,
+            128
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            437,
+            797
+          ],
+          "sourceRect": [
+            437,
+            797,
+            565,
+            925
+          ],
+          "destinationRect": [
+            784,
+            0,
+            912,
+            128
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            222,
+            580
+          ],
+          "sourceRect": [
+            222,
+            580,
+            350,
+            708
+          ],
+          "destinationRect": [
+            896,
+            0,
+            1024,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            707,
+            807
+          ],
+          "sourceRect": [
+            707,
+            807,
+            835,
+            935
+          ],
+          "destinationRect": [
+            1008,
+            0,
+            1136,
+            128
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            184,
+            581
+          ],
+          "sourceRect": [
+            184,
+            581,
+            312,
+            709
+          ],
+          "destinationRect": [
+            1120,
+            0,
+            1248,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            701,
+            823
+          ],
+          "sourceRect": [
+            701,
+            823,
+            829,
+            951
+          ],
+          "destinationRect": [
+            1232,
+            0,
+            1360,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            565,
+            253
+          ],
+          "sourceRect": [
+            565,
+            253,
+            693,
+            381
+          ],
+          "destinationRect": [
+            1344,
+            0,
+            1472,
+            128
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1154,
+            700
+          ],
+          "sourceRect": [
+            1154,
+            700,
+            1234,
+            828
+          ],
+          "destinationRect": [
+            1456,
+            0,
+            1536,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            226,
+            238
+          ],
+          "sourceRect": [
+            226,
+            238,
+            354,
+            366
+          ],
+          "destinationRect": [
+            0,
+            112,
+            128,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            587,
+            260
+          ],
+          "sourceRect": [
+            587,
+            260,
+            715,
+            388
+          ],
+          "destinationRect": [
+            112,
+            112,
+            240,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            217,
+            238
+          ],
+          "sourceRect": [
+            217,
+            238,
+            345,
+            366
+          ],
+          "destinationRect": [
+            224,
+            112,
+            352,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            994,
+            636
+          ],
+          "sourceRect": [
+            994,
+            636,
+            1122,
+            764
+          ],
+          "destinationRect": [
+            336,
+            112,
+            464,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            978,
+            750
+          ],
+          "sourceRect": [
+            978,
+            750,
+            1106,
+            878
+          ],
+          "destinationRect": [
+            448,
+            112,
+            576,
+            240
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1146,
+            170
+          ],
+          "sourceRect": [
+            1146,
+            170,
+            1274,
+            298
+          ],
+          "destinationRect": [
+            560,
+            112,
+            688,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            586,
+            251
+          ],
+          "sourceRect": [
+            586,
+            251,
+            714,
+            379
+          ],
+          "destinationRect": [
+            672,
+            112,
+            800,
+            240
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1139,
+            697
+          ],
+          "sourceRect": [
+            1139,
+            697,
+            1267,
+            825
+          ],
+          "destinationRect": [
+            784,
+            112,
+            912,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            591,
+            255
+          ],
+          "sourceRect": [
+            591,
+            255,
+            719,
+            383
+          ],
+          "destinationRect": [
+            896,
+            112,
+            1024,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            198,
+            261
+          ],
+          "sourceRect": [
+            198,
+            261,
+            326,
+            389
+          ],
+          "destinationRect": [
+            1008,
+            112,
+            1136,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            582,
+            262
+          ],
+          "sourceRect": [
+            582,
+            262,
+            710,
+            390
+          ],
+          "destinationRect": [
+            1120,
+            112,
+            1248,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            209,
+            257
+          ],
+          "sourceRect": [
+            209,
+            257,
+            337,
+            385
+          ],
+          "destinationRect": [
+            1232,
+            112,
+            1360,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            566,
+            259
+          ],
+          "sourceRect": [
+            566,
+            259,
+            694,
+            387
+          ],
+          "destinationRect": [
+            1344,
+            112,
+            1472,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            956,
+            745
+          ],
+          "sourceRect": [
+            956,
+            745,
+            1036,
+            873
+          ],
+          "destinationRect": [
+            1456,
+            112,
+            1536,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            573,
+            255
+          ],
+          "sourceRect": [
+            573,
+            255,
+            701,
+            383
+          ],
+          "destinationRect": [
+            0,
+            224,
+            128,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            957,
+            737
+          ],
+          "sourceRect": [
+            957,
+            737,
+            1085,
+            865
+          ],
+          "destinationRect": [
+            112,
+            224,
+            240,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            192,
+            259
+          ],
+          "sourceRect": [
+            192,
+            259,
+            320,
+            387
+          ],
+          "destinationRect": [
+            224,
+            224,
+            352,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            571,
+            261
+          ],
+          "sourceRect": [
+            571,
+            261,
+            699,
+            389
+          ],
+          "destinationRect": [
+            336,
+            224,
+            464,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            222,
+            257
+          ],
+          "sourceRect": [
+            222,
+            257,
+            350,
+            385
+          ],
+          "destinationRect": [
+            448,
+            224,
+            576,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            589,
+            251
+          ],
+          "sourceRect": [
+            589,
+            251,
+            717,
+            379
+          ],
+          "destinationRect": [
+            560,
+            224,
+            688,
+            352
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1115,
+            699
+          ],
+          "sourceRect": [
+            1115,
+            699,
+            1243,
+            827
+          ],
+          "destinationRect": [
+            672,
+            224,
+            800,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            968,
+            756
+          ],
+          "sourceRect": [
+            968,
+            756,
+            1096,
+            884
+          ],
+          "destinationRect": [
+            784,
+            224,
+            912,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            628
+          ],
+          "sourceRect": [
+            981,
+            628,
+            1109,
+            756
+          ],
+          "destinationRect": [
+            896,
+            224,
+            1024,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            631,
+            242
+          ],
+          "sourceRect": [
+            631,
+            242,
+            759,
+            370
+          ],
+          "destinationRect": [
+            1008,
+            224,
+            1136,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1004,
+            624
+          ],
+          "sourceRect": [
+            1004,
+            624,
+            1132,
+            752
+          ],
+          "destinationRect": [
+            1120,
+            224,
+            1248,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            982,
+            741
+          ],
+          "sourceRect": [
+            982,
+            741,
+            1110,
+            869
+          ],
+          "destinationRect": [
+            1232,
+            224,
+            1360,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            225,
+            220
+          ],
+          "sourceRect": [
+            225,
+            220,
+            353,
+            348
+          ],
+          "destinationRect": [
+            1344,
+            224,
+            1472,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            980,
+            627
+          ],
+          "sourceRect": [
+            980,
+            627,
+            1060,
+            755
+          ],
+          "destinationRect": [
+            1456,
+            224,
+            1536,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            969,
+            755
+          ],
+          "sourceRect": [
+            969,
+            755,
+            1097,
+            883
+          ],
+          "destinationRect": [
+            0,
+            336,
+            128,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            606
+          ],
+          "sourceRect": [
+            995,
+            606,
+            1123,
+            734
+          ],
+          "destinationRect": [
+            112,
+            336,
+            240,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            969,
+            731
+          ],
+          "sourceRect": [
+            969,
+            731,
+            1097,
+            859
+          ],
+          "destinationRect": [
+            224,
+            336,
+            352,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1001,
+            635
+          ],
+          "sourceRect": [
+            1001,
+            635,
+            1129,
+            763
+          ],
+          "destinationRect": [
+            336,
+            336,
+            464,
+            464
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1114,
+            706
+          ],
+          "sourceRect": [
+            1114,
+            706,
+            1242,
+            834
+          ],
+          "destinationRect": [
+            448,
+            336,
+            576,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            965,
+            767
+          ],
+          "sourceRect": [
+            965,
+            767,
+            1093,
+            895
+          ],
+          "destinationRect": [
+            560,
+            336,
+            688,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            975,
+            612
+          ],
+          "sourceRect": [
+            975,
+            612,
+            1103,
+            740
+          ],
+          "destinationRect": [
+            672,
+            336,
+            800,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            996,
+            730
+          ],
+          "sourceRect": [
+            996,
+            730,
+            1124,
+            858
+          ],
+          "destinationRect": [
+            784,
+            336,
+            912,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            626,
+            271
+          ],
+          "sourceRect": [
+            626,
+            271,
+            754,
+            399
+          ],
+          "destinationRect": [
+            896,
+            336,
+            1024,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            966,
+            745
+          ],
+          "sourceRect": [
+            966,
+            745,
+            1094,
+            873
+          ],
+          "destinationRect": [
+            1008,
+            336,
+            1136,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            998,
+            613
+          ],
+          "sourceRect": [
+            998,
+            613,
+            1126,
+            741
+          ],
+          "destinationRect": [
+            1120,
+            336,
+            1248,
+            464
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            589,
+            253
+          ],
+          "sourceRect": [
+            589,
+            253,
+            717,
+            381
+          ],
+          "destinationRect": [
+            1232,
+            336,
+            1360,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            969,
+            722
+          ],
+          "sourceRect": [
+            969,
+            722,
+            1097,
+            850
+          ],
+          "destinationRect": [
+            1344,
+            336,
+            1472,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            168,
+            315
+          ],
+          "sourceRect": [
+            168,
+            315,
+            248,
+            443
+          ],
+          "destinationRect": [
+            1456,
+            336,
+            1536,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            979,
+            624
+          ],
+          "sourceRect": [
+            979,
+            624,
+            1107,
+            752
+          ],
+          "destinationRect": [
+            0,
+            448,
+            128,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1140,
+            690
+          ],
+          "sourceRect": [
+            1140,
+            690,
+            1268,
+            818
+          ],
+          "destinationRect": [
+            112,
+            448,
+            240,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            964,
+            742
+          ],
+          "sourceRect": [
+            964,
+            742,
+            1092,
+            870
+          ],
+          "destinationRect": [
+            224,
+            448,
+            352,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            610
+          ],
+          "sourceRect": [
+            981,
+            610,
+            1109,
+            738
+          ],
+          "destinationRect": [
+            336,
+            448,
+            464,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1112,
+            693
+          ],
+          "sourceRect": [
+            1112,
+            693,
+            1240,
+            821
+          ],
+          "destinationRect": [
+            448,
+            448,
+            576,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1130,
+            170
+          ],
+          "sourceRect": [
+            1130,
+            170,
+            1258,
+            298
+          ],
+          "destinationRect": [
+            560,
+            448,
+            688,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            989,
+            630
+          ],
+          "sourceRect": [
+            989,
+            630,
+            1117,
+            758
+          ],
+          "destinationRect": [
+            672,
+            448,
+            800,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            176,
+            311
+          ],
+          "sourceRect": [
+            176,
+            311,
+            304,
+            439
+          ],
+          "destinationRect": [
+            784,
+            448,
+            912,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1135,
+            171
+          ],
+          "sourceRect": [
+            1135,
+            171,
+            1263,
+            299
+          ],
+          "destinationRect": [
+            896,
+            448,
+            1024,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            976,
+            609
+          ],
+          "sourceRect": [
+            976,
+            609,
+            1104,
+            737
+          ],
+          "destinationRect": [
+            1008,
+            448,
+            1136,
+            576
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            588,
+            261
+          ],
+          "sourceRect": [
+            588,
+            261,
+            716,
+            389
+          ],
+          "destinationRect": [
+            1120,
+            448,
+            1248,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            741
+          ],
+          "sourceRect": [
+            981,
+            741,
+            1109,
+            869
+          ],
+          "destinationRect": [
+            1232,
+            448,
+            1360,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            989,
+            616
+          ],
+          "sourceRect": [
+            989,
+            616,
+            1117,
+            744
+          ],
+          "destinationRect": [
+            1344,
+            448,
+            1472,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            168,
+            302
+          ],
+          "sourceRect": [
+            168,
+            302,
+            248,
+            430
+          ],
+          "destinationRect": [
+            1456,
+            448,
+            1536,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1125,
+            170
+          ],
+          "sourceRect": [
+            1125,
+            170,
+            1253,
+            298
+          ],
+          "destinationRect": [
+            0,
+            560,
+            128,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1002,
+            603
+          ],
+          "sourceRect": [
+            1002,
+            603,
+            1130,
+            731
+          ],
+          "destinationRect": [
+            112,
+            560,
+            240,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            966,
+            709
+          ],
+          "sourceRect": [
+            966,
+            709,
+            1094,
+            837
+          ],
+          "destinationRect": [
+            224,
+            560,
+            352,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            974,
+            721
+          ],
+          "sourceRect": [
+            974,
+            721,
+            1102,
+            849
+          ],
+          "destinationRect": [
+            336,
+            560,
+            464,
+            688
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            227,
+            238
+          ],
+          "sourceRect": [
+            227,
+            238,
+            355,
+            366
+          ],
+          "destinationRect": [
+            448,
+            560,
+            576,
+            688
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            588,
+            250
+          ],
+          "sourceRect": [
+            588,
+            250,
+            716,
+            378
+          ],
+          "destinationRect": [
+            560,
+            560,
+            688,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1146,
+            701
+          ],
+          "sourceRect": [
+            1146,
+            701,
+            1274,
+            829
+          ],
+          "destinationRect": [
+            672,
+            560,
+            800,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            979,
+            607
+          ],
+          "sourceRect": [
+            979,
+            607,
+            1107,
+            735
+          ],
+          "destinationRect": [
+            784,
+            560,
+            912,
+            688
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            592,
+            256
+          ],
+          "sourceRect": [
+            592,
+            256,
+            720,
+            384
+          ],
+          "destinationRect": [
+            896,
+            560,
+            1024,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            987,
+            738
+          ],
+          "sourceRect": [
+            987,
+            738,
+            1115,
+            866
+          ],
+          "destinationRect": [
+            1008,
+            560,
+            1136,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            979,
+            618
+          ],
+          "sourceRect": [
+            979,
+            618,
+            1107,
+            746
+          ],
+          "destinationRect": [
+            1120,
+            560,
+            1248,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            974,
+            757
+          ],
+          "sourceRect": [
+            974,
+            757,
+            1102,
+            885
+          ],
+          "destinationRect": [
+            1232,
+            560,
+            1360,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            619
+          ],
+          "sourceRect": [
+            995,
+            619,
+            1123,
+            747
+          ],
+          "destinationRect": [
+            1344,
+            560,
+            1472,
+            688
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            581,
+            255
+          ],
+          "sourceRect": [
+            581,
+            255,
+            661,
+            383
+          ],
+          "destinationRect": [
+            1456,
+            560,
+            1536,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            368,
+            577
+          ],
+          "sourceRect": [
+            368,
+            577,
+            496,
+            705
+          ],
+          "destinationRect": [
+            0,
+            672,
+            128,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            700,
+            797
+          ],
+          "sourceRect": [
+            700,
+            797,
+            828,
+            925
+          ],
+          "destinationRect": [
+            112,
+            672,
+            240,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            980,
+            631
+          ],
+          "sourceRect": [
+            980,
+            631,
+            1108,
+            759
+          ],
+          "destinationRect": [
+            224,
+            672,
+            352,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            986,
+            768
+          ],
+          "sourceRect": [
+            986,
+            768,
+            1114,
+            896
+          ],
+          "destinationRect": [
+            336,
+            672,
+            464,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            217,
+            308
+          ],
+          "sourceRect": [
+            217,
+            308,
+            345,
+            436
+          ],
+          "destinationRect": [
+            448,
+            672,
+            576,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            978,
+            751
+          ],
+          "sourceRect": [
+            978,
+            751,
+            1106,
+            879
+          ],
+          "destinationRect": [
+            560,
+            672,
+            688,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1138,
+            170
+          ],
+          "sourceRect": [
+            1138,
+            170,
+            1266,
+            298
+          ],
+          "destinationRect": [
+            672,
+            672,
+            800,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            947,
+            756
+          ],
+          "sourceRect": [
+            947,
+            756,
+            1075,
+            884
+          ],
+          "destinationRect": [
+            784,
+            672,
+            912,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1110,
+            703
+          ],
+          "sourceRect": [
+            1110,
+            703,
+            1238,
+            831
+          ],
+          "destinationRect": [
+            896,
+            672,
+            1024,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1132,
+            172
+          ],
+          "sourceRect": [
+            1132,
+            172,
+            1260,
+            300
+          ],
+          "destinationRect": [
+            1008,
+            672,
+            1136,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            985,
+            627
+          ],
+          "sourceRect": [
+            985,
+            627,
+            1113,
+            755
+          ],
+          "destinationRect": [
+            1120,
+            672,
+            1248,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1155,
+            721
+          ],
+          "sourceRect": [
+            1155,
+            721,
+            1283,
+            849
+          ],
+          "destinationRect": [
+            1232,
+            672,
+            1360,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1134,
+            171
+          ],
+          "sourceRect": [
+            1134,
+            171,
+            1262,
+            299
+          ],
+          "destinationRect": [
+            1344,
+            672,
+            1472,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1003,
+            613
+          ],
+          "sourceRect": [
+            1003,
+            613,
+            1083,
+            741
+          ],
+          "destinationRect": [
+            1456,
+            672,
+            1536,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            437,
+            793
+          ],
+          "sourceRect": [
+            437,
+            793,
+            565,
+            921
+          ],
+          "destinationRect": [
+            0,
+            784,
+            128,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            719,
+            812
+          ],
+          "sourceRect": [
+            719,
+            812,
+            847,
+            940
+          ],
+          "destinationRect": [
+            112,
+            784,
+            240,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1112,
+            700
+          ],
+          "sourceRect": [
+            1112,
+            700,
+            1240,
+            828
+          ],
+          "destinationRect": [
+            224,
+            784,
+            352,
+            912
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            230,
+            183
+          ],
+          "sourceRect": [
+            230,
+            183,
+            358,
+            311
+          ],
+          "destinationRect": [
+            336,
+            784,
+            464,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            984,
+            610
+          ],
+          "sourceRect": [
+            984,
+            610,
+            1112,
+            738
+          ],
+          "destinationRect": [
+            448,
+            784,
+            576,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            178,
+            305
+          ],
+          "sourceRect": [
+            178,
+            305,
+            306,
+            433
+          ],
+          "destinationRect": [
+            560,
+            784,
+            688,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            713,
+            807
+          ],
+          "sourceRect": [
+            713,
+            807,
+            841,
+            935
+          ],
+          "destinationRect": [
+            672,
+            784,
+            800,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            172,
+            573
+          ],
+          "sourceRect": [
+            172,
+            573,
+            300,
+            701
+          ],
+          "destinationRect": [
+            784,
+            784,
+            912,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            999,
+            629
+          ],
+          "sourceRect": [
+            999,
+            629,
+            1127,
+            757
+          ],
+          "destinationRect": [
+            896,
+            784,
+            1024,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            952,
+            719
+          ],
+          "sourceRect": [
+            952,
+            719,
+            1080,
+            847
+          ],
+          "destinationRect": [
+            1008,
+            784,
+            1136,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1147,
+            699
+          ],
+          "sourceRect": [
+            1147,
+            699,
+            1275,
+            827
+          ],
+          "destinationRect": [
+            1120,
+            784,
+            1248,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            631,
+            271
+          ],
+          "sourceRect": [
+            631,
+            271,
+            759,
+            399
+          ],
+          "destinationRect": [
+            1232,
+            784,
+            1360,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            956,
+            706
+          ],
+          "sourceRect": [
+            956,
+            706,
+            1084,
+            834
+          ],
+          "destinationRect": [
+            1344,
+            784,
+            1472,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            176,
+            308
+          ],
+          "sourceRect": [
+            176,
+            308,
+            256,
+            436
+          ],
+          "destinationRect": [
+            1456,
+            784,
+            1536,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            203,
+            578
+          ],
+          "sourceRect": [
+            203,
+            578,
+            331,
+            706
+          ],
+          "destinationRect": [
+            0,
+            896,
+            128,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            721
+          ],
+          "sourceRect": [
+            1151,
+            721,
+            1279,
+            849
+          ],
+          "destinationRect": [
+            112,
+            896,
+            240,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            978,
+            607
+          ],
+          "sourceRect": [
+            978,
+            607,
+            1106,
+            735
+          ],
+          "destinationRect": [
+            224,
+            896,
+            352,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            697
+          ],
+          "sourceRect": [
+            1151,
+            697,
+            1279,
+            825
+          ],
+          "destinationRect": [
+            336,
+            896,
+            464,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            985,
+            723
+          ],
+          "sourceRect": [
+            985,
+            723,
+            1113,
+            851
+          ],
+          "destinationRect": [
+            448,
+            896,
+            576,
+            1024
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            214,
+            258
+          ],
+          "sourceRect": [
+            214,
+            258,
+            342,
+            386
+          ],
+          "destinationRect": [
+            560,
+            896,
+            688,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            704
+          ],
+          "sourceRect": [
+            1151,
+            704,
+            1279,
+            832
+          ],
+          "destinationRect": [
+            672,
+            896,
+            800,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1117,
+            171
+          ],
+          "sourceRect": [
+            1117,
+            171,
+            1245,
+            299
+          ],
+          "destinationRect": [
+            784,
+            896,
+            912,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            982,
+            627
+          ],
+          "sourceRect": [
+            982,
+            627,
+            1110,
+            755
+          ],
+          "destinationRect": [
+            896,
+            896,
+            1024,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            761
+          ],
+          "sourceRect": [
+            995,
+            761,
+            1123,
+            889
+          ],
+          "destinationRect": [
+            1008,
+            896,
+            1136,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1160,
+            172
+          ],
+          "sourceRect": [
+            1160,
+            172,
+            1288,
+            300
+          ],
+          "destinationRect": [
+            1120,
+            896,
+            1248,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            976,
+            604
+          ],
+          "sourceRect": [
+            976,
+            604,
+            1104,
+            732
+          ],
+          "destinationRect": [
+            1232,
+            896,
+            1360,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1152,
+            702
+          ],
+          "sourceRect": [
+            1152,
+            702,
+            1280,
+            830
+          ],
+          "destinationRect": [
+            1344,
+            896,
+            1472,
+            1024
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            223,
+            226
+          ],
+          "sourceRect": [
+            223,
+            226,
+            303,
+            354
+          ],
+          "destinationRect": [
+            1456,
+            896,
+            1536,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1154,
+            710
+          ],
+          "sourceRect": [
+            1154,
+            710,
+            1282,
+            726
+          ],
+          "destinationRect": [
+            0,
+            1008,
+            128,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            990,
+            603
+          ],
+          "sourceRect": [
+            990,
+            603,
+            1118,
+            619
+          ],
+          "destinationRect": [
+            112,
+            1008,
+            240,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            412,
+            586
+          ],
+          "sourceRect": [
+            412,
+            586,
+            540,
+            602
+          ],
+          "destinationRect": [
+            224,
+            1008,
+            352,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1116,
+            697
+          ],
+          "sourceRect": [
+            1116,
+            697,
+            1244,
+            713
+          ],
+          "destinationRect": [
+            336,
+            1008,
+            464,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            171
+          ],
+          "sourceRect": [
+            1151,
+            171,
+            1279,
+            187
+          ],
+          "destinationRect": [
+            448,
+            1008,
+            576,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1004,
+            634
+          ],
+          "sourceRect": [
+            1004,
+            634,
+            1132,
+            650
+          ],
+          "destinationRect": [
+            560,
+            1008,
+            688,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1123,
+            170
+          ],
+          "sourceRect": [
+            1123,
+            170,
+            1251,
+            186
+          ],
+          "destinationRect": [
+            672,
+            1008,
+            800,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            715,
+            811
+          ],
+          "sourceRect": [
+            715,
+            811,
+            843,
+            827
+          ],
+          "destinationRect": [
+            784,
+            1008,
+            912,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            976,
+            616
+          ],
+          "sourceRect": [
+            976,
+            616,
+            1104,
+            632
+          ],
+          "destinationRect": [
+            896,
+            1008,
+            1024,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            207,
+            576
+          ],
+          "sourceRect": [
+            207,
+            576,
+            335,
+            592
+          ],
+          "destinationRect": [
+            1008,
+            1008,
+            1136,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            382,
+            587
+          ],
+          "sourceRect": [
+            382,
+            587,
+            510,
+            603
+          ],
+          "destinationRect": [
+            1120,
+            1008,
+            1248,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            152,
+            577
+          ],
+          "sourceRect": [
+            152,
+            577,
+            280,
+            593
+          ],
+          "destinationRect": [
+            1232,
+            1008,
+            1360,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1141,
+            700
+          ],
+          "sourceRect": [
+            1141,
+            700,
+            1269,
+            716
+          ],
+          "destinationRect": [
+            1344,
+            1008,
+            1472,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            186,
+            572
+          ],
+          "sourceRect": [
+            186,
+            572,
+            266,
+            588
+          ],
+          "destinationRect": [
+            1456,
+            1008,
+            1536,
+            1024
+          ]
+        }
+      ],
+      "categories": {
+        "rock": 29,
+        "forest": 69,
+        "meadow": 42
+      },
+      "nativePixels": [
+        1536,
+        1024
+      ],
+      "sourceGeoregistered": false
+    },
+    {
+      "tile": "south",
+      "file": "south-quilt.webp",
+      "dataFile": "south-data.js",
+      "sha256": "409ad0fe775ab8654b22a1e16920b238691fae683faea2cd758e5c74a6e40e28",
+      "patches": [
+        {
+          "category": "forest",
+          "source": [
+            982,
+            738
+          ],
+          "sourceRect": [
+            982,
+            738,
+            1110,
+            866
+          ],
+          "destinationRect": [
+            0,
+            0,
+            128,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            242,
+            188
+          ],
+          "sourceRect": [
+            242,
+            188,
+            370,
+            316
+          ],
+          "destinationRect": [
+            112,
+            0,
+            240,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            588,
+            254
+          ],
+          "sourceRect": [
+            588,
+            254,
+            716,
+            382
+          ],
+          "destinationRect": [
+            224,
+            0,
+            352,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            203,
+            262
+          ],
+          "sourceRect": [
+            203,
+            262,
+            331,
+            390
+          ],
+          "destinationRect": [
+            336,
+            0,
+            464,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            978,
+            636
+          ],
+          "sourceRect": [
+            978,
+            636,
+            1106,
+            764
+          ],
+          "destinationRect": [
+            448,
+            0,
+            576,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            625,
+            232
+          ],
+          "sourceRect": [
+            625,
+            232,
+            753,
+            360
+          ],
+          "destinationRect": [
+            560,
+            0,
+            688,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            713,
+            787
+          ],
+          "sourceRect": [
+            713,
+            787,
+            841,
+            915
+          ],
+          "destinationRect": [
+            672,
+            0,
+            800,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            975,
+            626
+          ],
+          "sourceRect": [
+            975,
+            626,
+            1103,
+            754
+          ],
+          "destinationRect": [
+            784,
+            0,
+            912,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            627,
+            231
+          ],
+          "sourceRect": [
+            627,
+            231,
+            755,
+            359
+          ],
+          "destinationRect": [
+            896,
+            0,
+            1024,
+            128
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            224,
+            255
+          ],
+          "sourceRect": [
+            224,
+            255,
+            352,
+            383
+          ],
+          "destinationRect": [
+            1008,
+            0,
+            1136,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            636,
+            227
+          ],
+          "sourceRect": [
+            636,
+            227,
+            764,
+            355
+          ],
+          "destinationRect": [
+            1120,
+            0,
+            1248,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            984,
+            609
+          ],
+          "sourceRect": [
+            984,
+            609,
+            1112,
+            737
+          ],
+          "destinationRect": [
+            1232,
+            0,
+            1360,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            628,
+            216
+          ],
+          "sourceRect": [
+            628,
+            216,
+            756,
+            344
+          ],
+          "destinationRect": [
+            1344,
+            0,
+            1472,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            722,
+            805
+          ],
+          "sourceRect": [
+            722,
+            805,
+            802,
+            933
+          ],
+          "destinationRect": [
+            1456,
+            0,
+            1536,
+            128
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            996,
+            616
+          ],
+          "sourceRect": [
+            996,
+            616,
+            1124,
+            744
+          ],
+          "destinationRect": [
+            0,
+            112,
+            128,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            213,
+            261
+          ],
+          "sourceRect": [
+            213,
+            261,
+            341,
+            389
+          ],
+          "destinationRect": [
+            112,
+            112,
+            240,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            589,
+            261
+          ],
+          "sourceRect": [
+            589,
+            261,
+            717,
+            389
+          ],
+          "destinationRect": [
+            224,
+            112,
+            352,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            731
+          ],
+          "sourceRect": [
+            981,
+            731,
+            1109,
+            859
+          ],
+          "destinationRect": [
+            336,
+            112,
+            464,
+            240
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1129,
+            170
+          ],
+          "sourceRect": [
+            1129,
+            170,
+            1257,
+            298
+          ],
+          "destinationRect": [
+            448,
+            112,
+            576,
+            240
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            167,
+            567
+          ],
+          "sourceRect": [
+            167,
+            567,
+            295,
+            695
+          ],
+          "destinationRect": [
+            560,
+            112,
+            688,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            160,
+            316
+          ],
+          "sourceRect": [
+            160,
+            316,
+            288,
+            444
+          ],
+          "destinationRect": [
+            672,
+            112,
+            800,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            994,
+            632
+          ],
+          "sourceRect": [
+            994,
+            632,
+            1122,
+            760
+          ],
+          "destinationRect": [
+            784,
+            112,
+            912,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            962,
+            739
+          ],
+          "sourceRect": [
+            962,
+            739,
+            1090,
+            867
+          ],
+          "destinationRect": [
+            896,
+            112,
+            1024,
+            240
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            200,
+            256
+          ],
+          "sourceRect": [
+            200,
+            256,
+            328,
+            384
+          ],
+          "destinationRect": [
+            1008,
+            112,
+            1136,
+            240
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1118,
+            704
+          ],
+          "sourceRect": [
+            1118,
+            704,
+            1246,
+            832
+          ],
+          "destinationRect": [
+            1120,
+            112,
+            1248,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            962,
+            755
+          ],
+          "sourceRect": [
+            962,
+            755,
+            1090,
+            883
+          ],
+          "destinationRect": [
+            1232,
+            112,
+            1360,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            996,
+            628
+          ],
+          "sourceRect": [
+            996,
+            628,
+            1124,
+            756
+          ],
+          "destinationRect": [
+            1344,
+            112,
+            1472,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            627,
+            248
+          ],
+          "sourceRect": [
+            627,
+            248,
+            707,
+            376
+          ],
+          "destinationRect": [
+            1456,
+            112,
+            1536,
+            240
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            991,
+            728
+          ],
+          "sourceRect": [
+            991,
+            728,
+            1119,
+            856
+          ],
+          "destinationRect": [
+            0,
+            224,
+            128,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            629,
+            242
+          ],
+          "sourceRect": [
+            629,
+            242,
+            757,
+            370
+          ],
+          "destinationRect": [
+            112,
+            224,
+            240,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            989,
+            625
+          ],
+          "sourceRect": [
+            989,
+            625,
+            1117,
+            753
+          ],
+          "destinationRect": [
+            224,
+            224,
+            352,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            973,
+            744
+          ],
+          "sourceRect": [
+            973,
+            744,
+            1101,
+            872
+          ],
+          "destinationRect": [
+            336,
+            224,
+            464,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            635,
+            257
+          ],
+          "sourceRect": [
+            635,
+            257,
+            763,
+            385
+          ],
+          "destinationRect": [
+            448,
+            224,
+            576,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            701,
+            797
+          ],
+          "sourceRect": [
+            701,
+            797,
+            829,
+            925
+          ],
+          "destinationRect": [
+            560,
+            224,
+            688,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            975,
+            614
+          ],
+          "sourceRect": [
+            975,
+            614,
+            1103,
+            742
+          ],
+          "destinationRect": [
+            672,
+            224,
+            800,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            996,
+            747
+          ],
+          "sourceRect": [
+            996,
+            747,
+            1124,
+            875
+          ],
+          "destinationRect": [
+            784,
+            224,
+            912,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            589,
+            254
+          ],
+          "sourceRect": [
+            589,
+            254,
+            717,
+            382
+          ],
+          "destinationRect": [
+            896,
+            224,
+            1024,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            215,
+            220
+          ],
+          "sourceRect": [
+            215,
+            220,
+            343,
+            348
+          ],
+          "destinationRect": [
+            1008,
+            224,
+            1136,
+            352
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            589,
+            259
+          ],
+          "sourceRect": [
+            589,
+            259,
+            717,
+            387
+          ],
+          "destinationRect": [
+            1120,
+            224,
+            1248,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            108
+          ],
+          "sourceRect": [
+            995,
+            108,
+            1123,
+            236
+          ],
+          "destinationRect": [
+            1232,
+            224,
+            1360,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            996,
+            621
+          ],
+          "sourceRect": [
+            996,
+            621,
+            1124,
+            749
+          ],
+          "destinationRect": [
+            1344,
+            224,
+            1472,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            969,
+            734
+          ],
+          "sourceRect": [
+            969,
+            734,
+            1049,
+            862
+          ],
+          "destinationRect": [
+            1456,
+            224,
+            1536,
+            352
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            612
+          ],
+          "sourceRect": [
+            995,
+            612,
+            1123,
+            740
+          ],
+          "destinationRect": [
+            0,
+            336,
+            128,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            945,
+            722
+          ],
+          "sourceRect": [
+            945,
+            722,
+            1073,
+            850
+          ],
+          "destinationRect": [
+            112,
+            336,
+            240,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            990,
+            630
+          ],
+          "sourceRect": [
+            990,
+            630,
+            1118,
+            758
+          ],
+          "destinationRect": [
+            224,
+            336,
+            352,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            951,
+            729
+          ],
+          "sourceRect": [
+            951,
+            729,
+            1079,
+            857
+          ],
+          "destinationRect": [
+            336,
+            336,
+            464,
+            464
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1132,
+            706
+          ],
+          "sourceRect": [
+            1132,
+            706,
+            1260,
+            834
+          ],
+          "destinationRect": [
+            448,
+            336,
+            576,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            717,
+            826
+          ],
+          "sourceRect": [
+            717,
+            826,
+            845,
+            954
+          ],
+          "destinationRect": [
+            560,
+            336,
+            688,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            980,
+            630
+          ],
+          "sourceRect": [
+            980,
+            630,
+            1108,
+            758
+          ],
+          "destinationRect": [
+            672,
+            336,
+            800,
+            464
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1143,
+            692
+          ],
+          "sourceRect": [
+            1143,
+            692,
+            1271,
+            820
+          ],
+          "destinationRect": [
+            784,
+            336,
+            912,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            959,
+            744
+          ],
+          "sourceRect": [
+            959,
+            744,
+            1087,
+            872
+          ],
+          "destinationRect": [
+            896,
+            336,
+            1024,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            630,
+            238
+          ],
+          "sourceRect": [
+            630,
+            238,
+            758,
+            366
+          ],
+          "destinationRect": [
+            1008,
+            336,
+            1136,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            995,
+            630
+          ],
+          "sourceRect": [
+            995,
+            630,
+            1123,
+            758
+          ],
+          "destinationRect": [
+            1120,
+            336,
+            1248,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            986,
+            758
+          ],
+          "sourceRect": [
+            986,
+            758,
+            1114,
+            886
+          ],
+          "destinationRect": [
+            1232,
+            336,
+            1360,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            150,
+            304
+          ],
+          "sourceRect": [
+            150,
+            304,
+            278,
+            432
+          ],
+          "destinationRect": [
+            1344,
+            336,
+            1472,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            632
+          ],
+          "sourceRect": [
+            981,
+            632,
+            1061,
+            760
+          ],
+          "destinationRect": [
+            1456,
+            336,
+            1536,
+            464
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            963,
+            765
+          ],
+          "sourceRect": [
+            963,
+            765,
+            1091,
+            893
+          ],
+          "destinationRect": [
+            0,
+            448,
+            128,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            976,
+            635
+          ],
+          "sourceRect": [
+            976,
+            635,
+            1104,
+            763
+          ],
+          "destinationRect": [
+            112,
+            448,
+            240,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            156,
+            317
+          ],
+          "sourceRect": [
+            156,
+            317,
+            284,
+            445
+          ],
+          "destinationRect": [
+            224,
+            448,
+            352,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            993,
+            616
+          ],
+          "sourceRect": [
+            993,
+            616,
+            1121,
+            744
+          ],
+          "destinationRect": [
+            336,
+            448,
+            464,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            172,
+            307
+          ],
+          "sourceRect": [
+            172,
+            307,
+            300,
+            435
+          ],
+          "destinationRect": [
+            448,
+            448,
+            576,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            981,
+            701
+          ],
+          "sourceRect": [
+            981,
+            701,
+            1109,
+            829
+          ],
+          "destinationRect": [
+            560,
+            448,
+            688,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            962,
+            736
+          ],
+          "sourceRect": [
+            962,
+            736,
+            1090,
+            864
+          ],
+          "destinationRect": [
+            672,
+            448,
+            800,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1006,
+            614
+          ],
+          "sourceRect": [
+            1006,
+            614,
+            1134,
+            742
+          ],
+          "destinationRect": [
+            784,
+            448,
+            912,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            947,
+            741
+          ],
+          "sourceRect": [
+            947,
+            741,
+            1075,
+            869
+          ],
+          "destinationRect": [
+            896,
+            448,
+            1024,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            988,
+            771
+          ],
+          "sourceRect": [
+            988,
+            771,
+            1116,
+            899
+          ],
+          "destinationRect": [
+            1008,
+            448,
+            1136,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            984,
+            623
+          ],
+          "sourceRect": [
+            984,
+            623,
+            1112,
+            751
+          ],
+          "destinationRect": [
+            1120,
+            448,
+            1248,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1152,
+            695
+          ],
+          "sourceRect": [
+            1152,
+            695,
+            1280,
+            823
+          ],
+          "destinationRect": [
+            1232,
+            448,
+            1360,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            984,
+            625
+          ],
+          "sourceRect": [
+            984,
+            625,
+            1112,
+            753
+          ],
+          "destinationRect": [
+            1344,
+            448,
+            1472,
+            576
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            986,
+            766
+          ],
+          "sourceRect": [
+            986,
+            766,
+            1066,
+            894
+          ],
+          "destinationRect": [
+            1456,
+            448,
+            1536,
+            576
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            153,
+            576
+          ],
+          "sourceRect": [
+            153,
+            576,
+            281,
+            704
+          ],
+          "destinationRect": [
+            0,
+            560,
+            128,
+            688
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            579,
+            261
+          ],
+          "sourceRect": [
+            579,
+            261,
+            707,
+            389
+          ],
+          "destinationRect": [
+            112,
+            560,
+            240,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1146,
+            697
+          ],
+          "sourceRect": [
+            1146,
+            697,
+            1274,
+            825
+          ],
+          "destinationRect": [
+            224,
+            560,
+            352,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1127,
+            171
+          ],
+          "sourceRect": [
+            1127,
+            171,
+            1255,
+            299
+          ],
+          "destinationRect": [
+            336,
+            560,
+            464,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            982,
+            608
+          ],
+          "sourceRect": [
+            982,
+            608,
+            1110,
+            736
+          ],
+          "destinationRect": [
+            448,
+            560,
+            576,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            979,
+            745
+          ],
+          "sourceRect": [
+            979,
+            745,
+            1107,
+            873
+          ],
+          "destinationRect": [
+            560,
+            560,
+            688,
+            688
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            1006,
+            606
+          ],
+          "sourceRect": [
+            1006,
+            606,
+            1134,
+            734
+          ],
+          "destinationRect": [
+            672,
+            560,
+            800,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1142,
+            694
+          ],
+          "sourceRect": [
+            1142,
+            694,
+            1270,
+            822
+          ],
+          "destinationRect": [
+            784,
+            560,
+            912,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1139,
+            170
+          ],
+          "sourceRect": [
+            1139,
+            170,
+            1267,
+            298
+          ],
+          "destinationRect": [
+            896,
+            560,
+            1024,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            164,
+            579
+          ],
+          "sourceRect": [
+            164,
+            579,
+            292,
+            707
+          ],
+          "destinationRect": [
+            1008,
+            560,
+            1136,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1117,
+            172
+          ],
+          "sourceRect": [
+            1117,
+            172,
+            1245,
+            300
+          ],
+          "destinationRect": [
+            1120,
+            560,
+            1248,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            162,
+            571
+          ],
+          "sourceRect": [
+            162,
+            571,
+            290,
+            699
+          ],
+          "destinationRect": [
+            1232,
+            560,
+            1360,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1130,
+            171
+          ],
+          "sourceRect": [
+            1130,
+            171,
+            1258,
+            299
+          ],
+          "destinationRect": [
+            1344,
+            560,
+            1472,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            174,
+            574
+          ],
+          "sourceRect": [
+            174,
+            574,
+            254,
+            702
+          ],
+          "destinationRect": [
+            1456,
+            560,
+            1536,
+            688
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            430,
+            810
+          ],
+          "sourceRect": [
+            430,
+            810,
+            558,
+            938
+          ],
+          "destinationRect": [
+            0,
+            672,
+            128,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1114,
+            702
+          ],
+          "sourceRect": [
+            1114,
+            702,
+            1242,
+            830
+          ],
+          "destinationRect": [
+            112,
+            672,
+            240,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1143,
+            171
+          ],
+          "sourceRect": [
+            1143,
+            171,
+            1271,
+            299
+          ],
+          "destinationRect": [
+            224,
+            672,
+            352,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            353,
+            585
+          ],
+          "sourceRect": [
+            353,
+            585,
+            481,
+            713
+          ],
+          "destinationRect": [
+            336,
+            672,
+            464,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            161,
+            565
+          ],
+          "sourceRect": [
+            161,
+            565,
+            289,
+            693
+          ],
+          "destinationRect": [
+            448,
+            672,
+            576,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1142,
+            170
+          ],
+          "sourceRect": [
+            1142,
+            170,
+            1270,
+            298
+          ],
+          "destinationRect": [
+            560,
+            672,
+            688,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1113,
+            714
+          ],
+          "sourceRect": [
+            1113,
+            714,
+            1241,
+            842
+          ],
+          "destinationRect": [
+            672,
+            672,
+            800,
+            800
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            999,
+            607
+          ],
+          "sourceRect": [
+            999,
+            607,
+            1127,
+            735
+          ],
+          "destinationRect": [
+            784,
+            672,
+            912,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            216,
+            570
+          ],
+          "sourceRect": [
+            216,
+            570,
+            344,
+            698
+          ],
+          "destinationRect": [
+            896,
+            672,
+            1024,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            404,
+            582
+          ],
+          "sourceRect": [
+            404,
+            582,
+            532,
+            710
+          ],
+          "destinationRect": [
+            1008,
+            672,
+            1136,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            202,
+            581
+          ],
+          "sourceRect": [
+            202,
+            581,
+            330,
+            709
+          ],
+          "destinationRect": [
+            1120,
+            672,
+            1248,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            357,
+            585
+          ],
+          "sourceRect": [
+            357,
+            585,
+            485,
+            713
+          ],
+          "destinationRect": [
+            1232,
+            672,
+            1360,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            217,
+            571
+          ],
+          "sourceRect": [
+            217,
+            571,
+            345,
+            699
+          ],
+          "destinationRect": [
+            1344,
+            672,
+            1472,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            432,
+            781
+          ],
+          "sourceRect": [
+            432,
+            781,
+            512,
+            909
+          ],
+          "destinationRect": [
+            1456,
+            672,
+            1536,
+            800
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            196,
+            569
+          ],
+          "sourceRect": [
+            196,
+            569,
+            324,
+            697
+          ],
+          "destinationRect": [
+            0,
+            784,
+            128,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1145,
+            719
+          ],
+          "sourceRect": [
+            1145,
+            719,
+            1273,
+            847
+          ],
+          "destinationRect": [
+            112,
+            784,
+            240,
+            912
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            584,
+            252
+          ],
+          "sourceRect": [
+            584,
+            252,
+            712,
+            380
+          ],
+          "destinationRect": [
+            224,
+            784,
+            352,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            953,
+            714
+          ],
+          "sourceRect": [
+            953,
+            714,
+            1081,
+            842
+          ],
+          "destinationRect": [
+            336,
+            784,
+            464,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1154,
+            716
+          ],
+          "sourceRect": [
+            1154,
+            716,
+            1282,
+            844
+          ],
+          "destinationRect": [
+            448,
+            784,
+            576,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            370,
+            584
+          ],
+          "sourceRect": [
+            370,
+            584,
+            498,
+            712
+          ],
+          "destinationRect": [
+            560,
+            784,
+            688,
+            912
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            706,
+            814
+          ],
+          "sourceRect": [
+            706,
+            814,
+            834,
+            942
+          ],
+          "destinationRect": [
+            672,
+            784,
+            800,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            185,
+            581
+          ],
+          "sourceRect": [
+            185,
+            581,
+            313,
+            709
+          ],
+          "destinationRect": [
+            784,
+            784,
+            912,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1161,
+            172
+          ],
+          "sourceRect": [
+            1161,
+            172,
+            1289,
+            300
+          ],
+          "destinationRect": [
+            896,
+            784,
+            1024,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            425,
+            804
+          ],
+          "sourceRect": [
+            425,
+            804,
+            553,
+            932
+          ],
+          "destinationRect": [
+            1008,
+            784,
+            1136,
+            912
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            582,
+            250
+          ],
+          "sourceRect": [
+            582,
+            250,
+            710,
+            378
+          ],
+          "destinationRect": [
+            1120,
+            784,
+            1248,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            220,
+            568
+          ],
+          "sourceRect": [
+            220,
+            568,
+            348,
+            696
+          ],
+          "destinationRect": [
+            1232,
+            784,
+            1360,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            443,
+            812
+          ],
+          "sourceRect": [
+            443,
+            812,
+            571,
+            940
+          ],
+          "destinationRect": [
+            1344,
+            784,
+            1472,
+            912
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            588,
+            259
+          ],
+          "sourceRect": [
+            588,
+            259,
+            668,
+            387
+          ],
+          "destinationRect": [
+            1456,
+            784,
+            1536,
+            912
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            702
+          ],
+          "sourceRect": [
+            1151,
+            702,
+            1279,
+            830
+          ],
+          "destinationRect": [
+            0,
+            896,
+            128,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            984,
+            617
+          ],
+          "sourceRect": [
+            984,
+            617,
+            1112,
+            745
+          ],
+          "destinationRect": [
+            112,
+            896,
+            240,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1112,
+            702
+          ],
+          "sourceRect": [
+            1112,
+            702,
+            1240,
+            830
+          ],
+          "destinationRect": [
+            224,
+            896,
+            352,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            980,
+            755
+          ],
+          "sourceRect": [
+            980,
+            755,
+            1108,
+            883
+          ],
+          "destinationRect": [
+            336,
+            896,
+            464,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1150,
+            171
+          ],
+          "sourceRect": [
+            1150,
+            171,
+            1278,
+            299
+          ],
+          "destinationRect": [
+            448,
+            896,
+            576,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            366,
+            577
+          ],
+          "sourceRect": [
+            366,
+            577,
+            494,
+            705
+          ],
+          "destinationRect": [
+            560,
+            896,
+            688,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            449,
+            800
+          ],
+          "sourceRect": [
+            449,
+            800,
+            577,
+            928
+          ],
+          "destinationRect": [
+            672,
+            896,
+            800,
+            1024
+          ]
+        },
+        {
+          "category": "rock",
+          "source": [
+            585,
+            253
+          ],
+          "sourceRect": [
+            585,
+            253,
+            713,
+            381
+          ],
+          "destinationRect": [
+            784,
+            896,
+            912,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            963,
+            708
+          ],
+          "sourceRect": [
+            963,
+            708,
+            1091,
+            836
+          ],
+          "destinationRect": [
+            896,
+            896,
+            1024,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            638,
+            244
+          ],
+          "sourceRect": [
+            638,
+            244,
+            766,
+            372
+          ],
+          "destinationRect": [
+            1008,
+            896,
+            1136,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1117,
+            696
+          ],
+          "sourceRect": [
+            1117,
+            696,
+            1245,
+            824
+          ],
+          "destinationRect": [
+            1120,
+            896,
+            1248,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1147,
+            170
+          ],
+          "sourceRect": [
+            1147,
+            170,
+            1275,
+            298
+          ],
+          "destinationRect": [
+            1232,
+            896,
+            1360,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            211,
+            573
+          ],
+          "sourceRect": [
+            211,
+            573,
+            339,
+            701
+          ],
+          "destinationRect": [
+            1344,
+            896,
+            1472,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1110,
+            704
+          ],
+          "sourceRect": [
+            1110,
+            704,
+            1190,
+            832
+          ],
+          "destinationRect": [
+            1456,
+            896,
+            1536,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1147,
+            172
+          ],
+          "sourceRect": [
+            1147,
+            172,
+            1275,
+            188
+          ],
+          "destinationRect": [
+            0,
+            1008,
+            128,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            165,
+            567
+          ],
+          "sourceRect": [
+            165,
+            567,
+            293,
+            583
+          ],
+          "destinationRect": [
+            112,
+            1008,
+            240,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1127,
+            172
+          ],
+          "sourceRect": [
+            1127,
+            172,
+            1255,
+            188
+          ],
+          "destinationRect": [
+            224,
+            1008,
+            352,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            635,
+            238
+          ],
+          "sourceRect": [
+            635,
+            238,
+            763,
+            254
+          ],
+          "destinationRect": [
+            336,
+            1008,
+            464,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            431,
+            784
+          ],
+          "sourceRect": [
+            431,
+            784,
+            559,
+            800
+          ],
+          "destinationRect": [
+            448,
+            1008,
+            576,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            384,
+            587
+          ],
+          "sourceRect": [
+            384,
+            587,
+            512,
+            603
+          ],
+          "destinationRect": [
+            560,
+            1008,
+            688,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            439,
+            809
+          ],
+          "sourceRect": [
+            439,
+            809,
+            567,
+            825
+          ],
+          "destinationRect": [
+            672,
+            1008,
+            800,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            980,
+            635
+          ],
+          "sourceRect": [
+            980,
+            635,
+            1108,
+            651
+          ],
+          "destinationRect": [
+            784,
+            1008,
+            912,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            964,
+            755
+          ],
+          "sourceRect": [
+            964,
+            755,
+            1092,
+            771
+          ],
+          "destinationRect": [
+            896,
+            1008,
+            1024,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1142,
+            171
+          ],
+          "sourceRect": [
+            1142,
+            171,
+            1270,
+            187
+          ],
+          "destinationRect": [
+            1008,
+            1008,
+            1136,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1151,
+            711
+          ],
+          "sourceRect": [
+            1151,
+            711,
+            1279,
+            727
+          ],
+          "destinationRect": [
+            1120,
+            1008,
+            1248,
+            1024
+          ]
+        },
+        {
+          "category": "forest",
+          "source": [
+            704,
+            804
+          ],
+          "sourceRect": [
+            704,
+            804,
+            832,
+            820
+          ],
+          "destinationRect": [
+            1232,
+            1008,
+            1360,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            195,
+            575
+          ],
+          "sourceRect": [
+            195,
+            575,
+            323,
+            591
+          ],
+          "destinationRect": [
+            1344,
+            1008,
+            1472,
+            1024
+          ]
+        },
+        {
+          "category": "meadow",
+          "source": [
+            1119,
+            170
+          ],
+          "sourceRect": [
+            1119,
+            170,
+            1199,
+            186
+          ],
+          "destinationRect": [
+            1456,
+            1008,
+            1536,
+            1024
+          ]
+        }
+      ],
+      "categories": {
+        "forest": 68,
+        "rock": 15,
+        "meadow": 57
+      },
+      "nativePixels": [
+        1536,
+        1024
+      ],
+      "sourceGeoregistered": false
+    }
+  ],
+  "sourceRegisteredToV123": false,
+  "historicRoadsVerified": false,
+  "periodSafe": false,
+  "gameArtApproved": false,
+  "physicalIPhoneApproved": false,
+  "productionApproved": false
+}

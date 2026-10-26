@@ -215,6 +215,9 @@ def verify(source_folder, output_folder):
         require(got["retainedFraction"] == round(retained, 6),
                 "retained area metric changed")
         images[name] = (rgb, expected_mask)
+    contact_path = output_folder / "v207-exclusion-contact.png"
+    require(contact_path.is_file() and actual.get("contactSha256") == sha(contact_path),
+            "review contact altered before regeneration")
     expected_contact = make_contact(images, output_folder)
     require(actual.get("contactImage") == expected_contact.name
             and actual.get("contactSha256") == sha(expected_contact),

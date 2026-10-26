@@ -29,3 +29,9 @@ WEST/SOUTH source-derived geographically coherent, period-safe high-resolution g
 gameArtApproved=false, geographicRegistrationVerified=false, historicalRoadsVerified=false, physicalIPhoneApproved=false, productionApproved=false.
 
 No merge/deploy or paid service. Next productive step is authentic geographically justified artwork, not adding artificial noise to pass this new diagnostic.
+
+
+## Final GitHub Actions verification — 2026-10-26 UTC
+- [V203 CI run 40264480671](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40264480671) completed with overall **FAILURE BY DESIGN**: inherited V194 road pixels, V192 cartway routes, original V192 numeric detail, V193 camera, V196 cache, V201 touch, V202 bridge/tap and V203 synthetic tests all **PASSED**. The **new V203 photographic microstructure step FAILED** as intended, in all four configurations.
+- Downloaded and visually inspected actual [artifact 12626100904](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40264480671/artifacts/12626100904), including all 12 captured screenshots, report.json, and a contact sheet comparing native screenshot grayscale to high-frequency structure. CI values matched independent V202 local analysis above in every configuration.
+- The **RED** outcome is a truthful quality block, not an infrastructure malfunction or a passing art milestone. No visual approval is implied. Do not weaken this new gate or add noise to pass it; replace with authentic, independently registered, period-safe art and inspect actual phone visuals.

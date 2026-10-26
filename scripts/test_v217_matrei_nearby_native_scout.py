@@ -26,6 +26,11 @@ class SourceScoutTests(unittest.TestCase):
     def test_reject_invented_registration_and_site_identity(self):
         m = scout.plan()
         m.update(contactFile="x", contactSha256="y")
+        for site in m["sites"]:
+            site["imageSha256"] = "dummy"
+            for tile in site["tiles"]:
+                tile.update(sha256="dummy", byteCount=123)
+        self.assertTrue(scout.verify_plan(m))
         for change in (
             lambda x: x.update(registeredToV123=True),
             lambda x: x.update(sourcePatchesContiguous=True),

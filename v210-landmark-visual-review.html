@@ -116,7 +116,9 @@ A visual resemblance is NOT proof these are the same location. Do not copy pixel
   if(!gameReady)return;
   const api=frame.contentWindow.V192;
   if(!api||!api.focusTile(cell))throw Error('V192 camera missing');
-  await new Promise(resolve=>frame.contentWindow.requestAnimationFrame(()=>frame.contentWindow.requestAnimationFrame(resolve)));
+  // The review iframe sits offscreen, where WebKit/Chromium may suspend rAF.
+  // Render the actual V192 camera synchronously rather than waiting forever.
+  if(!api.snapshotForReview())throw Error('Real game snapshot unavailable');
   const c=frame.contentDocument.querySelector('#map');
   camera=api.terrainCamera;
   if(!c||!camera||!finite(camera.scale)||camera.viewport[0]<=0||camera.viewport[1]<=0)throw Error('Cannot verify live game camera');

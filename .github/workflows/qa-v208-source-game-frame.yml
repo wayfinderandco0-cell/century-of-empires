@@ -1,0 +1,46 @@
+name: V208 Source-to-Game Frame Audit (REGISTRATION BLOCKED)
+on:
+  push:
+    branches: ['terrain-v208-source-game-frame-reconciliation-20261026']
+    paths:
+      - 'scripts/v208_source_game_frame_audit.py'
+      - 'scripts/test_v208_source_game_frame_audit.py'
+      - '.github/workflows/qa-v208-source-game-frame.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-game-frame-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve inherited native source and modern-exclusion controls
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+      - name: Verify V121/V123 immutable geometry and independent source/game frames
+        run: python scripts/test_v208_source_game_frame_audit.py
+      - name: Build actual geographic source-vs-game frame review artifact
+        run: python scripts/v208_source_game_frame_audit.py --output qa/v208-frame-audit
+      - name: Recompute and verify output without altering original files
+        run: python scripts/v208_source_game_frame_audit.py --verify --output qa/v208-frame-audit
+      - name: Confirm unverified source-to-game registration remains blocked
+        run: |
+          set +e
+          python scripts/v208_source_game_frame_audit.py --verify --output qa/v208-frame-audit --require-registered
+          result=$?
+          set -e
+          test "$result" -eq 2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v208-original-source-vs-game-frame-audit-NOT-APPROVED
+          path: qa/v208-frame-audit/
+          retention-days: 7

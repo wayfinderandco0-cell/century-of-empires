@@ -20,6 +20,26 @@ SIZE = 128
 MARGIN = 12
 STEP = 8
 PANELS = ("west_reference", "matrei_reference", "south_reference")
+# Actual V214 downloaded west crop showed a visible "2023" date imprint at
+# approximately native x=370,y=60, missed by the older V207 exclusions.
+# Explicitly quarantine the observed imprint and surrounding pixels. Do not
+# claim this detects every modern artifact in the source.
+REVIEW_QUARANTINE = {
+    "west_reference": ((340, 26, 413, 91),),
+    "matrei_reference": (),
+    "south_reference": (),
+}
+
+
+def reviewed_mask(name):
+    require(name in REVIEW_QUARANTINE, "unknown reviewed source panel")
+    result = masks.mask_for(name).copy()
+    d = ImageDraw.Draw(result)
+    for rect in REVIEW_QUARANTINE[name]:
+        d.rectangle(rect, fill=0)
+    return result
+
+
 FALSE_FLAGS = (
     "sourceRegisteredToV123", "periodSafe", "historicalVegetationVerified",
     "allModernFeaturesExcluded", "historicalRoadsVerified",
@@ -78,13 +98,13 @@ def expected(source_folder):
     for name in PANELS:
         with Image.open(source_folder / (name + ".png")) as im:
             rgb = im.convert("RGB")
-        box, detail = choose_native_patch(rgb, masks.mask_for(name))
+        box, detail = choose_native_patch(rgb, reviewed_mask(name))
         rows.append({
             "sourcePanel": name,
             "sourcePanelSha256": v206.SOURCE_SHA256[name],
             "nativeRectXYXY": list(box),
             "nativeFootprintLonLat": v206.geo_bounds(by_name[name], box),
-            "sourceMask": "V207_CONSERVATIVE_MANUAL_EXCLUSIONS",
+            "sourceMask": "V207_PLUS_V214_REVIEWED_2023_DATE_QUARANTINE",
             "sourcePixelsUnmodified": True,
             "detailScoreDiagnosticOnly": detail,
             "image": name + "-native-material.png",
@@ -164,7 +184,7 @@ def verify(source_folder, output_folder):
             require(crop.mode == "RGB" and crop.size == (SIZE, SIZE)
                     and crop.tobytes() == pixels,
                     "candidate pixels not bit-identical to original decoded source")
-        require(masks.mask_for(row["sourcePanel"]).crop(tuple(row["nativeRectXYXY"])).getextrema()
+        require(reviewed_mask(row["sourcePanel"]).crop(tuple(row["nativeRectXYXY"])).getextrema()
                 == (255, 255), "candidate intersects excluded modern features")
     contact = output_folder / "v214-native-material-contact.png"
     require(contact.is_file() and actual.get("contactImage") == contact.name

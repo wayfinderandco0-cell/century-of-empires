@@ -4,6 +4,7 @@ on:
     branches: ['terrain-v211-mobile-review-load-race-diagnostics-20261026']
     paths:
       - 'v210-landmark-visual-review.html'
+      - 'v192-weathered-cartways-graphics-test.html'
       - 'scripts/qa_v210_landmark_review_ui.py'
       - '.github/workflows/qa-v210-landmark-review.yml'
       - 'docs/v210-landmark-review-evidence.md'

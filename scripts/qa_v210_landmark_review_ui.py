@@ -106,19 +106,32 @@ try:
                             assert pending and abs(pending["gameWorldXY"][0]-center[0]) < 0.03, (key, cell, pending)
                             page.evaluate("""() => {
                               const el=document.querySelector('#sourcePanel'),r=el.getBoundingClientRect();
-                              el.dispatchEvent(new MouseEvent('click',{bubbles:true,
-                                clientX:r.left+r.width/2,clientY:r.top+r.height/2}));
+                              const e=new MouseEvent('click',{bubbles:true,
+                                clientX:r.left+r.width/2,clientY:r.top+r.height/2});
+                              // MouseEvent.clientX/Y are integer CSS pixels on
+                              // WebKit; preserve the actual dispatched values.
+                              window.__v211SourceEvent={x:e.clientX,y:e.clientY,
+                                rect:{left:r.left,top:r.top,width:r.width,height:r.height}};
+                              el.dispatchEvent(e);
                             }""")
                             report = page.evaluate("V210.observations")
                             assert len(report["matches"][cell]) == 1, (key, cell, report)
                             actual = report["matches"][cell][0]["sourceContactXY"]
-                            expected = {"west": [256, 256], "matrei": [768, 256],
-                                        "south": [768, 768]}[cell]
-                            # Browser CSS subpixel layout may introduce hundredths
-                            # of a native tile pixel. Never accept a whole-pixel
-                            # or wrong-cell coordinate displacement.
-                            assert all(abs(a - b) <= 0.05 for a, b in zip(actual, expected)), (
-                                key, cell, actual, expected)
+                            click = page.evaluate("window.__v211SourceEvent")
+                            offsets = {"west": [0, 0], "matrei": [512, 0],
+                                       "south": [512, 512]}[cell]
+                            rect = click["rect"]
+                            expected = [
+                                round(offsets[0] + (click["x"] - rect["left"]) * 512 / rect["width"], 2),
+                                round(offsets[1] + (click["y"] - rect["top"]) * 512 / rect["height"], 2),
+                            ]
+                            # Test the actual DOM event mapping, not an idealized
+                            # fractional click. WebKit quantizes MouseEvent CSS
+                            # client coordinates to integers on small iPhones.
+                            assert actual == expected, (key, cell, actual, expected, click)
+                            nominal = [offsets[0] + 256, offsets[1] + 256]
+                            assert all(abs(a - b) <= 2 for a, b in zip(actual, nominal)), (
+                                key, cell, actual, nominal, click)
                             assert report["matches"][cell][0]["evidenceStatus"] == (
                                 "UNVERIFIED_VISUAL_OBSERVATION_NOT_INDEPENDENTLY_MATCHED")
                             assert all(report[flag] is False for flag in (

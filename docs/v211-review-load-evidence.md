@@ -11,8 +11,9 @@ Date: 2026-10-26. Isolated branch based on V210. No merge, deployment, payment, 
 ## Isolated changes
 
 1. `v210-landmark-visual-review.html`: start the iframe readiness probe immediately as well as on `load`, with one shared promise to prevent duplicate initialization. Expose read-only status, tile and embedded-frame diagnostics; no coordinate, photo, terrain, army, road, bridge or approval mutation.
-2. `scripts/qa_v210_landmark_review_ui.py`: intercept modern imagery only by exact host, returning explicitly **SYNTHETIC TEST TILES**; on startup failure, write the browser screenshot and diagnostic JSON and fail the run. Preserve all four Chromium/WebKit × portrait/landscape checks and V121/V123 blob SHA pins.
-3. `.github/workflows/qa-v211-landmark-review.yml`: preserve V204–V209 source audits, V121/V123 route/bridge and mobile camera checks, three-center real game screenshot QA, and strict V203 photographic-detail gate. The latter **must remain red until actual West/South art improves**.
+2. `v192-weathered-cartways-graphics-test.html`: add a read-only `snapshotForReview()` hook invoking the **existing** V192 renderer synchronously. The iframe is positioned far offscreen; WebKit and Chromium can throttle its `requestAnimationFrame` indefinitely. The V210 review no longer waits for two offscreen animation frames. This is a real game-camera rendering path, not synthetic art or a changed movement graph.
+3. `scripts/qa_v210_landmark_review_ui.py`: intercept modern imagery only by exact host, returning explicitly **SYNTHETIC TEST TILES**; on startup failure, write the browser screenshot and diagnostic JSON and fail the run. Preserve all four Chromium/WebKit × portrait/landscape checks and V121/V123 blob SHA pins.
+4. `.github/workflows/qa-v211-landmark-review.yml`: preserve V204–V209 source audits, V121/V123 route/bridge and mobile camera checks, three-center real game screenshot QA, and strict V203 photographic-detail gate. The latter **must remain red until actual West/South art improves**.
 
 ## Boundaries and outstanding blockers
 
@@ -20,4 +21,4 @@ The modern V205 source is not registered to V123 playable cells. No independentl
 
 `sourceRegisteredToV123=false; historicalRoadsVerified=false; bridgeBanksVerified=false; gameArtApproved=false; physicalIPhoneApproved=false; productionApproved=false`.
 
-CI: V211 run 40301156199 triggered; results pending when this document was authored.
+CI: V211 initial run 40301156199 triggered before the synchronous snapshot fix; a subsequent push includes the snapshot hook. Do not infer a pass until the final run completes and its actual screenshots are inspected.

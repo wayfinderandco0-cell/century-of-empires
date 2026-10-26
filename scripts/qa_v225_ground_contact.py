@@ -59,7 +59,10 @@ def main():
                             sources=page.evaluate('V192.v224Sources')
                             assert len(sources)==2 and {s['tile'] for s in sources}=={'west','south'}
                             assert {(s['x'],s['y']) for s in sources}=={(0,0),(1536,1024)}
-                            assert page.evaluate('V192.roadNodeCount')>=90\n                            bank=page.evaluate('V192.v225GroundContact')\n                            assert bank['painted'] and len(bank['cells'])==2 and bank['roads']>=2 and bank['segments']>=4,bank\n                            assert bank['productionApproved'] is False and bank['bridgeBanksVerified'] is False
+                            assert page.evaluate('V192.roadNodeCount')>=90
+                            bank=page.evaluate('V192.v225GroundContact')
+                            assert bank['painted'] and len(bank['cells'])==2 and bank['roads']>=2 and bank['segments']>=4,bank
+                            assert bank['productionApproved'] is False and bank['bridgeBanksVerified'] is False
                             assert page.evaluate('V192.connectedRoute') is True
                             assert page.evaluate('V192.artDimensions')==[1536,1024]
                             assert page.evaluate('V192.productionApproved') is False

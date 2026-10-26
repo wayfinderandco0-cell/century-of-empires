@@ -38,6 +38,12 @@ class NativeMaterialTests(unittest.TestCase):
         self.assertRaises(ValueError, bank.choose_native_patch,
                           image, Image.new("L", (128, 256), 255), 64, 8, 8)
 
+    def test_inspected_date_imprint_quarantined_before_selection(self):
+        self.assertEqual(bank.reviewed_mask("west_reference").getpixel((370, 60)), 0)
+        self.assertEqual(bank.reviewed_mask("west_reference").getpixel((390, 80)), 0)
+        self.assertEqual(bank.reviewed_mask("matrei_reference").getpixel((300, 420)), 255)
+        self.assertRaises(ValueError, bank.reviewed_mask, "unknown_panel")
+
     @staticmethod
     def fixture(folder):
         manifest = source.plan("forest")

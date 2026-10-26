@@ -1,0 +1,89 @@
+name: V219 Native Source In-Game Photo Art Trial (human approval gate RED)
+on:
+  push:
+    branches: ['terrain-v219-native-material-game-art-trial-20261026']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-native-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve source and geography integrity tests
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          python scripts/test_v217_matrei_nearby_native_scout.py
+          python scripts/test_v218_reviewed_modern_quarantine.py
+      - name: Rebuild verified V218 source and four pixel-audited native V219 trial assets
+        run: |
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine
+          python scripts/v218_reviewed_modern_quarantine.py --output qa/v218-modern-quarantine --verify
+          python scripts/v219_native_art_trial.py --source qa/v218-modern-quarantine --output terrain-v219/assets
+          python scripts/v219_native_art_trial.py --source qa/v218-modern-quarantine --output terrain-v219/assets --verify
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v219-registration/report.json
+          python -c "import json; r=json.load(open('qa/v219-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v219-native-source-assets-unregistered-art-study
+          path: |
+            terrain-v219/assets/
+            qa/v219-registration/
+          retention-days: 7
+      - name: Publish generated native assets ONLY to isolated V219 branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-v219/assets/
+          if ! git diff --cached --quiet; then
+            git commit -m "V219: pin four audited native photo assets for isolated playable art trial"
+            git push origin HEAD:refs/heads/terrain-v219-native-material-game-art-trial-20261026
+          fi
+  four-browser-native-art-trial:
+    needs: source-native-art
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - uses: actions/download-artifact@v4
+        with:
+          name: v219-native-source-assets-unregistered-art-study
+          path: .
+      - name: Preserve original V137 road/seam and V202 tap regression gates
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: Four actual Chromium/WebKit phone layouts of V219 versus unchanged V192
+        run: python scripts/qa_v219_native_game_art_trial.py
+      - name: Strict unchanged V203 screenshot art thresholds - NEVER waive for noise
+        run: |
+          python scripts/qa_v203_canopy_structure.py --screenshots qa/v219-native-game-art-trial --output qa/v219-native-game-art-trial/strict-enforced --enforce
+      - name: Human approval remains fail-closed even if microstructure eventually passes
+        run: |
+          python -c "import json; m=json.load(open('terrain-v219/assets/manifest.json')); assert m['gameArtApproved'] is True and m['physicalIPhoneApproved'] is True, 'V219 NOT APPROVED: source placement and human visual acceptance missing'"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v219-actual-phone-west-matrei-south-and-RED-art-gate
+          path: |
+            qa/v219-native-game-art-trial/
+            qa/v137-clean/
+            qa/v202-road-segment-taps/
+          retention-days: 7

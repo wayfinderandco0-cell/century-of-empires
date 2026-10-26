@@ -26,6 +26,7 @@ jobs:
         run: |
           python scripts/v224_licensed_oblique_cells.py --verify
           python scripts/test_v224_licensed_oblique_cells.py
+          node scripts/test_v225_ground_contact.js
   existing-four-browser-game-regressions:
     runs-on: ubuntu-latest
     timeout-minutes: 55

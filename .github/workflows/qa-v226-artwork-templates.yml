@@ -1,0 +1,92 @@
+name: V226 Immutable Cartway Artwork Templates (ART STILL RED)
+on:
+  push:
+    branches: ['terrain-v226-immutable-cartway-artwork-templates-20261026']
+  workflow_dispatch:
+concurrency:
+  group: v226-artwork-templates
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  immutable-source-and-template:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original protected V121/V123 Git blobs
+        run: |
+          git hash-object v121-octagon-1-painted-road.html | grep '^4c6aa5cda9e7c359b6d2a49d5b5fe8a597346382$'
+          git hash-object terrain-grid/v123-atlas.js | grep '^09f04b4062e24fbacbb645307462cdddce2b2aa3$'
+      - name: Deterministic SVG authoring masks and tamper-negative controls
+        run: node scripts/test_v226_artwork_templates.js
+      - name: Final deterministic re-verification
+        run: node scripts/build_v226_artwork_templates.js --verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v226-original-graph-exact-artwork-templates-NOT-approved
+          path: terrain-v226/templates/
+          retention-days: 7
+  four-browser-actual-workbench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright numpy
+          python -m playwright install --with-deps chromium webkit
+      - name: Inherited V137 and V202 seam, bridge, camera, 24-tap army routing
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: Actual V226 four-config phone artwork-guide screenshots and immutable movement
+        run: python scripts/qa_v226_artwork_templates.py
+      - name: Existing V225 art baseline for UNCHANGED strict V203 thresholds
+        run: python scripts/qa_v225_ground_contact.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v226-actual-four-browser-authoring-workbench-NOT-approved
+          path: |
+            qa/v137-clean/
+            qa/v202-road-segment-taps/
+            qa/v225-ground-contact/
+            qa/v226-artwork-templates/
+          retention-days: 7
+  strict-v203-game-art-remains-red:
+    needs: four-browser-actual-workbench
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow numpy
+      - uses: actions/download-artifact@v4
+        with:
+          name: v226-actual-four-browser-authoring-workbench-NOT-approved
+          path: qa
+      - name: Strict V203 unchanged FAIL-CLOSED on actual unapproved game artwork
+        run: python scripts/qa_v203_canopy_structure.py --screenshots qa/v225-ground-contact --output qa/v226-strict-v203 --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v226-strict-V203-art-RED-evidence
+          path: qa/v226-strict-v203/
+          retention-days: 7
+  human-and-production-approval-stays-red:
+    needs: [immutable-source-and-template,four-browser-actual-workbench,strict-v203-game-art-remains-red]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Transparent alignment guides are NOT playable approved art
+        run: |
+          echo "BLOCKED: V209 natural tiepoints, 1780 roads, bridge banks, distinct Austrian West/South art, V100 four zoom tiers, physical iPhone user acceptance"
+          exit 1

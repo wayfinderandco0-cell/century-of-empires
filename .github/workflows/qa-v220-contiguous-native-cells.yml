@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  actions: read
 jobs:
   source-whole-cell-art:
     runs-on: ubuntu-latest

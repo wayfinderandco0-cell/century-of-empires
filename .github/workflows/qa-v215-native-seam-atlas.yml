@@ -1,0 +1,88 @@
+name: V215 Contiguous Native Alpine Source Seams (game art remains RED)
+on:
+  push:
+    branches: ['terrain-v215-source-native-seam-atlas-20261026']
+    paths:
+      - 'scripts/v215_native_source_seam_atlas.py'
+      - 'scripts/test_v215_native_source_seam_atlas.py'
+      - '.github/workflows/qa-v215-native-seam-atlas.yml'
+      - 'docs/v215-native-seam-atlas-evidence.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-geographic-source-seams:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free original source audit dependency
+        run: python -m pip install pillow
+      - name: Preserve original V121 V123 and V94 V97 V102 geography invariants
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          node scripts/test_v213_source_geodesy.js
+          python scripts/test_v214_source_native_material_bank.py
+      - name: V215 fail-closed source seam and masked RGB negative controls
+        run: python scripts/test_v215_native_source_seam_atlas.py
+      - name: Download and verify 12 original 2023-era modern source JPEG tiles
+        run: |
+          python scripts/v204_contiguous_matrei_sources.py --site forest --download --output qa/v215-native-source
+          python scripts/v204_contiguous_matrei_sources.py --site forest --verify --output qa/v215-native-source
+      - name: Build pixel-exact V214 source material and V215 contiguous masked atlas
+        run: |
+          python scripts/v214_source_native_material_bank.py --source qa/v215-native-source --output qa/v215-material
+          python scripts/v215_native_source_seam_atlas.py --source qa/v215-native-source --output qa/v215-seam-atlas
+          python scripts/v215_native_source_seam_atlas.py --source qa/v215-native-source --output qa/v215-seam-atlas --verify
+      - name: Geographic registration must remain blocked without independent landmarks
+        run: |
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v215-registration/report.json
+          python -c "import json; r=json.load(open('qa/v215-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS' and not r['sourceRegisteredToV123']"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v215-AUTHENTIC-native-three-panel-source-seams-NOT-GAME-ART
+          path: |
+            qa/v215-seam-atlas/
+            qa/v215-material/
+            qa/v215-registration/
+          retention-days: 7
+  original-phone-road-and-strict-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free four-phone QA dependencies
+        run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve original roads bridges armies camera and phone movement
+        run: |
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+          python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve original strict V203 photo detail gate RED until playable West and South improve
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v215-original-phone-route-and-strict-game-art-RED
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

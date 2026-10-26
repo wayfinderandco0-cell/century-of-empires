@@ -112,13 +112,34 @@ def assemble(cell,folder,quarantine_folder):
     rgba.putalpha(alpha)
     return rgba
 
+def acquire_native_tiles(cell,folder):
+    """Reuse exact native JPEGs from the pinned prior Actions artifact if valid.
+    This is a resumable SOURCE cache, not permission to fabricate missing pixels.
+    Every JPEG is decoded/size-checked and its byte SHA pinned in the manifest.
+    """
+    for tile in cell['tiles']:
+        path=folder/tile['name']
+        if path.is_file():
+            raw=path.read_bytes()
+            try:
+                scout.native_jpeg(raw)
+            except (ValueError, OSError, SyntaxError):
+                path.unlink()
+            else:
+                tile['sha256']=sha(raw)
+                tile['byteCount']=len(raw)
+                continue
+        print('V220 missing original native tile: '+tile['name']+
+              ' XYZ='+str(tile['xyz']),flush=True)
+        scout.download(folder,{'sites':[{'tiles':[tile]}]})
+
 def build(folder,quarantine_folder):
     scout.v204.verify_source_invariants('matrei')
     quarantine.verify(quarantine_folder)
     folder.mkdir(parents=True,exist_ok=True)
     m=plan()
     for cell in m['cells']:
-        scout.download(folder,{'sites':[{'tiles':cell['tiles']}]})
+        acquire_native_tiles(cell,folder)
         image=assemble(cell,folder,quarantine_folder)
         cell['maskZeroPixels']=sum(1 for a in image.getchannel('A').getdata() if a==0)
         require(cell['maskZeroPixels']>0,'reviewed exclusions missing')

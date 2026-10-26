@@ -1,0 +1,85 @@
+name: V214 Source-Native Photographic Materials (strict game art remains RED)
+on:
+  push:
+    branches: ['terrain-v214-source-native-material-bank-20261026']
+    paths:
+      - 'scripts/v214_source_native_material_bank.py'
+      - 'scripts/test_v214_source_native_material_bank.py'
+      - '.github/workflows/qa-v214-native-material-bank.yml'
+      - 'docs/v214-source-native-material-evidence.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-source-material-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free image audit dependencies
+        run: python -m pip install pillow
+      - name: Preserve geographic, historical, mask and original V121/V123 invariants
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+          node scripts/test_v213_source_geodesy.js
+      - name: New fail-closed V214 material selection tests
+        run: python scripts/test_v214_source_native_material_bank.py
+      - name: Download original modern aerial JPEGs and verify source identity
+        run: |
+          python scripts/v204_contiguous_matrei_sources.py --site forest --download --output qa/v214-original-native-source
+          python scripts/v204_contiguous_matrei_sources.py --site forest --verify --output qa/v214-original-native-source
+      - name: Build exact source-native unmasked photographic material bank
+        run: |
+          python scripts/v214_source_native_material_bank.py --source qa/v214-original-native-source --output qa/v214-native-material-bank
+          python scripts/v214_source_native_material_bank.py --source qa/v214-original-native-source --output qa/v214-native-material-bank --verify
+      - name: Keep V209 real geographic registration blocked
+        run: |
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v214-geographic-registration/report.json
+          python -c "import json; r=json.load(open('qa/v214-geographic-registration/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS' and not r['sourceRegisteredToV123']"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v214-original-native-material-candidates-NOT-GAME-ART
+          path: |
+            qa/v214-native-material-bank/
+            qa/v214-geographic-registration/
+          retention-days: 7
+  inherited-phone-and-strict-art-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free original four-phone QA dependencies
+        run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve original roads, bridges, armies, touch and camera tests
+        run: |
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+          python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve V203 fail-closed photographic detail gate (RED until West/South art actually improves)
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v214-original-phone-road-and-STRICT-art-RED
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

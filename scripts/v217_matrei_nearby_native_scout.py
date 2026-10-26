@@ -91,7 +91,7 @@ def verify_plan(manifest):
     return True
 
 def native_jpeg(data):
-    require(len(data) > 500 and data[:2] == b"\\xff\\xd8",
+    require(len(data) > 500 and data[:2] == b"\xff\xd8",
             "native JPEG required")
     with Image.open(io.BytesIO(data)) as im:
         require(im.format == "JPEG" and im.size == (256, 256),
@@ -172,7 +172,7 @@ def build(folder):
     image.save(folder / "matrei-nearby-native-contact.png")
     manifest["contactFile"] = "matrei-nearby-native-contact.png"
     manifest["contactSha256"] = sha((folder / manifest["contactFile"]).read_bytes())
-    (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\\n")
+    (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     verify(folder)
 
 def verify(folder):

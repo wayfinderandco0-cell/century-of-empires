@@ -104,6 +104,18 @@ try:
                             assert page.evaluate("(p)=>V192.roadDistance(p)",p)<.001
                             assert page.evaluate("V192.productionApproved") is False
                             checked+=1
+                        # Independently located V121 bridge-neighborhood cases:
+                        # old global-nearest-node snapping chose an adjacent
+                        # road vertex instead of the closest painted segment.
+                        # Both lie within the original mobile tap tolerance.
+                        for point,target,wrong_old_vertex in (
+                            ([2072,496],[2054,519],[2052,491]),
+                            ([2080,488],[2102,508],[2052,491]),
+                        ):
+                            assert page.evaluate("(p)=>V192.tapRoadWorld(p)",point),(key,point)
+                            selected=page.evaluate("V192.route")[-1]
+                            assert math.dist(selected,target)<1e-5,(key,point,selected,target)
+                            assert math.dist(selected,wrong_old_vertex)>1,(key,point)
                         # No invisible path outside the two unverified terminal
                         # vertices: these clicks are far beyond the tap tolerance.
                         limits=page.evaluate("V192.surveyLimits")

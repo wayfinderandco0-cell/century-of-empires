@@ -18,6 +18,10 @@ The exclusion polygons were manually reviewed against actual V217 source screens
 
 First V218 native-source job in [CI 40359051126](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40359051126) passed. Downloaded and opened actual original-versus-quarantined artifact 12667012373 (not a synthetic fixture). Its native images showed the date boxes and main exclusion regions worked, but also revealed **additional visible modern track segments** in sites 03, 05 and 06 and a small top-left structure in site 08. Expanded the corresponding source-pixel masks and added four specific regression points. The revised source job must be rerun and the new actual artifact reinspected; this does not make the material historically safe.
 
+## Recovered inherited V137 browser gate
+
+First V218 full browser CI revealed a separate pre-existing test harness defect: `scripts/qa_v137_coherent.py` requested nonexistent `v137-continuous-alpine-preview.html`, timed out, and prevented the later unchanged movement/art gates from executing. The actual retained file is `v137-coherent-alpine-preview.html`. Updated only that stale test URL on this isolated branch, leaving every fail-closed geometry, screenshot, route and movement assertion intact. Subsequent CI must confirm V137 and later gates actually execute. No gameplay or V137 renderer code changed.
+
 ## Non-negotiable interpretation
 
 Modern 2023 aerial images are **NOT** evidence of exact 1780 forest boundaries, historic roads, bridges, traversability or V121/V123 photo coordinates. This source quarantine does not register any of the three game octagons. No new source pixels are placed in the game; original 1536×1024 Matrei art and V121/V123 control geometry remain unchanged. No claims of game art approval, physical iPhone approval, or production readiness.

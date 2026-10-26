@@ -171,6 +171,36 @@ JS_WORLD_SEAMS = r"""() => {
 }"""
 
 
+# V201: independent world-positioned underlay probe. The road's decorative
+# grass/dust shoulders must stop at the same tile boundary as V198 road paint.
+# This catches V200's round-cap halo crossing into Matrei even if the final
+# opaque Matrei photograph conceals it in one particular camera screenshot.
+JS_SCENIC_VERGE_SEAMS = r"""() => {
+ const probe=(name)=>{
+  const tile=atlas.tiles.find(t=>t.id===name);
+  const seam=name==='west'?[1536,478]:[2002,1024];
+  const pts=name==='west'?tile.roads.east:tile.roads.north;
+  const canvas=document.createElement('canvas');canvas.width=240;canvas.height=240;
+  const g=canvas.getContext('2d',{willReadFrequently:true});
+  g.translate(120-seam[0],120-seam[1]);
+  paintScenicRoadVerge(g,tile,pts);
+  g.setTransform(1,0,0,1,0,0);
+  const pixels=g.getImageData(0,0,240,240).data;
+  const alpha=(x,y)=>pixels[(y*240+x)*4+3];
+  let inside=0,escaped=0;
+  for(let d=5;d<=25;d+=5){
+   const inX=name==='west'?120-d:120,inY=name==='south'?120+d:120;
+   const outX=name==='west'?120+d:120,outY=name==='south'?120-d:120;
+   if(alpha(inX,inY)>0)inside++;
+   if(alpha(outX,outY)>0)escaped++;
+  }
+  return {pass:inside===5&&escaped===0,inside,escaped,
+   exactV123Seam:seam,sourceRoadAndMovementUnchanged:true};
+ };
+ const west=probe('west'),south=probe('south');
+ return {pass:west.pass&&south.pass,west,south,artApproved:false};
+}"""
+
 # V197: test the FINAL composited screen pixels, not just offscreen painters.
 # A source photo, label, clip or later layer could conceal a correct offscreen
 # stroke. Sample both real seams at close phone zoom with the debug overlay off.
@@ -233,6 +263,8 @@ def main():
                             assert world_seams["pass"], (engine,orient,world_seams)
                             composite_seams=page.evaluate(JS_COMPOSITED_SEAMS)
                             assert composite_seams["pass"], (engine,orient,composite_seams)
+                            scenic_verges=page.evaluate(JS_SCENIC_VERGE_SEAMS)
+                            assert scenic_verges["pass"], (engine,orient,scenic_verges)
                             assert not errors,(engine,orient,errors)
                             page.evaluate("V192.focusTile('west')")
                             page.evaluate("V192.zoomTo(6)")
@@ -245,6 +277,7 @@ def main():
                             result["matreiNeighborSeams"]=seam
                             result["worldPositionedSeams"]=world_seams
                             result["compositedSeams"]=composite_seams
+                            result["scenicVergeSeams"]=scenic_verges
                             results[f"{engine}-{orient}"]=result
                         finally:page.close()
                 finally:browser.close()

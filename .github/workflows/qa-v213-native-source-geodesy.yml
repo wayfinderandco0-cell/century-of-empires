@@ -1,0 +1,100 @@
+name: V213 Native Source WGS84 Review (strict game art remains RED)
+on:
+  push:
+    branches: ['terrain-v213-native-source-geodesy-20261026']
+    paths:
+      - 'scripts/qa_v213_authentic_geo_mobile.py'
+      - 'scripts/qa_v213_geo_review_ui.py'
+      - 'scripts/test_v213_source_geodesy.js'
+      - 'terrain-grid/v213-source-geodesy.js'
+      - 'v213-landmark-geographic-review.html'
+      - '.github/workflows/qa-v213-authentic-source-mobile.yml'
+      - 'docs/v213-authentic-source-mobile-evidence.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-landmark-invariants:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve geographic and original V121/V123 evidence gates
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+          python scripts/test_v208_source_game_frame_audit.py
+          python scripts/test_v209_landmark_tiepoint_intake.py
+      - name: Native XYZ-to-WGS84 and geographic approval barriers
+        run: node scripts/test_v213_source_geodesy.js
+      - name: Require missing independent landmarks to remain unapproved
+        run: |
+          python scripts/v209_landmark_tiepoint_intake.py --report qa/v213-landmark-intake/report.json
+          python -c "import json; r=json.load(open('qa/v213-landmark-intake/report.json')); assert r['registrationStatus']=='BLOCKED_MISSING_REAL_TIEPOINTS' and not r['sourceRegisteredToV123']"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v213-geographic-registration-BLOCKED
+          path: qa/v213-landmark-intake/
+          retention-days: 7
+  authentic-modern-source-mobile-captures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free native-source and mobile-browser QA
+        run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Download and SHA-audit REAL 12 source tiles, render original V192 and capture four mobile layouts
+        run: python scripts/qa_v213_authentic_geo_mobile.py
+      - name: Four-layout synthetic UI negative controls (not authentic source)
+        run: python scripts/qa_v213_geo_review_ui.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v213-REAL-modern-source-geodesy-NOT-game-art
+          path: |
+            qa/v213-authentic-source-phone/
+            qa/v213-review-ui/
+          retention-days: 7
+  inherited-game-and-strict-art-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original phone QA dependencies
+        run: |
+          python -m pip install pillow playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve original road, bridge, army and camera QA
+        run: |
+          python scripts/qa_v194_cartway_pigment.py
+          python scripts/qa_v192_cartways.py
+          python scripts/qa_v193_camera_coverage.py
+          python scripts/qa_v201_touch_camera_cache.py
+          python scripts/qa_v202_road_segment_taps.py
+          python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Preserve strict V203 photo microstructure (expected RED until art replaced)
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v213-original-game-and-STRICT-art-RED
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+            qa/v202-road-segment-taps/
+          retention-days: 7

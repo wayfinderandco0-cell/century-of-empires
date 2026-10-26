@@ -1,0 +1,45 @@
+name: V221 Native Photo Detail Evidence (ART NOT APPROVED)
+on:
+  push:
+    branches: ['terrain-v221-native-vs-phone-detail-audit-20261026']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-pixel-diagnostic:
+    name: Measure true source pixels, never waive artwork acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image decoder
+        run: python -m pip install pillow
+      - name: Compile script and verify source-vs-Matrei at native size
+        run: |
+          python -m py_compile scripts/qa_v221_source_detail.py
+          python scripts/qa_v221_source_detail.py --output qa/v221-source-detail
+      - name: Keep all geography, period and artistic approval flags FALSE
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('qa/v221-source-detail/report.json').read_text())
+          assert r['version']==221
+          assert all(value is False for value in r['approval'].values())
+          assert set(r['nativeMetrics'])=={'west','matrei','south'}
+          assert all(r['nativeMetrics'][region]['native_sample_pixels']>100000
+                     for region in ('west','matrei','south'))
+          assert (Path('qa/v221-source-detail/native-source-contact.jpg')).is_file()
+          for region in ('west','south'):
+              print(region, r['nativeRelativeToMatrei'][region])
+          print('DIAGNOSTIC ONLY - V203 live phone screenshot art gate remains RED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v221-unaltered-native-source-detail-and-contact
+          path: qa/v221-source-detail/
+          retention-days: 7

@@ -80,8 +80,7 @@ def positive(tmp):
     assert all(x["v97ApproxElevationM"]>=1100 for x in r["sites"])
     assert 100<r["v97GridApproxCellMeters"][0]<200
     assert 200<r["v97GridApproxCellMeters"][1]<250
-    assert all(k is False for k in ("gameArtApproved","productionApproved")
-               for _ in [r[k]])
+    assert all(r[k] is False for k in ("gameArtApproved","productionApproved"))
     im=tmp/"relief.webp";Image.new("RGB",tuple(v.SIZE),(90,105,90)).save(im)
     out=tmp/"review.png";v.render_map(r,im,out)
     with Image.open(out) as picture:

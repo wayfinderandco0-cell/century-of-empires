@@ -137,9 +137,14 @@ def capture(mapping, tiles, manifest):
                                 paired = page.evaluate("V213.observations.matches[V213.cell]")
                                 assert len(paired) == 1, (key, cell, paired)
                                 geo = paired[0]["sourceGeo"]
-                                native = {"west": [139399, 92096, 18],
-                                          "matrei": [139401, 92096, 18],
-                                          "south": [139401, 92098, 18]}[cell]
+                                origin = {"west": [139398, 92095],
+                                          "matrei": [139400, 92095],
+                                          "south": [139400, 92097]}[cell]
+                                offset = {"west": [0, 0], "matrei": [512, 0],
+                                          "south": [512, 512]}[cell]
+                                pixel = paired[0]["sourceContactXY"]
+                                native = [origin[0] + int((pixel[0] - offset[0]) // 256),
+                                          origin[1] + int((pixel[1] - offset[1]) // 256), 18]
                                 assert geo["nativeXYZ"] == native
                                 assert geo["gameGeographyVerified"] is False
                                 assert geo["historicalGeographyVerified"] is False

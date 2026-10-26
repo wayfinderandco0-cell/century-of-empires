@@ -1,0 +1,63 @@
+name: V204 Contiguous Modern Matrei Source Proof (GAME ART STILL RED)
+on:
+  push:
+    branches: ['terrain-v204-contiguous-matrei-source-grid-20261025']
+    paths:
+      - 'scripts/v204_contiguous_matrei_sources.py'
+      - 'scripts/test_v204_contiguous_matrei_sources.py'
+      - '.github/workflows/qa-v204-contiguous-matrei-sources.yml'
+      - 'v192-weathered-cartways-graphics-test.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-native-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free Pillow dependency
+        run: python -m pip install pillow
+      - name: Test exact native XYZ, source integrity and negative approvals
+        run: python scripts/test_v204_contiguous_matrei_sources.py
+      - name: Fetch 12 genuine adjacent source JPEGs and build pixel-faithful L reference
+        run: python scripts/v204_contiguous_matrei_sources.py --download
+      - name: Reconstruct and independently verify all native RGB panels and source hashes
+        run: python scripts/v204_contiguous_matrei_sources.py --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v204-real-contiguous-matrei-modern-source-reference
+          path: qa/v204-contiguous-matrei-source/
+          retention-days: 7
+  existing-game-visual-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing free four-browser QA dependencies
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve V123 painted road pixel proof
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Preserve bridge route and segment tap proof
+        run: python scripts/qa_v202_road_segment_taps.py
+      - name: Preserve actual three-center screenshots and inherited parity
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Keep V203 strict photographic microstructure gate FAIL-CLOSED
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v204-unchanged-game-screenshots-strict-visual-gate
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+          retention-days: 7

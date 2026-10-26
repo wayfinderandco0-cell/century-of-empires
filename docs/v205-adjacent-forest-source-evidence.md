@@ -23,3 +23,6 @@ Native zoom-18 source origins: WEST [139398,92095,18], CENTER [139400,92095,18],
 The second V205 workflow job independently enforces the unchanged V203 strict game-art screenshot gate; it must remain RED until the playable WEST/SOUTH images genuinely improve. **No approval flags were changed.**
 
 **Next code task:** source-native, manually auditable exclusion masks for the visible modern tracks and date stamps; harvest only clean natural-cover RGB patches, retain their real coordinates and source hashes, and never inpaint or assign them false V123 positions.
+
+## Final V205 GitHub Actions outcome
+[Run 40269057347](https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/40269057347) completed **FAILURE BY DESIGN**: the real contiguous-forest source acquisition, V204/V205 negative controls and RGB integrity checks all **PASSED**. The separate unchanged-game browser job passed V202 original route/bridge taps and V192 three-center screenshot parity, then the **strict V203 photographic microstructure gate FAILED**. That is the correct result: natural source imagery has not yet been integrated into WEST/SOUTH game art, so the playable artwork remains visually rejected. No gate was weakened and no approval flag was set.

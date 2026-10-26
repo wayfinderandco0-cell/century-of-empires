@@ -47,6 +47,8 @@ jobs:
           git add terrain-v222/assets/
           if ! git diff --cached --quiet; then
             git commit -m "V222: pin two distinct original-painting material study cells [skip ci]"
+            git fetch origin terrain-v222-original-painting-material-quilt-20261026
+            git rebase origin/terrain-v222-original-painting-material-quilt-20261026
             git push origin HEAD:refs/heads/terrain-v222-original-painting-material-quilt-20261026
           fi
   four-browser-painted-neighbors:

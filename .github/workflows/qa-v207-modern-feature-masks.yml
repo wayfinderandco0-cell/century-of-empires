@@ -1,0 +1,93 @@
+name: V207 Conservative Modern Source Exclusions (GAME ART STILL RED)
+on:
+  push:
+    branches: ['terrain-v207-conservative-modern-feature-masks-20261026']
+    paths:
+      - 'scripts/v207_conservative_modern_masks.py'
+      - 'scripts/test_v207_conservative_modern_masks.py'
+      - '.github/workflows/qa-v207-modern-feature-masks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-exclusion-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow
+      - name: Preserve V204/V205/V206 native-source negative controls
+        run: |
+          python scripts/test_v204_contiguous_matrei_sources.py
+          python scripts/test_v205_adjacent_forest_materials.py
+          python scripts/test_v206_audited_natural_cover.py
+          python scripts/test_v207_conservative_modern_masks.py
+      - name: Acquire original 12 native modern-source tiles
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --download --output qa/v207-source
+      - name: Independently verify original source pixels and coordinates
+        run: python scripts/v204_contiguous_matrei_sources.py --site forest --verify --output qa/v207-source
+      - name: Build exclusion masks without replacing source pixels
+        run: python scripts/v207_conservative_modern_masks.py --source qa/v207-source --output qa/v207-exclusions
+      - name: Verify mask geometry and untouched source RGB
+        run: python scripts/v207_conservative_modern_masks.py --source qa/v207-source --output qa/v207-exclusions --verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v207-original-sources-and-exclusion-mask-review
+          path: |
+            qa/v207-source/
+            qa/v207-exclusions/
+          retention-days: 7
+  inherited-phone-route-camera-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve original Matrei road pigment, source geometry and crossing
+        run: python scripts/qa_v194_cartway_pigment.py
+      - name: Verify painted roads and original V123 army paths
+        run: python scripts/qa_v192_cartways.py
+      - name: Four mobile browser/orientation layouts and three-center screenshots
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Verify camera bounds
+        run: python scripts/qa_v193_camera_coverage.py
+      - name: Verify original bridge/road segment taps
+        run: python scripts/qa_v202_road_segment_taps.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v207-unchanged-game-four-phone-layout-screenshots
+          path: qa/v192-three-centers/
+          retention-days: 7
+  strict-visual-art-must-remain-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium webkit
+      - name: Real Chromium/WebKit portrait and landscape screenshot capture
+        run: python scripts/qa_v192_terrain_parity.py --capture --enforce
+      - name: Strict V203 photographic-detail parity is NOT waived
+        run: python scripts/qa_v203_canopy_structure.py --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v207-unchanged-game-strict-art-rejection
+          path: |
+            qa/v192-three-centers/
+            qa/v203-canopy-structure/
+          retention-days: 7

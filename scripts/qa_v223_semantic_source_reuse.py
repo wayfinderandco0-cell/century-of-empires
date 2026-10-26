@@ -105,9 +105,9 @@ def heatmap(counts, path):
         rgb = Image.new("RGB", small.size)
         a = np.asarray(small)
         data = np.zeros((a.shape[0], a.shape[1], 3), dtype=np.uint8)
-        data[:, :, 0] = a
-        data[:, :, 1] = np.where(a > 0, 145, 22)
-        data[:, :, 2] = np.where(a > 0, 45, 30)
+        data[:, :, 0] = np.where(a >= 126, 235, np.where(a > 0, 45, 12))
+        data[:, :, 1] = np.where(a >= 126, 40, np.where(a > 0, 175, 22))
+        data[:, :, 2] = np.where(a >= 126, 35, np.where(a > 0, 55, 30))
         rgb = Image.fromarray(data, "RGB")
         tiles.append((source, rgb))
     out = Image.new("RGB", (max(im.width for _, im in tiles), sum(im.height + 34 for _, im in tiles)), "#1b241c")

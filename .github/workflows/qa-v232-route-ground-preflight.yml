@@ -35,7 +35,8 @@ jobs:
         with:
           name: v232-actual-source-route-obstructions-ART-NOT-APPROVED
           path: |
-            qa/v232-road-ground/\n            terrain-v232/native-crops/native-source-manifest.json
+            qa/v232-road-ground/
+            terrain-v232/native-crops/native-source-manifest.json
           retention-days: 7
       - name: Keep art gate RED if both original cartways cannot be grounded
         run: |

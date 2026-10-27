@@ -21,7 +21,7 @@ const V227=require('../terrain-grid/v227-art-ingest.js');
  assert.equal(V227.validateContract(contract),true);
  assert.throws(()=>V227.validateContract({...contract,version:227}),/contract/);
  assert.throws(()=>V227.validateContract({...contract,productionApproved:true}),/contract/);
- assert.throws(()=>V227.validateContract({...contract,cells:contract.cells.slice(0,1)}),/contract/);
+ assert.throws(()=>V227.validateContract({...contract,cells:contract.cells.slice(0,1)}),/two neighbor/);
  assert.throws(()=>V227.validateContract({...contract,cells:contract.cells.map(c=>({...c,origin:[9,9]}))}),/origin/);
  const sample=Buffer.alloc(256,42);
  const file=new Blob([sample],{type:'image/png'});

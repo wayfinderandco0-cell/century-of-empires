@@ -172,10 +172,24 @@
   strokes.forEach(pts=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p));g.stroke();});
   g.restore();
  }
+ const RASTER_CACHE=new Map();
  function paint(ctx,atlas){
   assertAtlas(atlas);
   if(!ctx||typeof ctx.save!=='function'||typeof ctx.createLinearGradient!=='function')throw Error('V236 canvas context required');
-  for(const id of ['west','south'])landscape(ctx,atlas.tiles.find(t=>t.id===id));
+  for(const id of ['west','south']){
+   const tile=atlas.tiles.find(t=>t.id===id);
+   if(typeof document==='object'&&typeof document.createElement==='function'&&typeof ctx.drawImage==='function'){
+    let image=RASTER_CACHE.get(id);
+    if(!image){
+     image=document.createElement('canvas');image.width=SIZE[0];image.height=SIZE[1];
+     const off=image.getContext('2d',{alpha:true});
+     if(!off)throw Error('V236 offscreen canvas unavailable');
+     landscape(off,{...tile,origin:[0,0]});
+     RASTER_CACHE.set(id,image);
+    }
+    ctx.drawImage(image,...tile.origin);
+   }else landscape(ctx,tile); // headless geometry-unit-test fallback
+  }
   return Object.freeze({cells:2,version:236,kind:'FICTIONAL_AUTHORED_ALPINE_STUDY',...FALSE});
  }
  return Object.freeze({version:236,paint,assertAtlas,hashPoints,ROAD,approvals:FALSE});

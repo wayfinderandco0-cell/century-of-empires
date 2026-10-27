@@ -1,0 +1,87 @@
+name: V238 Native Meadow Cartway Bake (ART RED)
+on:
+  push:
+    branches: ['terrain-v238-native-meadow-cartway-bake-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v238-native-cartway
+  cancel-in-progress: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-art-and-conditional-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install necessary source-image dependencies only
+        run: python -m pip install pillow numpy opencv-python-headless requests
+      - name: Read verified WEST CC0 native crop from previous GitHub Actions evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/v237-source
+          gh run download 40488601990 --repo wayfinderandco0-cell/century-of-empires \
+            --name v237-cc0-photo-source-and-mobile-UNAPPROVED \
+            --dir /tmp/v237-source
+          test -s /tmp/v237-source/terrain-v237/generated/west-cc0-native.webp
+      - name: Verify immutable V123 graph and synthetic positive/negative tests
+        run: |
+          python -m py_compile scripts/v238_bake_native_cartways.py scripts/test_v238_native_cartway.py scripts/qa_v238_native_cartway.py
+          python scripts/test_v238_native_cartway.py
+          node scripts/test_v236_authored_alpine.js
+      - name: Bake WEST native meadow cartway and one new independently pinned SOUTH photo
+        id: bake
+        continue-on-error: true
+        run: |
+          python scripts/v238_bake_native_cartways.py \
+            --west /tmp/v237-source/terrain-v237/generated/west-cc0-native.webp
+      - name: Necessary physical-ground preflight (never art approval)
+        id: ground
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path('qa/v238-native-cartway/report.json')
+          ok=p.exists() and json.loads(p.read_text()).get('bothNecessaryGroundGatesPass',False)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('pass='+str(ok).lower()+'\n')
+          print('Both photographic ground gates:',ok,'PRODUCTION: RED')
+          PY
+      - name: Install browser dependencies ONLY for a two-cell necessary-ground pass
+        if: steps.ground.outputs.pass == 'true'
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Four Chromium/WebKit phone configurations, exact routing, movement and Matrei parity
+        if: steps.ground.outputs.pass == 'true'
+        run: python scripts/qa_v238_native_cartway.py
+      - name: Unchanged strict V203 microstructure on actual browser screenshots
+        if: steps.ground.outputs.pass == 'true'
+        continue-on-error: true
+        run: |
+          python scripts/qa_v203_canopy_structure.py \
+            --screenshots qa/v238-native-cartway \
+            --output qa/v238-strict-v203 --enforce
+      - name: Upload original-source diagnostics, baked-road review and conditional screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v238-native-meadow-cartway-UNAPPROVED
+          path: |
+            qa/v238-native-cartway/
+            qa/v238-strict-v203/
+            terrain-v238/generated/*.webp
+            v238-native-cartway-playtest.html
+          retention-days: 14
+      - name: Production stays RED until V203, human art, bridge banks and source tiepoints
+        if: always()
+        run: |
+          echo "V238 source pixels and cartway geometry do not establish 1780 history."
+          echo "No V209 natural tiepoints, bridge banks or user visual approval."
+          exit 1

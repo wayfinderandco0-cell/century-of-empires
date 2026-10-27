@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install image-test dependencies
-        run: python -m pip install pillow numpy opencv-python-headless
+        run: python -m pip install pillow numpy opencv-python-headless requests
       - name: Verify new geometry, earth evidence, source and negative controls
         run: |
           python -m py_compile scripts/v240_cartway_trace_registration.py scripts/test_v240_cartway_trace_registration.py

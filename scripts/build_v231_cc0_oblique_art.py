@@ -10,7 +10,7 @@ import numpy as np
 import requests
 from PIL import Image
 from build_v229_austrian_source_art import ROADS, SIZE, FALSE_FLAGS, assert_immutable_roads
-from build_v230_grounded_alpine_art import ground_contact, choose_meadow_strip
+from build_v230_grounded_alpine_art import ground_contact
 
 SOURCES = {
   "west": {
@@ -47,6 +47,27 @@ def download(info):
     return np.asarray(image),hashlib.sha256(raw).hexdigest()
   raise RuntimeError("Source unavailable; no unverified substitution")
 
+def choose_source_ground_strip(original):
+  """Find ONE native, nonrepeating 1536x112 meadow strip within actual source bounds.
+  Does not choose scene crops or infer 1780 roads. Never resample a shorter strip.
+  """
+  height,width=original.shape[:2]
+  if width<1536 or height<112: raise ValueError("Source too small for native strip")
+  best=None
+  for y in range(0,height-112+1,180):
+    for x in range(0,width-1536+1,260):
+      strip=original[y:y+112,x:x+1536]
+      if strip.shape!=(112,1536,3): continue
+      hsv=cv2.cvtColor(cv2.resize(strip,(384,28),interpolation=cv2.INTER_AREA),cv2.COLOR_RGB2HSV)
+      hue,sat,val=cv2.split(hsv)
+      meadow=((hue>=25)&(hue<=90)&(sat>=26)&(val>=35)&(val<=225))
+      score=float(meadow.mean())
+      if best is None or score>best[0]:best=(score,x,y)
+  if best is None or best[0]<.22:
+    raise ValueError("STOP: no suitable source-ground strip; do not paste sky/rock as roadbed")
+  score,x,y=best
+  return original[y:y+112,x:x+1536].copy(),[x,y,x+1536,y+112]
+
 def build(output):
   assert_immutable_roads()
   output.mkdir(parents=True,exist_ok=True)
@@ -59,7 +80,7 @@ def build(output):
     scene=original[crop[1]:crop[3],crop[0]:crop[2]].copy()
     # Single nonrepeating 1536px native ground strip follows unchanged V123 points.
     # This is illustrative and does NOT prove a real historical cartway or roadbank.
-    meadow,strip=choose_meadow_strip(original,crop)
+    meadow,strip=choose_source_ground_strip(original)
     prepared=ground_contact(scene,meadow,ROADS[cell])
     filename=cell+"-austrian-natural-cover-v231.webp"
     path=output/filename

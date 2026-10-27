@@ -11,6 +11,8 @@ assert.equal(hash('v121-octagon-1-painted-road.html'),'4c6aa5cda9e7c359b6d2a49d5
 assert.match(source,/id="nativeRoadReview"/);
 assert.match(source,/if\(!ready\|\|rawArtReview\)return false/);
 assert.match(source,/if\(last&&moving&&!rawArtReview\)/);
+assert.match(source,/function halt\(\)\{if\(rawArtReview\)return false/);
+assert.match(source,/progress\(f\)\{if\(rawArtReview\)return army\?\.slice\(\)/);
 assert.match(source,/if\(!rawArtReview\|\|!imported\)/);
 assert.match(source,/cx\.setLineDash\(\[7,9\]\)/);
 assert.match(source,/ids\.includes\('west'\).*ids\.includes\('south'\)/);

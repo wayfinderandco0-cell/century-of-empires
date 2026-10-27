@@ -1,0 +1,47 @@
+name: V250 Independent Original-Pixel Road Trace (ART RED)
+on:
+  push:
+    branches: ['terrain-v250-independent-physical-road-trace-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v250-original-pixel-trace
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  source-road-annotation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free browser dependencies
+        run: |
+          python -m pip install pillow numpy playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Immutable road/Matrei and source-preview regressions
+        run: |
+          node scripts/test_v249_pinned_source_art_review.js
+          node scripts/test_v248_native_cartway_review.js
+          node scripts/test_v242_photo_art_import.js
+          python -m py_compile scripts/qa_v250_independent_source_trace.py
+      - name: Four real browser synthetic source-road trace and screenshots
+        run: python scripts/qa_v250_independent_source_trace.py
+      - name: Preserve actual browser screenshots and fail-closed report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v250-original-road-annotation-SYNTHETIC-ART-RED
+          path: qa/v250-independent-trace/
+          retention-days: 14
+      - name: Production gate deliberately RED
+        if: always()
+        run: |
+          echo "V250 is a source-road annotation tool, not completed WEST/SOUTH art."
+          echo "Independent road verification, 1780 history, source licenses, bridge banks, V203, physical iPhone and user acceptance remain unverified."
+          exit 1

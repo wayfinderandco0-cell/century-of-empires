@@ -21,11 +21,11 @@ SOURCES = {
     "author": "Stijn te Strake", "place": "Schoenenbach, Bezau, Austria",
   },
   "south": {
-    "title": "Alpine valley (Unsplash).jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Alpine_valley_%28Unsplash%29.jpg",
-    "sourceSha1": "29667d44329ad6a36ce8f881e16dbcc51f8995db",
-    "dimensions": [5472, 3078], "crop": [2400, 1550, 3936, 2574],
-    "author": "Paul Gilmore", "place": "Brandenberg Alps, Austria",
+    "title": "Turquoise mountain lake (Unsplash).jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Turquoise_mountain_lake_%28Unsplash%29.jpg",
+    "sourceSha1": "776d4f0f7959d1ee1f14dfdc10ae8c3113a2ace1",
+    "dimensions": [6000, 4000], "crop": [0, 0, 1536, 1024],
+    "author": "Volker Schnäbele", "place": "Triebental, Austria",
   },
 }
 KIND = "UNAPPROVED_DISTINCT_CC0_OBLIQUE_AUSTRIAN_ART"

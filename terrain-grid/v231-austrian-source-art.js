@@ -23,11 +23,11 @@
   FALSE.forEach(k=>requireTrue(m[k]===false,'false approval '+k));
   requireTrue(m.sources&&Object.keys(m.sources).sort().join(',')==='south,west','exactly two sources');
   requireTrue(m.sources.west.sourceSha256!==m.sources.south.sourceSha256,'duplicate source');
-  const names={west:'Forested mountain valley (Unsplash).jpg',south:'Alpine valley (Unsplash).jpg'};
+  const names={west:'Forested mountain valley (Unsplash).jpg',south:'Turquoise mountain lake (Unsplash).jpg'};
   for(const id of IDS){
    const s=m.sources[id];
-   requireTrue(s.title===names[id]&&s.author===(id==='west'?'Stijn te Strake':'Paul Gilmore'),'author/source identity '+id);
-   const sourceSha1={west:'4a01fd2356056ceea1bfdf0374751040fdbd0145',south:'29667d44329ad6a36ce8f881e16dbcc51f8995db'};
+   requireTrue(s.title===names[id]&&s.author===(id==='west'?'Stijn te Strake':'Volker Schnäbele'),'author/source identity '+id);
+   const sourceSha1={west:'4a01fd2356056ceea1bfdf0374751040fdbd0145',south:'776d4f0f7959d1ee1f14dfdc10ae8c3113a2ace1'};
    requireTrue(s.sourceSha1===sourceSha1[id],'pinned Commons source SHA1 '+id);
    requireTrue(s.license==='CC0 1.0'&&s.licenseUrl==='https://creativecommons.org/publicdomain/zero/1.0/','attribution '+id);
    requireTrue(SHA.test(s.sourceSha256)&&SHA.test(s.outputSha256),'hash '+id);

@@ -1,0 +1,56 @@
+name: V236 Authored Alpine Physical Corridor Art (PRODUCTION RED)
+on:
+  push:
+    branches: ['terrain-v236-authored-physical-corridor-art-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v236-authored-alpine
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  authored-terrain-and-four-browser-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browser screenshot dependencies (no paid services)
+        run: |
+          python -m pip install pillow numpy playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Original V121/V123 art and graph integrity plus V236 authored-scene negative controls
+        run: |
+          node scripts/test_v236_authored_alpine.js
+          node scripts/test_v227_art_ingest.js
+      - name: Inherited graph, camera, touch and road segment regressions
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: Actual four Chromium/WebKit phone layouts and Matrei pixel preservation
+        run: python scripts/qa_v236_authored_alpine.py
+      - name: UNCHANGED V203 photographic microstructure check (diagnostic, cannot approve art)
+        id: v203
+        continue-on-error: true
+        run: python scripts/qa_v203_canopy_structure.py --screenshots qa/v236-authored-alpine --output qa/v236-strict-v203 --enforce
+      - name: Publish actual rendered screenshots and V203 report for human inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v236-fictional-two-cell-art-and-four-browser-UNAPPROVED
+          path: |
+            qa/v236-authored-alpine/
+            qa/v236-strict-v203/
+            qa/v202-road-segment-taps/
+          retention-days: 14
+      - name: Production stays RED without source registration, period roads, verified banks and user visual acceptance
+        if: always()
+        run: |
+          echo "V203 numeric result is diagnostic only; no metric establishes visual or historical approval."
+          echo "Fictional art, original V209 tiepoints, historic cartways, bridge banks and user iPhone approval unverified."
+          exit 1

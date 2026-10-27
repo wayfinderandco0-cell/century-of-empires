@@ -1,0 +1,13 @@
+# V245 SOUTH north-entry native cartway registration — experimental / NOT APPROVED
+
+**Observed blocker:** V244's monotone-x landscape warp cannot process the immutable SOUTH V123 route because its first two points have the same x coordinate (466) and it enters from y=0. This is a real geometric limitation, not an invitation to edit the road graph.
+
+**New executable experiment:** `scripts/v245_south_2d_native_warp.py` samples an **independently traced** physical road and the immutable V123 SOUTH polyline by normalized arc length, then performs a two-dimensional inverse image warp. Original source road pixels and adjacent ground are moved together; the script never paints a new road. Nearest-road displacement fades into the unmodified surrounding image. The code rejects excessive arc-length stretch, >155px displacement, local folding (Jacobian <0.24), or <99.7% original pixel coverage. V123 is Git-blob pinned through V243. The source-image SHA256 and explicit road-annotation provenance are required for real source input.
+
+**Visual evidence:** CI generates a native 1536x1024 synthetic diagnostic (not photographic game art) with a road starting at the top border, and overlays the exact V123 SOUTH centerline on the warped output. Inspect actual artifact pixels before judging geometry. A synthetic diagnostic is *not* source-proven geography, a period road, a verified bridge bank, or playable artwork.
+
+**Actual art remains blocked:** No independently traced, licensed SOUTH source with a physically existing north-entry road and matching bridge banks has passed. No full WEST+SOUTH pair is approved. The prior V244 WEST fictional photo overran its survey endpoint by 275px. Do not promote either image, reuse an unsuitable modern photo, invent tiepoints, extend a road past its survey limit, or change Matrei/army sprites/V94/saves/V121/V123. V203 visual thresholds, four Chromium/WebKit iPhone configurations, human screenshot inspection, and explicit user acceptance are still required.
+
+**Source/geographic status:** V209 natural tiepoints remain unverified; a successful mathematical warp is not geographic registration. All source license, 1780 road, bridge-bank, user acceptance and production flags are **FALSE**. Main remains unchanged. Production remains deliberately **RED**.
+
+**Next:** Independently source and annotate a distinct SOUTH image with genuine native north-entry cartway; run this remap and inspect physical bridge-bank continuity. Reject source if the fold, road survey, provenance, modern-feature, or visual tests fail. Only after a qualifying WEST+SOUTH pair exists should V242 gameplay import and four-browser strict V203 be run.

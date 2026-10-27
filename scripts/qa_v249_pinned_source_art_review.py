@@ -93,7 +93,7 @@ def run():
                         assert page.evaluate("(id)=>V192.focusTile(id)", tile)
                         page.evaluate("V192.zoomTo(3.3)")
                         assert page.evaluate("V192.snapshotForReview()")
-                        page.screenshot(path=str(OUT / f"{key}-{tile}-raw-UNAPPROVED.png"),
+                        page.screenshot(path=str(OUT / f"{key}-{tile}-close.png"),
                                         animations="disabled")
                     assert page.evaluate("V192.setRawArtReview(false)") is True
                     assert page.evaluate("V192.orderTo('south')") is True
@@ -126,7 +126,7 @@ def run():
                 browser.close()
     finally:
         server.shutdown()
-    imgs = [OUT / f"webkit-portrait-{tile}-raw-UNAPPROVED.png"
+    imgs = [OUT / f"webkit-portrait-{tile}-close.png"
             for tile in ("west", "matrei", "south")]
     if all(p.exists() for p in imgs):
         sheet = Image.new("RGB", (1170, 680), "#14241e")

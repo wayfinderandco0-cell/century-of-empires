@@ -1,0 +1,53 @@
+name: V249 Pinned URL Art Pair iPhone Review (ART RED)
+on:
+  push:
+    branches: ['terrain-v249-pinned-iphone-art-preview-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v249-pinned-iphone-art
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  pinned-pair-four-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free browser and image testing dependencies
+        run: |
+          python -m pip install pillow numpy playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: SHA-pinned source validation and immutable V123/Matrei regressions
+        run: |
+          node scripts/test_v249_pinned_source_art_review.js
+          node scripts/test_v248_native_cartway_review.js
+          node scripts/test_v242_photo_art_import.js
+          node scripts/test_v227_art_ingest.js
+          python -m py_compile scripts/qa_v249_pinned_source_art_review.py
+      - name: Real iPhone-sized Chromium and WebKit source pair inspection screenshots
+        run: python scripts/qa_v249_pinned_source_art_review.py
+      - name: Strict V203 remains diagnostic and does not approve artwork
+        continue-on-error: true
+        run: python scripts/qa_v203_canopy_structure.py --screenshots qa/v249-pinned-source-review --output qa/v249-strict-v203 --enforce
+      - name: Preserve actual browser evidence and metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v249-pinned-two-cell-iphone-UNAPPROVED
+          path: |
+            qa/v249-pinned-source-review/
+            qa/v249-strict-v203/
+          retention-days: 14
+      - name: Keep production RED pending real art, geography, bridge banks and human approval
+        if: always()
+        run: |
+          echo "V249 is a SHA-pinned source transport and raw-art inspection tool, not accepted WEST/SOUTH artwork."
+          echo "Historical routes, source tiepoints, bridge banks, physical iPhone and user acceptance remain unverified."
+          exit 1

@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Century of Empires · V192 Historical Cartway Surface and Alpine Graphics Trial</title>
+<style>
+:root{color-scheme:dark;font:13px -apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#14231d;color:#f3e8cd}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}canvas{width:100%;height:100%;touch-action:none;display:block}
+header{position:absolute;top:max(8px,env(safe-area-inset-top));left:9px;right:9px;pointer-events:none}
+header section{display:inline-block;background:#142920e9;border:1px solid #9b8564;border-radius:8px;padding:8px 10px;box-shadow:0 3px 10px #0006}
+header strong{font:700 13px Georgia;letter-spacing:.075em}header small{display:block;margin-top:3px;color:#c9c2a8;font-size:10px}
+footer{position:absolute;left:8px;bottom:max(8px,env(safe-area-inset-bottom));right:8px;max-width:570px;border:1px solid #997d4e;border-radius:8px;background:#11271feb;padding:6px 8px;box-shadow:0 2px 14px #0008}
+#status{font-size:12px;min-height:14px;color:#f4e2b4}#hint{color:#b8b8a0;font-size:10px;margin-top:4px}
+.actions{display:flex;gap:6px;margin-top:7px;align-items:center}
+button{border:1px solid #a18a63;background:#263a2e;color:#f2e1bc;border-radius:7px;padding:7px 9px;font-size:12px;min-height:34px}
+button:active{background:#5b5138}#options{margin-left:auto}
+#menu{display:none;position:absolute;right:8px;top:73px;background:#132a21ef;border:1px solid #a18a63;border-radius:8px;padding:8px;max-width:260px;box-shadow:0 3px 18px #0008}
+#menu.open{display:grid;gap:6px}#menu small{font-size:10px;color:#c6b89e;line-height:1.5}
+@media(max-height:440px){header section{padding:5px 8px}footer{padding:5px 7px;width:fit-content;max-width:95vw}footer .actions{margin-top:3px}button{padding:4px 7px;min-height:30px}}
+</style></head><body>
+<canvas id="map" aria-label="Three adjacent Alpine octagons; tap physical roads to march across borders"></canvas>
+<header><section><strong>CENTURY OF EMPIRES</strong> · V227 OPT-IN FULL-CELL ARTWORK IMPORT STUDY
+<small>V227 local art swap · source, roads and history UNVERIFIED · NOT APPROVED</small></section></header>
+<div id="menu"><button id="whole">Whole crossing</button><button id="gotoWest">March to Western Pass</button><button id="gotoMatrei">March to Matrei</button><button id="gotoSouth">March to Southern Valley</button><button id="debug">Inspect exact roads</button><button id="artGuide">Show exact art clearance guide</button><button id="compare">Show original neighbor art</button><button id="loadWest">Load WEST 1536×1024</button><button id="loadSouth">Load SOUTH 1536×1024</button><button id="resetArt">Reset local artwork</button>
+<small>V227 imported images are LOCAL, UNSURVEYED and UNLICENSED until separately verified. Original V226 exact 52px art clearance is NOT a playable road or source-verified bank. West/South 2023 Kosovo source photographs remain REJECTED. Source attribution CC BY 4.0 · SUHEJLO. Original graph and Matrei unchanged.</small></div>
+<input id="westArt" type="file" accept="image/png,image/jpeg,image/webp" hidden><input id="southArt" type="file" accept="image/png,image/jpeg,image/webp" hidden><footer><div id="status">Loading original Matrei artwork…</div>
+<div id="hint">Default CC BY 4.0 rejected V224 source; imported art has NO VERIFIED LICENSE or geography · original V123 roads only</div>
+<div class="actions"><button id="halt">Halt unit</button><button id="center">Center army</button><button id="options">Map options</button></div></footer>
+<script src="terrain-grid/v122-seam-engine.js"></script>
+<script src="terrain-grid/v123-atlas.js"></script>
+<script src="terrain-grid/v152-survey-limits.js"></script>
+<script src="terrain-grid/v144-geo-material.js"></script>
+<script src="terrain-v224/assets/west-data.js"></script><script src="terrain-v224/assets/south-data.js"></script><script src="terrain-grid/v224-licensed-oblique-neighbors.js"></script><script src="terrain-grid/v225-cartway-ground-contact.js"></script><script src="terrain-grid/v226-artwork-contract.js"></script><script src="terrain-grid/v227-art-ingest.js"></script>
+<script>
+'use strict';
+const sourceGeoMaterial=false; // V224 licensed oblique source photos, not V144 relief
+let v224Trial=null,showPainted=true,artGuide=false,artContract=null;
+// The offscreen landmark review iframe can have setTimeout(0) clamped to
+// 1s or more. Preserve identical terrain math/pixels but use microtask yields
+// only for review captures; ordinary interactive game scheduling is unchanged.
+const reviewCapture=new URLSearchParams(location.search).has('reviewCapture');
+const terrainYield=()=>reviewCapture?Promise.resolve():new Promise(resolve=>setTimeout(resolve,0));
+let geoCrop=null;
+const W=1536,H=1024, C=document.querySelector('#map');let cx=C.getContext('2d',{alpha:false});// One photographic terrain underlay, one masked center, no repeated tiles.
+const statusEl=document.querySelector('#status'),menu=document.querySelector('#menu');
+let width=0,height=0,dpr=1,scale=1,base=.12,zoom=2.4,cam=[2320,635],ready=false,debug=false;
+let art=null,originalRoads=null,atlas=null,graph=null,surveyLimits=null,army=null,currentKey=null,path=[],pathKeys=[],pausedEdge=null,startEdge=null,travel=0,distance=0,moving=false,goal=null,last=0,renderDirty=true;
+const pointers=new Map();let gesture=null,down=null;
+const hypot=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const world=(p)=>[cam[0]+(p[0]-width/2)/scale,cam[1]+(p[1]-height/2)/scale];
+const screen=(p)=>[width/2+(p[0]-cam[0])*scale,height/2+(p[1]-cam[1])*scale];
+const nodes=()=>Array.from(graph.graph.entries());
+const tileColor=t=>t.id==='west'?'#365444':'#3a4d3c';
+function lcg(seed){let a=seed>>>0;return ()=>{a=(Math.imul(1664525,a)+1013904223)>>>0;return a/4294967296;};}
+function polygon(ctx){ctx.beginPath();ctx.moveTo(256,0);ctx.lineTo(W-256,0);ctx.lineTo(W,256);ctx.lineTo(W,H-256);ctx.lineTo(W-256,H);ctx.lineTo(256,H);ctx.lineTo(0,H-256);ctx.lineTo(0,256);ctx.closePath();}
+function paintTrack(pts,thick=19){
+ // V195: the Matrei border extensions now use the SAME roadbed widths and
+ // pigment as the adjoining V194 cartways. No path geometry or source art moves.
+ // The only callers use thick=15; these widths then equal 22/18/14/10.
+ cx.save();cx.lineCap='round';cx.lineJoin='round';
+ for(const [color,size] of [['rgba(47,46,37,.86)',thick+7],['#675b45',thick+3],['#897657',thick-1],['#988263',thick-5]]){
+  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.strokeStyle=color;cx.lineWidth=Math.max(.8,size);cx.stroke();
+ }
+ cx.restore();
+}
+function paintNaturalTrailFinish(pts){
+ // V194: soften the V192's highway-like parallel stripes into a weathered
+ // single cartway. ONLY pigments and road-edge flecks change: every painted
+ // cartway still follows the exact original V123 navigation polyline.
+ if(!pts||pts.length<2)return;
+ cx.save();cx.lineCap='round';cx.lineJoin='round';
+ const trace=(width,color)=>{
+  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));
+  cx.strokeStyle=color;cx.lineWidth=width;cx.stroke();
+ };
+ // One continuous, narrower walkable roadbed. Never curve or offset it.
+ trace(22,'rgba(47,46,37,.86)');
+ trace(18,'#675b45');
+ trace(14,'#897657');
+ trace(10,'#988263');
+ const hash=(ix,iy,n)=>{
+  let k=(Math.imul(ix,1103515245)+Math.imul(iy,12345)+Math.imul(n,2654435761))|0;
+  k=Math.imul(k^(k>>>15),2246822519);return ((k^(k>>>13))>>>0)/4294967295;
+ };
+ for(let i=1;i<pts.length;i++){
+  const a=pts[i-1],b=pts[i],dx=b[0]-a[0],dy=b[1]-a[1];
+  const length=Math.hypot(dx,dy);if(length<.01)continue;
+  const tx=dx/length,ty=dy/length,nx=-ty,ny=tx;
+  const count=Math.max(1,Math.floor(length/4.1));
+  for(let k=0;k<count;k++){
+   const p=(k+.24+.5*hash(i,k,31))/count;
+   const x=a[0]+p*dx,y=a[1]+p*dy;
+   // Irregular, broken mineral shoulders: not another parallel highway lane.
+   for(const side of [-1,1]){
+    if(hash(i,k,side+17)>.42){
+     const offset=side*(11.5+2.5*hash(i,k,side+51));
+     const len=1.4+4.1*hash(i,k,side+73);
+     cx.beginPath();cx.moveTo(x+nx*offset-tx*len*.5,y+ny*offset-ty*len*.5);
+     cx.lineTo(x+nx*offset+tx*len*.5,y+ny*offset+ty*len*.5);
+     cx.strokeStyle=hash(i,k,side+91)>.55?'rgba(124,109,78,.78)':'rgba(69,65,47,.70)';
+     cx.lineWidth=1.0+2.4*hash(i,k,side+111);cx.stroke();
+    }
+    // Broken wheel marks; deliberate gaps avoid the two-railroad-track look.
+    if(hash(i,k,side+141)>.34){
+     const rut=side*(3.1+.65*hash(i,k,side+157));
+     const len=1.2+2.8*hash(i,k,side+171);
+     cx.beginPath();cx.moveTo(x+nx*rut-tx*len*.5,y+ny*rut-ty*len*.5);
+     cx.lineTo(x+nx*rut+tx*len*.5,y+ny*rut+ty*len*.5);
+     cx.strokeStyle='rgba(58,49,37,.34)';cx.lineWidth=.8;cx.stroke();
+    }
+   }
+   // Noncontinuous gravel and leaf litter, confined to the painted roadbed.
+   const off=(hash(i,k,97)-.5)*13.4;
+   const h=hash(i,k,53),z=.6+1.5*hash(i,k,7);
+   cx.strokeStyle=h>.55?'rgba(194,176,138,.48)':'rgba(46,43,34,.38)';
+   cx.lineWidth=.65+.95*hash(i,k,17);
+   cx.beginPath();cx.moveTo(x+nx*off,y+ny*off);
+   cx.lineTo(x+nx*off+tx*z,y+ny*off+ty*z);cx.stroke();
+   // Sparse verge grasses stop the road looking mechanically extruded.
+   if(hash(i,k,201)>.86){
+    const side=hash(i,k,211)>.5?1:-1;
+    const verge=side*(13.0+3.0*hash(i,k,223));
+    cx.beginPath();cx.moveTo(x+nx*verge,y+ny*verge);
+    cx.lineTo(x+nx*(verge+side*1.7)-tx*1.2,y+ny*(verge+side*1.7)-ty*1.2);
+    cx.strokeStyle='rgba(73,86,53,.55)';cx.lineWidth=1.1;cx.stroke();
+   }
+  }
+ }
+ cx.restore();
+}
+function distanceToRoad(p,roads){
+ let best=Infinity;
+ for(const pts of Object.values(roads))for(let i=1;i<pts.length;i++){
+  const a=pts[i-1],b=pts[i],vx=b[0]-a[0],vy=b[1]-a[1];
+  const t=Math.max(0,Math.min(1,((p[0]-a[0])*vx+(p[1]-a[1])*vy)/(vx*vx+vy*vy)));
+  best=Math.min(best,Math.hypot(p[0]-a[0]-t*vx,p[1]-a[1]-t*vy));
+ }return best;
+}
+
+
+// V137: a continuous, photo-textured Alpine surface. No repetition of villages,
+// buildings, existing cartways or bridges; V123 route geometry remains immutable.
+let toneReport=null,tileGroundDetail=null;
+let sharedGround=null,groundDetails=null,centerPhoto=null,photoStampCount=0,photoPatchCount=0,valleyStampCount=0,detailMarkCount=0,transitionCanopyDrawn=0,continuousTerrain=false;
+// Overscan the full three-octagon phone camera (including portrait whole view).
+// Previously exposed a featureless flat-green band along the northern horizon.
+const groundBounds=[-1900,-3000,7000,9000];
+// V193: keep the iPhone viewport inside the existing terrain canvas.
+// This changes no roads, settlements, original source pixels or army routing.
+function minimumTerrainZoom(){
+ const b=Math.max(base,1e-6);
+ return Math.max(.7,width/(groundBounds[2]*b),height/(groundBounds[3]*b));
+}
+function clampCamera(){
+ if(!width||!height||!scale)return;
+ for(let axis=0;axis<2;axis++){
+  const span=groundBounds[axis+2],start=groundBounds[axis];
+  const half=(axis===0?width:height)/(2*scale);
+  const low=start+half,high=start+span-half;
+  cam[axis]=low<=high?Math.max(low,Math.min(high,cam[axis])):start+span/2;
+ }
+}
+function visibleTerrainBounds(){
+ return [cam[0]-width/(2*scale),cam[1]-height/(2*scale),
+         cam[0]+width/(2*scale),cam[1]+height/(2*scale)];
+}
+const clip01=x=>Math.max(0,Math.min(1,x));
+const smooth=x=>{x=clip01(x);return x*x*(3-2*x);};
+const poly=[[386,6],[1150,6],[1444,283],[1444,675],[1150,968],[386,968],[91,675],[91,283]];
+function distanceSegment(p,a,b){
+ const dx=b[0]-a[0],dy=b[1]-a[1],dd=dx*dx+dy*dy;
+ const u=clip01(((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dd||1));
+ return Math.hypot(p[0]-a[0]-u*dx,p[1]-a[1]-u*dy);
+}
+// Convex clockwise polygon: inside distance to the nearest boundary equals
+// the minimum inward supporting-line distance. Precompute 8 edge normals once
+// rather than creating ~13 million arrays / hypot calls while feathering the
+// 1536×1024 Matrei painting. Outside distances need only remain negative.
+const inwardEdges=poly.map((b,i)=>{
+ const a=poly[(i+poly.length-1)%poly.length],dx=b[0]-a[0],dy=b[1]-a[1];
+ const inv=1/Math.hypot(dx,dy);
+ return [-dy*inv,dx*inv,(dy*a[0]-dx*a[1])*inv];
+});
+function signedEdge(x,y){
+ let nearest=Infinity;
+ for(const edge of inwardEdges){
+  const d=edge[0]*x+edge[1]*y+edge[2];
+  if(d<nearest)nearest=d;
+ }
+ return nearest;
+}
+async function loadGroundImage(path){
+ const im=new Image();im.src=path;
+ try {await im.decode();return im;}catch(e){console.warn('Optional Alpine material unavailable:',path);return null;}
+}
+function sourcePatchCandidates(roads){
+ const c=document.createElement('canvas');c.width=W;c.height=H;
+ const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(art,0,0);
+ const rgba=g.getImageData(0,0,W,H).data;
+ const samples=[];
+ for(let y=125;y<900;y+=42)for(let x=145;x<1395;x+=42){
+  if(signedEdge(x,y)<92||distanceToRoad([x,y],roads)<78)continue;
+  // Avoid Matrei rooftops, original bridge, river crossing and baked-in labels.
+  if(y>555&&x>270&&x<1080)continue;
+  let roof=0,bright=0,dark=0,water=0,total=0;
+  for(let yy=y-60;yy<=y+60;yy+=12)for(let xx=x-60;xx<=x+60;xx+=12){
+   const k=(yy*W+xx)*4,r=rgba[k],v=rgba[k+1],b=rgba[k+2];
+   if(r>100&&r>v*1.22&&r>b*1.24)roof++;
+   if(r>220&&v>220&&b>220)bright++;
+   if(r<28&&v<28&&b<28)dark++;
+   if(b>r*1.17&&v>r*1.23&&b+v>200)water++;
+   total++;
+  }
+  if(roof/total>.075||bright/total>.75||dark/total>.10||water/total>.055)continue;
+  samples.push([x,y]);
+ }
+ return samples;
+}
+function photoStamp(source,x,y,span){
+ const s=256,p=document.createElement('canvas');p.width=s;p.height=s;
+ const g=p.getContext('2d');
+ g.drawImage(source,x-span/2,y-span/2,span,span,0,0,s,s);
+ g.globalCompositeOperation='destination-in';
+ const mask=g.createRadialGradient(s/2,s/2,35,s/2,s/2,s*.495);
+ mask.addColorStop(0,'rgba(0,0,0,1)');
+ mask.addColorStop(.57,'rgba(0,0,0,.97)');
+ mask.addColorStop(.84,'rgba(0,0,0,.72)');
+ mask.addColorStop(1,'rgba(0,0,0,0)');
+ g.fillStyle=mask;g.fillRect(0,0,s,s);
+ return p;
+}
+// V187 experimental visual-only edge harmonization.
+// Samples the genuine V121 picture and the neighboring existing terrain at the
+// SAME world coordinates, then gently grades underlying colors in an outer ring.
+// Does not duplicate or move any landmark, change historical facts, or alter roads.
+function harmonizeTerrainTone(land){
+ if(sourceGeoMaterial)return {enabled:false,reason:'unaltered geographic-source comparison'};
+ const g=land.getContext('2d',{willReadFrequently:true});
+ const before=g.getImageData(0,0,land.width,land.height),pixels=before.data;
+ const photo=document.createElement('canvas');photo.width=W;photo.height=H;
+ const pg=photo.getContext('2d',{willReadFrequently:true});
+ pg.drawImage(art,0,0);
+ const original=pg.getImageData(0,0,W,H).data;
+ const groups=Array.from({length:8},()=>({n:0,delta:[0,0,0]}));
+ const bounds=groundBounds, tw=land.width,th=land.height;
+ const toIndex=(x,y)=>Math.floor((y*th/bounds[3])*tw+x*tw/bounds[2]);
+ const sector=(x,y)=>{
+  let angle=Math.atan2(y-H/2,x-W/2)/(2*Math.PI)*8;
+  return (angle+8)%8;
+ };
+ let samples=0;
+ for(let y=40;y<H-40;y+=12)for(let x=40;x<W-40;x+=12){
+  const d=signedEdge(x,y);
+  if(d<75||d>215)continue;
+  // Don't grade valleys to a bridge, village roofs, streams or troop decals.
+  if(y>510&&x>230&&x<1190)continue;
+  if(distanceToRoad([x,y],originalRoads)<64)continue;
+  const ix=Math.round((x+1536-bounds[0])/bounds[2]*(tw-1));
+  const iy=Math.round((y-bounds[1])/bounds[3]*(th-1));
+  if(ix<0||iy<0||ix>=tw||iy>=th)continue;
+  const j=(iy*tw+ix)*4,k=(y*W+x)*4;
+  const bucket=groups[Math.floor(sector(x,y))];
+  for(let c=0;c<3;c++)bucket.delta[c]+=original[k+c]-pixels[j+c];
+  bucket.n++;samples++;
+ }
+ if(samples<40)return {enabled:false,reason:'insufficient non-road photo-edge samples',samples};
+ const totals=groups.reduce((a,b)=>a+b.n,0),all=[0,1,2].map(c=>
+   Math.max(-34,Math.min(34,groups.reduce((a,b)=>a+b.delta[c],0)/totals)));
+ const offsets=groups.map(b=>b.n>=8?b.delta.map(v=>Math.max(-34,Math.min(34,v/b.n))):all);
+ let adjustedPixels=0;
+ for(let iy=0;iy<th;iy++)for(let ix=0;ix<tw;ix++){
+  const wx=bounds[0]+(ix+.5)/tw*bounds[2]-1536;
+  const wy=bounds[1]+(iy+.5)/th*bounds[3];
+  if(wx< -850||wx>W+850||wy< -850||wy>H+850)continue;
+  const edge=signedEdge(wx,wy);
+  if(edge<=-780)continue;
+  let influence=Math.max(0,Math.min(1,(edge+780)/850));
+  influence=influence*influence*(3-2*influence)*.72;
+  if(influence<.002)continue;
+  const sc=sector(wx,wy),lower=Math.floor(sc),upper=(lower+1)%8;
+  const mix=sc-lower;
+  const p=(iy*tw+ix)*4;
+  for(let c=0;c<3;c++){
+   const shift=offsets[lower][c]*(1-mix)+offsets[upper][c]*mix;
+   pixels[p+c]=Math.max(0,Math.min(255,Math.round(pixels[p+c]+shift*influence)));
+  }
+  adjustedPixels++;
+ }
+ g.putImageData(before,0,0);
+ return {enabled:true,samples,adjustedPixels,globalOffset:all,
+   maxAllowedOffset:34,originalArtworkUnmodified:true,routeGeometryUnmodified:true};
+}
+
+async function buildLandscape(){
+  // V137: one coherent elevation and vegetation field, not photographic patch tiling.
+  // Road graph and the one authentic Matrei painting are NEVER changed.
+  const lw=1120,lh=830,nx=230,ny=171;
+  const land=document.createElement('canvas');land.width=lw;land.height=lh;
+  const g=land.getContext('2d',{alpha:false});
+  const fract=x=>x-Math.floor(x);
+  const clamp=x=>Math.max(0,Math.min(1,x));
+  const smoothstep=(a,b,x)=>{const u=clamp((x-a)/(b-a));return u*u*(3-2*u);};
+  const hash=(x,y)=>{
+    let h=(Math.imul(x|0,374761393)+Math.imul(y|0,668265263)+2136789231)|0;
+    h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)/4294967295;
+  };
+  const noise=(x,y)=>{
+    const a=Math.floor(x),b=Math.floor(y),fx=smoothstep(0,1,fract(x)),fy=smoothstep(0,1,fract(y));
+    const n0=hash(a,b)*(1-fx)+hash(a+1,b)*fx,n1=hash(a,b+1)*(1-fx)+hash(a+1,b+1)*fx;
+    return n0*(1-fy)+n1*fy;
+  };
+  statusEl.textContent='Building continuous Alpine elevation…';
+  const altitude=new Float32Array(nx*ny),wetness=new Float32Array(nx*ny),shade=new Float32Array(nx*ny);
+  // Broad landform changes are continuous across BOTH tile borders. Valleys
+  // wander independently, while the northern rock ridges rise above the woods.
+  for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
+    const u=x/(nx-1),v=y/(ny-1),i=y*nx+x;
+    const primary=noise(u*3.8+1.2,v*3.1+5.8);
+    const landform=noise(u*10.4+1.6,v*6.7+2.2);
+    const wrinkles=noise(u*27.3+7.5,v*24.1+10.8);
+    const ridge=1-Math.abs(noise(u*7.2+13,v*3.5+3)*2-1);
+    altitude[i]=clamp(.15+.49*Math.pow(1-v,1.28)+.24*(landform-.5)
+      +.20*(primary-.5)+.115*ridge+.07*(wrinkles-.5));
+    wetness[i]=clamp(.43+.48*(noise(u*7.1+23,v*7.9+31)-.5)+.2*(primary-.5));
+  }
+  for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
+    const i=y*nx+x, xl=Math.max(0,x-1),xr=Math.min(nx-1,x+1),
+      yt=Math.max(0,y-1),yb=Math.min(ny-1,y+1);
+    const dx=(altitude[y*nx+xr]-altitude[y*nx+xl])*14;
+    const dy=(altitude[yb*nx+x]-altitude[yt*nx+x])*14;
+    shade[i]=clamp(.82+dx*.58-dy*.45);
+  }
+  // Generate satellite-like albedo directly from the elevation map. Each point
+  // has a deterministic unique value, avoiding the recognisable copy/paste
+  // cliffs, villages, streams and conifers reported on physical iPhone Safari.
+  statusEl.textContent='Painting unique Alpine terrain…';
+  const texture=document.createElement('canvas');texture.width=lw;texture.height=lh;
+  const tg=texture.getContext('2d',{alpha:false}),image=tg.createImageData(lw,lh),pixels=image.data;
+  for(let y=0;y<lh;y++){
+    if((y%24)===0)await terrainYield();
+    const vy=y*(ny-1)/(lh-1),iy=Math.min(ny-2,Math.floor(vy)),fy=vy-iy;
+    for(let x=0;x<lw;x++){
+      const vx=x*(nx-1)/(lw-1),ix=Math.min(nx-2,Math.floor(vx)),fx=vx-ix;
+      const a=iy*nx+ix,b=a+nx;
+      const wa=(1-fx)*(1-fy),wb=fx*(1-fy),wc=(1-fx)*fy,wd=fx*fy;
+      const h=altitude[a]*wa+altitude[a+1]*wb+altitude[b]*wc+altitude[b+1]*wd;
+      const wet=wetness[a]*wa+wetness[a+1]*wb+wetness[b]*wc+wetness[b+1]*wd;
+      const light=shade[a]*wa+shade[a+1]*wb+shade[b]*wc+shade[b+1]*wd;
+      const rock=smoothstep(.48,.78,h)+.20*Math.max(0,(1-light));
+      const snow=smoothstep(.79,.96,h)*(.6+.4*wet);
+      const grass=smoothstep(.36,.70,wet)*(1-smoothstep(.54,.78,h));
+      const tree=(1-smoothstep(.49,.79,h))*(.45+.55*wet);
+      const grain=hash(x>>1,y>>1)-.5;
+      // Fine dappled canopy is locally clustered, never a recycled picture.
+      const canopy=(hash(x>>2,y>>2)>.70?-1:1)*tree*7;
+      let r=68+23*grass-9*tree+38*rock+82*snow;
+      let green=74+23*grass-3*rock-12*snow;
+      let blue=48+8*grass+34*rock+116*snow;
+      const dark=.78+.29*light,noiseGrain=grain*17+canopy;
+      const i=(y*lw+x)*4;
+      pixels[i]=Math.max(0,Math.min(255,r*dark+noiseGrain));
+      pixels[i+1]=Math.max(0,Math.min(255,green*dark+noiseGrain));
+      pixels[i+2]=Math.max(0,Math.min(255,blue*dark+noiseGrain*.8));
+      pixels[i+3]=255;
+    }
+  }
+  statusEl.textContent='Blending landscape photography…';
+  tg.putImageData(image,0,0);
+  g.drawImage(texture,0,0);
+  // Real-world photomaterial supplies subdued detail but is never stamped,
+  // cropped or repeated as separate mountain/tree/village features.
+  const imgs=await Promise.all([
+    loadGroundImage('terrain-v97/brenner-relief.webp'),
+    loadGroundImage('terrain-v102/alpine-material.webp')
+  ]);
+  // V140 experimental: use a ONE-PIECE, geography-derived Alpine material
+  // raster instead of reducing the established terrain data to a barely
+  // visible 9% multiply. This is modern Copernicus/WorldCover topography,
+  // illustrative beneath V123's NOT-yet-geo-registered local routes. Do not
+  // present it as a historical map or an orthophoto.
+  if(sourceGeoMaterial){
+    // V144: V97/V102 modern geographic rasters, not a V123 road survey.
+    const [v97m,v102m]=await Promise.all([
+      fetch('terrain-v97/manifest.json').then(r=>{if(!r.ok)throw Error('V97 manifest unavailable');return r.json();}),
+      fetch('terrain-v102/manifest.json').then(r=>{if(!r.ok)throw Error('V102 manifest unavailable');return r.json();})
+    ]);
+    if(JSON.stringify(v97m.boundsLonLat)!==JSON.stringify(v102m.broadBoundsLonLat))
+      throw Error('V97/V102 geographic extents differ');
+    if(!imgs[0]||!imgs[1])throw Error('V144 requires both original geographic materials');
+    geoCrop=V144GeoMaterial.fit(v102m.broadBoundsLonLat,groundBounds,imgs[1].naturalWidth,imgs[1].naturalHeight);
+    g.drawImage(imgs[1],geoCrop.sx,geoCrop.sy,geoCrop.sw,geoCrop.sh,0,0,lw,lh);
+    const shadeCrop=V144GeoMaterial.fit(v97m.boundsLonLat,groundBounds,imgs[0].naturalWidth,imgs[0].naturalHeight);
+    g.save();g.globalAlpha=.30;g.globalCompositeOperation='multiply';
+    g.drawImage(imgs[0],shadeCrop.sx,shadeCrop.sy,shadeCrop.sw,shadeCrop.sh,0,0,lw,lh);g.restore();
+  }else{
+    if(imgs[1]){
+      g.save();g.globalAlpha=.88;g.globalCompositeOperation='source-over';
+      g.drawImage(imgs[1],0,0,lw,lh);g.restore();
+    }
+    if(imgs[0]){
+      g.save();g.globalAlpha=.30;g.globalCompositeOperation='multiply';
+      g.drawImage(imgs[0],0,0,lw,lh);g.restore();
+    }
+  }
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';
+  photoPatchCount=0;photoStampCount=0;valleyStampCount=0;
+  const toLand=p=>[(p[0]-groundBounds[0])/groundBounds[2]*lw,
+                   (p[1]-groundBounds[1])/groundBounds[3]*lh];
+  // A grassy, feathered natural depression follows the SAME immutable roads
+  // as troop navigation, while the actual cartway is painted during rendering.
+  for(const t of atlas.tiles.filter(t=>t.id!=='matrei')){
+    for(const pts of Object.values(t.roads)){
+      if(pts.length<2)continue;
+      g.save();g.beginPath();
+      pts.forEach((p,i)=>{
+        const q=toLand([p[0]+t.origin[0],p[1]+t.origin[1]]);
+        i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);
+      });
+      g.strokeStyle='rgba(138,145,92,.24)';g.lineCap='round';g.lineJoin='round';
+      g.lineWidth=54;g.shadowColor='rgba(100,125,81,.55)';g.shadowBlur=48;g.stroke();
+      g.shadowBlur=0;g.lineWidth=19;g.strokeStyle='rgba(140,135,91,.15)';g.stroke();
+      g.restore();valleyStampCount+=pts.length;
+    }
+  }
+  // V139 high-frequency, never-reused terrain detail on the two neighboring
+  // octagons. A single geological noise field alone looks like a flat carpet
+  // when enlarged from 1120px over several world kilometres. Make the
+  // photographic center a reference, not the only patch with visible detail.
+  // Draw *individual* terrain features at world-locked positions on a separate
+  // layer, never tiled or repeated photo cutouts and never game structures.
+  statusEl.textContent='Drawing continuous ridges and forest texture…';
+  const dw=2560,dh=2300;
+  const details=document.createElement('canvas');details.width=dw;details.height=dh;
+  const dg=details.getContext('2d');
+  const rnd=lcg(1372639);
+  const heightAt=(px,py)=>{
+    const tx=clip01(px/dw)*(nx-1),ty=clip01(py/dh)*(ny-1),
+      xi=Math.min(nx-2,Math.floor(tx)),yi=Math.min(ny-2,Math.floor(ty)),
+      xx=tx-xi,yy=ty-yi,j=yi*nx+xi,k=j+nx;
+    return altitude[j]*(1-xx)*(1-yy)+altitude[j+1]*xx*(1-yy)
+       +altitude[k]*(1-xx)*yy+altitude[k+1]*xx*yy;
+  };
+  // Rock strata and ridge edges are continuous strokes, not isolated ovals.
+  // Contour lines are indexed to the same elevation model as ground albedo.
+  const detailCell=11,cols=Math.ceil(dw/detailCell),rows=Math.ceil(dh/detailCell);
+  if(!sourceGeoMaterial)for(const cutoff of [.41,.53,.65,.76]){
+    dg.beginPath();
+    for(let iy=0;iy<rows-1;iy++){
+      if((iy%60)===0)await terrainYield();
+      for(let ix=0;ix<cols-1;ix++){
+        const x=ix*detailCell,y=iy*detailCell,s=detailCell;
+        const v0=heightAt(x,y)-cutoff,v1=heightAt(x+s,y)-cutoff,
+          v2=heightAt(x+s,y+s)-cutoff,v3=heightAt(x,y+s)-cutoff;
+        const cross=[];
+        const edge=(a,b,ax,ay,bx,by)=>{
+          if((a<0)===(b<0))return;
+          const t=a/(a-b);cross.push([ax+(bx-ax)*t,ay+(by-ay)*t]);
+        };
+        edge(v0,v1,x,y,x+s,y);edge(v1,v2,x+s,y,x+s,y+s);
+        edge(v2,v3,x+s,y+s,x,y+s);edge(v3,v0,x,y+s,x,y);
+        if(cross.length>=2){dg.moveTo(cross[0][0],cross[0][1]);dg.lineTo(cross[1][0],cross[1][1]);}
+        if(cross.length===4){dg.moveTo(cross[2][0],cross[2][1]);dg.lineTo(cross[3][0],cross[3][1]);}
+      }
+    }
+    dg.lineWidth=cutoff>=.65?2.0:1.35;
+    dg.strokeStyle=cutoff>=.65?'rgba(201,188,157,.17)':'rgba(20,32,26,.22)';
+    dg.stroke();
+  }
+  // V192: Strategy roads pass through visible sparse clearings,
+  // rather than a carpet of computer-generated spruce crowns.
+  // Removes only decorative trees, never modifies verified route geometry.
+  const clearance=48,clearance2=clearance*clearance;
+  const roadEdges=[];
+  for(const tile of atlas.tiles){
+   if(tile.id==='matrei')continue;
+   for(const pts of Object.values(tile.roads)){
+    for(let k=1;k<pts.length;k++){
+     const a=pts[k-1],b=pts[k],ax=a[0]+tile.origin[0],ay=a[1]+tile.origin[1],
+       bx=b[0]+tile.origin[0],by=b[1]+tile.origin[1];
+     const dx=bx-ax,dy=by-ay,den=Math.max(1,dx*dx+dy*dy);
+     roadEdges.push({ax,ay,dx,dy,den,
+       minX:Math.min(ax,bx)-clearance,maxX:Math.max(ax,bx)+clearance,
+       minY:Math.min(ay,by)-clearance,maxY:Math.max(ay,by)+clearance});
+    }
+   }
+  }
+  const inScenicRoadVerge=(x,y)=>{
+   for(const s of roadEdges){
+    if(x<s.minX||x>s.maxX||y<s.minY||y>s.maxY)continue;
+    const u=Math.max(0,Math.min(1,((x-s.ax)*s.dx+(y-s.ay)*s.dy)/s.den));
+    const ex=x-s.ax-u*s.dx,ey=y-s.ay-u*s.dy;
+    if(ex*ex+ey*ey<clearance2)return true;
+   }
+   return false;
+  };
+  // V142 canopy forms. Reject perfectly round "green marbles": neighboring
+  // terrain needs naturally irregular, overlapping, directionally lit crowns.
+  // The forest belt follows the continuous altitude and woodland habitat map.
+  // Shapes are procedural illustrations and are not real tree geolocations.
+  if(!sourceGeoMaterial)for(let i=0;i<104000;i++){
+    if((i%4600)===0)await terrainYield();
+    const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
+    const worldx=groundBounds[0]+x/dw*groundBounds[2],
+          worldy=groundBounds[1]+y/dh*groundBounds[3];
+    if(h>.76||h<.14)continue;
+    const stand=noise(x/dw*16+7.2,y/dh*13+4.8);
+    const woodland=clip01((.80-h)*2.1)*(.29+.72*stand);
+    if(rnd()>woodland||inScenicRoadVerge(worldx,worldy))continue;
+    // A rectangular no-forest zone around Matrei produced an obvious
+    // square 'photo island' in physical iPhone screenshots. Let trees grow
+    // all the way up to the real feather mask, while keeping the opaque
+    // painted village core clear. Canopy is BELOW the original painting.
+    const photoDepth=signedEdge(worldx-1536,worldy);
+    if(photoDepth>238)continue;
+    const radius=2.9+4.1*rnd();
+    const ratio=.57+.36*rnd(),tilt=(rnd()-.5)*.45;
+    const arms=7+Math.floor(rnd()*4),angles=[],lengths=[];
+    const shape=(dx,dy,scale=1)=>{
+      dg.beginPath();
+      for(let k=0;k<arms;k++){
+        const theta=k*2*Math.PI/arms+tilt;
+        const len=lengths[k]*scale,xx=x+dx+Math.cos(theta)*len*ratio,
+              yy=y+dy+Math.sin(theta)*len;
+        if(k===0)dg.moveTo(xx,yy);else dg.lineTo(xx,yy);
+      }
+      dg.closePath();
+    };
+    for(let k=0;k<arms;k++)lengths.push(radius*(.64+.42*rnd()));
+    // Every canopy casts a bottom-right terrain shadow.
+    dg.fillStyle='rgba(8,22,18,.32)';
+    shape(1.5,1.7,1.07);dg.fill();
+    const cool=rnd();
+    dg.fillStyle=cool>.7?'rgba(53,75,41,.79)':cool>.32?'rgba(30,66,38,.78)':'rgba(25,59,37,.79)';
+    shape(0,0,1);dg.fill();
+    // Open-sided upper-left glints follow sunlight, without concentric discs.
+    const lightLength=radius*(.33+.26*rnd());
+    dg.lineWidth=.7+1.3*rnd();
+    dg.strokeStyle='rgba(144,156,100,.58)';
+    dg.beginPath();dg.moveTo(x-radius*.15,y-radius*.22);
+    dg.lineTo(x-radius*.15-lightLength*.55,y-radius*.22-lightLength*.66);
+    dg.stroke();
+    if(rnd()>.45){
+      dg.strokeStyle='rgba(129,144,86,.46)';
+      dg.beginPath();dg.moveTo(x+radius*.09,y-radius*.08);
+      dg.lineTo(x+radius*.08-lightLength*.35,y-radius*.08-lightLength*.5);
+      dg.stroke();
+    }
+    detailMarkCount++;
+    if(photoDepth>-160&&photoDepth<120)transitionCanopyDrawn++;
+  }
+  // Weathered scarps get geological striations with site-specific bearings.
+  // Cliff bedding is illustration from elevation; it does not define travel.
+  if(!sourceGeoMaterial)for(let i=0;i<32000;i++){
+    if((i%8500)===0)await terrainYield();
+    const x=dw*rnd(),y=dh*rnd(),h=heightAt(x,y);
+    if(h<.52||rnd()<.2)continue;
+    const z=2.5+6*rnd(),lean=(rnd()-.5)*1.5;
+    dg.strokeStyle=rnd()>.48?'rgba(222,211,185,.43)':'rgba(24,34,32,.40)';
+    dg.lineWidth=.8+1.45*rnd();dg.beginPath();
+    dg.moveTo(x,y);dg.lineTo(x+z,y-lean*z);dg.stroke();detailMarkCount++;
+  }
+  toneReport=harmonizeTerrainTone(land);
+  // V192: Resolve ground material at one source pixel per world coordinate on
+  // the WEST and SOUTH sectors only. Existing forest/rock forms remain above
+  // this layer. No image stamps, towns, new bridges, road edges or unit changes.
+  statusEl.textContent='Refining neighboring Alpine ground detail…';
+  tileGroundDetail=[];
+  const clip255=v=>Math.max(0,Math.min(255,v));
+  const signedHash=(x,y,salt)=>{
+    let n=(Math.imul(x|0,374761393)+Math.imul(y|0,668265263)+salt)|0;
+    n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)/4294967295;
+  };
+  for(const tile of atlas.tiles.filter(t=>t.id!=='matrei')){
+    const micro=document.createElement('canvas');micro.width=W;micro.height=H;
+    const mg=micro.getContext('2d',{willReadFrequently:true});
+    const sx=(tile.origin[0]-groundBounds[0])/groundBounds[2]*lw;
+    const sy=(tile.origin[1]-groundBounds[1])/groundBounds[3]*lh;
+    mg.drawImage(land,sx,sy,W/groundBounds[2]*lw,H/groundBounds[3]*lh,0,0,W,H);
+    const bitmap=mg.getImageData(0,0,W,H),rgba=bitmap.data;
+    // Spatially correlated leaf, scree and meadow variations; stochastic
+    // but deterministic per WORLD coordinate, so adjacent tiles cannot repeat.
+    // Feather edges avoids exposing a rectangular extra-detail island.
+    for(let y=0;y<H;y++){
+      if((y%48)===0)await terrainYield();
+      const wy=y+tile.origin[1];
+      const edgeY=Math.min(y,H-1-y);
+      for(let x=0;x<W;x++){
+        const wx=x+tile.origin[0],i=(y*W+x)*4;
+        const nearEdge=Math.min(x,W-1-x,edgeY);
+        const coverage=smooth((nearEdge-14)/135);
+        if(coverage<=0){rgba[i+3]=0;continue;}
+        const broad=signedHash(wx>>5,wy>>5,19337)-.5;
+        const needles=signedHash(wx>>2,wy>>2,72817)-.5;
+        const small=signedHash(wx>>1,wy>>1,38279)-.5;
+        const flecks=signedHash(wx,wy,27011)-.5;
+        const green=rgba[i+1],red=rgba[i],blue=rgba[i+2];
+        const forest=clip01((green-red+25)/42);
+        const rock=clip01((blue-green+14)/29);
+        // Meadow foliage: broad shadows with tiny high-contrast needle/grass
+        // surfaces. Rock: sharply edged shale flecks and directional bedding.
+        const material=rock>.5?1.14:(.72+.42*forest);
+        const light=(broad*22+needles*38+small*38+flecks*32)*material;
+        const moss=forest*(needles*9+small*8);
+        rgba[i]=clip255(red+light-moss*.32);
+        rgba[i+1]=clip255(green+light+moss*.65);
+        rgba[i+2]=clip255(blue+light-moss*.35);
+        rgba[i+3]=Math.round(255*coverage);
+      }
+    }
+    mg.putImageData(bitmap,0,0);
+    tileGroundDetail.push({canvas:micro,origin:tile.origin.slice()});
+  }
+  groundDetails=details;
+  statusEl.textContent='Fitting the Matrei road painting…';
+  sharedGround=land;
+  centerPhoto=document.createElement('canvas');centerPhoto.width=W;centerPhoto.height=H;
+  const center=centerPhoto.getContext('2d',{willReadFrequently:true});
+  center.drawImage(art,0,0);
+  const im=center.getImageData(0,0,W,H),p=im.data;
+  // Suppress the painted octagon border; soften authentic art into the larger
+  // unique relief surface. Original imagery and road coordinates remain intact.
+  for(let y=0;y<H;y++){
+    if((y%28)===0)await terrainYield();
+    for(let x=0;x<W;x++){
+    const k=(y*W+x)*4,d=signedEdge(x,y);
+    // Widen the irregular transition: no hard rectangular/straight bevel.
+    // Only alpha is changed; V121 original pixels and road graph are intact.
+    const featherOffset=16*Math.sin(x*.012+Math.sin(y*.008))+
+                        11*Math.sin(y*.019-x*.004);
+    // V192: retain the authored village, bridge and river as the sharp core,
+    // but stop displaying a recognisable octagonal photograph around them.
+    // Irregular falloff joins natural forest and mountain vegetation.
+    const radius=Math.hypot((x-785)/690,(y-548)/560);
+    const irregular=.047*Math.sin(x*.013+y*.003)
+                   +.035*Math.sin(y*.018-x*.006)
+                   +.024*Math.sin((x+y)*.028);
+    const scenicFocus=smooth((1.20-radius-irregular)/.59);
+    const geometricMask=smooth((d-12-featherOffset)/280);
+    p[k+3]=Math.round(p[k+3]*geometricMask*scenicFocus);
+    }
+  }
+  center.putImageData(im,0,0);
+  v224Trial=await V224LicensedObliqueNeighbors.load(); // fail closed when source images unavailable
+ continuousTerrain=true;
+}
+// Camera-stable terrain is drawn once; moving army/route redraw separately.
+// A viewport-sized snapshot costs one extra screen buffer, not another atlas.
+let staticFrame=null,staticDirty=true,staticBuilds=0,cacheHits=0,dynamicFrames=0;
+const renderTimings=[];
+function render(){
+ if(!width||!height)return;
+ if(!staticFrame||staticFrame.width!==C.width||staticFrame.height!==C.height){
+   staticFrame=document.createElement('canvas');staticFrame.width=C.width;staticFrame.height=C.height;staticDirty=true;
+ }
+ if(staticDirty){
+ cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.fillStyle='#627559';cx.fillRect(0,0,width,height);
+ cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);
+ cx.scale(scale,scale);
+ if(sharedGround)cx.drawImage(sharedGround,...groundBounds);
+ // Match Matrei's pixel-level road surroundings without repeating village art.
+ // The original multi-octagon landscape and vegetation still render above it.
+ if(tileGroundDetail)for(const detail of tileGroundDetail)
+  cx.drawImage(detail.canvas,...detail.origin,W,H);
+ if(groundDetails)cx.drawImage(groundDetails,...groundBounds);
+  // Two complete native 1536x1024 CC BY photo neighbors; placement is artistic, unregistered and NOT 1780 geography.
+  // Original Matrei and exact road cartways render above this artistic study.
+  if(v224Trial&&showPainted){V224LicensedObliqueNeighbors.paint(cx,v224Trial);} // rejected V224 photos remain default diagnostic background only.
+ if(showPainted)V227ArtIngest.paint(cx); // V227 opt-in full-cell artwork, clipped to exact WEST/SOUTH octagons; original Matrei untouched.
+ // V226 guide is a removable authoring overlay, NEVER playable terrain or route.
+ if(artGuide&&artContract){
+  for(const cell of artContract.cells){
+   cx.save();cx.translate(...cell.origin);
+   const pts=cell.points;
+   cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));
+   cx.lineCap='round';cx.lineJoin='round';
+   cx.strokeStyle='rgba(255,176,43,.34)';cx.lineWidth=52;cx.stroke();
+   cx.strokeStyle='rgba(255,244,183,.88)';cx.lineWidth=22;cx.stroke();
+   cx.setLineDash([8,8]);cx.strokeStyle='#dc462b';cx.lineWidth=3;cx.stroke();cx.setLineDash([]);
+   cx.beginPath();cx.arc(...cell.unverifiedTerminus,17,0,Math.PI*2);cx.fillStyle='#f24438';cx.fill();
+   cx.beginPath();cx.arc(...cell.join,13,0,Math.PI*2);cx.fillStyle='#35d68a';cx.fill();
+   cx.restore();
+  }
+ }
+ if(atlas){
+  // The central painted Alpine artwork is unique; no village, bridge or river
+  // photo is copied into western/southern tiles.
+  if(centerPhoto)cx.drawImage(centerPhoto,1536,0,W,H);
+  // Paint only exact graph cartways; the same unchanged polylines drive troops.
+  for(const t of atlas.tiles){
+   cx.save();cx.translate(...t.origin);
+   if(t.id==='matrei'){
+    // The photograph is feathered at both shared exits. Overdraw only the
+    // source-traced exit corridors so fading scenery never erases the roads.
+    paintTrack([[0,478],...originalRoads.west.slice(0,6)],15);
+    paintTrack([...originalRoads.south.slice(-8),[466,1024]],15);
+   }else for(const pts of Object.values(t.roads))paintNaturalTrailFinish(pts);
+   if(debug){polygon(cx);cx.strokeStyle='#f4da92';cx.lineWidth=2;cx.stroke();}
+   cx.restore();
+  }
+  cx.save();cx.font='600 21px Georgia';cx.textAlign='center';cx.fillStyle='#fff0c4';cx.shadowBlur=8;cx.shadowColor='#1a2218';
+  cx.fillText('WESTERN PASS',740,165);
+  // Matrei label is already baked into the preserved original artwork.
+  cx.fillText('SOUTHERN VALLEY',2280,1250);
+  cx.restore();
+  if(debug)for(const t of atlas.tiles){
+   cx.save();cx.translate(...t.origin);
+   for(const pts of Object.values(t.roads)){cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#f9d84f';cx.lineWidth=2;cx.stroke();}
+   cx.restore();
+  }
+  // World-locked, degree-one termini: not imaginary road continuations.
+  if(surveyLimits)V152Survey.paint(cx,scale,surveyLimits,debug);
+ }
+ cx.restore();
+ const cached=staticFrame.getContext('2d');
+ cached.setTransform(1,0,0,1,0,0);cached.clearRect(0,0,staticFrame.width,staticFrame.height);
+ cached.drawImage(C,0,0);staticBuilds++;staticDirty=false;
+ }else{
+ cx.setTransform(1,0,0,1,0,0);cx.drawImage(staticFrame,0,0);cacheHits++;
+ }
+ cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.save();cx.translate(width/2-cam[0]*scale,height/2-cam[1]*scale);cx.scale(scale,scale);
+ if(atlas){
+  if(path.length>1){cx.beginPath();path.forEach((p,i)=>i?cx.lineTo(...p):cx.moveTo(...p));cx.strokeStyle='#efdc91c2';cx.lineWidth=3;cx.stroke();}
+  if(army){cx.save();cx.translate(...army);
+   const k=16/scale;cx.fillStyle='#172e26';cx.strokeStyle='#e7d087';cx.lineWidth=2/scale;
+   cx.beginPath();cx.arc(0,0,k,0,Math.PI*2);cx.fill();cx.stroke();
+   cx.font='bold '+Math.ceil(19/scale)+'px Georgia';cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='#f5e4b4';cx.fillText('⚔',0,-1/scale);
+   cx.fillStyle='#15291c';cx.fillRect(-22/scale,19/scale,44/scale,17/scale);
+   cx.fillStyle='#ead89e';cx.font='bold '+Math.ceil(11/scale)+'px sans-serif';cx.fillText('720',0,28/scale);
+   cx.fillStyle='#e4d19f';cx.fillRect(3/scale,-30/scale,2/scale,14/scale);
+   cx.fillStyle='#242529';cx.fillRect(5/scale,-30/scale,15/scale,5/scale);
+   cx.fillStyle='#d6ac47';cx.fillRect(5/scale,-25/scale,15/scale,5/scale);
+   cx.restore();}
+ }
+ cx.restore();
+ dynamicFrames++;
+}
+function polygonAt(t){cx.save();cx.translate(...t.origin);polygon(cx);cx.restore();}
+function resize(){width=C.clientWidth||window.innerWidth;height=C.clientHeight||window.innerHeight;
+ dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(width*dpr);C.height=Math.round(height*dpr);
+ base=Math.min(width/3200,height/2450);redraw();}
+function redraw(){
+ staticDirty=true;
+ zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom));
+ scale=base*zoom;clampCamera();renderDirty=true;
+}
+function currentEdge(){
+ if(path.length<2||pathKeys.length!==path.length)return pausedEdge;
+ let remaining=travel;
+ for(let i=1;i<path.length;i++){
+  const len=hypot(path[i-1],path[i]);
+  if(remaining<=len+1e-5){
+   if(i===1&&pathKeys[0]===null)return startEdge;
+   return pathKeys[i-1]&&pathKeys[i]?{a:pathKeys[i-1],b:pathKeys[i]}:null;
+  }
+  remaining-=len;
+ }
+ return null;
+}
+function issue(to){
+ if(!ready)return false;
+ const edge=moving?currentEdge():pausedEdge;
+ const candidates=edge?[edge.a,edge.b]:[currentKey];
+ let chosen=null;
+ for(const key of candidates){
+  if(!key)continue;
+  const found=graph.planRoute(key,to);
+  if(!found)continue;
+  const start=graph.graph.get(key).world;
+  const points=hypot(army,start)>1e-5?[army.slice(),...found.positions]:found.positions.slice();
+  const keys=points.length===found.positions.length?found.keys.slice():[null,...found.keys];
+  const cost=hypot(army,start)+found.distance;
+  if(!chosen||cost<chosen.cost)chosen={cost,points,keys,found,entry:edge};
+ }
+ if(!chosen){statusEl.textContent='No connected road route';return false;}
+ goal=to;path=chosen.points;pathKeys=chosen.keys;travel=0;distance=chosen.cost;startEdge=chosen.entry;pausedEdge=null;
+ moving=distance>.001;renderDirty=true;statusEl.textContent=moving?'Army marching across '+chosen.found.seams+' tile border(s)':'Unit already here';
+ return true;
+}
+// V202: select the nearest painted segment before choosing an original V123
+// vertex. Global nearest-vertex snapping can choose the wrong road at bends
+// or crossings. No graph edges, bridge banks or onward roads are invented.
+function nearestPaintedRoadNode(p){
+ if(!atlas||!graph)return null;
+ let closest=null,dd=Infinity;
+ for(const tile of atlas.tiles){
+  for(const points of Object.values(tile.roads)){
+   for(let i=1;i<points.length;i++){
+    const a=points[i-1],b=points[i];
+    const ax=a[0]+tile.origin[0],ay=a[1]+tile.origin[1];
+    const bx=b[0]+tile.origin[0],by=b[1]+tile.origin[1];
+    const dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+    if(den<1e-9)continue;
+    const t=Math.max(0,Math.min(1,((p[0]-ax)*dx+(p[1]-ay)*dy)/den));
+    const ex=p[0]-ax-t*dx,ey=p[1]-ay-t*dy;
+    const d=Math.hypot(ex,ey);
+    if(d<dd){
+     const key=graph.key(tile.id,t<=.5?a:b);
+     if(!graph.graph.has(key))throw Error('Painted road vertex missing from V123 graph');
+     closest={key,distance:d,tile:tile.id,roadSegment:i-1};
+     dd=d;
+    }
+   }
+  }
+ }
+ return closest;
+}
+// Tap tolerance follows the V123 *painted polylines*, not a circular bubble
+// around graph nodes. Long segments and bridge banks are selectable, while a
+// field or an unrelated building cannot accidentally command the army.
+function roadDistanceAt(p){
+ if(!atlas)return Infinity;
+ let d=Infinity;
+ for(const tile of atlas.tiles){
+  const local=[p[0]-tile.origin[0],p[1]-tile.origin[1]];
+  d=Math.min(d,distanceToRoad(local,tile.roads));
+ }
+ return d;
+}
+function tapWorld(p){
+ if(!ready)return false;
+ const tolerance=Math.max(18,Math.min(42,12/Math.max(scale,.01)));
+ if(roadDistanceAt(p)>tolerance){
+  statusEl.textContent='Tap the visible road, not a field or building';
+  return false;
+ }
+ const near=nearestPaintedRoadNode(p);
+ if(!near||near.distance>tolerance){
+  statusEl.textContent='No surveyed road segment at that location';
+  return false;
+ }
+ return issue(near.key);
+}
+function tap(pt){return tapWorld(world(pt));}
+function sampleRoute(d){
+ let remaining=d;
+ for(let i=1;i<path.length;i++){
+  const a=path[i-1],b=path[i],len=hypot(a,b);
+  if(remaining<=len)return[a[0]+(b[0]-a[0])*remaining/len,a[1]+(b[1]-a[1])*remaining/len];
+  remaining-=len;
+ }return path.at(-1).slice();
+}
+function march(dt){if(!moving)return;
+ travel=Math.min(distance,travel+Math.max(0,dt)*215);
+ army=sampleRoute(travel);
+ if(travel>=distance-.01){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;statusEl.textContent='Unit arrived · tap a different road';}
+}
+function halt(){if(!moving)return;
+ pausedEdge=currentEdge();moving=false;path=[];pathKeys=[];goal=null;travel=0;distance=0;
+ renderDirty=true;statusEl.textContent='Unit halted on the exact painted cartway';}
+C.addEventListener('pointerdown',e=>{
+ C.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===1)down=[e.clientX,e.clientY];
+ if(pointers.size===2){const a=[...pointers.values()];gesture={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};down=null;}
+});
+// V201: real touch gestures must invalidate the STATIC terrain snapshot as well
+// as the moving-army overlay. Otherwise camera coordinates change while the
+// previous landscape stays frozen on screen (not covered by zoomTo QA).
+C.addEventListener('pointermove',e=>{
+ if(!pointers.has(e.pointerId))return;
+ const before=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===2){
+  const a=[...pointers.values()],next={distance:hypot(...a),mid:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};
+  if(gesture&&gesture.distance>5){const anchor=world(gesture.mid);
+   zoom=Math.max(minimumTerrainZoom(),Math.min(7,zoom*next.distance/gesture.distance));scale=base*zoom;
+   const moved=world(next.mid);cam[0]+=anchor[0]-moved[0];cam[1]+=anchor[1]-moved[1];clampCamera();}
+  gesture=next;down=null;staticDirty=true;renderDirty=true;return;
+ }
+ if(down&&hypot(down,[e.clientX,e.clientY])>9)down=null;
+ cam[0]-=(e.clientX-before[0])/scale;cam[1]-=(e.clientY-before[1])/scale;clampCamera();staticDirty=true;renderDirty=true;
+});
+function finish(e){
+ if(!pointers.has(e.pointerId))return;
+ if(pointers.size===1&&down&&hypot(down,[e.clientX,e.clientY])<9)tap([e.clientX,e.clientY]);
+ pointers.delete(e.pointerId);if(pointers.size<2)gesture=null;down=null;
+}
+for(const name of ['pointerup','pointercancel','lostpointercapture'])C.addEventListener(name,finish);
+window.addEventListener('resize',resize);
+document.querySelector('#halt').onclick=halt;
+document.querySelector('#center').onclick=()=>{if(army){cam=army.slice();zoom=2.5;redraw();}};
+document.querySelector('#whole').onclick=()=>{cam=[1670,925];zoom=1;menu.classList.remove('open');redraw();};
+document.querySelector('#options').onclick=()=>menu.classList.toggle('open');
+for(const [button,destination] of [['gotoWest','west'],['gotoMatrei','matrei'],['gotoSouth','south']]){
+ document.getElementById(button).onclick=()=>{
+  if(ready)issue(V123Atlas.endpoints(atlas)[destination]);
+  menu.classList.remove('open');
+ };
+}
+document.querySelector('#compare').onclick=()=>{showPainted=!showPainted;document.querySelector('#compare').textContent=showPainted?'Show original neighbor art':'Show licensed source neighbors';staticDirty=true;renderDirty=true;};
+for(const [id,tile] of [['westArt','west'],['southArt','south']]){
+ const input=document.getElementById(id);
+ document.getElementById(tile==='west'?'loadWest':'loadSouth').onclick=()=>input.click();
+ input.addEventListener('change',async()=>{
+  const file=input.files?.[0];if(!file)return;
+  try{
+   const record=await V227ArtIngest.importFile(tile,file,artContract);
+   showPainted=true;staticDirty=true;renderDirty=true;
+   statusEl.textContent=tile.toUpperCase()+' original artwork loaded for VISUAL STUDY ONLY · '+record.sha256.slice(0,12)+' · no approval';
+  }catch(err){statusEl.textContent='ARTWORK REJECTED: '+err.message;}
+  finally{input.value='';menu.classList.remove('open');}
+ });
+}
+document.getElementById('resetArt').onclick=()=>{
+ V227ArtIngest.reset();showPainted=true;staticDirty=true;renderDirty=true;
+ statusEl.textContent='Local art cleared; V224 rejected photos restored for diagnostics';menu.classList.remove('open');
+};
+document.querySelector('#artGuide').onclick=()=>{artGuide=!artGuide;document.querySelector('#artGuide').textContent=artGuide?'Hide exact art clearance guide':'Show exact art clearance guide';staticDirty=true;renderDirty=true;};
+document.querySelector('#debug').onclick=()=>{debug=!debug;document.querySelector('#debug').textContent=debug?'Hide road inspection':'Inspect exact roads';;staticDirty=true;renderDirty=true;};
+window.V192=Object.freeze({
+ get reviewCapture(){return reviewCapture},
+ get renderStats(){const t=renderTimings.slice().sort((a,b)=>a-b);return {staticBuilds,cacheHits,dynamicFrames,cacheBytes:staticFrame?staticFrame.width*staticFrame.height*4:0,renderSamples:t.length,renderP95Ms:t.length?t[Math.ceil(t.length*.95)-1]:null,staticDirty};},
+ get terrainCamera(){return {center:cam.slice(),scale,zoom,minZoom:minimumTerrainZoom(),
+   viewport:[width,height],groundBounds:groundBounds.slice(),visible:visibleTerrainBounds()};},
+ get paintedVisible(){return showPainted},togglePainted(){showPainted=!showPainted;staticDirty=true;renderDirty=true;return showPainted;},
+ get v227ArtImport(){return V227ArtIngest.snapshot()},get v226ArtGuide(){return artGuide},get v226ArtworkContract(){return artContract},
+ get v225GroundContact(){return V225GroundContact.report},get v224Trial(){return !!v224Trial},get v224Sources(){return v224Trial?.images.map(p=>({tile:p.tile,x:p.x,y:p.y}))||[]},
+ get seamTone(){return toneReport},get ready(){return ready},get surveyLimits(){return surveyLimits},get geoMaterialSourceOnly(){return sourceGeoMaterial},get geoCrop(){return geoCrop},get seamStatus(){return atlas?.network.seams.map(x=>({id:x.id,pass:x.pass,errors:x.errors.slice()}))||[]},
+ get point(){return army?.slice()},get route(){return path.map(p=>p.slice())},
+ get roadNodeCount(){return graph?.graph.size||0},get moving(){return moving},get productionApproved(){return false},
+ get physicalIPhoneApproved(){return false},get historicRouteVerified(){return false},
+ roadDistance(p){return roadDistanceAt(p)},tapRoadWorld(p){return tapWorld(p)},
+ get connectedRoute(){return atlas?!!graph.planRoute(V123Atlas.endpoints(atlas).west,V123Atlas.endpoints(atlas).south):false},
+ destinations(){return atlas?V123Atlas.endpoints(atlas):null},
+ orderTo(name){return atlas&&V123Atlas.endpoints(atlas)[name]?issue(V123Atlas.endpoints(atlas)[name]):false},
+ progress(f){if(!path.length)return army?.slice();travel=Math.max(0,Math.min(1,f))*distance;army=sampleRoute(travel);if(f>=1){moving=false;currentKey=goal;pausedEdge=null;startEdge=null;}renderDirty=true;return army.slice();},
+ halt,zoomTo(z){zoom=z;redraw();},
+ // Read-only snapshot hook for V211's OFFSCREEN landmark-review iframe.
+ // Browsers may throttle requestAnimationFrame in offscreen iframes, so a
+ // camera capture must explicitly render after focusTile rather than hang.
+ // This uses the existing exact game renderer; no roads or units are moved.
+ snapshotForReview(){
+   if(!ready)return false;
+   render();renderDirty=false;
+   return true;
+ },
+ focusTile(name){
+   const centers={west:[790,510],matrei:[2350,530],south:[2300,1580]};
+   if(!centers[name])return false;
+   cam=centers[name].slice();zoom=2.4;redraw();return true;
+ },inspect(){debug=!debug;redraw();},
+ get artDimensions(){return art?[art.naturalWidth,art.naturalHeight]:null},
+ get photoPatchCount(){return photoPatchCount},get photoStampCount(){return photoStampCount},get valleyStampCount(){return valleyStampCount},get detailMarkCount(){return detailMarkCount},get transitionCanopyDrawn(){return transitionCanopyDrawn},get continuousTerrain(){return continuousTerrain},get experimental(){return !!atlas?.experimentalSeams},get neighborGroundDetailCount(){return tileGroundDetail?.length||0}
+});
+async function boot(){
+ try{
+  if(sourceGeoMaterial)document.querySelector('header small').textContent='V144 source-only geographic crop · no invented trees · routes unverified';
+  const html=await(await fetch('v121-octagon-1-painted-road.html')).text();
+  const artMatch=html.match(/source\.src='(data:image\/webp;base64,[^']+)'/);
+  const roadMatch=html.match(/const ROADS=(\{[^\r\n]+\});/);
+  if(!artMatch||!roadMatch)throw Error('V121 source art/route declaration missing');
+  const v121Roads=JSON.parse(roadMatch[1]);originalRoads=v121Roads;
+  atlas=V123Atlas.create(v121Roads,{experimentalSeams:true});graph=atlas.network;
+  artContract=V226ArtworkContract.build(atlas);
+  if(!graph.seams.every(s=>s.pass))throw Error('Octagon seam integrity failed; movement blocked');
+  surveyLimits=V152Survey.inspect(atlas); // Exact V123 graph endpoints, no extra edges.
+  const source=new Image();source.src=artMatch[1];
+  await new Promise((resolve,reject)=>{source.onload=resolve;source.onerror=reject;});
+  if(source.naturalWidth!==1536||source.naturalHeight!==1024)throw Error('Painted source has unexpected size');
+  art=source;await buildLandscape();currentKey=V123Atlas.endpoints(atlas).matrei;army=graph.graph.get(currentKey).world.slice();
+  ready=true;staticDirty=true;renderDirty=true;statusEl.textContent='V226 ARTWORK WORKBENCH · road clearance is NOT a painted 1780 cartway · no verified tiepoints';
+ }catch(e){statusEl.textContent='Atlas not loaded: '+e.message;console.error(e);}
+}
+// Static landscape is cached. Repaint only while marching or when camera/UI
+// changes; prevents continuously redrawing a large terrain layer on iPhone.
+function frame(t){if(last&&moving){march(Math.min(.04,(t-last)/1000));renderDirty=true;}
+ last=t;if(renderDirty){const t0=performance.now();render();renderTimings.push(performance.now()-t0);if(renderTimings.length>240)renderTimings.shift();renderDirty=false;}requestAnimationFrame(frame);}
+resize();boot();requestAnimationFrame(frame);
+</script></body></html>

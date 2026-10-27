@@ -18,7 +18,8 @@
   requireTrue(m?.version===230&&m.kind==='UNAPPROVED_ROUTE_GROUNDED_AUSTRIAN_COMPOSITION','manifest identity');
   requireTrue(m.sourceRegion==='Matrei in Osttirol, Austria','source location');
   requireTrue(m.notHistorical1780Geography===true&&m.cartwaysAndBridgeBanksNotSurveyed===true,'false geography');
-  requireTrue(m.license==='CC BY-SA 4.0','license');\n  requireTrue(m.sourceLandmarkTiepointsVerified===false&&m.selectionIsSemanticVerification===false,'unverified source/game registration');
+  requireTrue(m.license==='CC BY-SA 4.0','license');
+  requireTrue(m.sourceLandmarkTiepointsVerified===false&&m.selectionIsSemanticVerification===false,'unverified source/game registration');
   FALSE.forEach(k=>requireTrue(m[k]===false,'false approval '+k));
   requireTrue(m.sources&&Object.keys(m.sources).sort().join(',')==='south,west','exactly two sources');
   requireTrue(m.sources.west.sourceSha256!==m.sources.south.sourceSha256,'duplicate source');
@@ -28,7 +29,9 @@
    requireTrue(s.title===names[id]&&s.author==='Michael Kranewitter','author/source identity '+id);
    requireTrue(s.license==='CC BY-SA 4.0'&&s.licenseUrl==='https://creativecommons.org/licenses/by-sa/4.0/','attribution '+id);
    requireTrue(SHA.test(s.sourceSha256)&&SHA.test(s.outputSha256),'hash '+id);
-   requireTrue(s.nativePixels.join(',')===SIZE.join(','),'native image size '+id);\n   requireTrue(Array.isArray(s.nonrepeatingGroundStrip)&&s.nonrepeatingGroundStrip.length===4,'contiguous ground source '+id);\n   requireTrue(Array.isArray(s.crop)&&s.crop.length===4,'native source crop '+id);
+   requireTrue(s.nativePixels.join(',')===SIZE.join(','),'native image size '+id);
+   requireTrue(Array.isArray(s.nonrepeatingGroundStrip)&&s.nonrepeatingGroundStrip.length===4,'contiguous ground source '+id);
+   requireTrue(Array.isArray(s.crop)&&s.crop.length===4,'native source crop '+id);
    requireTrue(s.file===id+'-austrian-natural-cover-v230.webp','asset filename '+id);
    FALSE.forEach(k=>requireTrue(s[k]===false,'false source approval '+id+'/'+k));
   }

@@ -1,0 +1,84 @@
+name: V240 Independent Visible Cartway Registration (ART RED)
+on:
+  push:
+    branches: ['terrain-v240-visible-cartway-registration-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v240-visible-cartway
+  cancel-in-progress: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  road-visible-source-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image-test dependencies
+        run: python -m pip install pillow numpy opencv-python-headless
+      - name: Verify new geometry, earth evidence, source and negative controls
+        run: |
+          python -m py_compile scripts/v240_cartway_trace_registration.py scripts/test_v240_cartway_trace_registration.py
+          python scripts/test_v240_cartway_trace_registration.py
+          node scripts/test_v236_authored_alpine.js
+      - name: Download already pinned original WEST source (no Wikimedia requests)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/v237-source
+          gh run download 40488601990 --repo wayfinderandco0-cell/century-of-empires \
+            --name v237-cc0-photo-source-and-mobile-UNAPPROVED \
+            --dir /tmp/v237-source
+          test -s /tmp/v237-source/terrain-v237/generated/west-cc0-native.webp
+      - name: Actual original-photo negative control and route overlay evidence
+        run: |
+          python - <<'PY'
+          import sys,json
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          sys.path.insert(0,'scripts')
+          import v240_cartway_trace_registration as v240
+          import v238_bake_native_cartways as v238
+          source=Path('/tmp/v237-source/terrain-v237/generated/west-cc0-native.webp')
+          raw=source.read_bytes()
+          assert __import__('hashlib').sha256(raw).hexdigest()==v238.WEST_SHA256
+          roads=v238.verify_graph()
+          photo=Image.open(source).convert('RGB')
+          evidence=v240.earth_evidence(photo,roads['west'])
+          print('Actual untouched WEST photo, visible earth on V123:',evidence)
+          # This is an unpainted meadow, not a visible cartway.
+          assert not evidence['visibleEarthPass']
+          output=Path('qa/v240-visible-cartway');output.mkdir(parents=True,exist_ok=True)
+          draw=ImageDraw.Draw(photo)
+          draw.line([tuple(p) for p in roads['west']],fill=(238,40,40),width=5)
+          photo.save(output/'actual-unpainted-west-photo-v123-overlay.jpg',quality=91)
+          report={'version':240,'sourceSha256':v238.WEST_SHA256,
+                  'source':'V237 pinned CC0 Stijn te Strake native WEST crop',
+                  'originalVisibleEarth':evidence,
+                  'originalPhotoHasVisibleCartway':False,
+                  'noTwoCellCandidate':True,
+                  'annotationIndependentVerified':False,
+                  'historicalRoadsVerified':False,
+                  'bridgeBanksVerified':False,
+                  'sourceRegisteredToV123':False,
+                  'humanVisualApproval':False,
+                  'productionApproved':False}
+          (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+          PY
+      - name: Preserve actual original-photo and test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v240-visible-cartway-registration-UNAPPROVED
+          path: qa/v240-visible-cartway/
+          retention-days: 14
+      - name: Production and user-art acceptance remain RED
+        if: always()
+        run: |
+          echo 'V240 checks independently traced road pixels; no WEST+SOUTH art approved.'
+          echo 'No source/game tiepoints, historic roads, bridge banks, four-browser or user acceptance.'
+          exit 1

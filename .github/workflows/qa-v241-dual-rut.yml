@@ -1,0 +1,66 @@
+name: V241 Source-Textured Dual-Rut Study (ART RED)
+on:
+  push:
+    branches: ['terrain-v241-dual-rut-source-native-study-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v241-dual-rut
+  cancel-in-progress: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  west-source-native-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install raster test dependencies
+        run: python -m pip install pillow numpy opencv-python-headless
+      - name: Test V123 geometry and both tile ruts
+        run: |
+          python -m py_compile scripts/v241_rut_carver.py scripts/test_v241_rut_carver.py
+          python scripts/test_v241_rut_carver.py
+          python scripts/test_v240_cartway_trace_registration.py
+          node scripts/test_v236_authored_alpine.js
+      - name: Download already-pinned original WEST photo from existing V237 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/v237-source
+          gh run download 40488601990 --repo wayfinderandco0-cell/century-of-empires \
+            --name v237-cc0-photo-source-and-mobile-UNAPPROVED \
+            --dir /tmp/v237-source
+          test -s /tmp/v237-source/terrain-v237/generated/west-cc0-native.webp
+      - name: Generate actual source-native WEST art and edit mask (unapproved)
+        run: |
+          python scripts/v241_rut_carver.py \
+            --image /tmp/v237-source/terrain-v237/generated/west-cc0-native.webp \
+            --atlas terrain-grid/v123-atlas.js \
+            --tile west --output qa/v241-dual-rut \
+            --source-sha256 425d85e01adb9a34a141d1f2860a2e35575bbad42ba1eda1392301f46ae78b41
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('qa/v241-dual-rut/report.json')
+          report=json.loads(p.read_text())
+          assert report['pixelsModifiedOutside22px']==0
+          assert not report['productionApproved']
+          print('V241 original WEST art generated; human screenshot review still required')
+          PY
+      - name: Save actual rendered source and mask
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v241-dual-rut-source-native-UNAPPROVED
+          path: qa/v241-dual-rut/
+          retention-days: 14
+      - name: Production approval deliberately remains RED
+        if: always()
+        run: |
+          echo 'V241 cannot certify a road as physically believable, historical, or geographically registered.'
+          echo 'SOUTH has no qualified source; bridge banks and four-browser V203/human art acceptance missing.'
+          exit 1

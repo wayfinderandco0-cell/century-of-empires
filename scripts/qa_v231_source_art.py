@@ -58,7 +58,7 @@ def main():
                                       wait_until='domcontentloaded',timeout=30000)
                             page.wait_for_function('window.V192?.ready===true',timeout=180000)
                             m=page.evaluate('V192.v231SourceArt')
-                            assert m['version']==230 and m['productionApproved'] is False
+                            assert m['version']==231 and m['productionApproved'] is False
                             assert m['sources']['west']['sourceSha256']!=m['sources']['south']['sourceSha256']
                             assert m['sourceRegisteredToV123'] is False
                             assert page.evaluate('V192.v231SourceArtLoaded') is True

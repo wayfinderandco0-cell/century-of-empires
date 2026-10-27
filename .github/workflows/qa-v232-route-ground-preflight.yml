@@ -21,13 +21,13 @@ jobs:
         run: python -m pip install pillow numpy requests opencv-python-headless
       - name: V232 immutable V123 route, open-ground, forest and rock negative controls
         run: python -m unittest discover -s scripts -p 'test_v232_route_ground_preflight.py' -v
-      - name: Generate both pinned CC0 source-art images from V231 for semantic rejection
-        run: python scripts/build_v231_cc0_oblique_art.py
+      - name: Extract two SHA1-pinned CC0 native crops BEFORE V231 artificial road-strip edits
+        run: python scripts/build_v232_unaltered_source_crops.py
       - name: Inspect actual 1536x1024 source pixels against original V123 road footprints
         run: |
           python scripts/v232_route_ground_preflight.py \
-            --west terrain-v231/assets/west-austrian-natural-cover-v231.webp \
-            --south terrain-v231/assets/south-austrian-natural-cover-v231.webp \
+            --west terrain-v232/native-crops/west-unaltered-native-source-v232.png \
+            --south terrain-v232/native-crops/south-unaltered-native-source-v232.png \
             --output qa/v232-road-ground
       - name: Preserve diagnostic image overlays and machine-readable metrics
         if: always()
@@ -35,7 +35,7 @@ jobs:
         with:
           name: v232-actual-source-route-obstructions-ART-NOT-APPROVED
           path: |
-            qa/v232-road-ground/
+            qa/v232-road-ground/\n            terrain-v232/native-crops/native-source-manifest.json
           retention-days: 7
       - name: Keep art gate RED if both original cartways cannot be grounded
         run: |

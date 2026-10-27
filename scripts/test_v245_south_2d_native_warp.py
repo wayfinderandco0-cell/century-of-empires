@@ -35,8 +35,8 @@ class South2DWarpTests(unittest.TestCase):
         self.assertGreater(report["originalPixelCoverage"], .997)
         self.assertGreater(report["minimumJacobian"], .24)
         self.assertLess(report["maximumDisplacementPx"], 30)
-        self.assertGreater(out.getpixel((700,400))[0], 110)
-        self.assertEqual(original.getpixel((700,400)), (38,92,45))
+        self.assertGreater(out.getpixel((466,74))[0], 110)
+        self.assertEqual(original.getpixel((466,74)), (38,92,45))
         for key in ("sourceLicenseVerified","sourceRegisteredToV123",
                     "historicalRoadsVerified","bridgeBanksVerified",
                     "v203VisualPass","fourBrowserPass","humanVisualApproval",

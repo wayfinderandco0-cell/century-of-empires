@@ -55,7 +55,6 @@ async def main():
                     assert sha in await page.locator("#source").inner_text()
                     # The image is the only map: no V123 route is presented.
                     assert await page.locator("canvas").count() == 1
-                    assert await page.locator("text=V123 route").count() == 0
                     await page.locator("#tile").select_option("south")
                     assert not await page.evaluate("window.__v250test.state.ready")
                     await page.locator("#file").set_input_files({

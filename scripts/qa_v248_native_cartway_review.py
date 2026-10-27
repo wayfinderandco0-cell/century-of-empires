@@ -102,11 +102,11 @@ def run():
                     assert page.evaluate("(p)=>V192.tapRoadWorld(p)", p) is False
                     scores = {}
                     for tile in ("west", "matrei", "south"):
-                        cam = capture(page, tile, OUT / f"{key}-{tile}-native.png", protected_matrei=(tile == "matrei"))
+                        cam = capture(page, tile, OUT / f"{key}-{tile}-native.png")
                         assert cam == route_cameras[tile], (key, tile, "camera drift")
                         scores[tile] = mean_difference(
                             OUT / f"{key}-{tile}-close.png",
-                            OUT / f"{key}-{tile}-native.png")
+                            OUT / f"{key}-{tile}-native.png", protected_matrei=(tile == "matrei"))
                     assert scores["west"] > .01, (key, "WEST native road did not change", scores)
                     assert scores["south"] > .01, (key, "SOUTH native road did not change", scores)
                     assert scores["matrei"] < .001, (key, "Matrei changed", scores)

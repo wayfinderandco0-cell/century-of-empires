@@ -11,6 +11,8 @@
  'use strict';
  const SIZE=[1536,1024],IDS=['west','south'],MAX_BYTES=20*1024*1024;
  const origins=Object.freeze({west:[0,0],south:[1536,1024]});
+ const lockedRoadHash=Object.freeze({west:'a716b11c',south:'c0491522'});
+ function hashPoints(points){let h=2166136261;for(const ch of JSON.stringify(points))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;return h.toString(16)}
  const records=new Map();
  const FALSE=Object.freeze({
   sourceRegisteredToV123:false,historicalRoadsVerified:false,
@@ -29,6 +31,7 @@
    assert(cell.productionApproved===false&&cell.sourceRegisteredToV123===false,id+' false approval');
    assert(cell.points?.length===(id==='west'?13:12),id+' original path');
    assert(cell.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)),id+' path coordinates');
+   assert(hashPoints(cell.points)===lockedRoadHash[id],id+' immutable V123 interior route drift');
   }
   return true;
  }

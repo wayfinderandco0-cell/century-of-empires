@@ -23,6 +23,8 @@ const V227=require('../terrain-grid/v227-art-ingest.js');
  assert.throws(()=>V227.validateContract({...contract,productionApproved:true}),/contract/);
  assert.throws(()=>V227.validateContract({...contract,cells:contract.cells.slice(0,1)}),/two neighbor/);
  assert.throws(()=>V227.validateContract({...contract,cells:contract.cells.map(c=>({...c,origin:[9,9]}))}),/origin/);
+ const tampered={...contract,cells:contract.cells.map(c=>c.id==='west'?{...c,points:c.points.map((p,i)=>i===5?[p[0]+1,p[1]]:p)}:c)};
+ assert.throws(()=>V227.validateContract(tampered),/immutable V123 interior/);
  const sample=Buffer.alloc(256,42);
  const file=new Blob([sample],{type:'image/png'});
  file.name='synthetic-test-only.png';

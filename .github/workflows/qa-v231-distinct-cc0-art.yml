@@ -1,0 +1,63 @@
+name: V231 Two Distinct CC0 Austrian Landscape Studies (ART STILL RED)
+on:
+  push:
+    branches: ['terrain-v231-distinct-cc0-oblique-art-20261026']
+  workflow_dispatch:
+concurrency:
+  group: v231-austrian-source-art
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  generate-and-four-browser-art-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free image processing and browser QA dependencies
+        run: |
+          python -m pip install pillow numpy requests opencv-python-headless playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Build TWO source-pinned native landscapes with narrow V123-locked ground contact (UNAPPROVED)
+        run: python scripts/build_v231_cc0_oblique_art.py
+      - name: Immutable V121/V123 road, two-source SHA, license and negative approval checks
+        run: |
+          node scripts/test_v226_artwork_templates.js
+          node scripts/test_v227_art_ingest.js
+          node scripts/test_v231_austrian_source_art.js
+          node scripts/build_v226_artwork_templates.js --verify
+      - name: Inherited four-browser road, bridge, camera and 24-tap regression
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: V231 actual Chromium/WebKit portrait/landscape source art and movement
+        run: python scripts/qa_v231_source_art.py
+      - name: UNCHANGED strict V203 numeric artwork gate on ACTUAL V231 screenshots
+        run: python scripts/qa_v203_canopy_structure.py --screenshots qa/v231-austrian-source-art --output qa/v231-strict-v203 --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v231-source-grounded-four-browser-ART-NOT-APPROVED
+          path: |
+            terrain-v231/assets/
+            qa/v137-clean/
+            qa/v202-road-segment-taps/
+            qa/v231-austrian-source-art/
+            qa/v231-strict-v203/
+          retention-days: 7
+  human-and-production-approval-red:
+    needs: generate-and-four-browser-art-review
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: CC0 photographic sources do not establish registered 1780 geography or human approval
+        run: |
+          echo "RED: original V209 tiepoints, historic cartways, banks, meaningful onward routes, four V100 zoom tiers, physical iPhone/user visual approval missing"
+          echo "No merge, deployment or production claim is authorized"
+          exit 1

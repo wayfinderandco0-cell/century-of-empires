@@ -21,9 +21,12 @@ def fixture(tile, route, extra=False):
     image = Image.new("RGB", (1536, 1024),
                       (33, 90, 50) if tile == "west" else (40, 85, 53))
     d = ImageDraw.Draw(image)
-    d.line([tuple(p) for p in route], fill=(168, 129, 86), width=28,
+    # Deliberately offset native source road pixels. The V245 warp must move
+    # real brown pixels to the unchanged V123 line, not merely redraw it.
+    shifted = [[x + (12 if tile == "south" else 0), y + 16] for x, y in route]
+    d.line([tuple(p) for p in shifted], fill=(168, 129, 86), width=28,
            joint="curve")
-    full = [list(p) for p in route]
+    full = [list(p) for p in shifted]
     start, end = 0, len(full) - 1
     if extra:
         if tile == "west":
@@ -70,6 +73,7 @@ class DualArtReviewTests(unittest.TestCase):
             for tile in ("west", "south"):
                 self.assertTrue((out / f"{tile}-native-warp-UNAPPROVED.png").is_file())
                 self.assertTrue(report["tiles"][tile]["warpedRoadEvidence"]["visibleEarthPass"])
+                self.assertGreater(report["tiles"][tile]["warp"]["maximumDisplacementPx"], 10)
             evidence = os.getenv("V246_SYNTHETIC_OUT")
             if evidence:
                 target = Path(evidence); target.mkdir(parents=True, exist_ok=True)

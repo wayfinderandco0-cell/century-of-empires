@@ -1,0 +1,85 @@
+name: V227 Full-Cell Artwork Import Contract (ART STILL RED)
+on:
+  push:
+    branches: ['terrain-v227-art-asset-ingest-20261026']
+  workflow_dispatch:
+concurrency:
+  group: v227-art-ingest
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  immutable-source-and-art-ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Protected V121/V123 originals, source geometry, SHA, two-image, negative controls
+        run: |
+          node scripts/test_v226_artwork_templates.js
+          node scripts/test_v227_art_ingest.js
+      - name: Existing V226 deterministic template verification
+        run: node scripts/build_v226_artwork_templates.js --verify
+  actual-four-browser-art-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install pillow playwright numpy
+          python -m playwright install --with-deps chromium webkit
+      - name: Inherited V137/V202 seams, bridge, camera and 24 road taps
+        run: |
+          python scripts/qa_v137_coherent.py
+          python scripts/qa_v202_road_segment_taps.py
+      - name: V227 actual Chromium/WebKit portrait/landscape art import + immutable movement
+        run: python scripts/qa_v227_art_ingest.py
+      - name: Reproduce unchanged rejected V225 artwork for strict V203
+        run: python scripts/qa_v225_ground_contact.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v227-actual-four-browser-art-ingest-NOT-approved
+          path: |
+            qa/v137-clean/
+            qa/v202-road-segment-taps/
+            qa/v227-art-ingest/
+            qa/v225-ground-contact/
+          retention-days: 7
+  strict-v203-game-art-stays-red:
+    needs: actual-four-browser-art-import
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow numpy
+      - uses: actions/download-artifact@v4
+        with:
+          name: v227-actual-four-browser-art-ingest-NOT-approved
+          path: qa
+      - name: Unchanged strict V203 production art thresholds, fail-closed
+        run: python scripts/qa_v203_canopy_structure.py --screenshots qa/v225-ground-contact --output qa/v227-strict-v203 --enforce
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v227-strict-V203-art-RED-evidence
+          path: qa/v227-strict-v203/
+          retention-days: 7
+  human-and-production-approval-red:
+    needs: [immutable-source-and-art-ingest,actual-four-browser-art-import,strict-v203-game-art-stays-red]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: A local image import cannot establish licensed authentic terrain or visual approval
+        run: |
+          echo "BLOCKED: distinct licensed coherent WEST/SOUTH landscapes, source tiepoints, physical roadbeds, bridge banks, meaningful destinations, four V100 zoom tiers, user visual acceptance"
+          exit 1

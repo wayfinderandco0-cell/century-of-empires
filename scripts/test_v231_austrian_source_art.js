@@ -13,7 +13,7 @@ for(const id of ['west','south']){
  assert.equal(data.subarray(0,4).toString('ascii'),'RIFF');
  assert.equal(data.subarray(8,12).toString('ascii'),'WEBP');
  assert.equal(src.nativePixels.join(','),'1536,1024');
- assert.equal(src.author,id==='west'?'Stijn te Strake':'Paul Gilmore');
+ assert.equal(src.author,id==='west'?'Stijn te Strake':'Volker Schnäbele');
  assert.equal(src.license,'CC0 1.0');
 }
 const copy=()=>structuredClone(m);

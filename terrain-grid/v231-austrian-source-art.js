@@ -15,7 +15,7 @@
  const SHA=/^[a-f0-9]{64}$/;
  const requireTrue=(x,msg)=>{if(!x)throw Error('V231 source art: '+msg)};
  function verify(m){
-  requireTrue(m?.version===230&&m.kind==='UNAPPROVED_DISTINCT_CC0_OBLIQUE_AUSTRIAN_ART','manifest identity');
+  requireTrue(m?.version===231&&m.kind==='UNAPPROVED_DISTINCT_CC0_OBLIQUE_AUSTRIAN_ART','manifest identity');
   requireTrue(m.sourceRegion==='Two different Austrian Alpine valleys, NOT Matrei','source location');
   requireTrue(m.notHistorical1780Geography===true&&m.cartwaysAndBridgeBanksNotSurveyed===true,'false geography');
   requireTrue(m.license==='CC0 1.0','license');

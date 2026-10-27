@@ -1,0 +1,116 @@
+{
+  "west": {
+    "sha256": "0aeabc9e95f21cbddfb7c0bc39ec5599807aae6bdee0fbbe4a88146405e8545d",
+    "sourceKind": "original AI-generated fictional illustration; NOT surveyed geography",
+    "guide": [
+      [
+        1480,
+        462
+      ],
+      [
+        1400,
+        455
+      ],
+      [
+        1290,
+        455
+      ],
+      [
+        1190,
+        465
+      ],
+      [
+        1080,
+        495
+      ],
+      [
+        1020,
+        530
+      ],
+      [
+        955,
+        565
+      ],
+      [
+        900,
+        610
+      ],
+      [
+        865,
+        650
+      ],
+      [
+        830,
+        670
+      ],
+      [
+        815,
+        685
+      ],
+      [
+        795,
+        700
+      ],
+      [
+        785,
+        715
+      ]
+    ],
+    "sourceRegisteredToV123": false
+  },
+  "south": {
+    "sha256": "81e8727bc2772e983fa761fe6505ac070de046719616fc15fad2ce7fe102ca20",
+    "sourceKind": "original AI-generated fictional illustration; NOT surveyed geography",
+    "guide": [
+      [
+        625,
+        215
+      ],
+      [
+        610,
+        235
+      ],
+      [
+        590,
+        300
+      ],
+      [
+        580,
+        360
+      ],
+      [
+        610,
+        425
+      ],
+      [
+        650,
+        470
+      ],
+      [
+        710,
+        540
+      ],
+      [
+        800,
+        610
+      ],
+      [
+        900,
+        670
+      ],
+      [
+        965,
+        705
+      ],
+      [
+        1020,
+        730
+      ],
+      [
+        1090,
+        755
+      ]
+    ],
+    "sourceRegisteredToV123": false
+  }
+}

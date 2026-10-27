@@ -1,0 +1,43 @@
+name: V239 Licensed Hinteregger SOUTH (ART RED)
+on:
+  push:
+    branches: ['terrain-v239-hinteregger-licensed-south-20261027']
+  workflow_dispatch:
+concurrency:
+  group: v239-hinteregger-south
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  source-photo-native-road-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install photo-only dependencies
+        run: python -m pip install pillow numpy opencv-python-headless requests
+      - name: Immutable graph, attribution and negative tests
+        run: |
+          python -m py_compile scripts/v239_hinteregger_south.py scripts/test_v239_hinteregger_south.py
+          python scripts/test_v239_hinteregger_south.py
+          python scripts/test_v238_native_cartway.py
+      - name: Download and inspect one distinct CC BY-SA SOUTH original
+        id: audit
+        continue-on-error: true
+        run: python scripts/v239_hinteregger_south.py
+      - name: Preserve original-photo and graph-locked road screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v239-hinteregger-south-source-ground-UNAPPROVED
+          path: qa/v239-hinteregger-south/
+          retention-days: 14
+      - name: Production and user-art approval remain RED
+        if: always()
+        run: |
+          echo 'V239 is a photographic SOUTH candidate audit, not an approved 1780 road.'
+          echo 'No source-game tiepoints, bridge banks, four-browser visual acceptance, or user approval.'
+          exit 1

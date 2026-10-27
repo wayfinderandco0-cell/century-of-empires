@@ -7,7 +7,7 @@ const V123=require('../terrain-grid/v123-atlas.js');
 const V236=require('../terrain-grid/v236-authored-alpine.js');
 const V226=require('../terrain-grid/v226-artwork-contract.js');
 const html=fs.readFileSync(path.join(__dirname,'../v121-octagon-1-painted-road.html'),'utf8');
-const roads=JSON.parse(html.match(/const ROADS=(\\{[^\\r\\n]+\\});/)[1]);
+const roads=JSON.parse(html.match(/const ROADS=(\{[^\r\n]+\});/)[1]);
 const atlas=V123.create(roads,{experimentalSeams:true});
 const before=JSON.stringify(atlas.tiles);
 V226.build(atlas);V236.assertAtlas(atlas);

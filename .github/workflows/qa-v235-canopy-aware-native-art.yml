@@ -1,0 +1,60 @@
+name: V235 Canopy-Aware Native Alpine Art (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v235-canopy-aware-native-art-20261027
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  canopy-aware-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image analysis dependencies
+        run: python -m pip install --disable-pip-version-check numpy pillow opencv-python-headless requests
+      - name: Retrieve actual V234 screenshot-crop regression evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p terrain-v235/previous-v234-review
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/wayfinderandco0-cell/century-of-empires/actions/artifacts/12717600769/zip" \
+            -o /tmp/v234-source-native-review.zip
+          unzip -j /tmp/v234-source-native-review.zip \
+            'review/*-native-photo-candidate.webp' \
+            -d terrain-v235/previous-v234-review/
+      - name: Compile and test canopy-aware selection and actual V234 regression
+        run: |
+          python -m py_compile scripts/v235_canopy_aware_native_art.py scripts/test_v235_canopy_aware_native_art.py
+          python scripts/test_v235_canopy_aware_native_art.py
+      - name: Fetch pinned original CC0 Austrian source photographs
+        run: python scripts/v234_fetch_cc0_sources.py terrain-v235/originals
+      - name: Search full native source imagery with corrected landcover gate
+        run: |
+          python scripts/v235_canopy_aware_native_art.py \
+            --west terrain-v235/originals/west.jpg \
+            --south terrain-v235/originals/south.jpg \
+            --manifest terrain-v235/originals/source-manifest.json \
+            --output terrain-v235/review
+      - name: Upload actual candidate/rejection screenshots and provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v235-landcover-source-review
+          path: |
+            terrain-v235/review/
+            terrain-v235/originals/source-manifest.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Fail closed - historical and human art approval absent
+        run: |
+          echo 'ART RED: canopy-aware ground classification is necessary, not historic registration, bridge proof, V203, gameplay or user acceptance.'
+          exit 1

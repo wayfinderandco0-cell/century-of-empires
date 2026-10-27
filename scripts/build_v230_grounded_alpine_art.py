@@ -3,7 +3,7 @@
 A source-attributed ART EXPERIMENT, not registered 1780 geography or verified roads.
 No procedural texture, duplicated Matrei pixels, new roads, or new crossings.
 """
-import argparse, hashlib, io, json
+import argparse, hashlib, io, json, time
 from pathlib import Path
 import cv2
 import numpy as np
@@ -15,10 +15,22 @@ KIND = "UNAPPROVED_ROUTE_GROUNDED_AUSTRIAN_COMPOSITION"
 NATIVE_W, NATIVE_H = SIZE
 
 def download(info):
-    response = requests.get(info["url"], timeout=90,
-                            headers={"User-Agent":"CenturyOfEmpiresArtSourceAudit/0.2"})
-    response.raise_for_status()
-    raw = response.content
+    # Wikimedia temporarily throttles repeated CI source reads (observed 429
+    # at 2026-10-27 03:26 UTC). Respect Retry-After; NEVER bypass hashes or
+    # substitute unlicensed/modified source bytes to make a green CI run.
+    raw = None
+    for attempt, pause in enumerate((0, 15, 30, 60, 90)):
+        if pause: time.sleep(pause)
+        response = requests.get(info["url"], timeout=90, headers={
+            "User-Agent":"CenturyOfEmpires/0.2 (source verification; https://github.com/wayfinderandco0-cell/century-of-empires/issues/9)"})
+        if response.status_code == 429:
+            if attempt == 4: response.raise_for_status()
+            print("Wikimedia 429; waiting before verified-source retry",flush=True)
+            continue
+        response.raise_for_status()
+        raw = response.content
+        break
+    if raw is None: raise RuntimeError("Source unavailable; no unverified substitute allowed")
     actual = hashlib.sha256(raw).hexdigest()
     if actual != info["sourceSha256"]:
         raise ValueError("STOP: unpinned source: " + actual)

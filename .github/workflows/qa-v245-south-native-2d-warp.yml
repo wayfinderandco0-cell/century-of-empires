@@ -1,0 +1,37 @@
+name: V245 SOUTH 2D Native Road Remap (PRODUCTION RED)
+on:
+  push:
+    branches: [terrain-v245-south-native-2d-cartway-registration-20261027]
+  workflow_dispatch:
+jobs:
+  south-2d-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install geometry and image test dependencies
+        run: python -m pip install --disable-pip-version-check pillow numpy scipy opencv-python-headless
+      - name: Compile new and inherited geometry source
+        run: python -m py_compile scripts/v245_south_2d_native_warp.py scripts/test_v245_south_2d_native_warp.py scripts/v243_road_conditioning.py
+      - name: Run SOUTH vertical-entry real-pixel and negative controls
+        run: V245_DIAGNOSTIC_OUT=qa/v245-south-synthetic-only PYTHONPATH=scripts python -m unittest -v test_v245_south_2d_native_warp
+      - name: Verify unchanged V123 WEST/SOUTH source and masks
+        run: |
+          PYTHONPATH=scripts python -m unittest -v test_v243_road_conditioning
+          python scripts/v243_road_conditioning.py --out qa/v245-inherited-v123-masks
+      - name: Upload actual synthetic pixel screenshots and exact graph report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v245-south-native-remap-synthetic-NOT-GAME-ART
+          path: |
+            qa/v245-south-synthetic-only/
+            qa/v245-inherited-v123-masks/
+          if-no-files-found: warn
+      - name: PRODUCTION GATE deliberately RED — no qualifying photographic WEST/SOUTH source pair
+        run: |
+          echo "ART RED: 2D synthetic geometry is not geographic evidence, photo-grade gameplay, V203 approval, four-browser acceptance, or user approval."
+          exit 1

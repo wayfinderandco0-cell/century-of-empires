@@ -50,7 +50,7 @@ def verify_graph():
     return v232.source_roads()
 
 def source_south():
-    name=SOUTH_INFO['filename']
+    name=SOUTH_INFO['filename'].replace(' ','_')
     md5=hashlib.md5(name.encode()).hexdigest()
     url='https://upload.wikimedia.org/wikipedia/commons/'+md5[0]+'/'+md5[:2]+'/'+quote(name)
     response=None

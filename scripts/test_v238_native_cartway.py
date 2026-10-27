@@ -16,6 +16,8 @@ class CartwayTests(unittest.TestCase):
         self.assertEqual(v238.verify_graph()['west'][-1],[275,550])
         self.assertNotEqual(v238.WEST_SHA256,v238.SOUTH_INFO['sha1'])
         self.assertEqual(v238.SOUTH_INFO['license'],'CC0 1.0')
+        self.assertEqual(v238.commons_original_url(v238.SOUTH_INFO['filename']),
+          'https://upload.wikimedia.org/wikipedia/commons/a/a8/Peaceful_Austrian_valley_%28Unsplash%29.jpg')
         self.assertEqual(v238.PIN,'09f04b4062e24fbacbb645307462cdddce2b2aa3')
     def test_meadow_bakes_only_on_immutable_corridor(self):
         # Deliberately uniform synthetic grass: verifies pixels and geometry,

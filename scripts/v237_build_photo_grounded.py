@@ -133,7 +133,7 @@ def write_preview():
     qa=qa.replace('v237-authored-alpine-playtest.html',
                   'v237-photo-grounded-playtest.html')
     qa=qa.replace("page.wait_for_function('window.V192?.ready===true',timeout=180000)",
-      "page.wait_for_function('window.V192?.ready===true && window.V237PhotoGrounded?.loaded===true',timeout=180000)")
+      "page.wait_for_function('window.V192?.ready===true && window.V237PhotoGrounded?.loaded===true',timeout=180000)",1)
     (ROOT/'scripts/qa_v237_photo_grounded.py').write_text(qa)
 
 def build():

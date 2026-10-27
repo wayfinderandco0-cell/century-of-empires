@@ -667,7 +667,7 @@ function render(){
   // Original Matrei and exact road cartways render above this artistic study.
   if(v224Trial&&showPainted){V224LicensedObliqueNeighbors.paint(cx,v224Trial);} // rejected V224 photos remain default diagnostic background only.
  if(showPainted)V227ArtIngest.paint(cx); // local import remains opt-in; no imported images in this build.
- if(showPainted)V236AuthoredAlpine.paint(cx,atlas); // authored two-cell fictional terrain; original Matrei draws later. // V227 opt-in full-cell artwork, clipped to exact WEST/SOUTH octagons; original Matrei untouched.
+ if(showPainted&&atlas)V236AuthoredAlpine.paint(cx,atlas); // authored two-cell fictional terrain; original Matrei draws later. // V227 opt-in full-cell artwork, clipped to exact WEST/SOUTH octagons; original Matrei untouched.
  // V226 guide is a removable authoring overlay, NEVER playable terrain or route.
  if(artGuide&&artContract){
   for(const cell of artContract.cells){

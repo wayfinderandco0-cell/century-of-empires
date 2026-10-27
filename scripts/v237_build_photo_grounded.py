@@ -127,6 +127,9 @@ def write_preview():
     qa=(ROOT/'scripts/qa_v236_authored_alpine.py').read_text()
     qa=qa.replace('v236','v237').replace('V236','V237')
     qa=qa.replace('FICTIONAL_AUTHORED_ALPINE_STUDY','CC0_PHOTO_GROUND_STUDY')
+    qa=qa.replace("m['version']==236", "m['version']==237")
+    qa=qa.replace("'version':236", "'version':237")
+    qa=qa.replace('twoDistinctFictionalCompositionsRendered','twoDistinctCC0NativePhotosRendered')
     qa=qa.replace('v237-authored-alpine-playtest.html',
                   'v237-photo-grounded-playtest.html')
     qa=qa.replace("page.wait_for_function('window.V192?.ready===true',timeout=180000)",

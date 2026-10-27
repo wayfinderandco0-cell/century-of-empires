@@ -49,10 +49,13 @@ def verify_graph():
     if blob!=PIN:raise ValueError('STOP: V123 immutable graph changed')
     return v232.source_roads()
 
-def source_south():
-    name=SOUTH_INFO['filename'].replace(' ','_')
+def commons_original_url(filename):
+    name=filename.replace(' ','_')
     md5=hashlib.md5(name.encode()).hexdigest()
-    url='https://upload.wikimedia.org/wikipedia/commons/'+md5[0]+'/'+md5[:2]+'/'+quote(name)
+    return 'https://upload.wikimedia.org/wikipedia/commons/'+md5[0]+'/'+md5[:2]+'/'+quote(name)
+
+def source_south():
+    url=commons_original_url(SOUTH_INFO['filename'])
     response=None
     for delay in (0,10):
         if delay:time.sleep(delay)

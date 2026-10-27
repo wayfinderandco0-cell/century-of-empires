@@ -63,8 +63,11 @@ async def main():
                     await page.wait_for_function("window.__v250test.state.ready")
                     rect = await page.locator("#canvas").bounding_box()
                     for x, y in [(260, 510), (510, 540), (830, 500), (1260, 550)]:
-                        await page.mouse.click(rect["x"] + rect["width"] * x / 1536,
-                                               rect["y"] + rect["height"] * y / 1024)
+                        await page.dispatch_event("#canvas", "pointerdown", {
+                            "clientX": rect["x"] + rect["width"] * x / 1536,
+                            "clientY": rect["y"] + rect["height"] * y / 1024,
+                            "bubbles": True,
+                        })
                     assert await page.evaluate("window.__v250test.state.points.length") == 4
                     await page.locator("#clear").click()
                     assert await page.evaluate("window.__v250test.state.points.length") == 0

@@ -64,6 +64,7 @@ def main():
                             assert page.evaluate('V192.focusTile("matrei")')
                             page.evaluate('V192.zoomTo(6)')
                             assert page.evaluate('V192.snapshotForReview()')
+                            matrei_camera_before=page.evaluate('V192.terrainCamera')
                             matrei_before=OUT/f'{key}-matrei-before.png'
                             page.screenshot(path=str(matrei_before),animations='disabled')
                             for tile in ('west','south'):
@@ -80,7 +81,17 @@ def main():
                                 page.screenshot(path=str(after),animations='disabled')
                                 assert difference(before,after)>1000,(key,tile,'image did not change')
                             assert page.evaluate('V192.focusTile("matrei")')
+                            # focusTile deliberately resets zoom to 2.4. Compare the SAME
+                            # camera pose, not a 6x before image against a 2.4x after.
+                            # Otherwise this false-fails Matrei preservation while
+                            # the imported neighbor textures never touch Matrei.
+                            page.evaluate('V192.zoomTo(6)')
                             assert page.evaluate('V192.snapshotForReview()')
+                            matrei_camera_after=page.evaluate('V192.terrainCamera')
+                            for axis in ('center','scale','zoom','viewport'):
+                                assert matrei_camera_after[axis]==matrei_camera_before[axis],(
+                                    'Matrei camera drift',key,axis,
+                                    matrei_camera_before[axis],matrei_camera_after[axis])
                             matrei_after=OUT/f'{key}-matrei-after.png'
                             page.screenshot(path=str(matrei_after),animations='disabled')
                             with Image.open(matrei_before) as a,Image.open(matrei_after) as b:
@@ -101,6 +112,7 @@ def main():
                                 'twoIndependentLocalImagesImported':True,
                                 'onlyWestSouthArtChanged':True,
                                 'matreiCenterUnchanged':True,
+                                'matreiCameraPoseMatched':True,
                                 'originalRoadGraphAndArmyMovementUnchanged':True,
                                 'sourceAndApprovalFlagsRemainFalse':True}
                         finally:page.close()

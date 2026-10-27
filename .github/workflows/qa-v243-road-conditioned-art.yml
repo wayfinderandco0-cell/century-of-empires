@@ -1,0 +1,50 @@
+name: V243 road-conditioned photo-grade art authoring (production RED)
+on:
+  push:
+    branches: ['terrain-v243-road-conditioned-art-20261027']
+  workflow_dispatch:
+jobs:
+  native-route-art-briefs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free image tests
+        run: python -m pip install Pillow==11.3.0
+      - name: Compile and test route-conditioned guide generator
+        run: |
+          python -m py_compile scripts/v243_road_conditioning.py scripts/test_v243_road_conditioning.py
+          python -m unittest discover -s scripts -p 'test_v243_road_conditioning.py' -v
+      - name: Preserve unchanged V123, Matrei and imported-art integration regression
+        run: |
+          node scripts/test_v242_photo_art_import.js
+          node scripts/test_v236_authored_alpine.js
+      - name: Generate BOTH native-resolution source-road composition constraints
+        run: |
+          python scripts/v243_road_conditioning.py --atlas terrain-grid/v123-atlas.js --out qa/v243-road-conditioning
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('qa/v243-road-conditioning/manifest.json').read_text())
+          assert set(r['cells']) == {'west','south'}
+          assert r['v123GitBlob']=='09f04b4062e24fbacbb645307462cdddce2b2aa3'
+          assert all(r[k] is False for k in ('sourceRegisteredToV123','historicRoadsVerified','bridgeBanksVerified','sourceLicenseVerified','humanArtApproved','physicalIPhoneApproved','productionApproved'))
+          for tile in r['cells']:
+              assert r['cells'][tile]['imageReadyForGameplay'] is False
+          print('V243 GUIDE GENERATION PASS; NO NEW PLAYABLE ART OR APPROVAL')
+          PY
+      - name: Save full-resolution artwork briefs and manifest for human review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v243-west-south-original-road-conditioned-art-guides-UNAPPROVED
+          path: qa/v243-road-conditioning/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Keep strict V203, physical iPhone and production acceptance RED
+        if: always()
+        run: |
+          echo 'Guide masks are not image art; no verified historic road, bridge-bank, natural tiepoints, four-browser new-art V203 pass, or user visual approval.'
+          exit 1

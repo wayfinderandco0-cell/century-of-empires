@@ -18,7 +18,10 @@ for(const id of ['west','south']){
 }
 const copy=()=>structuredClone(m);
 function rejected(mutate){const bad=copy();mutate(bad);assert.throws(()=>loader.verify(bad));}
-rejected(m=>m.productionApproved=true);\nrejected(m=>m.sourceLandmarkTiepointsVerified=true);\nrejected(m=>m.selectionIsSemanticVerification=true);\nrejected(m=>m.sources.west.nonrepeatingGroundStrip=null);
+rejected(m=>m.productionApproved=true);
+rejected(m=>m.sourceLandmarkTiepointsVerified=true);
+rejected(m=>m.selectionIsSemanticVerification=true);
+rejected(m=>m.sources.west.nonrepeatingGroundStrip=null);
 rejected(m=>m.sourceRegisteredToV123=true);
 rejected(m=>m.notHistorical1780Geography=false);
 rejected(m=>m.cartwaysAndBridgeBanksNotSurveyed=false);

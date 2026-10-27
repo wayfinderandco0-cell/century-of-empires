@@ -31,14 +31,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
-def mean_difference(a, b):
+def mean_difference(a, b, *, protected_matrei=False):
     with Image.open(a) as aa, Image.open(b) as bb:
         x, y = np.asarray(aa.convert("RGB"), dtype=np.int16), np.asarray(bb.convert("RGB"), dtype=np.int16)
     assert x.shape == y.shape
-    # Exclude browser header/footer UI changes from pixel evidence.
+    # Exclude header/footer UI. At portrait zoom, the lower 30% of a Matrei-
+    # centered viewport includes the SOUTH neighbor: those pixels SHOULD change.
+    # Only compare the protected Matrei interior, never demand neighboring art
+    # outside the Matrei cell remain unchanged.
     h, w, _ = x.shape
-    return round(float(np.abs(x[int(h * .20):int(h * .77), int(w * .15):int(w * .85)] -
-                                   y[int(h * .20):int(h * .77), int(w * .15):int(w * .85)]).mean()), 5)
+    y1 = int(h * (.70 if protected_matrei else .77))
+    a_roi = x[int(h * .20):y1, int(w * .15):int(w * .85)]
+    b_roi = y[int(h * .20):y1, int(w * .15):int(w * .85)]
+    return round(float(np.abs(a_roi - b_roi).mean()), 5)
 
 
 def capture(page, tile, path):
@@ -97,7 +102,7 @@ def run():
                     assert page.evaluate("(p)=>V192.tapRoadWorld(p)", p) is False
                     scores = {}
                     for tile in ("west", "matrei", "south"):
-                        cam = capture(page, tile, OUT / f"{key}-{tile}-native.png")
+                        cam = capture(page, tile, OUT / f"{key}-{tile}-native.png", protected_matrei=(tile == "matrei"))
                         assert cam == route_cameras[tile], (key, tile, "camera drift")
                         scores[tile] = mean_difference(
                             OUT / f"{key}-{tile}-close.png",

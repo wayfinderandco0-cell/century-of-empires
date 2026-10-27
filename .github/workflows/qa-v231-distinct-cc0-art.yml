@@ -28,6 +28,7 @@ jobs:
         run: python scripts/build_v231_cc0_oblique_art.py
       - name: Immutable V121/V123 road, two-source SHA, license and negative approval checks
         run: |
+          node scripts/build_v226_artwork_templates.js
           node scripts/test_v226_artwork_templates.js
           node scripts/test_v227_art_ingest.js
           node scripts/test_v231_austrian_source_art.js

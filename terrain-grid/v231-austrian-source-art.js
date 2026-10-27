@@ -27,6 +27,8 @@
   for(const id of IDS){
    const s=m.sources[id];
    requireTrue(s.title===names[id]&&s.author===(id==='west'?'Stijn te Strake':'Paul Gilmore'),'author/source identity '+id);
+   const sourceSha1={west:'4a01fd2356056ceea1bfdf0374751040fdbd0145',south:'29667d44329ad6a36ce8f881e16dbcc51f8995db'};
+   requireTrue(s.sourceSha1===sourceSha1[id],'pinned Commons source SHA1 '+id);
    requireTrue(s.license==='CC0 1.0'&&s.licenseUrl==='https://creativecommons.org/publicdomain/zero/1.0/','attribution '+id);
    requireTrue(SHA.test(s.sourceSha256)&&SHA.test(s.outputSha256),'hash '+id);
    requireTrue(s.nativePixels.join(',')===SIZE.join(','),'native image size '+id);

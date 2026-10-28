@@ -372,42 +372,81 @@ function between(anchors,v){
   const a=anchors[i-1],b=anchors[i],t=(v-a[0])/(b[0]-a[0]);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
  }return anchors.at(-1).slice(1);
 }
+// The playable SOUTH road is reconstructed from genuine source cartway pixels
+// without displacing any mountains, trees, rivers, cabins or forest canopy.
+// Unlike the rejected full-cell x-warp, only two narrow horizontal strips
+// per row are edited: old photographed roadbed cleaned with nearby meadow,
+// and the ORIGINAL photographic roadbed relocated to immutable V123 geometry.
+// No artificial stroke, invented graph edge or procedural highway is drawn.
+// WEST keeps its existing V123-conforming registered raster.
+function southRoadFromNativePixels(src,anchors){
+ const input=src.data;
+ const out=new ImageData(new Uint8ClampedArray(input),W,H);
+ const output=out.data;
+ const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
+ function rgbAt(x,y,c){
+  x=Math.max(0,Math.min(W-1.001,x));
+  y=Math.max(0,Math.min(H-1,Math.round(y)));
+  const ix=Math.floor(x),f=x-ix,offset=(y*W+ix)*4;
+  return input[offset+c]*(1-f)+input[offset+4+c]*f;
+ }
+ for(let y=0;y<=690;y++){
+  const row=smoothSourceRoad(anchors,y);
+  const sourceX=row[0],targetX=row[1],shift=sourceX-targetX;
+  const fadeY=1-smooth((y-600)/90);
+  if(Math.abs(shift)<2||fadeY<.001)continue;
+  // Erase only the old 22–34px roadbed, replacing it with native
+  // left/right meadow samples. Outside 66px all source pixels are identical.
+  const oldMin=Math.max(0,Math.floor(sourceX-68)),oldMax=Math.min(W-1,Math.ceil(sourceX+68));
+  for(let x=oldMin;x<=oldMax;x++){
+   const d=x-sourceX,weight=(1-smooth((Math.abs(d)-31)/37))*fadeY;
+   if(weight<=0)continue;
+   const blend=.5+.5*Math.max(-1,Math.min(1,d/50));
+   for(let c=0;c<3;c++){
+    const a=rgbAt(sourceX-112+d*.27,y,c);
+    const b=rgbAt(sourceX+112+d*.27,y,c);
+    const meadow=a*(1-blend)+b*blend;
+    const i=(y*W+x)*4+c;
+    output[i]=Math.round(output[i]*(1-weight)+meadow*weight);
+   }
+  }
+  // Insert the already-painted, period-style native cartway at the
+  // precise fixed road centerline. The road has 1:1 width and length.
+  // Outside 62px it leaves every original tree untouched.
+  const newMin=Math.max(0,Math.floor(targetX-63)),newMax=Math.min(W-1,Math.ceil(targetX+63));
+  for(let x=newMin;x<=newMax;x++){
+   const d=x-targetX,weight=(1-smooth((Math.abs(d)-38)/25))*fadeY;
+   if(weight<=0)continue;
+   const i=(y*W+x)*4;
+   for(let c=0;c<3;c++){
+    const originalRoad=rgbAt(sourceX+d,y,c);
+    output[i+c]=Math.round(output[i+c]*(1-weight)+originalRoad*weight);
+   }
+  }
+ }
+ return out;
+}
 function registerSource(img,tile){
  const input=document.createElement('canvas');input.width=W;input.height=H;
  const ictx=input.getContext('2d',{willReadFrequently:true});ictx.drawImage(img,0,0,W,H);
- const src=ictx.getImageData(0,0,W,H),out=ictx.createImageData(W,H);
- const a=src.data,b=out.data,anchors=tile==='west'?WEST_ART_ROUTE:SOUTH_ART_ROUTE;
- // WEST keeps its previously reviewed source-local registration. SOUTH is
- // registered to the exact unchanged V123 graph with an edge-anchored,
- // monotone C1 Hermite inverse map. Unlike a Gaussian displacement field,
- // this does not concentrate horizontal compression inside the road valley,
- // fold terrain, repeat clamped edge pixels, or narrow the physical cartway.
- for(let y=0;y<H;y++){
-  const row=tile==='south'?smoothSourceRoad(anchors,y):null;
-  for(let x=0;x<W;x++){
-   let fx=x,fy=y;
-   if(tile==='south'){
-    const sourceRoad=row[0],targetRoad=row[1],delta=sourceRoad-targetRoad;
-    const offset=x-targetRoad,shoulder=34;
-    // Hold the photographed roadbed to its full width; fade deformation to
-    // zero at the left/right edges without moving the immutable V123 route.
-    const outer=offset<0?targetRoad-shoulder:W-targetRoad-shoulder;
-    const u=Math.max(0,Math.min(1,(Math.abs(offset)-shoulder)/Math.max(1,outer)));
-    // A mostly uniform inverse warp avoids the extreme midpoint pinch
-    // that bent trees near the road with full smoothstep displacement.
-    const even=1-u,smooth=1-u*u*(3-2*u);
-    fx=x+delta*(.65*even+.35*smooth);
-   }else{
-    const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
-    const shift=delta*Math.exp(-.5*((y-target)/205)**2);
-    fy=y+Math.max(-y*.82,Math.min((H-1-y)*.82,shift));
-   }
-   fx=Math.max(0,Math.min(W-1.001,fx));fy=Math.max(0,Math.min(H-1.001,fy));
-   const x0=Math.floor(fx),y0=Math.floor(fy),tx=fx-x0,ty=fy-y0;
-   const i=(y0*W+x0)*4,j=i+4,k=i+W*4,l=k+4,o=(y*W+x)*4;
-   for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-tx)*(1-ty)+a[j+c]*tx*(1-ty)+a[k+c]*(1-tx)*ty+a[l+c]*tx*ty;
-   b[o+3]=255;
-  }
+ const src=ictx.getImageData(0,0,W,H);
+ if(tile==='south'){
+  const out=southRoadFromNativePixels(src,SOUTH_ART_ROUTE);
+  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+  canvas.getContext('2d').putImageData(out,0,0);
+  return canvas;
+ }
+ // Preserve the previously inspected WEST source registration as-is.
+ const out=ictx.createImageData(W,H),a=src.data,b=out.data,anchors=WEST_ART_ROUTE;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
+  const shift=delta*Math.exp(-.5*((y-target)/205)**2);
+  let fy=y+Math.max(-y*.82,Math.min((H-1-y)*.82,shift));
+  fy=Math.max(0,Math.min(H-1.001,fy));
+  const x0=x,y0=Math.floor(fy),ty=fy-y0;
+  const i=(y0*W+x0)*4,k=i+W*4,o=(y*W+x)*4;
+  for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-ty)+a[k+c]*ty;
+  b[o+3]=255;
  }
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  canvas.getContext('2d').putImageData(out,0,0);return canvas;

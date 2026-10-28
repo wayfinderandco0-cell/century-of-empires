@@ -30,6 +30,7 @@ jobs:
           node scripts/test_v248_native_cartway_review.js
           node scripts/test_v242_photo_art_import.js
           python -m py_compile scripts/qa_v253_original_art_playtest.py
+          python -m unittest discover -s scripts -p 'test_v253_original_art_playtest.py'
       - name: Real original-source game-renderer four-browser screenshots
         run: python scripts/qa_v253_original_art_playtest.py
       - name: Strict V203 landscape diagnostics (never approval)

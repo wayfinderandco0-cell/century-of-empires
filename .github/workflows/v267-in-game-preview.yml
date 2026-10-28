@@ -1,0 +1,48 @@
+name: V267 in-game Alpine review entry (UNAPPROVED)
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - index.html
+      - v267-three-octagon-original-art-prototype.html
+      - scripts/v267_in_game_preview_check.py
+      - .github/workflows/v267-in-game-preview.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview-entry:
+    name: In-game art / ${{ matrix.browser }} / ${{ matrix.orientation }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+        orientation: [portrait, landscape]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install mobile browser engines
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Test actual V267 art preview inside the unapproved V94 campaign shell
+        run: |
+          python scripts/v267_in_game_preview_check.py \
+            --browser ${{ matrix.browser }} \
+            --orientation ${{ matrix.orientation }} \
+            --out art-reviews/v267-in-game/
+      - name: Preserve real rendered in-game screenshots and test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-in-game-${{ matrix.browser }}-${{ matrix.orientation }}
+          path: art-reviews/v267-in-game/
+          if-no-files-found: warn
+          retention-days: 14

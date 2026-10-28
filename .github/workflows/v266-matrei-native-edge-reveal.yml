@@ -1,0 +1,46 @@
+name: V266 Matrei Native Edge Reveal (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v266-matrei-native-edge-reveal-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-native-edge-technical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile and test alpha-only change, no source image redistribution
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/v266_native_matrei_edge_reveal.py scripts/test_v266_native_matrei_edge_reveal.py
+          python scripts/test_v266_native_matrei_edge_reveal.py -v
+      - name: Preserve protected game and immutable road/bridge graph
+        run: |
+          set -euo pipefail
+          git cat-file -e b29bbf06^{commit}
+          git diff --name-only b29bbf06 HEAD > /tmp/v266-changed
+          if grep -E '^(index\.html|v94-|v121-octagon-1-painted-road\.html|terrain-grid/v12[13]-|campaign|saves|assets/sprites)' /tmp/v266-changed; then
+            echo 'PROTECTED GAME FILE CHANGED'; exit 1
+          fi
+          test "$(git hash-object terrain-grid/v123-atlas.js)" = 09f04b4062e24fbacbb645307462cdddce2b2aa3
+      - name: Browser test on SYNTHETIC fixtures only (not exact artwork)
+        run: |
+          python -m pip install pillow numpy opencv-python-headless playwright
+          python -m playwright install --with-deps chromium webkit
+          python scripts/qa_v265_synthetic_browser.py
+  production-art-approval:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Keep production red pending independent visual/geographic review
+        run: |
+          echo 'V266 only restores existing Matrei photo detail. Exact-art WebKit/iPhone, source geography, bridge banks and user approval are missing.'
+          exit 1

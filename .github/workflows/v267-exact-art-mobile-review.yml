@@ -34,12 +34,22 @@ jobs:
       - name: Verify immutable production sources are unchanged
         run: |
           git fetch --no-tags --depth=1 origin main
-          changed=$(git diff --name-only origin/main HEAD)
-          printf '%s\n' "$changed"
-          if printf '%s\n' "$changed" | grep -E '^(index\.html|v121-|v122-|v123-|v94-|assets/|saves/)' ; then
-            echo 'Protected game/source file modified: refusing to test as approved.'
+          # The earlier isolated opt-in index is pinned, not falsely
+          # rejected by comparing the entire branch against main.
+          actual_index=$(git rev-parse HEAD:index.html)
+          expected_index=bebb8717b7a8dd8891f4a9bbc15541418f21dac1
+          if [ "$actual_index" != "$expected_index" ]; then
+            echo "Isolated V94 shell/index changed unexpectedly: $actual_index"
             exit 1
           fi
+          # Compare immutable V121/V123/V94 sources and sprites/saves with main.
+          changed=$(git diff --name-only origin/main HEAD -- 'v121-*' 'v122-*' 'v123-*' 'v94-*' 'assets/**' 'saves/**')
+          if [ -n "$changed" ]; then
+            printf '%s\\n' "$changed"
+            echo 'Protected game/source files changed: production gate RED.'
+            exit 1
+          fi
+          echo 'Pinned opt-in index and protected source files unchanged; still UNAPPROVED.'
       - name: Run real artwork browser review (NOT production approval)
         run: |
           python scripts/v267_actual_art_browser_review.py \

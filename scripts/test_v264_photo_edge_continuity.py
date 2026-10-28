@@ -44,7 +44,7 @@ class EdgeTests(unittest.TestCase):
     self.assertIn('const westRoad=[[1536,478]];const southRoad=[[466,0]];',html)
     self.assertEqual(html.count('if(centerPhoto)cx.drawImage(centerPhoto,1536,0,W,H);'),1)
     self.assertIn('get productionApproved(){return false}',html)
-    self.assertIn('V227ArtIngest.snapshot().cells.filter(Boolean).length===2',html)
+    self.assertIn('V263_PINS[c.id]===c.sha256',html)
     self.assertGreater(report['patch_bytes'],1000)
     self.assertFalse(report['productionApproved'])
     with self.assertRaises(ValueError):mod.build(base,s,w,p/'wrong.html')

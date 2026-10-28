@@ -401,11 +401,14 @@ function southRoadFromNativePixels(src,anchors){
   for(let x=oldMin;x<=oldMax;x++){
    const d=x-sourceX,weight=(1-smooth((Math.abs(d)-31)/37))*fadeY;
    if(weight<=0)continue;
-   const blend=.5+.5*Math.max(-1,Math.min(1,d/50));
+   // Reconstruct the absent meadow from a single adjacent source crop
+   // at native 1:1 scale. Mixing opposite sides previously produced the
+   // visibly stretched, low-detail green smear in the user's screenshot.
+   // The source and destination sample offsets have identical x derivative,
+   // so foliage and soil texture keep their real aspect ratio.
+   const sampleX=sourceX+104+d;
    for(let c=0;c<3;c++){
-    const a=rgbAt(sourceX-112+d*.27,y,c);
-    const b=rgbAt(sourceX+112+d*.27,y,c);
-    const meadow=a*(1-blend)+b*blend;
+    const meadow=rgbAt(sampleX,y,c);
     const i=(y*W+x)*4+c;
     output[i]=Math.round(output[i]*(1-weight)+meadow*weight);
    }

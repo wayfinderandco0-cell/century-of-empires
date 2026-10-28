@@ -1,0 +1,66 @@
+name: V264 Fictional Photo-Seam Underlay (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v264-source-pixel-matrei-seam-underlay-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-seam-technical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free image and browser dependencies
+        run: |
+          python -m pip install pillow numpy playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Compile and test fail-closed source-pixel seam compositor
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/v264_photo_edge_continuity.py scripts/test_v264_photo_edge_continuity.py scripts/qa_v264_synthetic_browser.py
+          python scripts/test_v264_photo_edge_continuity.py -v
+          python scripts/test_v263_offline_exact_art_playable.py -v
+      - name: Preserve original V94/V121/V123/army/saves exactly
+        run: |
+          set -euo pipefail
+          git cat-file -e b29bbf06^{commit}
+          git diff --name-only b29bbf06 HEAD > /tmp/v264-changed
+          if grep -E '^(index\.html|v94-|v121-octagon-1-painted-road\.html|terrain-grid/v12[13]-|campaign|saves|assets/sprites)' /tmp/v264-changed; then
+            echo 'PROTECTED GAME FILE CHANGED'; exit 1
+          fi
+          python - <<'PY'
+          import hashlib
+          data=open('terrain-grid/v123-atlas.js','rb').read()
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert blob=='09f04b4062e24fbacbb645307462cdddce2b2aa3',blob
+          print('Original immutable V123 route graph verified')
+          PY
+      - name: Four mobile-browser smoke tests with SYNTHETIC source images only
+        run: python scripts/qa_v264_synthetic_browser.py
+      - name: Save non-production synthetic screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v264-SYNTHETIC-four-browser-NOT-ART-APPROVAL
+          path: |
+            qa/v264-synthetic-browser/*-SYNTHETIC.png
+            qa/v264-synthetic-browser/report.json
+          retention-days: 14
+  production-art-approval:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Keep approval RED until actual V203, WebKit, bridge and human approval
+        run: |
+          echo 'Reflected source pixels are fictional artistic infill, not independently georegistered 1780 geography.'
+          echo 'The original SOUTH landscape failed unchanged strict V203 in landscape.'
+          echo 'No source-verified bridge banks, full physical route-to-rut review, native iPhone or user visual approval.'
+          echo 'Do not merge or promote this candidate.'
+          exit 1

@@ -77,7 +77,7 @@ def build(v263,west,south,output,patch_out=None):
  replacement=needle+'''
  // V264 fictional source-pixel underlay beneath original Matrei; no original art edits.
  // The source-registered road graph is NOT implied; no new playable route.
- if(showPainted && V227ArtIngest.snapshot().cells.filter(Boolean).length===2 &&
+ if(showPainted && V227ArtIngest.snapshot().cells.every(\n    c=>c && V263_PINS[c.id]===c.sha256) &&
     V264_SEAM_UNDERLAY.complete && V264_SEAM_UNDERLAY.naturalWidth===1536)
    cx.drawImage(V264_SEAM_UNDERLAY,1536,0,1536,1024);
 '''

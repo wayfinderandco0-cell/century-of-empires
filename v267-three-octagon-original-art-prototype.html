@@ -241,10 +241,12 @@ function buildInlay(){
    for(const e of edges){
     const u=Math.max(0,Math.min(1,((px-e.a[0])*e.dx+(py-e.a[1])*e.dy)/e.len));
     const ex=e.a[0]+u*e.dx,ey=e.a[1]+u*e.dy;
-    const d=Math.hypot(px-ex,py-ey),deep=Math.min(108,12+d*.54);
+    // Continue sampling progressively deeper *unique* photographed terrain instead of
+    // clamping at 108px (which duplicated a narrow strip of forest and rock).
+    const d=Math.hypot(px-ex,py-ey),deep=18+Math.min(360,d*.88);
     const sx=Math.max(0,Math.min(W-2,Math.round(ex+e.n[0]*deep/Math.SQRT2-e.origin[0])));
     const sy=Math.max(0,Math.min(H-2,Math.round(ey+e.n[1]*deep/Math.SQRT2-e.origin[1])));
-    const j=(sy*W+sx)*4,weight=Math.exp(-d/78);
+    const j=(sy*W+sx)*4,weight=Math.exp(-d/112);
     if(e.source[j+3]<100)continue;
     rr+=weight*e.source[j];gg+=weight*e.source[j+1];bb+=weight*e.source[j+2];sum+=weight;
    }
@@ -254,6 +256,33 @@ function buildInlay(){
   context.putImageData(output,0,0);
   inlays.push({name,x:X,y:Y,canvas});
  }
+}
+
+
+// Open only the two actual road crossings through V121's gold border baked
+// into the canonical photograph. This is render-copy art, not a road overlay.
+// Pixels are sampled from Matrei's existing photographic road, never invented.
+// The original V121 file, V123 graph, campaign, saves and sprites are unchanged.
+const roadPortals=[];
+function buildRoadPortals(){
+ roadPortals.length=0;
+ const matrei=textures.matrei.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
+ const sample=(x,y,c)=>matrei[(Math.max(0,Math.min(H-1,Math.round(y)))*W+Math.max(0,Math.min(W-1,Math.round(x))))*4+c];
+ const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
+ function make(name,x,y,w,h){
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const cx=canvas.getContext('2d'),im=cx.createImageData(w,h),a=im.data;
+  for(let j=0;j<h;j++)for(let i=0;i<w;i++){
+   const along=name==='west'?j:i,edge=Math.min(along,(name==='west'?h:w)-1-along);
+   const alpha=smooth(edge/14)*(name==='west'?1-smooth(i/(w-1)):smooth(j/(h-1)));
+   for(let c=0;c<3;c++)a[(j*w+i)*4+c]=name==='west'?sample(18+i*.4,y+j,c):sample(x-1536+i,998+j*.3,c);
+   a[(j*w+i)*4+3]=Math.round(255*alpha);
+  }
+  cx.putImageData(im,0,0);roadPortals.push({name,x,y,canvas});
+ }
+ // Only 80px around each immutable V123 endpoint, never whole border strips.
+ make('west',1536,438,18,80);  // WEST(1536,478) ↔ MATREI(0,478)
+ make('south',1962,1009,80,15); // MATREI(466,1024) ↔ SOUTH(466,0)
 }
 
 let cw=1,ch=1,dpr=1,base=1,zoom=1.65,scale=1,cam=[1560,1010],srcStatus="loading";
@@ -484,6 +513,8 @@ function render(){
   ctx.restore();
   naturalOutline(tile);
  }
+ // Road portals cover the baked border at the two crossings only.
+ for(const patch of roadPortals)ctx.drawImage(patch.canvas,patch.x,patch.y);
  if(showRoads){
   for(const tile of atlas){ctx.save();ctx.translate(...tile.o);
    for(const pts of Object.values(tile.roads)){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineWidth=5;ctx.strokeStyle="#f8e76c";ctx.stroke();}
@@ -573,7 +604,7 @@ async function boot(){
  textures.matrei=registerCanonicalMatrei(canonical);srcStatus="original";
  document.getElementById("source").textContent="Offline V121 Matrei • original V122/V123 engine • fictional WEST/SOUTH art • NOT APPROVED";
  
- rebuildGraph();buildInlay();resize();requestAnimationFrame(frame);
+ rebuildGraph();buildInlay();buildRoadPortals();resize();requestAnimationFrame(frame);
  document.getElementById("status").textContent="Playable prototype ready • 3 connected octagons";
  document.getElementById("status").textContent="Ready • 100 V123 tile nodes / 98 world points • 2 experimental seams • march WEST → SOUTH";
 }

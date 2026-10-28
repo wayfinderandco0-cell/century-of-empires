@@ -24,7 +24,7 @@ class SouthRecontactTests(unittest.TestCase):
   self.assertFalse(self.after['independentGeographicTiepointsVerified'])
  def test_south_native_geometry_gates_unchanged(self):
   dst=target_at_source_progress('south',TRACE['south'])
-  mx,my,_,_=mapping(TRACE['south'],dst,sigma=170,spacing=1.25)
+  mx,my=mapping(TRACE['south'],dst,sigma=170,spacing=1.25)
   q=evaluate(mx,my,TRACE['south'],dst)
   self.assertLess(q['maxPairedAnchorDisplacementPx'],155)
   self.assertGreater(q['minSampledJacobian'],.24)

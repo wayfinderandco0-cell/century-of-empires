@@ -1,0 +1,65 @@
+name: V265 SOUTH Native Shadow Detail (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v265-south-native-shadow-recovery-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-native-detail-technical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free source-processing and browser dependencies
+        run: |
+          python -m pip install pillow numpy opencv-python-headless playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Compile and test fail-closed source detail recovery
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/v265_native_south_shadow_detail.py scripts/test_v265_native_south_shadow_detail.py scripts/qa_v265_synthetic_browser.py
+          python scripts/test_v265_native_south_shadow_detail.py -v
+          python scripts/test_v263_offline_exact_art_playable.py -v
+      - name: Protect main, original V94/V121/V123, army and saves
+        run: |
+          set -euo pipefail
+          git cat-file -e b29bbf06^{commit}
+          git diff --name-only b29bbf06 HEAD > /tmp/v265-changed
+          if grep -E '^(index\.html|v94-|v121-octagon-1-painted-road\.html|terrain-grid/v12[13]-|campaign|saves|assets/sprites)' /tmp/v265-changed; then
+            echo 'PROTECTED GAME FILE CHANGED'; exit 1
+          fi
+          python - <<'PY'
+          import hashlib
+          data=open('terrain-grid/v123-atlas.js','rb').read()
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert blob=='09f04b4062e24fbacbb645307462cdddce2b2aa3',blob
+          print('Original immutable V123 route graph verified')
+          PY
+      - name: Four mobile-browser functional checks on SYNTHETIC art only
+        run: python scripts/qa_v265_synthetic_browser.py
+      - name: Save explicitly synthetic screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v265-SYNTHETIC-four-browser-NOT-V203-APPROVAL
+          path: |
+            qa/v265-synthetic-browser/*-SYNTHETIC.png
+            qa/v265-synthetic-browser/report.json
+          retention-days: 14
+  production-art-approval:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Fail closed until exact WebKit, geography, bridge and user approval
+        run: |
+          echo 'V265 shadow recovery passes local Chromium V203 only; no exact-art WebKit/iPhone or human acceptance.'
+          echo 'V264 reflected seam and unverified historical roads/bridge banks are not accepted.'
+          echo 'Never promote experimental fictional artwork to production.'
+          exit 1

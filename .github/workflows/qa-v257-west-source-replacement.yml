@@ -1,0 +1,38 @@
+name: V257 New WEST Original Bridge Cartway (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v257-original-west-bridge-cartway-replacement-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-west-source-geometry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install native-image geometry dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy opencv-python-headless
+      - name: Compile replacement WEST source and tests
+        run: python -m py_compile scripts/v257_replacement_west.py scripts/test_v257_replacement_west.py
+      - name: Run V257 regressions (source-PNG test SKIPS unless original images provided)
+        run: PYTHONPATH=scripts python -m unittest -v scripts/test_v257_replacement_west.py
+      - name: Ensure protected game and route files unchanged
+        run: |
+          git diff --name-only b29bbf06 -- terrain-grid/v123-atlas.js terrain-grid/v121-road-graph.js v121-octagon-1-painted-road.html v94.html index.html | tee /tmp/v257-protected-diff.txt
+          test ! -s /tmp/v257-protected-diff.txt
+  production-art-approval:
+    runs-on: ubuntu-latest
+    needs: isolated-west-source-geometry
+    steps:
+      - name: Production stays RED pending independently verified source/game and human acceptance
+        run: |
+          echo 'New WEST geometry passes NECESSARY deformation test in local original-image study.'
+          echo 'CI does NOT host the original fictional PNGs; synthetic code tests are not art acceptance.'
+          echo 'SOUTH visible cartway still drifts from immutable V123 in middle bend.'
+          echo 'Neither historic geodesy, both bridge banks, four-browser exact-art V203 nor user approval verified.'
+          echo 'Three octagons NOT complete; production approval RED.'
+          exit 1

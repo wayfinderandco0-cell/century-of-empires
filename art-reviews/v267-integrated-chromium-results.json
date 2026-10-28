@@ -1,0 +1,194 @@
+[
+  {
+    "config": "iphone-portrait",
+    "nodes": 100,
+    "engine": "canonical V122/V123 experimental seam graph",
+    "seams": [
+      {
+        "id": "west-matrei",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      },
+      {
+        "id": "matrei-south",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      }
+    ],
+    "loaded": true,
+    "connected": true,
+    "status": "Ready \u2022 100 V123 tile nodes / 98 world points \u2022 2 experimental seams \u2022 march WEST \u2192 SOUTH",
+    "touch": {
+      "moving": true,
+      "route": 23
+    },
+    "path": {
+      "count": 53,
+      "keys": 53,
+      "initial": [
+        312.82239529420514,
+        538.852346650129
+      ],
+      "moving": true
+    },
+    "halt": {
+      "moving": false,
+      "edge": {
+        "a": "west@275.000,550.000",
+        "b": "west@370.000,522.000"
+      }
+    },
+    "arrival": [
+      2806,
+      1629
+    ],
+    "errors": [],
+    "elapsed": 3.83
+  },
+  {
+    "config": "iphone-landscape",
+    "nodes": 100,
+    "engine": "canonical V122/V123 experimental seam graph",
+    "seams": [
+      {
+        "id": "west-matrei",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      },
+      {
+        "id": "matrei-south",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      }
+    ],
+    "loaded": true,
+    "connected": true,
+    "status": "Ready \u2022 100 V123 tile nodes / 98 world points \u2022 2 experimental seams \u2022 march WEST \u2192 SOUTH",
+    "touch": {
+      "moving": true,
+      "route": 23
+    },
+    "path": {
+      "count": 53,
+      "keys": 53,
+      "initial": [
+        312.80177239600766,
+        538.8584249780188
+      ],
+      "moving": true
+    },
+    "halt": {
+      "moving": false,
+      "edge": {
+        "a": "west@275.000,550.000",
+        "b": "west@370.000,522.000"
+      }
+    },
+    "arrival": [
+      2806,
+      1629
+    ],
+    "errors": [],
+    "elapsed": 2.24
+  },
+  {
+    "config": "small-portrait",
+    "nodes": 100,
+    "engine": "canonical V122/V123 experimental seam graph",
+    "seams": [
+      {
+        "id": "west-matrei",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      },
+      {
+        "id": "matrei-south",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      }
+    ],
+    "loaded": true,
+    "connected": true,
+    "status": "Ready \u2022 100 V123 tile nodes / 98 world points \u2022 2 experimental seams \u2022 march WEST \u2192 SOUTH",
+    "touch": {
+      "moving": true,
+      "route": 23
+    },
+    "path": {
+      "count": 53,
+      "keys": 53,
+      "initial": [
+        312.7811494978101,
+        538.8645033059086
+      ],
+      "moving": true
+    },
+    "halt": {
+      "moving": false,
+      "edge": {
+        "a": "west@275.000,550.000",
+        "b": "west@370.000,522.000"
+      }
+    },
+    "arrival": [
+      2806,
+      1629
+    ],
+    "errors": [],
+    "elapsed": 1.78
+  },
+  {
+    "config": "small-landscape",
+    "nodes": 100,
+    "engine": "canonical V122/V123 experimental seam graph",
+    "seams": [
+      {
+        "id": "west-matrei",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      },
+      {
+        "id": "matrei-south",
+        "pass": true,
+        "gap": 0,
+        "errors": []
+      }
+    ],
+    "loaded": true,
+    "connected": true,
+    "status": "Ready \u2022 100 V123 tile nodes / 98 world points \u2022 2 experimental seams \u2022 march WEST \u2192 SOUTH",
+    "touch": {
+      "moving": true,
+      "route": 23
+    },
+    "path": {
+      "count": 53,
+      "keys": 53,
+      "initial": [
+        309.37837129522353,
+        539.8674274077235
+      ],
+      "moving": true
+    },
+    "halt": {
+      "moving": false,
+      "edge": {
+        "a": "west@275.000,550.000",
+        "b": "west@370.000,522.000"
+      }
+    },
+    "arrival": [
+      2806,
+      1629
+    ],
+    "errors": [],
+    "elapsed": 1.93
+  }
+]

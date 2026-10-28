@@ -1,0 +1,12 @@
+{
+  "description": "Chromium actual V267 candidate art, HUD hidden for inspection",
+  "orientation": "390x844, DPR2",
+  "panels": [
+    "SOUTH JOIN",
+    "WEST JOIN",
+    "WHOLE MAP"
+  ],
+  "production_approved": false,
+  "native_iphone_safari_verified": false,
+  "errors": []
+}

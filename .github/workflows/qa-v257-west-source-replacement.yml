@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -22,6 +24,8 @@ jobs:
         run: PYTHONPATH=scripts python -m unittest -v scripts/test_v257_replacement_west.py
       - name: Ensure protected game and route files unchanged
         run: |
+          set -euo pipefail
+          git rev-parse --verify b29bbf06^{commit}
           git diff --name-only b29bbf06 -- terrain-grid/v123-atlas.js terrain-grid/v121-road-graph.js v121-octagon-1-painted-road.html v94.html index.html | tee /tmp/v257-protected-diff.txt
           test ! -s /tmp/v257-protected-diff.txt
   production-art-approval:

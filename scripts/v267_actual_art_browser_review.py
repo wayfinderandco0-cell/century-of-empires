@@ -45,6 +45,19 @@ def main():
             Math.floor(w/2),Math.floor(h/2),1,1).data);
         })""")
         assert len(inlay_colors)==3 and all(color[3]==255 for color in inlay_colors), inlay_colors
+        # Diamond-center texture should be sampled from ORIGINAL unwarped
+        # SOUTH art, not stretched from the V123 registered gameplay tile.
+        center = page.evaluate("""() => {
+          const p=inlays.find(x=>x.name==='square');
+          const a=p.canvas.getContext('2d').getImageData(256,256,1,1).data;
+          const b=nativeSouthTexture.getContext('2d').getImageData(600,730,1,1).data;
+          return [Array.from(a),Array.from(b)];
+        }""")
+        assert center[0][:3] == center[1][:3], center
+        # The center is decorative scenery, NOT a new cross-tile route.
+        page.evaluate('roadTap([1536,1024])')
+        assert 'No road in the terrain infill' in page.locator('#status').inner_text()
+        assert not page.evaluate('COE.moving')
         page.locator('#whole').click()
         page.wait_for_timeout(100)
         page.screenshot(path=str(out / f'{args.browser}-{args.orientation}-whole-three-gaps.png'))

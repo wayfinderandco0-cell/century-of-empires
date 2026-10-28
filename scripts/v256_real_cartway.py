@@ -76,6 +76,6 @@ if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--west',required=True);p.add_argument('--south',required=True);p.add_argument('--atlas',default='terrain-grid/v123-atlas.js');p.add_argument('--out',required=True);args=p.parse_args()
  result={'version':256,'tiles':{}}
  for tile in ('west','south'):result['tiles'][tile]=process(tile,getattr(args,tile),args.atlas,args.out)
- result['allNecessaryGeometryPass']=all(q['geometryPass'] for q in result['tiles'].values())
+ result['allNecessaryGeometryPass']=all(q['necessaryGeometryPass'] for q in result['tiles'].values())
  result['productionApproved']=False
  Path(args.out,'report.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

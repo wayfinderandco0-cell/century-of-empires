@@ -1,0 +1,50 @@
+name: V262 Offline Exact-Art iPhone Inspection (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v262-exact-art-iphone-inspection-bundle-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-viewer-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install minimal viewer dependencies
+        run: python -m pip install pillow
+      - name: Compile and test offline inspection builder
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/v262_art_review_builder.py scripts/test_v262_art_review_builder.py
+          python scripts/test_v262_art_review_builder.py -v
+          echo "CI exact-art tests explicitly SKIP without private original PNGs; no false image/browser approval."
+      - name: Verify all protected game sources unchanged
+        run: |
+          set -euo pipefail
+          git cat-file -e b29bbf06^{commit}
+          git diff --name-only b29bbf06 HEAD > /tmp/v262-changed
+          if grep -E '^(index\.html|v94-|v121-octagon-1-painted-road\.html|terrain-grid/v12[13]-|campaign|saves|assets/sprites)' /tmp/v262-changed; then
+            echo "PROTECTED GAME FILE CHANGED"; exit 1
+          fi
+          python - <<'PY'
+          import hashlib
+          data=open('terrain-grid/v123-atlas.js','rb').read()
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert blob=='09f04b4062e24fbacbb645307462cdddce2b2aa3',blob
+          print('V123 unchanged')
+          PY
+  production-art-approval:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Keep production gate RED until real artwork and gameplay acceptance
+        run: |
+          echo "V262 is an isolated offline visual inspection alternative, NOT gameplay integration."
+          echo "No independently verified geography, Matrei seam, WebKit/iPhone or user visual approval."
+          exit 1

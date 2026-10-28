@@ -36,10 +36,10 @@ class RealCartwayTests(unittest.TestCase):
    self.assertEqual(qa['foldedFraction'],0)
    if tile=='west':
     self.assertGreater(qa['maxPairedAnchorDisplacementPx'],155)
-    self.assertFalse(qa['geometryPass'])
+    self.assertFalse(qa['necessaryGeometryPass'])
    else:
     self.assertLessEqual(qa['maxPairedAnchorDisplacementPx'],155)
-    self.assertTrue(qa['geometryPass'])
+    self.assertTrue(qa['necessaryGeometryPass'])
  def test_synthetic_road_transport_not_art_approval(self):
   for tile in ('west','south'):
    dst=target_at_source_progress(tile)

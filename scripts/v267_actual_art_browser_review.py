@@ -35,9 +35,19 @@ def main():
         state = page.evaluate("""() => ({nodes:COE.nodes, unique:COE.uniqueWorldNodes,
           seams:COE.roadSeams, connected:COE.westSouthConnected,
           originalMatrei:COE.originalMatreiLoaded, engine:COE.engine,
-          productionApproved:COE.productionApproved})""")
+          productionApproved:COE.productionApproved, inlays:COE.decorativeGapPatches})""")
         assert state['nodes'] == 100 and state['unique'] == 98 and state['connected']
         assert state['originalMatrei'] and not state['productionApproved']
+        assert state['inlays']==['north','square','east'], state['inlays']
+        inlay_colors = page.evaluate("""() => inlays.map(p => {
+          const c=p.canvas,w=c.width,h=c.height;
+          return Array.from(c.getContext('2d').getImageData(
+            Math.floor(w/2),Math.floor(h/2),1,1).data);
+        })""")
+        assert len(inlay_colors)==3 and all(color[3]==255 for color in inlay_colors), inlay_colors
+        page.locator('#whole').click()
+        page.wait_for_timeout(100)
+        page.screenshot(path=str(out / f'{args.browser}-{args.orientation}-whole-three-gaps.png'))
         assert len(state['seams']) == 2 and all(s['pass'] and s['gap'] == 0 for s in state['seams'])
         for join in ('west', 'south'):
             page.locator('#' + join + 'join').click()
@@ -64,7 +74,8 @@ def main():
                   'seams': state['seams'], 'touchMarch': True, 'halt': True,
                   'pathNodes': len(path), 'destination': [2806, 1629],
                   'javascriptErrors': errors, 'nativeIPhoneSafari': False,
-                  'visualUserApproved': False, 'productionApproved': False}
+                  'visualUserApproved': False, 'productionApproved': False, 'decorativeGapInlays': state['inlays'],
+                  'inlayCenterPixels': inlay_colors}
         (out / f'{args.browser}-{args.orientation}-result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result, indent=2))
         ctx.close()

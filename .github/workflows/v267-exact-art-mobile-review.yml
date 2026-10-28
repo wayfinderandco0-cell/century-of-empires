@@ -1,0 +1,56 @@
+name: V267 exact original-art mobile review (UNAPPROVED)
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - v267-three-octagon-original-art-prototype.html
+      - scripts/v267_actual_art_browser_review.py
+      - .github/workflows/v267-exact-art-mobile-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actual-art-browser-review:
+    name: ${{ matrix.browser }} / ${{ matrix.orientation }} / exact embedded art
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+        orientation: [portrait, landscape]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test tools
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify immutable production sources are unchanged
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          changed=$(git diff --name-only origin/main HEAD)
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -E '^(index\.html|v121-|v122-|v123-|v94-|assets/|saves/)' ; then
+            echo 'Protected game/source file modified: refusing to test as approved.'
+            exit 1
+          fi
+      - name: Run real artwork browser review (NOT production approval)
+        run: |
+          python scripts/v267_actual_art_browser_review.py \
+            --browser ${{ matrix.browser }} \
+            --orientation ${{ matrix.orientation }} \
+            --out art-reviews/v267-actual-browser
+      - name: Preserve actual mobile screenshots and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-actual-${{ matrix.browser }}-${{ matrix.orientation }}
+          path: art-reviews/v267-actual-browser/
+          if-no-files-found: warn
+          retention-days: 14

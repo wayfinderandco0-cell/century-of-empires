@@ -239,14 +239,13 @@ function registerSource(img,tile){
   for(let x=0;x<W;x++){
    let fx=x,fy=y;
    if(tile==='south'){
-    const sourceRoad=row[0],targetRoad=row[1],left=x<=targetRoad;
-    const span=left?targetRoad:W-targetRoad;
-    const u=Math.max(0,Math.min(1,left?x/span:(x-targetRoad)/span));
-    const u2=u*u,u3=u2*u;
-    const h00=2*u3-3*u2+1,h10=u3-2*u2+u;
-    const h01=-2*u3+3*u2,h11=u3-u2;
-    const v0=left?0:sourceRoad,v1=left?sourceRoad:W;
-    fx=h00*v0+h10*span+h01*v1+h11*span;
+    const sourceRoad=row[0],targetRoad=row[1],delta=sourceRoad-targetRoad;
+    const offset=x-targetRoad,shoulder=34;
+    // Hold the photographed roadbed to its full width; fade deformation to
+    // zero at the left/right edges without moving the immutable V123 route.
+    const outer=offset<0?targetRoad-shoulder:W-targetRoad-shoulder;
+    const u=Math.max(0,Math.min(1,(Math.abs(offset)-shoulder)/Math.max(1,outer)));
+    fx=x+delta*(1-u*u*(3-2*u));
    }else{
     const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
     const shift=delta*Math.exp(-.5*((y-target)/205)**2);
@@ -262,12 +261,42 @@ function registerSource(img,tile){
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  canvas.getContext('2d').putImageData(out,0,0);return canvas;
 }
+// Preserve V121 pixels around the original painted junction, bridge and
+// south cartway. Smooth Gaussian mapping avoids a digital road overlay.
+// Only the rendered preview pixels are re-registered; raw art stays intact.
+function matreiRoadGuide(){
+ const segments=[],roads=byId("matrei").roads;
+ for(const road of ["west","bridge","south"]){
+  const points=roads[road];for(let i=1;i<points.length;i++)segments.push([points[i-1],points[i]]);
+ }
+ const step=8,cols=W/step+1,rows=H/step+1,field=new Float32Array(cols*rows);
+ const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t)};
+ for(let iy=0;iy<rows;iy++)for(let ix=0;ix<cols;ix++){
+  const x=ix*step,y=iy*step;let d2=Infinity;
+  for(const [a,b] of segments){
+   const dx=b[0]-a[0],dy=b[1]-a[1],n=dx*dx+dy*dy;
+   const t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/n));
+   const ex=x-a[0]-t*dx,ey=y-a[1]-t*dy;
+   d2=Math.min(d2,ex*ex+ey*ey);
+  }
+  field[iy*cols+ix]=.97*Math.exp(-d2/(2*105*105))*
+    smooth(130,430,x)*(1-smooth(820,1018,y))*(1-smooth(1370,1535,x));
+ }
+ return {field,cols,step};
+}
+function guideStrength(g,x,y){
+ const u=x/g.step,v=y/g.step,ix=Math.floor(u),iy=Math.floor(v),tx=u-ix,ty=v-iy;
+ const i=iy*g.cols+ix,a=g.field;
+ return (a[i]*(1-tx)+a[i+1]*tx)*(1-ty)+
+        (a[i+g.cols]*(1-tx)+a[i+g.cols+1]*tx)*ty;
+}
 function registerCanonicalMatrei(img){
  // Reframe the exact unmodified V121 source image into V123 octagon framing.
  // Original painted bridge, roads and settlement remain the original pixels.
  const input=document.createElement('canvas');input.width=W;input.height=H;
  const ictx=input.getContext('2d',{willReadFrequently:true});ictx.drawImage(img,0,0,W,H);
  const src=ictx.getImageData(0,0,W,H),out=ictx.createImageData(W,H),a=src.data,b=out.data;
+ const guide=matreiRoadGuide();
  for(let y=0;y<H;y++){
   const sy=10+y*(953/H);
   const sl=sy<286?385-(sy-10)*(295/276):sy>674?90+(sy-674)*(295/289):90;
@@ -279,12 +308,12 @@ function registerCanonicalMatrei(img){
    const bottomT=Math.max(0,Math.min(1,(y-700)/324));
    const bottomSmooth=bottomT*bottomT*(3-2*bottomT);
    const correction=55*bottomSmooth*Math.exp(-.5*((x-466)/105)**2);
-   const sx=Math.max(0,Math.min(W-1.001,sl+(x-tl)*(sr-sl)/(tr-tl)-correction));
-   // Match the photographed V121 WEST approach to its unchanged V123 cartway.
-   // Localized source-image sampling corrects the old global framing offset;
-   // the native V121 image and graph remain byte-for-byte unchanged.
+   const sxFrame=sl+(x-tl)*(sr-sl)/(tr-tl)-correction;
    const westCorridor=26*Math.exp(-.5*((x-240)/400)**2)*Math.exp(-.5*((y-505)/110)**2);
-   const yy=Math.min(H-1.001,sy+westCorridor),x0=Math.floor(sx),y0=Math.floor(yy),tx=sx-x0,ty=yy-y0;
+   const w=guideStrength(guide,x,y);
+   const sx=Math.max(0,Math.min(W-1.001,sxFrame*(1-w)+x*w));
+   const yy=Math.max(0,Math.min(H-1.001,(sy+westCorridor)*(1-w)+y*w));
+   const x0=Math.floor(sx),y0=Math.floor(yy),tx=sx-x0,ty=yy-y0;
    const i=(y0*W+x0)*4,j=i+4,k=i+W*4,l=k+4;
    for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-tx)*(1-ty)+a[j+c]*tx*(1-ty)+a[k+c]*(1-tx)*ty+a[l+c]*tx*ty;
    b[o+3]=255;

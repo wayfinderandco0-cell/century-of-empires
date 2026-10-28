@@ -1,0 +1,38 @@
+name: V255 Paired Physical-Road Pixel Contact (ART RED)
+on:
+  push:
+    branches:
+      - terrain-v255-source-anchor-road-contact-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-native-road-contact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install raster dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy opencv-python-headless
+      - name: Compile V255 road-pixel engine and regression tests
+        run: python -m py_compile scripts/v255_anchored_cartway.py scripts/test_v255_anchored_cartway.py
+      - name: Test original-pixel geometry and synthetic road contact
+        run: PYTHONPATH=scripts python -m unittest -v scripts/test_v255_anchored_cartway.py
+      - name: Verify immutable game, campaign, sprite and road files untouched
+        run: |
+          git diff --name-only b29bbf06 -- terrain-grid/v123-atlas.js terrain-grid/v121-road-graph.js v121-octagon-1-painted-road.html v94.html index.html | tee /tmp/v255-protected-diff.txt
+          test ! -s /tmp/v255-protected-diff.txt
+  production-art-approval:
+    runs-on: ubuntu-latest
+    needs: isolated-native-road-contact
+    steps:
+      - name: Explicitly reject production until actual image and user acceptance
+        run: |
+          echo 'V255 numerical road-anchor tests do NOT verify physical road centers in photographs.'
+          echo 'Actual new WEST/SOUTH source images are NOT in this repository or browser CI.'
+          echo 'No independently verified historical route, V209 natural tiepoints or bridge banks.'
+          echo 'Strict V203, 4-browser new-art gameplay, and user visual approval are missing.'
+          echo 'PRODUCTION GATE RED; never merge or deploy automatically.'
+          exit 1

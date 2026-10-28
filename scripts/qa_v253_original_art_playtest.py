@@ -92,7 +92,7 @@ def run():
                         assert page.evaluate('(id)=>V192.focusTile(id)',tile)
                         page.evaluate('V192.zoomTo(6)')
                         assert page.evaluate('V192.snapshotForReview()')
-                        page.screenshot(path=str(OUT/f'{key}-{tile}-raw.png'),animations='disabled')
+                        page.screenshot(path=str(OUT/f'{key}-{tile}-close.png'),animations='disabled')
                     assert page.evaluate('V192.setRawArtReview(false)') is True
                     assert page.evaluate("V192.orderTo('south')") is True
                     max_error=0
@@ -111,7 +111,7 @@ def run():
                     page.close();browser.close()
     finally:
         server.shutdown()
-    shots=[OUT/f'webkit-portrait-{t}-raw.png' for t in ('west','matrei','south')]
+    shots=[OUT/f'webkit-portrait-{t}-close.png' for t in ('west','matrei','south')]
     if all(p.exists() for p in shots):
         contact=Image.new('RGB',(1170,680),'#17251e');draw=ImageDraw.Draw(contact)
         for i,(tile,p) in enumerate(zip(('west','matrei','south'),shots)):

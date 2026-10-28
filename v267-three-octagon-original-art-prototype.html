@@ -290,16 +290,6 @@ function guideStrength(g,x,y){
  return (a[i]*(1-tx)+a[i+1]*tx)*(1-ty)+
         (a[i+g.cols]*(1-tx)+a[i+g.cols+1]*tx)*ty;
 }
-// Preview-only source-pixel registration of the SOUTHBOUND Matrei cartway.
-// These are hand-read control points from the existing V121 painting, NOT
-// historical geographic claims. This corrects the route-over-rooftop defect
-// at the southwest village without editing V121 source or V123 graph nodes.
-// Format: output y, unchanged V123 road x, photographic x offset (pixels).
-const MATREI_SOUTH_CARTWAY_RENDER_REGISTRATION=[
- [580,515,0],[620,503,15],[650,475,38],[680,430,53],
- [707,378,62],[726,381,40],[742,399,12],[766,427,0],
- [850,478,0],[1024,466,0]
-];
 function registerCanonicalMatrei(img){
  // Reframe the exact unmodified V121 source image into V123 octagon framing.
  // Original painted bridge, roads and settlement remain the original pixels.
@@ -312,7 +302,6 @@ function registerCanonicalMatrei(img){
   const sl=sy<286?385-(sy-10)*(295/276):sy>674?90+(sy-674)*(295/289):90;
   const sr=W-sl;
   const tl=y<256?256-y:y>768?y-768:0,tr=W-tl;
-  const [cartwayX,cartwayShift]=between(MATREI_SOUTH_CARTWAY_RENDER_REGISTRATION,y);
   for(let x=0;x<W;x++){
    const o=(y*W+x)*4;
    if(x<tl||x>tr){b[o+3]=0;continue}
@@ -322,10 +311,7 @@ function registerCanonicalMatrei(img){
    const sxFrame=sl+(x-tl)*(sr-sl)/(tr-tl)-correction;
    const westCorridor=26*Math.exp(-.5*((x-240)/400)**2)*Math.exp(-.5*((y-505)/110)**2);
    const w=guideStrength(guide,x,y);
-   // Shift the source photograph as a continuous terrain corridor, never
-   // paint a digital road. Broad falloff retains natural banks and buildings.
-   const southCorridor=cartwayShift*Math.exp(-.5*((x-cartwayX)/220)**2);
-   const sx=Math.max(0,Math.min(W-1.001,sxFrame*(1-w)+x*w-southCorridor));
+   const sx=Math.max(0,Math.min(W-1.001,sxFrame*(1-w)+x*w));
    const yy=Math.max(0,Math.min(H-1.001,(sy+westCorridor)*(1-w)+y*w));
    const x0=Math.floor(sx),y0=Math.floor(yy),tx=sx-x0,ty=yy-y0;
    const i=(y0*W+x0)*4,j=i+4,k=i+W*4,l=k+4;

@@ -40,7 +40,7 @@ def south_holdout_report(trace):
     still only source-pixel observations, NOT historical/geodetic verification.
     """
     dst=target_at_source_progress('south',trace)
-    mx,my,_,_=mapping(trace,dst,sigma=170,spacing=1.25)
+    mx,my=mapping(trace,dst,sigma=170,spacing=1.25)
     yy,xx=np.indices(mx[::2,::2].shape)
     tree=cKDTree(np.column_stack((mx[::2,::2].ravel(),my[::2,::2].ravel())))
     source_inverse_error,indices=tree.query(SOUTH_HOLDOUT)
@@ -60,7 +60,7 @@ def process(tile,source,atlas,out):
     check_atlas(atlas)
     im=verify_source(tile,source)
     dst=target_at_source_progress(tile,TRACE[tile])
-    mx,my,_,_=mapping(TRACE[tile],dst,sigma=170,spacing=1.25)
+    mx,my=mapping(TRACE[tile],dst,sigma=170,spacing=1.25)
     qa=evaluate(mx,my,TRACE[tile],dst)
     result=cv2.remap(im,mx,my,cv2.INTER_CUBIC,borderMode=cv2.BORDER_REFLECT_101)
     out=Path(out);out.mkdir(parents=True,exist_ok=True)

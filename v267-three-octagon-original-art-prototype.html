@@ -18,7 +18,7 @@ button:active{background:#4c654e}
 </style></head>
 <body>
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
-<header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>Original WEST/SOUTH art • canonical V123 engine • unapproved</small></div></header>
+<header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>WEST/SOUTH original art • SOUTH cartway re-registered • unapproved</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
 <div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="southjoin">SOUTH join</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
@@ -217,7 +217,7 @@ function strokeTrack(pts,important=true){
 // not geographic/historical tiepoints. Smooth monotone warps preserve trees,
 // rocks and the cartway itself; no painted highway overlay is added.
 const WEST_ART_ROUTE=[[275,548,550],[370,520,522],[470,552,520],[570,635,540],[680,589,560],[784,575,551],[890,621,535],[980,648,515],[1085,630,507],[1210,586,490],[1320,559,480],[1450,558,478],[1536,576,478]];
-const SOUTH_ART_ROUTE=[[0,519,466],[74,510,466],[160,548,470],[235,640,488],[310,747,540],[350,810,620],[400,894,700],[442,975,805],[510,1118,930],[550,1225,1050],[585,1325,1140],[605,1405,1270]];
+const SOUTH_ART_ROUTE=[[0,507,466],[74,505,466],[160,553,470],[235,667,488],[310,805,540],[350,869,620],[400,906,700],[442,943,805],[510,1025,930],[550,1114,1050],[585,1240,1140],[605,1370,1270]];
 function between(anchors,v){
  if(v<=anchors[0][0])return anchors[0].slice(1);
  for(let i=1;i<anchors.length;i++)if(v<=anchors[i][0]){
@@ -228,22 +228,31 @@ function registerSource(img,tile){
  const input=document.createElement('canvas');input.width=W;input.height=H;
  const ictx=input.getContext('2d',{willReadFrequently:true});ictx.drawImage(img,0,0,W,H);
  const src=ictx.getImageData(0,0,W,H),out=ictx.createImageData(W,H);
- const a=src.data,b=out.data, anchors=tile==='west'?WEST_ART_ROUTE:SOUTH_ART_ROUTE;
- const sigma=tile==='west'?205:235;
- const ix=Math.min,clamp=(v,max)=>Math.max(0,Math.min(max,v));
- // Bilinear source sampling avoids jagged texture and does not fabricate roads.
+ const a=src.data,b=out.data,anchors=tile==='west'?WEST_ART_ROUTE:SOUTH_ART_ROUTE;
+ // WEST keeps its previously reviewed source-local registration. SOUTH is
+ // registered to the exact unchanged V123 graph with an edge-anchored,
+ // monotone C1 Hermite inverse map. Unlike a Gaussian displacement field,
+ // this does not concentrate horizontal compression inside the road valley,
+ // fold terrain, repeat clamped edge pixels, or narrow the physical cartway.
  for(let y=0;y<H;y++){
   const row=tile==='south'?between(anchors,y):null;
   for(let x=0;x<W;x++){
-   const pt=tile==='west'?between(anchors,x):row;
-   const target=pt[1],delta=pt[0]-target;
-   const distance=(tile==='west'?y:x)-target;
-   let shift=delta*Math.exp(-.5*(distance/sigma)**2);
-   // Never sample a clamped image edge: taper the displacement before the
-   // boundary, preventing repeated-color streaks in the SOUTH valley.
-   const coord=tile==='south'?x:y,limit=tile==='south'?W:H;
-   shift=Math.max(-coord*.82,Math.min((limit-1-coord)*.82,shift));
-   const fx=clamp(tile==='south'?x+shift:x,W-1.001),fy=clamp(tile==='west'?y+shift:y,H-1.001);
+   let fx=x,fy=y;
+   if(tile==='south'){
+    const sourceRoad=row[0],targetRoad=row[1],left=x<=targetRoad;
+    const span=left?targetRoad:W-targetRoad;
+    const u=Math.max(0,Math.min(1,left?x/span:(x-targetRoad)/span));
+    const u2=u*u,u3=u2*u;
+    const h00=2*u3-3*u2+1,h10=u3-2*u2+u;
+    const h01=-2*u3+3*u2,h11=u3-u2;
+    const v0=left?0:sourceRoad,v1=left?sourceRoad:W;
+    fx=h00*v0+h10*span+h01*v1+h11*span;
+   }else{
+    const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
+    const shift=delta*Math.exp(-.5*((y-target)/205)**2);
+    fy=y+Math.max(-y*.82,Math.min((H-1-y)*.82,shift));
+   }
+   fx=Math.max(0,Math.min(W-1.001,fx));fy=Math.max(0,Math.min(H-1.001,fy));
    const x0=Math.floor(fx),y0=Math.floor(fy),tx=fx-x0,ty=fy-y0;
    const i=(y0*W+x0)*4,j=i+4,k=i+W*4,l=k+4,o=(y*W+x)*4;
    for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-tx)*(1-ty)+a[j+c]*tx*(1-ty)+a[k+c]*(1-tx)*ty+a[l+c]*tx*ty;

@@ -12,8 +12,8 @@
 ## Actual Chromium browser checks
 Four mobile viewport tests with the **exact embedded art** (390×844, 844×390, 375×667, 667×375) passed: original Matrei decoded offline, 100 tile nodes/98 unique positions, two V123 seams pass with 0px coordinate gap, real touch on the rendered cartway triggers movement, halt preserves the current road edge, and WEST→MATREI→SOUTH route reaches world coordinate (2806,1629). A typical shortest route traverses 53 tile-keyed points, including both seams. No JavaScript page errors.
 
-- [Actual Chromium screenshot contact sheet](art-reviews/v267-integrated-actual-chromium.jpg)
-- [Browser test results](art-reviews/v267-integrated-chromium-results.json)
+- [Actual Chromium screenshot contact sheet](v267-integrated-actual-chromium.jpg)
+- [Browser test results](v267-integrated-chromium-results.json)
 - [Playable candidate](../v267-three-octagon-original-art-prototype.html)
 
 ## Open blockers

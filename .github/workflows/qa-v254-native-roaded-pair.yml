@@ -1,0 +1,39 @@
+name: V254 Original Roaded Pair Raster (ART RED)
+on:
+  push:
+    branches:
+      - terrain-v254-native-roaded-pair-endpoint-study-20261027
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-native-pair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install numerical raster dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy opencv-python-headless
+      - name: Compile V254 and inherited V251 engine
+        run: |
+          python -m py_compile scripts/v251_fictional_cartway_pair.py scripts/v254_native_roaded_pair.py scripts/test_v254_native_roaded_pair.py
+      - name: Test full native image geometry, source hashes and immutable V123
+        run: |
+          PYTHONPATH=scripts python -m unittest -v scripts/test_v254_native_roaded_pair.py
+      - name: Confirm isolated code did not change protected files
+        run: |
+          git diff --name-only b29bbf06 -- terrain-grid/v123-atlas.js v121-octagon-1-painted-road.html v94.html index.html | tee /tmp/v254-protected-diff.txt
+          test ! -s /tmp/v254-protected-diff.txt
+  production-art-approval:
+    runs-on: ubuntu-latest
+    needs: isolated-native-pair
+    steps:
+      - name: Deliberately RED until strict V203 and user visual acceptance
+        run: |
+          echo 'V254 original AI-generated fictional source pair is NOT historical geography.'
+          echo 'No source/game natural tiepoints, independently verified road traces or bridge banks.'
+          echo 'New art has NOT been tested in four browsers or approved by the user.'
+          echo 'Keep production RED. Do not merge or deploy.'
+          exit 1

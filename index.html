@@ -891,4 +891,33 @@ $('startBtn').addEventListener('click',()=>{state=initialState($('countrySelect'
 function frame(){if(!state)return;const now=Date.now();if(!Number.isFinite(Number(state.nextTickAt)))state.nextTickAt=now+MONTH_MS;if(state.year>=1880){$('clockProgress').style.width='100%';$('clockCountdown').textContent='Campaign complete · 1880';return}if(now>=state.nextTickAt){const steps=Math.min(1200,1+Math.floor((now-state.nextTickAt)/MONTH_MS));for(let i=0;i<steps&&state.year<1880;i++){doMonth();state.nextTickAt+=MONTH_MS}render()}if(state.year<1880){const remains=Math.max(0,state.nextTickAt-Date.now());$('clockProgress').style.width=`${Math.max(0,Math.min(100,(1-remains/MONTH_MS)*100))}%`;const min=Math.floor(remains/60000),sec=Math.floor(remains%60000/1000);$('clockCountdown').textContent=`Next month in ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}}
 switchScreen('map');if(restore()){initialEnvoy();selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;$('startOverlay').hidden=true;frame();render();centerMapAt(selected);notice('Campaign restored. World time continues while you are away and catches up on your return.')}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state)save();else if(state)frame()});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
 })();
+</script>
+<!-- Isolated V267 art-review surface: main V94 campaign and saves are never replaced. -->
+<style>
+#alpineArtOpen{position:fixed;z-index:130;left:9px;bottom:max(11px,env(safe-area-inset-bottom));border:1px solid #d9ba78;border-radius:9px;background:#17342ce8;color:#fff0cc;font:700 12px system-ui,sans-serif;padding:12px;min-height:44px;box-shadow:0 2px 14px #0008}
+#alpineArtLayer{position:fixed;z-index:800;inset:0;background:#102119;color:#f6e9d0;display:flex;flex-direction:column}
+#alpineArtLayer[hidden]{display:none!important}
+#alpineArtTop{min-height:49px;padding:7px max(10px,env(safe-area-inset-right)) 7px max(10px,env(safe-area-inset-left));display:flex;gap:8px;align-items:center;justify-content:space-between;background:#132820;border-bottom:1px solid #aa9568}
+#alpineArtTop span{font:700 12px Georgia,serif}
+#alpineArtTop small{font:400 10px system-ui,sans-serif;color:#ddcdb0}
+#alpineArtClose{background:#2e453c;border:1px solid #b9a36a;border-radius:7px;color:#fff0cc;min-width:83px;min-height:37px;padding:7px 12px;font:700 12px system-ui,sans-serif}
+#alpineArtFrame{flex:1;min-height:0;width:100%;height:100%;border:0;background:#132820}
+</style>
+<button type="button" id="alpineArtOpen" aria-controls="alpineArtLayer">Alpine art preview</button>
+<section id="alpineArtLayer" hidden aria-label="Unapproved three-octagon art experiment">
+ <div id="alpineArtTop"><span>THREE ALPINE OCTAGONS <small>· experimental / does not modify your campaign</small></span><button type="button" id="alpineArtClose">Back to game</button></div>
+ <iframe id="alpineArtFrame" title="West Matrei South art playtest" loading="lazy"></iframe>
+</section>
+<script>
+(function(){
+ const toggle=document.getElementById('alpineArtOpen'),layer=document.getElementById('alpineArtLayer'),frame=document.getElementById('alpineArtFrame');
+ function close(){layer.hidden=true;toggle.hidden=false;toggle.focus();}
+ toggle.addEventListener('click',function(){
+  if(!frame.getAttribute('src'))frame.src='v267-three-octagon-original-art-prototype.html';
+  layer.hidden=false;toggle.hidden=true;
+  document.getElementById('alpineArtClose').focus();
+ });
+ document.getElementById('alpineArtClose').addEventListener('click',close);
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!layer.hidden)close()});
+})();
 </script></body></html>

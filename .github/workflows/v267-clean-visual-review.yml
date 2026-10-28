@@ -1,0 +1,53 @@
+name: V267 real-art clean mobile screenshot review (UNAPPROVED)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - v267-three-octagon-original-art-prototype.html
+      - scripts/v267_clean_visual_review.py
+      - .github/workflows/v267-clean-visual-review.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  actual-scene:
+    name: Render and preserve real terrain screenshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser and image QA
+        run: |
+          python -m pip install --disable-pip-version-check pillow playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Render V267 real original-art closeups with HUD hidden
+        run: python scripts/v267_clean_visual_review.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-clean-road-scene
+          path: |
+            art-reviews/v267-road-scene-current.jpg
+            art-reviews/v267-road-scene-current.json
+          retention-days: 14
+      - name: Commit review only if source branch has not advanced
+        run: |
+          git config user.name "century-of-empires-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo "Branch advanced; skipping stale screenshot commit."
+            exit 0
+          fi
+          git add art-reviews/v267-road-scene-current.jpg art-reviews/v267-road-scene-current.json
+          if git diff --cached --quiet; then
+            echo "No screenshot changes"
+          else
+            git commit -m "Record actual V267 landscape viewport for visual inspection"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi

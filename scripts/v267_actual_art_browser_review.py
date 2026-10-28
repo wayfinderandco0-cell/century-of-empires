@@ -38,6 +38,27 @@ def main():
           productionApproved:COE.productionApproved, inlays:COE.decorativeGapPatches})""")
         assert state['nodes'] == 100 and state['unique'] == 98 and state['connected']
         assert state['originalMatrei'] and not state['productionApproved']
+        # This regression is about PIXEL INTEGRITY, not just V123 routes.
+        # Trees outside narrow road cut-and-copy bands must be *identical*
+        # to the original unwarped SOUTH photograph.
+        native_comparison=page.evaluate("""() => {
+          const native=nativeSouthTexture.getContext('2d').getImageData(0,0,W,H).data;
+          const rebuilt=textures.south.getContext('2d').getImageData(0,0,W,H).data;
+          const forest=[[120,300],[180,470],[310,640],[900,760],[1400,180],[950,920]];
+          const pixels=(x,y,a)=>Array.from(a.slice((y*W+x)*4,(y*W+x)*4+4));
+          const equality=forest.map(([x,y])=>({
+            point:[x,y],same:pixels(x,y,native).every((v,i)=>v===pixels(x,y,rebuilt)[i])
+          }));
+          // At source y=400 the physical painted road is centered x=906.
+          // It must be relocated to the FIXED V123 rendered x=700.
+          const sourceRoad=pixels(906,400,native),targetRoad=pixels(700,400,rebuilt);
+          const roadDelta=sourceRoad.map((v,i)=>Math.abs(v-targetRoad[i]));
+          return {equality,sourceRoad,targetRoad,roadDelta,
+            algorithm: southRoadFromNativePixels.name};
+        }""")
+        assert all(row['same'] for row in native_comparison['equality']), native_comparison
+        assert max(native_comparison['roadDelta'][:3]) <= 1, native_comparison
+
         assert state['inlays']==['north','square','east'], state['inlays']
         inlay_colors = page.evaluate("""() => inlays.map(p => {
           const c=p.canvas,w=c.width,h=c.height;
@@ -88,6 +109,8 @@ def main():
                   'pathNodes': len(path), 'destination': [2806, 1629],
                   'javascriptErrors': errors, 'nativeIPhoneSafari': False,
                   'visualUserApproved': False, 'productionApproved': False, 'decorativeGapInlays': state['inlays'],
+                  'nativeForestPreserved': native_comparison['equality'],
+                  'nativeCartwayRelocated': native_comparison['roadDelta'],
                   'inlayCenterPixels': inlay_colors}
         (out / f'{args.browser}-{args.orientation}-result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result, indent=2))

@@ -20,7 +20,7 @@ button:active{background:#4c654e}
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
 <header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>Original WEST/SOUTH art • canonical V123 engine • unapproved</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
-<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="halt">Halt</button></div>
+<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="southjoin">SOUTH join</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
 <script>
 (function(){
@@ -271,7 +271,11 @@ function registerCanonicalMatrei(img){
    const bottomSmooth=bottomT*bottomT*(3-2*bottomT);
    const correction=55*bottomSmooth*Math.exp(-.5*((x-466)/105)**2);
    const sx=Math.max(0,Math.min(W-1.001,sl+(x-tl)*(sr-sl)/(tr-tl)-correction));
-   const yy=Math.min(H-1.001,sy),x0=Math.floor(sx),y0=Math.floor(yy),tx=sx-x0,ty=yy-y0;
+   // Match the photographed V121 WEST approach to its unchanged V123 cartway.
+   // Localized source-image sampling corrects the old global framing offset;
+   // the native V121 image and graph remain byte-for-byte unchanged.
+   const westCorridor=26*Math.exp(-.5*((x-240)/400)**2)*Math.exp(-.5*((y-505)/110)**2);
+   const yy=Math.min(H-1.001,sy+westCorridor),x0=Math.floor(sx),y0=Math.floor(yy),tx=sx-x0,ty=yy-y0;
    const i=(y0*W+x0)*4,j=i+4,k=i+W*4,l=k+4;
    for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-tx)*(1-ty)+a[j+c]*tx*(1-ty)+a[k+c]*(1-tx)*ty+a[l+c]*tx*ty;
    b[o+3]=255;
@@ -341,9 +345,21 @@ function sample(path,d){
  for(let i=1;i<path.length;i++){let seg=dist(path[i-1],path[i]);if(d<=seg){let f=d/seg;return [path[i-1][0]+(path[i][0]-path[i-1][0])*f,path[i-1][1]+(path[i][1]-path[i-1][1])*f]}d-=seg}
  return path.at(-1);
 }
+// Touch targets follow the real V123 cartway SEGMENTS, not merely nodes.
+// This prevents missed taps on long road intervals and accidental off-road
+// orders while leaving the original navigation graph and paths untouched.
 function roadTap(p){
- const k=nearestKey(p),d=dist(p,graph.get(k).world);
- if(d<88)start(k);else document.getElementById("status").textContent="Tap closer to a visible cartway.";
+ let closest=null;
+ for(const [k,n] of graph){for(const edge of n.edges){
+  const target=graph.get(edge.to);if(!target)continue;
+  const a=n.world,b=target.world,dx=b[0]-a[0],dy=b[1]-a[1];
+  const len2=dx*dx+dy*dy;if(len2<1e-6)continue;
+  const t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len2));
+  const d=dist(p,[a[0]+t*dx,a[1]+t*dy]);
+  if(!closest||d<closest.d)closest={d,k:t<.5?k:edge.to};
+ }}
+ if(closest&&closest.d<72)start(closest.k);
+ else document.getElementById("status").textContent="Tap a visible cartway to march.";
 }
 function render(){
  ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -419,12 +435,19 @@ for(const ev of ["pointerup","pointercancel","lostpointercapture"])C.addEventLis
 window.addEventListener("resize",resize);
 document.getElementById("whole").onclick=()=>{cam=[1590,1020];zoom=1;scale=base*zoom;dirty=true};
 document.getElementById("center").onclick=()=>{cam=army.slice();zoom=3;scale=base*zoom;dirty=true};
+// One-touch iPhone inspection of the two fixed V123 cartway connections.
+function focusJoin(which){cam=(which==="west"?[1536,478]:[2002,1024]);zoom=5.7;scale=base*zoom;dirty=true;
+ document.getElementById("status").textContent=(which==="west"?"WEST → MATREI":"MATREI → SOUTH")+" • visual road/terrain review • NOT APPROVED";
+}
+document.getElementById("westjoin").onclick=()=>focusJoin("west");
+document.getElementById("southjoin").onclick=()=>focusJoin("south");
 document.getElementById("roads").onclick=()=>{showRoads=!showRoads;document.getElementById("roads").textContent=showRoads?"Hide road lines":"Show road lines";dirty=true};
 document.getElementById("halt").onclick=halt;
 document.getElementById("march").onclick=()=>{moving=false;pausedEdge=null;startEdge=null;
  currentKey=V123Atlas.endpoints(atlasPlan).west;army=graph.get(currentKey).world.slice();
  start(V123Atlas.endpoints(atlasPlan).south);cam=[1550,975];zoom=1.22;scale=base*zoom;dirty=true};
 window.COE=Object.freeze({
+ focusJoin,
  get nodes(){return graph.size},get uniqueWorldNodes(){return new Set([...graph.values()].map(n=>n.world.join(","))).size},get moving(){return moving},get originalMatreiLoaded(){return srcStatus==="original"},
  get army(){return army.slice()},get westSouthConnected(){return !!(network&&network.planRoute(V123Atlas.endpoints(atlasPlan).west,V123Atlas.endpoints(atlasPlan).south))},
  get sourceRegistered(){return !!(textures.west&&textures.south)},

@@ -329,6 +329,35 @@ function buildRoadPortals(){
  make('south',1962,1009,80,15); // MATREI(466,1024) ↔ SOUTH(466,0)
 }
 
+// Photographic cross-tile road joint. Unlike changing route nodes or
+// painting a synthetic highway, this blends the genuine Matrei and SOUTH
+// cartway pixels ONLY within a narrow area centered at their exact V123
+// world endpoint (2002,1024). The entire forest remains unwarped.
+function buildSouthRoadJoin(){
+ const A=textures.matrei.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
+ const B=textures.south.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
+ const width=140,height=50,center=70;
+ const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+ const cx=canvas.getContext('2d'),out=cx.createImageData(width,height);
+ const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
+ for(let y=0;y<height;y++){
+  const worldY=1024-25+y;
+  const my=Math.max(0,Math.min(H-1,worldY));
+  const sy=Math.max(0,Math.min(H-1,worldY-1024));
+  const bottomWeight=smooth((y-9)/32);
+  const verticalMask=smooth(y/9)*(1-smooth((y-40)/9));
+  for(let x=0;x<width;x++){
+   const localX=466-center+x;
+   const radial=Math.abs(x-center),mask=(1-smooth((radial-30)/40))*verticalMask;
+   if(mask<=0)continue;
+   const j=(y*width+x)*4,a=(my*W+localX)*4,b=(sy*W+localX)*4;
+   for(let c=0;c<3;c++)out.data[j+c]=Math.round(A[a+c]*(1-bottomWeight)+B[b+c]*bottomWeight);
+   out.data[j+3]=Math.round(mask*255);
+  }
+ }
+ cx.putImageData(out,0,0);
+ roadPortals.push({name:'south-road-join',x:2002-center,y:1024-25,canvas});
+}
 let cw=1,ch=1,dpr=1,base=1,zoom=1.65,scale=1,cam=[1560,1010],srcStatus="loading";
 let marchPath=[],pathKeys=[],traveled=0,total=0,moving=false,army=[275,550],showRoads=false,dir=1,last=performance.now(),pointerState=new Map(),down=null,gesture=null;
 let currentKey=null,goalKey=null,pausedEdge=null,startEdge=null,dirty=true;
@@ -759,7 +788,7 @@ async function boot(){
  textures.matrei=registerCanonicalMatrei(canonical);srcStatus="original";
  document.getElementById("source").textContent="Offline V121 Matrei • original V122/V123 engine • fictional WEST/SOUTH art • NOT APPROVED";
  
- rebuildGraph();buildInlay();buildRoadPortals();resize();requestAnimationFrame(frame);
+ rebuildGraph();buildInlay();buildRoadPortals();buildSouthRoadJoin();resize();requestAnimationFrame(frame);
  document.getElementById("status").textContent="Playable prototype ready • 3 connected octagons";
  document.getElementById("status").textContent="Ready • 100 V123 tile nodes / 98 world points • 2 experimental seams • march WEST → SOUTH";
 }

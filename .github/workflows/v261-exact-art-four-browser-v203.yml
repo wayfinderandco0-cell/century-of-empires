@@ -1,0 +1,50 @@
+name: V261 Exact-Art Four-Browser V203 Gate (PRODUCTION RED)
+on:
+  push:
+    branches:
+      - terrain-v261-exact-art-four-browser-v203-20261028
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  strict-art-gate-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install synthetic-test dependencies
+        run: python -m pip install pillow numpy
+      - name: Compile and test fail-closed V261 exact-art gate
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/v261_exact_art_four_browser_gate.py scripts/test_v261_exact_art_four_browser_gate.py
+          python scripts/test_v261_exact_art_four_browser_gate.py -v
+      - name: Verify protected game and atlas unchanged
+        run: |
+          set -euo pipefail
+          git cat-file -e b29bbf06^{commit}
+          git diff --name-only b29bbf06 HEAD > /tmp/v261-changed
+          if grep -E '^(index\.html|v94-|v121-octagon-1-painted-road\.html|terrain-grid/v12[13]-|campaign|saves|assets/sprites)' /tmp/v261-changed; then
+            echo 'PROTECTED GAME FILE CHANGED'; exit 1
+          fi
+          python - <<'PY'
+          import hashlib
+          data=open('terrain-grid/v123-atlas.js','rb').read()
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert blob=='09f04b4062e24fbacbb645307462cdddce2b2aa3',blob
+          print('V123 immutable graph SHA verified')
+          PY
+          echo 'CI synthetic tests do NOT validate the unhosted exact V260 source pair.'
+  production-art-approval:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Independent geography, exact V260 WebKit, bridge banks, user approval still RED
+        run: |
+          echo 'V261 is a fail-closed QA runner, not approved artwork.'
+          echo 'Exact V260 original PNG pair remains local-only. No four-browser art pass.'
+          exit 1

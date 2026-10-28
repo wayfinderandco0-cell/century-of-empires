@@ -18,7 +18,7 @@ The updated render-copy registration adds a **localized source-image resampling 
 
 ## Test status
 
-Locally ran the exact embedded images in real Chromium at **390×844, 844×390, 375×667, 667×375**, touch/DPR2. All four loaded the original Matrei offline, returned 100 nodes / 98 unique positions, both V123 seam checks passed with 0px graph gap, WEST→MATREI→SOUTH traversal used 53 tile-specific path nodes and reached (2806,1629), and no JS page errors occurred. Actual touch-to-march and halt also passed in 390×844 and 844×390. See the Actions workflow for exact-art WebKit results; do not infer them from Chromium.
+Locally ran the exact embedded images in real Chromium at **390×844, 844×390, 375×667, 667×375**, touch/DPR2. All four loaded the original Matrei offline, returned 100 nodes / 98 unique positions, both V123 seam checks passed with 0px graph gap, WEST→MATREI→SOUTH traversal used 53 tile-specific path nodes and reached (2806,1629), and no JS page errors occurred. Actual touch-to-march and halt also passed in 390×844 and 844×390. **Exact-art GitHub Actions run 40745579967 completed SUCCESS in all four configurations:** Chromium portrait/landscape and WebKit portrait/landscape. Every job rendered the actual embedded WEST/SOUTH + V121 Matrei images, saved before/overlay screenshots, passed touchscreen-to-march, halt, both zero-gap seam graph checks and 53-node WEST→MATREI→SOUTH route, with no JS errors. WebKit portrait/landscape screenshots were downloaded and inspected: WEST's photographed road now tracks the seam overlay more closely; SOUTH still has a visible source-style and road-bank transition requiring human review. These are real WebKit-engine simulations, **not physical iPhone Safari**.
 
 ## Unresolved
 

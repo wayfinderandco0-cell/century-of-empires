@@ -193,6 +193,7 @@ const ART_WEST="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHCAkIB
 const C=document.getElementById("map"),ctx=C.getContext("2d",{alpha:false});
 const textures={};let graph=new Map(),atlasPlan=null,network=null;
 const inlays=[]; // Decorative artwork only; graph and tapping remain V123
+let nativeSouthTexture=null;
 // Hide gold polygon walls only on the two real shared road-bearing sides.
 function naturalOutline(tile){
  const v=[[256,0],[1280,0],[1536,256],[1536,768],[1280,1024],[256,1024],[0,768],[0,256]];
@@ -211,6 +212,8 @@ function buildInlay(){
  const img={};for(const t of atlas){
   img[t.id]=textures[t.id].getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
  }
+ if(!nativeSouthTexture)throw Error("Missing native South landscape");
+ const nativePixels=nativeSouthTexture.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
  const plans=[
   ['north',1280,0,512,256,[[0,0],[512,0],[256,256]],[
    ['west',[1280,0],[1536,256],[-1,1]],
@@ -244,10 +247,11 @@ function buildInlay(){
    // Only a narrow 32px band meets the exact neighboring source pixels.
    // This remains FICTIONAL, non-navigable prototype art; no road is added.
    if(name==='square'){
-    const sx=Math.max(0,Math.min(W-2,Math.round(350+(x-256)*.62)));
-    const sy=Math.max(0,Math.min(H-2,Math.round(850+(y-256)*.58)));
+    // Native 1:1 Alpine meadow: prevent duplicated, bent, skewed trees.
+    const sx=Math.max(0,Math.min(W-2,Math.round(600+x-256)));
+    const sy=Math.max(0,Math.min(H-2,Math.round(730+y-256)));
     const q=(sy*W+sx)*4,k=(y*w+x)*4;
-    const base=img.south;
+    const base=nativePixels;
     let bestD=Infinity,bestEdge=null,bestX=0,bestY=0;
     for(const e of edges){
      const u=Math.max(0,Math.min(1,((px-e.a[0])*e.dx+(py-e.a[1])*e.dy)/e.len));
@@ -344,6 +348,17 @@ function strokeTrack(pts,important=true){
 // rocks and the cartway itself; no painted highway overlay is added.
 const WEST_ART_ROUTE=[[275,548,550],[370,520,522],[470,552,520],[570,635,540],[680,589,560],[784,575,551],[890,621,535],[980,648,515],[1085,630,507],[1210,586,490],[1320,559,480],[1450,558,478],[1536,576,478]];
 const SOUTH_ART_ROUTE=[[0,507,466],[74,505,466],[160,553,470],[235,667,488],[310,805,540],[350,869,620],[400,906,700],[442,943,805],[510,1025,930],[550,1114,1050],[585,1240,1140],[605,1370,1270]];
+// Smooth art-road row sampling; no change to V123 navigation or positions.
+function smoothSourceRoad(anchors,v){
+ if(v<=anchors[0][0])return anchors[0].slice(1);
+ for(let i=1;i<anchors.length;i++)if(v<=anchors[i][0]){
+  const a=anchors[i-1],b=anchors[i],d=b[0]-a[0],t=(v-a[0])/d;
+  const slope=(ix)=>{const x=anchors[Math.max(0,ix-1)],y=anchors[Math.min(anchors.length-1,ix+1)];return (y[1]-x[1])/(y[0]-x[0]);};
+  const h00=2*t*t*t-3*t*t+1,h10=t*t*t-2*t*t+t,h01=-2*t*t*t+3*t*t,h11=t*t*t-t*t;
+  return [h00*a[1]+h10*d*slope(i-1)+h01*b[1]+h11*d*slope(i),a[2]+(b[2]-a[2])*t];
+ }
+ return anchors.at(-1).slice(1);
+}
 function between(anchors,v){
  if(v<=anchors[0][0])return anchors[0].slice(1);
  for(let i=1;i<anchors.length;i++)if(v<=anchors[i][0]){
@@ -361,7 +376,7 @@ function registerSource(img,tile){
  // this does not concentrate horizontal compression inside the road valley,
  // fold terrain, repeat clamped edge pixels, or narrow the physical cartway.
  for(let y=0;y<H;y++){
-  const row=tile==='south'?between(anchors,y):null;
+  const row=tile==='south'?smoothSourceRoad(anchors,y):null;
   for(let x=0;x<W;x++){
    let fx=x,fy=y;
    if(tile==='south'){
@@ -371,7 +386,10 @@ function registerSource(img,tile){
     // zero at the left/right edges without moving the immutable V123 route.
     const outer=offset<0?targetRoad-shoulder:W-targetRoad-shoulder;
     const u=Math.max(0,Math.min(1,(Math.abs(offset)-shoulder)/Math.max(1,outer)));
-    fx=x+delta*(1-u*u*(3-2*u));
+    // A mostly uniform inverse warp avoids the extreme midpoint pinch
+    // that bent trees near the road with full smoothstep displacement.
+    const even=1-u,smooth=1-u*u*(3-2*u);
+    fx=x+delta*(.65*even+.35*smooth);
    }else{
     const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
     const shift=delta*Math.exp(-.5*((y-target)/205)**2);
@@ -429,7 +447,9 @@ function eraseInternalMatreiFrame(out){
   [[256,1024],[1280,1024],[0,-1]],
   [[1280,1024],[1536,768],[-1,-1]]
  ];
- const radius=13,step=19;
+ // Inward sampling must clear the full old gold octagon frame, not
+ // copy gold pixels from inside the frame back onto its own edge.
+ const radius=34,step=47;
  for(const [a,b,n] of edges){
   const dx=b[0]-a[0],dy=b[1]-a[1],len2=dx*dx+dy*dy,inv=1/Math.hypot(...n),nx=n[0]*inv,ny=n[1]*inv;
   const xmin=Math.max(0,Math.floor(Math.min(a[0],b[0])-radius-1)),xmax=Math.min(W-1,Math.ceil(Math.max(a[0],b[0])+radius+1));
@@ -441,8 +461,12 @@ function eraseInternalMatreiFrame(out){
    if(inward<0||inward>radius)continue;
    const u=Math.max(0,Math.min(1,(radius-inward)/radius)),strength=u*u*(3-2*u);
    const sx=Math.max(0,Math.min(W-1,Math.round(x+nx*step))),sy=Math.max(0,Math.min(H-1,Math.round(y+ny*step)));
-   const i=(y*W+x)*4,j=(sy*W+sx)*4;
-   for(let c=0;c<3;c++)pixels[i+c]=original[i+c]*(1-strength)+original[j+c]*strength;
+   const ux=Math.max(0,Math.min(W-1,Math.round(x+nx*(step+16)))),uy=Math.max(0,Math.min(H-1,Math.round(y+ny*(step+16))));
+   const i=(y*W+x)*4,j=(sy*W+sx)*4,k=(uy*W+ux)*4;
+   for(let c=0;c<3;c++){
+     const terrain=original[j+c]*.65+original[k+c]*.35;
+     pixels[i+c]=original[i+c]*(1-strength)+terrain*strength;
+   }
   }
  }
 }
@@ -545,6 +569,15 @@ function sample(path,d){
 // This prevents missed taps on long road intervals and accidental off-road
 // orders while leaving the original navigation graph and paths untouched.
 function roadTap(p){
+ // Gap artwork is intentionally not a playable region; don't snap a
+ // tap in the decorative square onto the closest road by accident.
+ const playable=atlas.some(t=>{
+  const x=p[0]-t.o[0],y=p[1]-t.o[1];
+  if(x<0||x>W||y<0||y>H)return false;
+  const inx=y<CUT?CUT-y:y>H-CUT?y-(H-CUT):0;
+  return x>=inx&&x<=W-inx;
+ });
+ if(!playable){document.getElementById('status').textContent='No road in the terrain infill';return;}
  let closest=null;
  for(const [k,n] of graph){for(const edge of n.edges){
   const target=graph.get(edge.to);if(!target)continue;
@@ -664,6 +697,11 @@ window.COE=Object.freeze({
 async function boot(){
  // New source tiles are embedded in this HTML, making them available offline.
  const [west,south]=await Promise.all([loadImage(ART_WEST),loadImage(ART_SOUTH)]);
+ // Keep the unwarped original for gap painting; the movement tile still
+ // receives the V123-aligned registered SOUTH version.
+ nativeSouthTexture=document.createElement('canvas');
+ nativeSouthTexture.width=W;nativeSouthTexture.height=H;
+ nativeSouthTexture.getContext('2d').drawImage(south,0,0,W,H);
  textures.west=registerSource(west,"west");textures.south=registerSource(south,"south");
  const canonical=await loadImage(ART_MATREI_CANONICAL);
  textures.matrei=registerCanonicalMatrei(canonical);srcStatus="original";

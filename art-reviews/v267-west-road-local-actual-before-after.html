@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Century of Empires — WEST native forest: actual browser before/after</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#14201c;color:#f2eee3;font:15px/1.5 system-ui,-apple-system,sans-serif}
+header{padding:16px max(16px,env(safe-area-inset-left));background:#1e3029;border-bottom:1px solid #506452}
+h1{font-size:1.2rem;margin:0 0 8px}.status{color:#ffd99a;font-weight:700}
+p{margin:6px 0 0;max-width:78ch}nav{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px}
+button{padding:11px 15px;border:1px solid #80988b;border-radius:8px;background:#283f35;color:#fff;font-weight:700}
+button[aria-pressed=true]{background:#c7b386;color:#152018}
+main{display:flex;gap:12px;overflow-x:auto;padding:0 12px 20px;scroll-snap-type:x mandatory}
+article{min-width:min(92vw,580px);width:min(92vw,580px);scroll-snap-align:start;background:#23352e;border:1px solid #506452;border-radius:10px;overflow:hidden}
+h2{font-size:1rem;margin:0;padding:10px 14px;background:#283f35}
+.frame{position:relative;width:100%;overflow:hidden;background:#111;height:auto;aspect-ratio:610/1338}
+.frame img{position:absolute;top:0;width:300%;max-width:none;height:auto}
+.frame.south img{left:0}.frame.west img{left:-100%}.frame.whole img{left:-200%}
+footer{padding:14px 16px 30px;color:#d4d5c8}a{color:#d9e9bd}
+</style></head>
+<body><header><h1>WEST forest &amp; cartway — actual browser comparison</h1>
+<div class="status">UNAPPROVED — isolated V267 artwork only; production RED</div>
+<p>Both panels are genuine Chromium screenshots of the embedded three-octagon scene. The WEST source was reconstructed with a local road corridor rather than shifting entire forests. Matrei and SOUTH were not modified.</p></header>
+<nav aria-label="Compare location">
+<button type="button" aria-pressed="true" onclick="focusPart('west',this)">WEST / MATREI seam</button>
+<button type="button" aria-pressed="false" onclick="focusPart('south',this)">MATREI / SOUTH seam</button>
+<button type="button" aria-pressed="false" onclick="focusPart('whole',this)">Whole three-octagon scene</button>
+</nav>
+<main>
+<article><h2>BEFORE — global forest displacement</h2>
+<div class="frame west"><img alt="Actual before Chromium browser screenshot, three octagon contact sheet" src="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/156834228c05320fec2d3e4b226e1ec3f4973dc1/art-reviews/v267-road-scene-current.jpg"></div></article>
+<article><h2>AFTER — road-local photographic registration</h2>
+<div class="frame west"><img alt="Actual after Chromium browser screenshot, three octagon contact sheet" src="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/920dbc587b096d1ab3acd96eb1f7e7e4939798a7/art-reviews/v267-road-scene-current.jpg"></div></article>
+</main>
+<footer><p>Swipe sideways on iPhone to compare. Both images are pinned to immutable commits. This is a fictional 1780–1880-inspired artwork prototype, not verified historical topography. Remaining defects: WEST/MATREI photo material boundary, Matrei/SOUTH horizontal seam, and farther-east SOUTH painted road. Physical iPhone Safari approval has not been given.</p>
+<p><a href="../v267-three-octagon-original-art-prototype.html">Open the current three-octagon review prototype</a> · <a href="https://github.com/wayfinderandco0-cell/century-of-empires/issues/9">Issue #9</a></p></footer>
+<script>function focusPart(name,button){document.querySelectorAll('.frame').forEach(e=>e.className='frame '+name);document.querySelectorAll('nav button').forEach(e=>e.setAttribute('aria-pressed',e===button?'true':'false'));}</script>
+</body></html>

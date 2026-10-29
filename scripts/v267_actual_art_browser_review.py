@@ -50,19 +50,24 @@ def main():
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             return {point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))};
           });
-          // New SOUTH is an independently generated, unwarped terrain source.
-          // Confirm road approach and surrounding native pixels are untouched;
-          // visual V123 alignment is reviewed separately, never inferred here.
-          for(const [x,y] of [[466,0],[466,160],[700,400],[930,510],[1270,605]]){
+          // Only the first 270px of open SOUTH meadow may be registered.
+          // All forest/gorge/bridge points and downstream road remain native.
+          for(const [x,y] of [[466,270],[700,400],[930,510],[1270,605]]){
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             equality.push({point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))});
           }
-          return {equality,algorithm:'unwarped-original-SOUTH-source'};
+          const entrance=[[466,0],[466,160]].map(([x,y])=>{
+            const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
+            return {point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))};
+          });
+          return {equality,entrance,algorithm:'bounded-270px-SOUTH-meadow-entrance-registration'};
         }""")
-        # WebKit performs a small color-space/premultiply conversion when
-        # a native image is moved through ImageData; tolerate <=3 RGB levels,
-        # but never a geometry displacement or large recoloring.
+        # WebKit may introduce <=3 RGB levels during ImageData conversion.
+        # Protected forest/gorge and the rest of the SOUTH source must match.
         assert all(row['maxChannelDelta']<=3 for row in native_comparison['equality']), native_comparison
+        # A visible change at the two northern cartway samples proves the
+        # deliberate, spatially bounded image registration actually ran.
+        assert all(row['maxChannelDelta']>=10 for row in native_comparison['entrance']), native_comparison
 
         assert state['inlays']==['north','square','east'], state['inlays']
         inlay_colors = page.evaluate("""() => inlays.map(p => {
@@ -115,7 +120,8 @@ def main():
                   'javascriptErrors': errors, 'nativeIPhoneSafari': False,
                   'visualUserApproved': False, 'productionApproved': False, 'decorativeGapInlays': state['inlays'],
                   'nativeForestPreserved': native_comparison['equality'],
-                  'newSouthSourceUnwarped': native_comparison['algorithm'],
+                  'southRegistrationScope': native_comparison['algorithm'],
+                  'southEntranceRegistration': native_comparison['entrance'],
                   'inlayCenterPixels': inlay_colors}
         (out / f'{args.browser}-{args.orientation}-result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result, indent=2))

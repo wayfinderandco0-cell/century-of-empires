@@ -18,7 +18,7 @@ button:active{background:#4c654e}
 </style></head>
 <body>
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
-<header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>SOUTH terrain-aligned road + natural forest • UNAPPROVED</small></div></header>
+<header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>WEST native-forest correction + SOUTH terrain • UNAPPROVED</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
 <div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
@@ -504,17 +504,23 @@ function registerSource(img,tile){
   const registered=document.createElement('canvas');registered.width=W;registered.height=H;
   registered.getContext('2d').putImageData(out,0,0);return registered;
  }
- // Preserve the previously inspected WEST source registration as-is.
+ // WEST native photographic landscape: align the real cartway with the
+ // immutable V123 road using a per-column RIGID terrain translation. The
+ // previous y-Gaussian resampling bent and stretched conifer crowns below
+ // the road, particularly at the east boundary (source y576 -> route y478).
+ // Each column now moves together, retaining vertical forest geometry;
+ // no new road, tree, settlement or synthetic terrain pixels are painted.
+ // Only the clipped, isolated WEST review tile is resampled.
  const out=ictx.createImageData(W,H),a=src.data,b=out.data,anchors=WEST_ART_ROUTE;
- for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-  const pt=between(anchors,x),target=pt[1],delta=pt[0]-target;
-  const shift=delta*Math.exp(-.5*((y-target)/205)**2);
-  let fy=y+Math.max(-y*.82,Math.min((H-1-y)*.82,shift));
-  fy=Math.max(0,Math.min(H-1.001,fy));
-  const x0=x,y0=Math.floor(fy),ty=fy-y0;
-  const i=(y0*W+x0)*4,k=i+W*4,o=(y*W+x)*4;
-  for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-ty)+a[k+c]*ty;
-  b[o+3]=255;
+ for(let x=0;x<W;x++){
+  const pt=between(anchors,x),delta=pt[0]-pt[1];
+  for(let y=0;y<H;y++){
+   const fy=Math.max(0,Math.min(H-1.001,y+delta));
+   const y0=Math.floor(fy),ty=fy-y0;
+   const i=(y0*W+x)*4,k=i+W*4,o=(y*W+x)*4;
+   for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-ty)+a[k+c]*ty;
+   b[o+3]=255;
+  }
  }
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  canvas.getContext('2d').putImageData(out,0,0);return canvas;

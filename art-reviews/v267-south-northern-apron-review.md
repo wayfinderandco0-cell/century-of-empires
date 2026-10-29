@@ -1,9 +1,1 @@
-# SOUTH natural photographic apron — UNAPPROVED
-
-Fictional original Alpine prototype art; not historically verified.
-
-Changes: locally register the first 340px of SOUTH terrain, retain native trees, join the photographed cartway at x466, adjust natural stream material, remove V121 render-copy gold from the shared SOUTH boundary, and suppress only the two pairs of shared-edge frame strokes. The V121 source image and 100-node V123 graph are unchanged. No production renderer, V94, sprites or saves edited.
-
-Still requires physical iPhone Safari inspection, WEST and SOUTH visual approval, and road alignment farther east. Production RED.
-
-SOUTH JPEG SHA256: b0539b6ab79da998a1659e38d94e597d5ad899f47d7cf6a0a9a5d5835d047921
+# SOUTH river-ground contact — UNAPPROVED\n\nOriginal fictional 1536x1024 photographic game-art prototype.\n\nMoved the native upper-right gorge/riverbank 116px toward Matrei's existing river exit with a masked, one-to-one photographic translation. Protected the x466 road and left-side meadow, feathered the upper riverbank color and preserved native unwarped forest/road pixels. The 100-node V123 graph, original V121 image, V94, sprites and saves are unchanged. This is an art study, not historical topography.\n\nOutstanding: actual phone Safari visual review, WEST forest boundary, and full Matrei/SOUTH material transition. Production RED.\n\nSOUTH JPEG SHA256: f554b6218a6f8d29ef8b8113349a46ce9db45e771a0d7d98995565c914e925a4\n

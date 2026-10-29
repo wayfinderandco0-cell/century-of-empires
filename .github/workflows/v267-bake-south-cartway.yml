@@ -1,0 +1,52 @@
+name: V267 bake SOUTH photographic cartway and actual review (UNAPPROVED)
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - scripts/v267_bake_south_cartway.py
+      - .github/workflows/v267-bake-south-cartway.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bake-and-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install free local art and browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy opencv-python-headless pillow playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Bake a SOUTH source-art replacement around fixed V123 road
+        run: python scripts/v267_bake_south_cartway.py
+      - name: Capture actual mobile Chromium three-view art evidence
+        run: python scripts/v267_clean_visual_review.py
+      - name: Confirm protected V121/V123/V94 source files remain untouched
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          changed=$(git diff --name-only origin/main HEAD -- 'v121-*' 'v122-*' 'v123-*' 'v94-*' 'assets/**' 'saves/**')
+          if [ -n "$changed" ]; then
+            printf '%s\n' "$changed"
+            echo 'Protected files changed; refusing source-art commit.'
+            exit 1
+          fi
+      - name: Commit baked photographic source, playable candidate, real screenshots
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art-reviews/v267-original-source/south-cartway-local-registered-unapproved.jpg \
+            v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-road-scene-current.jpg \
+            art-reviews/v267-road-scene-current.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Bake SOUTH source photo to fixed V123 cartway and capture actual phone-size screenshots (UNAPPROVED)'
+          git push origin HEAD:terrain-v267-three-original-art-prototype-20261028

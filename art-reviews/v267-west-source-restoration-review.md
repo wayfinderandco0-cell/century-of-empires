@@ -7,4 +7,4 @@ This is fictional game-art prototype, not verified historical topography. The WE
 Source: art-reviews/v267-original-source/west-native-original.jpg
 Output: art-reviews/v267-original-source/west-native-restored-unapproved.jpg
 Output dimensions: 1536x1024
-Output SHA256: 191b3f0151c893ef6cf7756ad9d256f5a2552e5b572908cf93fa064ea1078375
+Output SHA256: b115278ee8f859ad0c329d5f33db55df803a91f691226556fc9f7d430d704d8e

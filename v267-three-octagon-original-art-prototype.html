@@ -365,52 +365,62 @@ function buildSouthRoadJoin(){
 // Both images contribute their ORIGINAL pixels, mirrored only within the
 // collar; no painted roads, added route edges, warped forests or new tiles.
 // Road collars are wider than scenery collars to keep both banks coherent.
+// Keep native photography on BOTH sides of each immutable V123 join.
+// Previous collars reflected pixels with abs(distance), duplicating trees
+// and rocks along the seam. Only low-frequency ROAD colors are now matched.
 const seamArtPatches=[];
 function buildSeamArtTransitions(){
  seamArtPatches.length=0;
  const get=id=>textures[id].getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
  const west=get('west'),matrei=get('matrei'),south=get('south');
  const sm=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
- const pix=(src,x,y,c)=>src[(Math.max(0,Math.min(H-1,y))*W+Math.max(0,Math.min(W-1,x)))*4+c];
- function compose(name,kind,start,length,first,second){
-  const maxRadius=46,span=maxRadius*2;
+ const sample=(src,x,y,c)=>src[(Math.max(0,Math.min(H-1,Math.round(y)))*W+
+    Math.max(0,Math.min(W-1,Math.round(x))))*4+c];
+ function compose(name,kind,first,second){
+  const vertical=kind==='vertical',span=64,half=span/2;
+  const alongLength=vertical?512:1024;
   const canvas=document.createElement('canvas');
-  canvas.width=kind==='vertical'?span:length;
-  canvas.height=kind==='vertical'?length:span;
-  const cx=canvas.getContext('2d'),data=cx.createImageData(canvas.width,canvas.height),p=data.data;
-  for(let u=0;u<length;u++){
-   const local=kind==='vertical'?start+u:256+u;
-   // The immutable V123 join coordinates are WEST y=478 and SOUTH x=466.
-   const fromRoad=Math.abs(local-(kind==='vertical'?478:466));
-   const roadProximity=1-sm((fromRoad-42)/100);
-   const radius=13+24*roadProximity;  // 13px terrain, 37px cartway collar
-   const endpointFade=sm(u/22)*sm((length-1-u)/22);
+  canvas.width=vertical?span:alongLength;
+  canvas.height=vertical?alongLength:span;
+  const cx=canvas.getContext('2d');
+  const out=cx.createImageData(canvas.width,canvas.height),p=out.data;
+  for(let u=0;u<alongLength;u++){
+   const along=256+u;
+   const roadCenter=vertical?478:466;
+   // Match only the real cartway approach, never whole trees/rock faces.
+   const roadMask=1-sm((Math.abs(along-roadCenter)-34)/48);
+   const endpointFade=sm(u/16)*sm((alongLength-1-u)/16);
+   if(roadMask<=0||endpointFade<=0)continue;
+   const radius=26,meanA=[0,0,0],meanB=[0,0,0];
+   // A nine-sample edge average keeps needles and wheel ruts sharp.
+   for(let t=-12;t<=12;t+=3)for(let c=0;c<3;c++){
+    meanA[c]+=vertical?sample(first,W-2,along+t,c):sample(first,along+t,H-2,c);
+    meanB[c]+=vertical?sample(second,1,along+t,c):sample(second,along+t,1,c);
+   }
+   for(let c=0;c<3;c++){meanA[c]/=9;meanB[c]/=9;}
    for(let n=0;n<span;n++){
-    const d=n-maxRadius,weight=sm((d+radius)/(2*radius));
-    // Mirrored edge extension prevents clamped, repeated edge-pixel stripes.
-    const offset=Math.abs(d);
-    const ax=kind==='vertical'?W-1-offset:local;
-    const ay=kind==='vertical'?local:H-1-offset;
-    const bx=kind==='vertical'?offset:local;
-    const by=kind==='vertical'?local:offset;
-    const x=kind==='vertical'?n:u,y=kind==='vertical'?u:n;
-    const k=(y*canvas.width+x)*4;
-    // Only the narrow collar deviates from the native tile artwork.
-    const alpha=endpointFade*(1-sm((Math.abs(d)-radius)/5));
-    if(alpha<=0)continue;
+    const d=n-half,ad=Math.abs(d);
+    const weight=(1-sm((ad-2)/(radius-2)))*roadMask*endpointFade;
+    if(weight<=0)continue;
+    const aSide=d<0,source=aSide?first:second;
+    // Native side pixel only: NO abs(d) mirroring, stretching or duplication.
+    const sx=vertical?(aSide?W+d:d):along;
+    const sy=vertical?along:(aSide?H+d:d);
+    const x=vertical?n:u,y=vertical?u:n,k=(y*canvas.width+x)*4;
     for(let c=0;c<3;c++){
-     const a=pix(first,ax,ay,c),b=pix(second,bx,by,c);
-     p[k+c]=Math.round(a*(1-weight)+b*weight);
+     const diff=Math.max(-40,Math.min(40,meanA[c]-meanB[c]));
+     const adjustment=(aSide?-diff/2:diff/2)*weight;
+     p[k+c]=Math.max(0,Math.min(255,Math.round(sample(source,sx,sy,c)+adjustment)));
     }
-    p[k+3]=Math.round(alpha*255);
+    p[k+3]=255;
    }
   }
-  cx.putImageData(data,0,0);
-  seamArtPatches.push({name,x:kind==='vertical'?1536-maxRadius:1792,
-    y:kind==='vertical'?256:1024-maxRadius,canvas});
+  cx.putImageData(out,0,0);
+  seamArtPatches.push({name,x:vertical?1536-half:1792,
+   y:vertical?256:1024-half,canvas});
  }
- compose('west-cartway-source-feather','vertical',256,512,west,matrei);
- compose('south-cartway-source-feather','horizontal',256,1024,matrei,south);
+ compose('west-native-cartway-edge','vertical',west,matrei);
+ compose('south-native-cartway-edge','horizontal',matrei,south);
 }
 
 let cw=1,ch=1,dpr=1,base=1,zoom=1.65,scale=1,cam=[1560,1010],srcStatus="loading";
@@ -744,11 +754,10 @@ function render(){
   ctx.restore();
   naturalOutline(tile);
  }
- // Road portals cover the baked border at the two crossings only.
- for(const patch of roadPortals)ctx.drawImage(patch.canvas,patch.x,patch.y);
- // Seam collars sit above tiny gold-border restorations; they use real
- // neighboring photography rather than a synthetic stripe over the joint.
+ // Match road colors first, then restore the true photographic
+ // bridge/cartway pixels ON TOP of the correction at each V123 crossing.
  for(const patch of seamArtPatches)ctx.drawImage(patch.canvas,patch.x,patch.y);
+ for(const patch of roadPortals)ctx.drawImage(patch.canvas,patch.x,patch.y);
  if(showRoads){
   for(const tile of atlas){ctx.save();ctx.translate(...tile.o);
    for(const pts of Object.values(tile.roads)){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineWidth=5;ctx.strokeStyle="#f8e76c";ctx.stroke();}

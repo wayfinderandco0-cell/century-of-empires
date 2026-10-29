@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replace the visibly pasted WEST cirque with one coherent native Alpine photograph.
+"""Reconstruct WEST cartway locally without bending the native Alpine forest.
 
 This is an isolated V267 art-only candidate. It intentionally preserves the
 original V121 Matrei bytes, V123 route arrays, V94 campaign, sprites and saves.
@@ -41,19 +41,34 @@ def smooth(t):
 
 
 def reconstruct_native():
-    """Use only the original WEST source, preserving its coherent landscape."""
+    """Preserve original forest/cliffs and register only the native cartway apron."""
     with Image.open(SOURCE) as im:
         native = np.asarray(im.convert("RGB").resize((W,H),Image.Resampling.LANCZOS))
     xx = np.arange(W,dtype=np.float32)
     yy = np.arange(H,dtype=np.float32)
     delta = np.interp(xx, ROUTE[:,0], ROUTE[:,1]-ROUTE[:,2])
-    # Same pre-existing WEST art-to-route registration as the accepted
-    # V267 source registration. Crucially, remove the pasted cirque ellipse.
-    falloff = smooth(yy/110)*smooth((H-1-yy)/285)
+    # Register the *photographed cartway*, not the whole mountain.
+    # The previous y-only global displacement dragged the forest/cliffs
+    # alongside the road and bent trees near the WEST/MATREI edge.
+    # Keep native source pixels 1:1 away from the actual road corridor.
+    # For each x the road center samples source_y = target_y + delta[x].
+    # The Gaussian's derivative stays positive even at the largest
+    # measured 98px displacement: no foldovers, mirrored terrain,
+    # cloned trees or artificial road stripe.
+    target_y = np.interp(xx, ROUTE[:,0], ROUTE[:,2]).astype(np.float32)
+    sigma = 125.0 + .18*np.abs(delta)
+    distance = (yy[:,None]-target_y[None,:])/sigma[None,:]
+    corridor = np.exp(-.5*distance*distance).astype(np.float32)
+    # Compact-support taper makes the distant native forest bit-identical.
+    cutoff = np.clip((3.25-np.abs(distance))/.45,0,1)
+    corridor *= (cutoff*cutoff*(3-2*cutoff)).astype(np.float32)
     map_x = np.broadcast_to(xx[None,:],(H,W)).copy()
-    map_y = np.broadcast_to(yy[:,None]+falloff[:,None]*delta[None,:],(H,W))
+    map_y = yy[:,None] + corridor*delta[None,:]
     result = cv2.remap(native,map_x,np.clip(map_y,0,H-1.001).astype(np.float32),
                        cv2.INTER_CUBIC,borderMode=cv2.BORDER_REPLICATE)
+    # Exact source preservation outside the cartway apron, not just a
+    # visually similar re-sample (important for natural spruce crowns).
+    result[corridor==0] = native[corridor==0]
     return Image.fromarray(result)
 
 

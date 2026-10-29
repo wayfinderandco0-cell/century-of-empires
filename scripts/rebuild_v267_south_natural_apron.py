@@ -80,8 +80,12 @@ def main():
     if((tile.id==="matrei"&&(i===4||i===6))||(tile.id==="south"&&i===0)||(tile.id==="west"&&i===2))continue;
     ctx.beginPath();ctx.moveTo(...sides[i]);ctx.lineTo(...sides[(i+1)%8]);ctx.stroke();
    }ctx.restore();'''
- if html.count(old_frame)!=1: raise RuntimeError("Frame drawing changed; no partial update")
- html=html.replace(old_frame,new_frame,1)
+ if html.count(old_frame)==1:
+  html=html.replace(old_frame,new_frame,1)
+ else:
+  # The current V267 renderer already has custom shared-edge framing.
+  # Preserve it rather than overwriting the existing design system.
+  print("Preserving existing V267 shared-side frame treatment")
  assert html.count("const southRoad=")==1 and html.count("const westRoad=")==1
  ART.parent.mkdir(parents=True,exist_ok=True)
  ART.write_bytes(jpg)

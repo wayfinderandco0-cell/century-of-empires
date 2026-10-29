@@ -9,3 +9,7 @@ This source is intentionally **not substituted** into the existing V267 playable
 - Existing playable `v267-three-octagon-original-art-prototype.html` remains unchanged.
 - Original V121 Matrei, V123 100-node graph, V94 campaign, sprites, saves and production are untouched.
 - Next: reconstruct a visually natural road and stone bridge on the exact V123 route; then inspect actual phone-sized WEST/MATREI/SOUTH and test tap-to-march before presenting for approval. Production RED.
+
+## Actual mobile WebKit/Chromium review evidence
+
+[Actual WebKit iPhone-sized side-by-side screenshots](south-original-source-actual-webkit-side-by-side.jpg) compare the unchanged playable Matrei/SOUTH join with the newly authored SOUTH source and fixed V123 yellow route overlay. Both were rendered in a real WebKit browser at a 390×844 CSS viewport (device pixel ratio 2), at approximately the same map zoom. The photographed new bridge is visibly above the graph crossing; **reject route registration** pending artwork reconstruction. Mobile Chromium and WebKit both loaded the new source, panned/focused, toggled the overlay without page errors. Both also loaded the existing playable V267, preserved 100 nodes, two zero-gap seams, tap-to-march and the 53-node WEST→MATREI→SOUTH route ending at [2806,1629]. No physical iPhone Safari acceptance.

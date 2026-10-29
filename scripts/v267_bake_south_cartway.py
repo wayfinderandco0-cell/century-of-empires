@@ -102,7 +102,11 @@ def update_html(html, jpeg):
         changed=changed.replace(MATREI_BEFORE,MATREI_AFTER,1)
     elif MATREI_AFTER not in changed:
         raise RuntimeError('Unexpected Matrei renderer; refusing modification')
-    if FRAME_BEFORE in changed:
+    if 'naturalOutline(tile);' in changed:
+        # The current V267 candidate already suppresses shared gold sides
+        # and fills nonplayable corner gaps. Preserve that renderer verbatim.
+        pass
+    elif FRAME_BEFORE in changed:
         changed=changed.replace(FRAME_BEFORE,FRAME_AFTER,1)
     elif FRAME_AFTER not in changed:
         raise RuntimeError('Unexpected frame renderer; refusing modification')

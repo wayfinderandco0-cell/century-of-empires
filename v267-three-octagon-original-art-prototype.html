@@ -515,7 +515,12 @@ function registerSource(img,tile){
  for(let x=0;x<W;x++){
   const pt=between(anchors,x),delta=pt[0]-pt[1];
   for(let y=0;y<H;y++){
-   const fy=Math.max(0,Math.min(H-1.001,y+delta));
+   // A full rigid shift is safe in the road's central forest but samples
+   // beyond the image's last row at the bottom. Fade only near the outer
+   // image edges, where no V123 road passes, to avoid repeated gray bands.
+   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
+   const edgeSafe=smooth(y/110)*smooth((H-1-y)/285);
+   const fy=Math.max(0,Math.min(H-1.001,y+delta*edgeSafe));
    const y0=Math.floor(fy),ty=fy-y0;
    const i=(y0*W+x)*4,k=i+W*4,o=(y*W+x)*4;
    for(let c=0;c<3;c++)b[o+c]=a[i+c]*(1-ty)+a[k+c]*ty;

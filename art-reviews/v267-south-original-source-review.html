@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Century of Empires — original SOUTH source review</title>
+<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#24251e;color:#f5e7c4;font:14px system-ui}canvas{display:block;width:100%;height:100%;touch-action:none}header,footer{position:fixed;left:0;right:0;background:#10251fe9;z-index:2;padding:10px 14px}header{top:0}footer{bottom:0;padding-bottom:max(12px,env(safe-area-inset-bottom))}strong{color:#f8e4ae}small{display:block;color:#d6c39b;font-size:11px;margin-top:3px}button,a{font:inherit;color:#f5e7c4;background:#28443a;border:1px solid #9c875c;border-radius:6px;padding:8px 10px;text-decoration:none}button{touch-action:manipulation}.controls{display:flex;gap:6px;overflow-x:auto;white-space:nowrap}.warn{color:#ffc88e}</style></head>
+<body><canvas id="map" aria-label="Original SOUTH Alpine source artwork with optional V123 road alignment"></canvas>
+<header><strong>CENTURY OF EMPIRES — SOUTH ORIGINAL SOURCE</strong><small class="warn">FICTIONAL ART • NOT ROAD-REGISTERED • NOT APPROVED • PRODUCTION RED</small></header>
+<footer><div id="status" style="margin-bottom:7px">Loading new 1536 × 1024 original Alpine artwork…</div><div class="controls"><button id="route">Hide fixed V123 route</button><button id="entry">Road entrance</button><button id="bridge">Bridge comparison</button><button id="whole">Whole tile</button><a href="../v267-three-octagon-original-art-prototype.html">Existing playable V267</a></div></footer>
+<script>
+"use strict";
+const W=1536,H=1024,CUT=256,road=[[466,0],[466,74],[470,160],[488,235],[540,310],[620,350],[700,400],[805,442],[930,510],[1050,550],[1140,585],[1270,605]];
+const canvas=document.getElementById('map'),ctx=canvas.getContext('2d'),img=new Image();
+let cw=1,ch=1,dpr=1,scale=1,cam=[768,512],show=true,down=null;
+function resize(){dpr=Math.min(2,devicePixelRatio||1);cw=innerWidth;ch=innerHeight;canvas.width=Math.round(cw*dpr);canvas.height=Math.round(ch*dpr);if(scale===1)fit();render()}
+function fit(){scale=Math.min((cw-28)/W,(ch-190)/H);cam=[W/2,H/2]}
+function poly(){ctx.beginPath();ctx.moveTo(CUT,0);ctx.lineTo(W-CUT,0);ctx.lineTo(W,CUT);ctx.lineTo(W,H-CUT);ctx.lineTo(W-CUT,H);ctx.lineTo(CUT,H);ctx.lineTo(0,H-CUT);ctx.lineTo(0,CUT);ctx.closePath()}
+function render(){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#27271f';ctx.fillRect(0,0,cw,ch);ctx.save();ctx.translate(cw/2-cam[0]*scale,ch/2-cam[1]*scale);ctx.scale(scale,scale);
+ctx.save();poly();ctx.clip();if(img.complete&&img.naturalWidth)ctx.drawImage(img,0,0,W,H);ctx.restore();
+ctx.beginPath();ctx.moveTo(W,CUT);ctx.lineTo(W,H-CUT);ctx.lineTo(W-CUT,H);ctx.lineTo(CUT,H);ctx.lineTo(0,H-CUT);ctx.lineTo(0,CUT);ctx.lineTo(CUT,0);ctx.strokeStyle='#e1cda087';ctx.lineWidth=7;ctx.stroke();
+if(show){ctx.beginPath();road.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.strokeStyle='#172b28';ctx.lineWidth=18;ctx.stroke();ctx.strokeStyle='#ffdf54';ctx.lineWidth=7;ctx.setLineDash([20,16]);ctx.stroke();ctx.setLineDash([]);for(const [x,y] of [[466,0],[1140,585]]){ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fillStyle='#ffdf54';ctx.fill()}}
+ctx.restore()}
+function focus(x,y,z){cam=[x,y];scale=z;render()}
+document.getElementById('route').onclick=()=>{show=!show;document.getElementById('route').textContent=show?'Hide fixed V123 route':'Show fixed V123 route';render()};
+document.getElementById('entry').onclick=()=>focus(466,120,Math.max(.65,Math.min(cw/500,ch/500)));
+document.getElementById('bridge').onclick=()=>focus(1140,585,Math.max(.65,Math.min(cw/600,ch/600)));
+document.getElementById('whole').onclick=()=>{fit();render()};
+canvas.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY,...cam];canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!down)return;cam=[down[2]-(e.clientX-down[0])/scale,down[3]-(e.clientY-down[1])/scale];render()});
+canvas.addEventListener('pointerup',()=>down=null);
+canvas.addEventListener('wheel',e=>{e.preventDefault();scale=Math.max(.2,Math.min(4,scale*(e.deltaY<0?1.15:.87)));render()},{passive:false});
+img.onload=()=>{fit();render();document.getElementById('status').textContent='Original SOUTH terrain loaded. Yellow = immutable V123 route; compare physical road and bridge. The existing playable candidate is unchanged.'};
+img.onerror=()=>{document.getElementById('status').textContent='Source image failed to load';};
+img.src='v267-original-source/south-gorge-bridge-original-unapproved.webp';
+addEventListener('resize',resize);resize();
+</script></body></html>

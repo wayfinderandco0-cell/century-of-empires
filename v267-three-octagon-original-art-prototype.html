@@ -20,7 +20,7 @@ button:active{background:#4c654e}
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
 <header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>WEST original cirque + SOUTH terrain • UNAPPROVED</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
-<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="westcirque">WEST cirque</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="southsource">New SOUTH art</button><button id="halt">Halt</button></div>
+<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="westcirque">WEST cirque</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="southsource">New SOUTH art</button><button id="southbridge">Bridge contact</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
 <script>
 (function(){
@@ -820,7 +820,15 @@ window.COE=Object.freeze({
 // The newly authored SOUTH gorge-and-stone-bridge source is an OPT-IN visual
 // candidate. It is intentionally NOT road-registered to immutable V123.
 // Default stays the established offline V267 image and movement experience.
-const SOUTH_ORIGINAL_PREVIEW=new URLSearchParams(location.search).get("southArt")==="original";
+const SOUTH_ART_MODE=new URLSearchParams(location.search).get("southArt");
+const SOUTH_BRIDGE_CONTACT_PREVIEW=SOUTH_ART_MODE==="bridge";
+const SOUTH_ORIGINAL_PREVIEW=SOUTH_ART_MODE==="original"||SOUTH_BRIDGE_CONTACT_PREVIEW;
+document.getElementById("southbridge").onclick=()=>{
+ const url=new URL(location.href);
+ if(SOUTH_BRIDGE_CONTACT_PREVIEW)url.searchParams.delete("southArt");
+ else url.searchParams.set("southArt","bridge");
+ location.assign(url.href);
+};
 document.getElementById("southsource").onclick=()=>{
  const url=new URL(location.href);
  if(SOUTH_ORIGINAL_PREVIEW)url.searchParams.delete("southArt");
@@ -830,7 +838,9 @@ document.getElementById("southsource").onclick=()=>{
 async function boot(){
  // Default source is embedded and offline; the optional original source is
  // the durable 1536x1024 WebP committed beside this HTML in the same branch.
- const southArtSource=SOUTH_ORIGINAL_PREVIEW
+ const southArtSource=SOUTH_BRIDGE_CONTACT_PREVIEW
+  ? "art-reviews/v267-original-source/south-bridge-contact-unapproved.webp"
+  : SOUTH_ORIGINAL_PREVIEW
   ? "art-reviews/v267-original-source/south-gorge-bridge-original-unapproved.webp"
   : ART_SOUTH;
  const [west,south]=await Promise.all([loadImage(ART_WEST),loadImage(southArtSource)]);

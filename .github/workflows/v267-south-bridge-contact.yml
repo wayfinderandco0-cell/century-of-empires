@@ -1,0 +1,67 @@
+name: V267 original SOUTH bridge contact art bake (UNAPPROVED)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_recompose_south_bridge_contact.py
+      - .github/workflows/v267-south-bridge-contact.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bake-source-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install free local photo and actual-browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy opencv-python-headless pillow playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Build real source-native SOUTH bridge photograph and opt-in preview
+        run: |
+          python -m py_compile scripts/v267_recompose_south_bridge_contact.py
+          python scripts/v267_recompose_south_bridge_contact.py
+      - name: Capture actual iPhone-size three-tile browser screenshots
+        run: python scripts/v267_clean_visual_review.py
+      - name: Verify protected game, Matrei and V123 source files were not touched
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          changed=$(git diff --name-only origin/main HEAD -- 'v121-*' 'v122-*' 'v123-*' 'v94-*' 'assets/**' 'saves/**')
+          if [ -n "$changed" ]; then
+            printf '%s\n' "$changed"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-south-bridge-contact-real-art
+          path: |
+            art-reviews/v267-original-source/south-bridge-contact-unapproved.webp
+            art-reviews/v267-original-source/south-bridge-contact-unapproved.json
+            art-reviews/v267-original-south-playable-comparison.jpg
+            art-reviews/v267-road-scene-current.jpg
+          retention-days: 14
+      - name: Commit real source, opt-in iPhone preview and screenshots on SAME branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo 'Branch advanced: refusing stale art commit.'
+            exit 1
+          fi
+          git add art-reviews/v267-original-source/south-bridge-contact-unapproved.webp \
+            art-reviews/v267-original-source/south-bridge-contact-unapproved.json \
+            v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-original-south-playable-comparison.jpg \
+            art-reviews/v267-road-scene-current.jpg \
+            art-reviews/v267-road-scene-current.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Stage native SOUTH bridge closer to V123 crossing in real mobile renderer (UNAPPROVED)'
+          git push origin HEAD:"$GITHUB_REF_NAME"

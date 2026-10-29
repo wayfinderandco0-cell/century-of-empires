@@ -22,13 +22,49 @@ jobs:
       - name: Install free local photo and actual-browser dependencies
         run: |
           python -m pip install --disable-pip-version-check numpy opencv-python-headless pillow playwright==1.56.0
-          python -m playwright install --with-deps chromium
+          python -m playwright install --with-deps chromium webkit
       - name: Build real source-native SOUTH bridge photograph and opt-in preview
         run: |
           python -m py_compile scripts/v267_recompose_south_bridge_contact.py
           python scripts/v267_recompose_south_bridge_contact.py
       - name: Capture actual iPhone-size three-tile browser screenshots
         run: python scripts/v267_clean_visual_review.py
+      - name: Open the REAL bridge-contact page in iPhone-size WebKit and march
+        run: |
+          python - <<'PY'
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          from functools import partial
+          from threading import Thread
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          root=Path.cwd()
+          server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(root)))
+          Thread(target=server.serve_forever,daemon=True).start()
+          url=f'http://127.0.0.1:{server.server_port}/v267-three-octagon-original-art-prototype.html?southArt=bridge'
+          with sync_playwright() as pw:
+              browser=pw.webkit.launch(headless=True)
+              context=browser.new_context(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              page=context.new_page()
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto(url,wait_until='load')
+              page.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=90000)
+              assert page.evaluate('COE.nodes')==100
+              assert page.evaluate('COE.westSouthConnected')
+              page.locator('#southjoin').click()
+              page.screenshot(path='art-reviews/v267-original-source/south-bridge-contact-actual-webkit-iphone.png')
+              page.locator('#westjoin').click()
+              page.touchscreen.tap(195,422)
+              assert page.evaluate('COE.moving')
+              page.evaluate('COE.halt()')
+              assert page.evaluate('COE.marchWestToSouth()')
+              assert page.evaluate('COE.stepToEnd()')==[2806,1629]
+              assert not errors,errors
+              print('REAL WebKit 390x844: SOUTH bridge source loaded, 100 V123 nodes, touch + WEST→MATREI→SOUTH march passed')
+              context.close()
+              browser.close()
+          server.shutdown()
+          PY
       - name: Verify protected game, Matrei and V123 source files were not touched
         run: |
           git fetch --no-tags --depth=1 origin main
@@ -46,6 +82,7 @@ jobs:
             art-reviews/v267-original-source/south-bridge-contact-unapproved.json
             art-reviews/v267-original-south-playable-comparison.jpg
             art-reviews/v267-road-scene-current.jpg
+            art-reviews/v267-original-source/south-bridge-contact-actual-webkit-iphone.png
           retention-days: 14
       - name: Commit real source, opt-in iPhone preview and screenshots on SAME branch
         run: |
@@ -61,7 +98,8 @@ jobs:
             v267-three-octagon-original-art-prototype.html \
             art-reviews/v267-original-south-playable-comparison.jpg \
             art-reviews/v267-road-scene-current.jpg \
-            art-reviews/v267-road-scene-current.json
+            art-reviews/v267-road-scene-current.json \
+            art-reviews/v267-original-source/south-bridge-contact-actual-webkit-iphone.png
           git diff --cached --quiet && exit 0
           git commit -m 'Stage native SOUTH bridge closer to V123 crossing in real mobile renderer (UNAPPROVED)'
           git push origin HEAD:"$GITHUB_REF_NAME"

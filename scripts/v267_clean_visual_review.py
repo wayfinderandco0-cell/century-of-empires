@@ -80,7 +80,7 @@ with sync_playwright() as pw:
     context=browser.new_context(viewport={"width":390,"height":844},
        device_scale_factor=2,is_mobile=True,has_touch=True)
     page=context.new_page()
-    for name,query in [("REGISTERED SOUTH", ""),("NEW SOUTH ORIGINAL", "?southArt=original")]:
+    for name,query in [("REGISTERED SOUTH", ""),("NEW SOUTH ORIGINAL", "?southArt=original"),("BRIDGE CONTACT STUDY", "?southArt=bridge")]:
         page.goto(base_url+query,wait_until="load")
         page.wait_for_function("window.COE && COE.originalMatreiLoaded && COE.sourceRegistered",timeout=90000)
         assert page.evaluate("COE.nodes")==100

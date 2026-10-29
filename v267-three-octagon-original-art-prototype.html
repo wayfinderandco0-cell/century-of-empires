@@ -377,7 +377,7 @@ function buildSeamArtTransitions(){
  const sample=(src,x,y,c)=>src[(Math.max(0,Math.min(H-1,Math.round(y)))*W+
     Math.max(0,Math.min(W-1,Math.round(x))))*4+c];
  function compose(name,kind,first,second){
-  const vertical=kind==='vertical',span=64,half=span/2;
+  const vertical=kind==='vertical',span=128,half=span/2;
   const alongLength=vertical?512:1024;
   const canvas=document.createElement('canvas');
   canvas.width=vertical?span:alongLength;
@@ -388,10 +388,10 @@ function buildSeamArtTransitions(){
    const along=256+u;
    const roadCenter=vertical?478:466;
    // Match only the real cartway approach, never whole trees/rock faces.
-   const roadMask=1-sm((Math.abs(along-roadCenter)-34)/48);
+   const roadMask=1; // Native scenery needs edge-color continuity too.
    const endpointFade=sm(u/16)*sm((alongLength-1-u)/16);
    if(roadMask<=0||endpointFade<=0)continue;
-   const radius=26,meanA=[0,0,0],meanB=[0,0,0];
+   const radius=50,meanA=[0,0,0],meanB=[0,0,0];
    // A nine-sample edge average keeps needles and wheel ruts sharp.
    for(let t=-12;t<=12;t+=3)for(let c=0;c<3;c++){
     meanA[c]+=vertical?sample(first,W-2,along+t,c):sample(first,along+t,H-2,c);
@@ -408,7 +408,7 @@ function buildSeamArtTransitions(){
     const sy=vertical?along:(aSide?H+d:d);
     const x=vertical?n:u,y=vertical?u:n,k=(y*canvas.width+x)*4;
     for(let c=0;c<3;c++){
-     const diff=Math.max(-40,Math.min(40,meanA[c]-meanB[c]));
+     const diff=Math.max(-65,Math.min(65,meanA[c]-meanB[c]));
      const adjustment=(aSide?-diff/2:diff/2)*weight;
      p[k+c]=Math.max(0,Math.min(255,Math.round(sample(source,sx,sy,c)+adjustment)));
     }

@@ -20,7 +20,7 @@ button:active{background:#4c654e}
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
 <header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>SOUTH cartway photo registration • no global x warp • UNAPPROVED</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
-<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="southjoin">SOUTH join</button><button id="halt">Halt</button></div>
+<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
 <script>
 (function(){
@@ -770,6 +770,8 @@ function focusJoin(which){cam=(which==="west"?[1536,478]:[2002,1024]);zoom=5.7;s
 }
 document.getElementById("westjoin").onclick=()=>focusJoin("west");
 document.getElementById("southjoin").onclick=()=>focusJoin("south");
+document.getElementById("southroad").onclick=()=>{cam=[2466,1534];zoom=4.2;scale=base*zoom;dirty=true;
+ document.getElementById("status").textContent="SOUTH photographic cartway vs unchanged V123 path • visual review • NOT APPROVED";};
 document.getElementById("roads").onclick=()=>{showRoads=!showRoads;document.getElementById("roads").textContent=showRoads?"Hide road lines":"Show road lines";dirty=true};
 document.getElementById("halt").onclick=halt;
 document.getElementById("march").onclick=()=>{moving=false;pausedEdge=null;startEdge=null;

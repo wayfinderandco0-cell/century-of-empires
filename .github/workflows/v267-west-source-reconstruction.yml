@@ -1,0 +1,108 @@
+name: WEST source-art reconstruction (single V267 review candidate)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_restore_original_west_landscape.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-west-source-reconstruction
+  cancel-in-progress: false
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install art and real-browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless playwright==1.56.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Rebuild native WEST art without collage or mirrored Matrei scenery
+        run: python scripts/v267_restore_original_west_landscape.py
+      - name: Capture actual iPhone-size three-octagon screenshots
+        run: python scripts/v267_clean_visual_review.py
+      - name: Test mobile WebKit and Chromium with real embedded art and touch marching
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          html=Path('v267-three-octagon-original-art-prototype.html').read_text()
+          out=Path('art-reviews/v267-native-west-phone')
+          out.mkdir(exist_ok=True)
+          with sync_playwright() as pw:
+            for engine in ('chromium','webkit'):
+              browser=getattr(pw,engine).launch(headless=True)
+              for orientation,(w,h) in {'portrait':(390,844),'landscape':(844,390)}.items():
+                ctx=browser.new_context(viewport={'width':w,'height':h},device_scale_factor=2,is_mobile=True,has_touch=True)
+                page=ctx.new_page();errors=[]
+                page.on('pageerror',lambda e:errors.append(str(e)))
+                page.set_content(html,wait_until='load')
+                page.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=90000)
+                assert page.evaluate('COE.nodes')==100
+                assert page.evaluate('COE.uniqueWorldNodes')==98
+                assert all(s['pass'] and s['gap']==0 for s in page.evaluate('COE.roadSeams'))
+                page.evaluate('COE.focusJoin("west")')
+                page.wait_for_timeout(100)
+                page.screenshot(path=str(out/f'{engine}-{orientation}-west.png'))
+                page.touchscreen.tap(w/2,h/2)
+                assert page.evaluate('COE.moving'),(engine,orientation,'tap march')
+                page.evaluate('COE.halt()')
+                assert page.evaluate('COE.marchWestToSouth()')
+                assert len(page.evaluate('COE.route'))==53
+                assert page.evaluate('COE.stepToEnd()')==[2806,1629]
+                page.evaluate('COE.focusJoin("south")')
+                page.wait_for_timeout(100)
+                page.screenshot(path=str(out/f'{engine}-{orientation}-south.png'))
+                assert not errors,errors
+                print(engine,orientation,'native WEST, two seams, touch route PASS')
+                ctx.close()
+              browser.close()
+          PY
+      - name: Assert protected files are untouched
+        run: |
+          python - <<'PY'
+          import subprocess
+          names={line[3:] for line in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          allowed={'v267-three-octagon-original-art-prototype.html',
+                   'art-reviews/v267-original-source/west-native-restored-unapproved.jpg',
+                   'art-reviews/v267-west-source-restoration-review.md',
+                   'art-reviews/v267-road-scene-current.jpg',
+                   'art-reviews/v267-road-scene-current.json'}
+          assert all(n in allowed or n.startswith('art-reviews/v267-native-west-phone/') for n in names),sorted(names)
+          assert 'v267-three-octagon-original-art-prototype.html' in names,'No visible art change'
+          print('Protected V121/V123/V94/engine/sprites/saves unchanged')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-native-west-source-actual-browser-review
+          path: |
+            art-reviews/v267-original-source/west-native-restored-unapproved.jpg
+            art-reviews/v267-west-source-restoration-review.md
+            art-reviews/v267-road-scene-current.jpg
+            art-reviews/v267-native-west-phone/
+          retention-days: 14
+      - name: Commit only isolated WEST review art and actual screenshot
+        run: |
+          git config user.name "century-of-empires-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo "Branch advanced: preserve review artifact, no stale push."
+            exit 0
+          fi
+          git add v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-original-source/west-native-restored-unapproved.jpg \
+            art-reviews/v267-west-source-restoration-review.md \
+            art-reviews/v267-road-scene-current.jpg art-reviews/v267-road-scene-current.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Restore coherent original WEST alpine source art; remove composited cirque seam"
+          git push origin HEAD:"$GITHUB_REF_NAME"

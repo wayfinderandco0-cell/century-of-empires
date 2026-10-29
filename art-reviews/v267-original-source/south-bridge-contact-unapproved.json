@@ -1,15 +1,15 @@
 {
-  "status": "UNAPPROVED; NOT road-aligned; production RED",
+  "status": "UNAPPROVED; northern road and stone bridge photo-registered; production RED",
   "provenance": "fictional original Alpine game artwork",
   "source": "art-reviews/v267-original-source/south-gorge-bridge-original-unapproved.webp",
   "source_sha256": "d2865c0deac6c6a3a5c1a07e52efd1c2e7c7db9391e38c5bfb31baefbd0671c1",
   "candidate": "art-reviews/v267-original-source/south-bridge-contact-unapproved.webp",
-  "candidate_sha256": "0f5742e91258bbfdb52fb56b8bac79747ef8606236b41000296d4753aca7c5f1",
+  "candidate_sha256": "46efdd3cfd7df0163330445f7841e3e35502a317c3780f80cfd4a18444901103",
   "dimensions": [
     1536,
     1024
   ],
-  "art_registration": "rigid native photo move -50px x, +85px y; native photo seam",
+  "art_registration": "rigid native bridge move -50px x,+85px y; original rutted cartway transplanted locally to V123 north entry x466; abandoned track restored with native meadow",
   "bridge_expected_graph": [
     1140,
     585
@@ -18,11 +18,11 @@
     466,
     0
   ],
-  "northern_photo_entry_still_wrong": true,
+  "northern_photo_entry_still_wrong": false,
   "known_visual_defects": [
-    "northern photographed cartway still west of V123 x466",
-    "outer right forest edge needs manual source-art reconstruction",
-    "Matrei-SOUTH material seam remains unapproved"
+    "northern cartway now reaches x466; verify on real iPhone at high zoom",
+    "outer right forest edge may still show material discontinuity",
+    "Matrei-SOUTH material seam and photographic road curvature remain unapproved"
   ],
   "protected": "V121/V123/V94, sprites, saves, production main unchanged"
 }

@@ -1,0 +1,79 @@
+name: V267 SOUTH natural photographic apron (isolated, unapproved)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/rebuild_v267_south_natural_apron.py
+      - .github/workflows/v267-south-natural-apron.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-south-natural-apron
+  cancel-in-progress: false
+jobs:
+  build-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install photographic art and actual-browser tools
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Rebuild SOUTH terrain and natural Matrei join
+        run: python scripts/rebuild_v267_south_natural_apron.py
+      - name: Render real three-octagon phone screenshots (not synthetic)
+        run: python scripts/v267_clean_visual_review.py
+      - name: Assert changed paths cannot affect engine or V121/V123
+        run: |
+          python - <<'PY'
+          import subprocess
+          allowed={
+            'v267-three-octagon-original-art-prototype.html',
+            'art-reviews/v267-original-source/south-northern-apron-unapproved.jpg',
+            'art-reviews/v267-south-northern-apron-review.md',
+            'art-reviews/v267-road-scene-current.jpg',
+            'art-reviews/v267-road-scene-current.json'
+          }
+          changed=set(subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines())
+          names={s[3:] for s in changed}
+          print('Changed paths:',sorted(names))
+          assert names <= allowed,(names-allowed)
+          assert 'v267-three-octagon-original-art-prototype.html' in names
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-south-natural-apron-real-phone-review
+          path: |
+            art-reviews/v267-road-scene-current.jpg
+            art-reviews/v267-road-scene-current.json
+            art-reviews/v267-original-source/south-northern-apron-unapproved.jpg
+            art-reviews/v267-south-northern-apron-review.md
+          retention-days: 14
+      - name: Commit ONLY review art if branch has not advanced
+        run: |
+          git config user.name "century-of-empires-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo "Branch advanced; preserve artifact, do not push stale work."
+            exit 0
+          fi
+          git add v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-original-source/south-northern-apron-unapproved.jpg \
+            art-reviews/v267-south-northern-apron-review.md \
+            art-reviews/v267-road-scene-current.jpg \
+            art-reviews/v267-road-scene-current.json
+          if git diff --cached --quiet; then
+            echo "No art change"
+          else
+            git commit -m "Rebuild natural SOUTH/Matrei photographic seam and preserve actual phone views"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi

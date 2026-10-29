@@ -63,6 +63,17 @@ print("Saved clean browser image at",OUT/"v267-road-scene-current.jpg")
 
 # The NEW SOUTH original is reviewed inside the SAME actual renderer, not a
 # stand-alone source mockup. Real Chromium screenshots at iPhone 390x844 DPR2.
+# Serve the actual committed file over localhost: Chromium file:// pages
+# can have opaque origins, tainting data-URL canvas pixels in getImageData.
+# HTTP matches the real iPhone review's same-origin asset loading.
+from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+from functools import partial
+from threading import Thread
+class QuietHandler(SimpleHTTPRequestHandler):
+    def log_message(self,*args): pass
+server=ThreadingHTTPServer(("127.0.0.1",0),partial(QuietHandler,directory=str(ROOT)))
+Thread(target=server.serve_forever,daemon=True).start()
+base_url=f"http://127.0.0.1:{server.server_port}/v267-three-octagon-original-art-prototype.html"
 comparison=[]
 with sync_playwright() as pw:
     browser=pw.chromium.launch(headless=True)
@@ -70,7 +81,7 @@ with sync_playwright() as pw:
        device_scale_factor=2,is_mobile=True,has_touch=True)
     page=context.new_page()
     for name,query in [("REGISTERED SOUTH", ""),("NEW SOUTH ORIGINAL", "?southArt=original")]:
-        page.goto(HTML_PATH.as_uri()+query,wait_until="load")
+        page.goto(base_url+query,wait_until="load")
         page.wait_for_function("window.COE && COE.originalMatreiLoaded && COE.sourceRegistered",timeout=90000)
         assert page.evaluate("COE.nodes")==100
         assert page.evaluate("COE.westSouthConnected")
@@ -86,6 +97,7 @@ with sync_playwright() as pw:
             page.wait_for_timeout(300)
             comparison.append(("ORIGINAL BRIDGE + V123 ROUTE",Image.open(BytesIO(page.screenshot())).convert("RGB")))
     context.close();browser.close()
+server.shutdown()
 cw=max(im.width for _,im in comparison);ch=max(im.height for _,im in comparison)
 board=Image.new("RGB",(len(comparison)*(cw+24)+24,ch+100),(21,35,29))
 draw=ImageDraw.Draw(board)

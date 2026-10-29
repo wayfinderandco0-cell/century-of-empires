@@ -485,24 +485,11 @@ function registerSource(img,tile){
  const ictx=input.getContext('2d',{willReadFrequently:true});ictx.drawImage(img,0,0,W,H);
  const src=ictx.getImageData(0,0,W,H);
  if(tile==='south'){
-  // Original SOUTH art entry is 50px right of the fixed V123 border point.
-  // Register ONLY the first 270px of the road's open meadow approach, with
-  // a smooth horizontal falloff. Forest, gorge and bridge stay native pixels.
-  const out=ictx.createImageData(W,H),a=src.data,b=out.data;b.set(a);
-  for(let y=0;y<270;y++){
-   const u=y/270,fade=(1-u)*(1-u)*(1+2*u),center=466+.45*y;
-   const left=Math.max(0,Math.floor(center-475)),right=Math.min(W-2,Math.ceil(center+475));
-   for(let x=left;x<=right;x++){
-    const dx=50*fade*Math.exp(-.5*((x-center)/150)**2);
-    if(dx<.08)continue;
-    const sx=Math.min(W-1.001,x+dx),ix=Math.floor(sx),t=sx-ix;
-    const dest=(y*W+x)*4,j=(y*W+ix)*4,k=j+4;
-    for(let c=0;c<3;c++)b[dest+c]=a[j+c]*(1-t)+a[k+c]*t;
-    b[dest+3]=255;
-   }
-  }
-  const registered=document.createElement('canvas');registered.width=W;registered.height=H;
-  registered.getContext('2d').putImageData(out,0,0);return registered;
+  // SOUTH's original photographed road is now registered in the durable
+  // 1536x1024 review source. Applying the former 50px runtime shift AGAIN
+  // displaced its northern cartway from the immutable V123 (466,0) seam.
+  // Display the baked source 1:1: no warped forest, river or road stripe.
+  return input;
  }
  // WEST native photographic landscape: align the real cartway with the
  // immutable V123 road using a per-column RIGID terrain translation. The

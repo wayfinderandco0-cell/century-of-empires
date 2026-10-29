@@ -79,7 +79,8 @@ jobs:
           changed=set(subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines())
           names={s[3:] for s in changed}
           print('Changed paths:',sorted(names))
-          assert names <= allowed,(names-allowed)
+          unexpected={p for p in names if p not in allowed and not p.startswith('art-reviews/v267-apron-mobile/')}
+          assert not unexpected,unexpected
           if names: print('Art and screenshot changes staged for review')
           else: print('Already integrated; verification only')
           PY

@@ -17,6 +17,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     html = HTML.read_text(encoding='utf-8')
     assert len(html) > 800_000 and 'ART_MATREI_CANONICAL' in html
+    assert 'SOUTH_CARTWAY_EDGE_CONTACT_20261029' in html, 'Expected durable SOUTH photographic registration'
     w, h = (390, 844) if args.orientation == 'portrait' else (844, 390)
     errors = []
     with sync_playwright() as pw:
@@ -50,8 +51,8 @@ def main():
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             return {point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))};
           });
-          // Only the first 270px of open SOUTH meadow may be registered.
-          // All forest/gorge/bridge points and downstream road remain native.
+          // The SOUTH photo is already baked to the V123 road entrance.
+          // No additional runtime resampling may alter any source pixels.
           for(const [x,y] of [[466,270],[700,400],[930,510],[1270,605]]){
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             equality.push({point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))});
@@ -60,14 +61,14 @@ def main():
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             return {point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))};
           });
-          return {equality,entrance,algorithm:'bounded-270px-SOUTH-meadow-entrance-registration'};
+          return {equality,entrance,algorithm:'baked-SOUTH-photo-no-double-runtime-shift'};
         }""")
         # WebKit may introduce <=3 RGB levels during ImageData conversion.
         # Protected forest/gorge and the rest of the SOUTH source must match.
         assert all(row['maxChannelDelta']<=3 for row in native_comparison['equality']), native_comparison
-        # A visible change at the two northern cartway samples proves the
-        # deliberate, spatially bounded image registration actually ran.
-        assert all(row['maxChannelDelta']>=10 for row in native_comparison['entrance']), native_comparison
+        # The source was durably registered in the 1536x1024 JPEG. A second
+        # runtime shift would make the photographed road miss the seam.
+        assert all(row['maxChannelDelta']<=3 for row in native_comparison['entrance']), native_comparison
 
         assert state['inlays']==['north','square','east'], state['inlays']
         inlay_colors = page.evaluate("""() => inlays.map(p => {

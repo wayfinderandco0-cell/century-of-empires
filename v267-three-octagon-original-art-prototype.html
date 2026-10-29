@@ -388,10 +388,15 @@ function buildSeamArtTransitions(){
    const along=256+u;
    const roadCenter=vertical?478:466;
    // Match only the real cartway approach, never whole trees/rock faces.
-   const roadMask=1; // Native scenery needs edge-color continuity too.
+   // Keep photographic scenery fully native. A previous full-edge color
+   // collar tinted an entire 1024px SOUTH border, creating a conspicuous
+   // horizontal stripe through unrelated trees, rocks and meadows.
+   // Only the fixed V123 cartway and its immediate banks are harmonized.
+   const bankDistance=Math.abs(along-roadCenter);
+   const roadMask=1-sm((bankDistance-72)/88);
    const endpointFade=sm(u/16)*sm((alongLength-1-u)/16);
    if(roadMask<=0||endpointFade<=0)continue;
-   const radius=50,meanA=[0,0,0],meanB=[0,0,0];
+   const radius=46,meanA=[0,0,0],meanB=[0,0,0];
    // A nine-sample edge average keeps needles and wheel ruts sharp.
    for(let t=-12;t<=12;t+=3)for(let c=0;c<3;c++){
     meanA[c]+=vertical?sample(first,W-2,along+t,c):sample(first,along+t,H-2,c);

@@ -9,7 +9,8 @@ from PIL import Image,ImageOps,ImageDraw
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
-HTML=(ROOT/"v267-three-octagon-original-art-prototype.html").read_text()
+HTML_PATH=ROOT/"v267-three-octagon-original-art-prototype.html"
+HTML=HTML_PATH.read_text()
 OUT=ROOT/"art-reviews"
 OUT.mkdir(exist_ok=True)
 VIEWS=[("SOUTH JOIN","south"),("WEST JOIN","west"),("WHOLE MAP","whole")]
@@ -59,3 +60,38 @@ board.save(OUT/"v267-road-scene-current.jpg",quality=87,optimize=True)
   "errors":errors
 },indent=2))
 print("Saved clean browser image at",OUT/"v267-road-scene-current.jpg")
+
+# The NEW SOUTH original is reviewed inside the SAME actual renderer, not a
+# stand-alone source mockup. Real Chromium screenshots at iPhone 390x844 DPR2.
+comparison=[]
+with sync_playwright() as pw:
+    browser=pw.chromium.launch(headless=True)
+    context=browser.new_context(viewport={"width":390,"height":844},
+       device_scale_factor=2,is_mobile=True,has_touch=True)
+    page=context.new_page()
+    for name,query in [("REGISTERED SOUTH", ""),("NEW SOUTH ORIGINAL", "?southArt=original")]:
+        page.goto(HTML_PATH.as_uri()+query,wait_until="load")
+        page.wait_for_function("window.COE && COE.originalMatreiLoaded && COE.sourceRegistered",timeout=90000)
+        assert page.evaluate("COE.nodes")==100
+        assert page.evaluate("COE.westSouthConnected")
+        page.evaluate("COE.focusJoin('south')")
+        page.evaluate("""() => {
+          document.querySelector('header').style.display='none';
+          document.querySelector('footer').style.display='none';
+        }""")
+        page.wait_for_timeout(300)
+        comparison.append((name,Image.open(BytesIO(page.screenshot())).convert("RGB")))
+        if query:
+            page.evaluate("document.querySelector('#southroad').click()")
+            page.wait_for_timeout(300)
+            comparison.append(("ORIGINAL BRIDGE + V123 ROUTE",Image.open(BytesIO(page.screenshot())).convert("RGB")))
+    context.close();browser.close()
+cw=max(im.width for _,im in comparison);ch=max(im.height for _,im in comparison)
+board=Image.new("RGB",(len(comparison)*(cw+24)+24,ch+100),(21,35,29))
+draw=ImageDraw.Draw(board)
+for i,(label,im) in enumerate(comparison):
+    x=24+i*(cw+24)
+    draw.text((x,26),label,fill=(244,231,193))
+    board.paste(im,(x,72))
+board.save(OUT/"v267-original-south-playable-comparison.jpg",quality=88,optimize=True)
+print("Saved real-renderer SOUTH original side-by-side",OUT/"v267-original-south-playable-comparison.jpg")

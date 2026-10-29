@@ -20,7 +20,7 @@ button:active{background:#4c654e}
 <canvas id="map" aria-label="Playable three-octagon alpine terrain"></canvas>
 <header><div class="flag"><strong>CENTURY OF EMPIRES</strong> · ART CANDIDATE<small>WEST original cirque + SOUTH terrain • UNAPPROVED</small></div></header>
 <footer><div id="status">Preparing Alpine terrain…</div><div class="hint">Tap a visible cartway to march • drag to pan • pinch to zoom</div>
-<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="westcirque">WEST cirque</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="halt">Halt</button></div>
+<div class="buttons"><button id="whole">Whole map</button><button id="march">March west → south</button><button id="center">Center army</button><button id="roads">Show road lines</button><button id="westjoin">WEST join</button><button id="westcirque">WEST cirque</button><button id="southjoin">SOUTH join</button><button id="southroad">SOUTH cartway</button><button id="southsource">New SOUTH art</button><button id="halt">Halt</button></div>
 <div class="hint" id="source">Verifying embedded original Matrei V121 image…</div></footer>
 <script>
 (function(){
@@ -817,9 +817,28 @@ window.COE=Object.freeze({
  halt,stepToEnd:()=>{if(marchPath.length){traveled=total;army=sample(marchPath,total);moving=false;currentKey=goalKey;goalKey=null;dirty=true}return army.slice()},
  get destinations(){return atlasPlan?V123Atlas.endpoints(atlasPlan):null}
 });
+// The newly authored SOUTH gorge-and-stone-bridge source is an OPT-IN visual
+// candidate. It is intentionally NOT road-registered to immutable V123.
+// Default stays the established offline V267 image and movement experience.
+const SOUTH_ORIGINAL_PREVIEW=new URLSearchParams(location.search).get("southArt")==="original";
+document.getElementById("southsource").onclick=()=>{
+ const url=new URL(location.href);
+ if(SOUTH_ORIGINAL_PREVIEW)url.searchParams.delete("southArt");
+ else url.searchParams.set("southArt","original");
+ location.assign(url.href);
+};
 async function boot(){
- // New source tiles are embedded in this HTML, making them available offline.
- const [west,south]=await Promise.all([loadImage(ART_WEST),loadImage(ART_SOUTH)]);
+ // Default source is embedded and offline; the optional original source is
+ // the durable 1536x1024 WebP committed beside this HTML in the same branch.
+ const southArtSource=SOUTH_ORIGINAL_PREVIEW
+  ? "art-reviews/v267-original-source/south-gorge-bridge-original-unapproved.webp"
+  : ART_SOUTH;
+ const [west,south]=await Promise.all([loadImage(ART_WEST),loadImage(southArtSource)]);
+ if(south.naturalWidth!==W||south.naturalHeight!==H)throw Error("SOUTH source dimensions drifted");
+ document.getElementById("southsource").textContent=SOUTH_ORIGINAL_PREVIEW?"Existing SOUTH art":"New SOUTH art";
+ if(SOUTH_ORIGINAL_PREVIEW){
+  document.querySelector("header small").textContent="NEW SOUTH gorge and stone bridge • physical crossing OFF V123 • UNAPPROVED";
+ }
  // Keep both unwarped original photo sources for gap painting; the movement tile still
  // receives the V123-aligned registered SOUTH version.
  nativeWestTexture=document.createElement('canvas');
@@ -831,11 +850,19 @@ async function boot(){
  textures.west=document.createElement("canvas");textures.west.width=W;textures.west.height=H;textures.west.getContext("2d").drawImage(west,0,0,W,H);textures.south=registerSource(south,"south");
  const canonical=await loadImage(ART_MATREI_CANONICAL);
  textures.matrei=registerCanonicalMatrei(canonical);srcStatus="original";
- document.getElementById("source").textContent="Offline V121 Matrei • original V122/V123 engine • fictional WEST/SOUTH art • NOT APPROVED";
+ document.getElementById("source").textContent=SOUTH_ORIGINAL_PREVIEW
+  ?"ORIGINAL SOUTH PHOTO: cartway/stone bridge OFF V123 • use Show road lines • do NOT approve or merge"
+  :"Offline V121 Matrei • original V122/V123 engine • fictional WEST/SOUTH art • NOT APPROVED";
  
- rebuildGraph();buildInlay();buildRoadPortals();buildSouthRoadJoin();buildSeamArtTransitions();resize();requestAnimationFrame(frame);
+ rebuildGraph();buildInlay();buildRoadPortals();
+ // Do not hide the original source's off-graph cartway with a fake painted join.
+ if(!SOUTH_ORIGINAL_PREVIEW)buildSouthRoadJoin();
+ buildSeamArtTransitions();resize();requestAnimationFrame(frame);
+ if(SOUTH_ORIGINAL_PREVIEW){showRoads=true;cam=[2490,1420];zoom=2.4;resize();}
  document.getElementById("status").textContent="Playable prototype ready • 3 connected octagons";
- document.getElementById("status").textContent="Ready • 100 V123 tile nodes / 98 world points • 2 experimental seams • march WEST → SOUTH";
+ document.getElementById("status").textContent=SOUTH_ORIGINAL_PREVIEW
+  ?"ORIGINAL SOUTH ART — bridge/cartway NOT aligned • V123 movement remains unchanged"
+  :"Ready • 100 V123 tile nodes / 98 world points • 2 experimental seams • march WEST → SOUTH";
 }
 boot().catch(e=>{document.getElementById("status").textContent="Load error: "+e.message});
 </script></body></html>

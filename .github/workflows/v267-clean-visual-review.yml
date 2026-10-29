@@ -34,6 +34,7 @@ jobs:
           path: |
             art-reviews/v267-road-scene-current.jpg
             art-reviews/v267-road-scene-current.json
+            art-reviews/v267-original-south-playable-comparison.jpg
           retention-days: 14
       - name: Commit review only if source branch has not advanced
         run: |
@@ -44,7 +45,7 @@ jobs:
             echo "Branch advanced; skipping stale screenshot commit."
             exit 0
           fi
-          git add art-reviews/v267-road-scene-current.jpg art-reviews/v267-road-scene-current.json
+          git add art-reviews/v267-road-scene-current.jpg art-reviews/v267-road-scene-current.json art-reviews/v267-original-south-playable-comparison.jpg
           if git diff --cached --quiet; then
             echo "No screenshot changes"
           else

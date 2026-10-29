@@ -50,18 +50,19 @@ def main():
             const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
             return {point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))};
           });
-          // At source y=400 the physical painted road is centered x=906.
-          // It must be relocated to the FIXED V123 rendered x=700.
-          const sourceRoad=pixels(906,400,native),targetRoad=pixels(700,400,rebuilt);
-          const roadDelta=sourceRoad.map((v,i)=>Math.abs(v-targetRoad[i]));
-          return {equality,sourceRoad,targetRoad,roadDelta,
-            algorithm: southRoadFromNativePixels.name};
+          // New SOUTH is an independently generated, unwarped terrain source.
+          // Confirm road approach and surrounding native pixels are untouched;
+          // visual V123 alignment is reviewed separately, never inferred here.
+          for(const [x,y] of [[466,0],[466,160],[700,400],[930,510],[1270,605]]){
+            const source=pixels(x,y,native),product=pixels(x,y,rebuilt);
+            equality.push({point:[x,y],maxChannelDelta:Math.max(...source.map((v,i)=>Math.abs(v-product[i])))});
+          }
+          return {equality,algorithm:'unwarped-original-SOUTH-source'};
         }""")
         # WebKit performs a small color-space/premultiply conversion when
         # a native image is moved through ImageData; tolerate <=3 RGB levels,
         # but never a geometry displacement or large recoloring.
         assert all(row['maxChannelDelta']<=3 for row in native_comparison['equality']), native_comparison
-        assert max(native_comparison['roadDelta'][:3]) <= 1, native_comparison
 
         assert state['inlays']==['north','square','east'], state['inlays']
         inlay_colors = page.evaluate("""() => inlays.map(p => {

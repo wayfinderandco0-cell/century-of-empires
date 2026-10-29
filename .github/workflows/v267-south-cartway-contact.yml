@@ -1,0 +1,125 @@
+name: V267 SOUTH real-photo cartway edge registration (isolated review)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_south_cartway_edge_contact.py
+      - .github/workflows/v267-south-cartway-contact.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-south-cartway-contact
+  cancel-in-progress: false
+jobs:
+  art-and-phone-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install photographic and real-browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless playwright==1.56.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Preserve actual previous review HTML and register SOUTH photo
+        run: |
+          cp v267-three-octagon-original-art-prototype.html /tmp/v267-south-before.html
+          python scripts/v267_south_cartway_edge_contact.py
+      - name: Render before/after actual source art and test touch marching in four phone configurations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageOps,ImageDraw
+          from playwright.sync_api import sync_playwright
+          old=Path('/tmp/v267-south-before.html').read_text()
+          new=Path('v267-three-octagon-original-art-prototype.html').read_text()
+          folder=Path('art-reviews/v267-south-cartway-phone')
+          folder.mkdir(exist_ok=True)
+          with sync_playwright() as pw:
+            for engine in ('chromium','webkit'):
+              browser=getattr(pw,engine).launch(headless=True)
+              for orient,(w,h) in {'portrait':(390,844),'landscape':(844,390)}.items():
+                ctx=browser.new_context(viewport={'width':w,'height':h},
+                  device_scale_factor=2,is_mobile=True,has_touch=True)
+                for label,html in [('before',old),('after',new)]:
+                  page=ctx.new_page()
+                  errors=[]
+                  page.on('pageerror',lambda e:errors.append(str(e)))
+                  page.set_content(html,wait_until='load')
+                  page.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=90000)
+                  assert page.evaluate('COE.nodes')==100
+                  assert page.evaluate('COE.uniqueWorldNodes')==98
+                  assert all(s['pass'] and s['gap']==0 for s in page.evaluate('COE.roadSeams'))
+                  page.evaluate('COE.focusJoin("south")')
+                  page.wait_for_timeout(150)
+                  page.screenshot(path=str(folder/f'{engine}-{orient}-{label}.png'))
+                  if label=='after':
+                    page.touchscreen.tap(w/2,h/2)
+                    assert page.evaluate('COE.moving'),(engine,orient,'touch')
+                    page.evaluate('COE.halt()')
+                    assert page.evaluate('COE.marchWestToSouth()')
+                    assert len(page.evaluate('COE.route'))==53
+                    assert page.evaluate('COE.stepToEnd()')==[2806,1629]
+                  assert not errors,errors
+                  page.close()
+                ctx.close()
+              browser.close()
+          # Two actual Chromium phone screenshots; no synthetic imagery.
+          before=Image.open(folder/'chromium-portrait-before.png').convert('RGB')
+          after=Image.open(folder/'chromium-portrait-after.png').convert('RGB')
+          sheet=Image.new('RGB',(before.width*2,before.height+50),'#16231b')
+          sheet.paste(before,(0,50));sheet.paste(after,(before.width,50))
+          d=ImageDraw.Draw(sheet)
+          d.text((20,17),'BEFORE: photographic road drift',fill='#f1e5c6')
+          d.text((before.width+20,17),'AFTER: local SOUTH meadow registration',fill='#f1e5c6')
+          sheet.save('art-reviews/v267-south-road-contact-actual-before-after.jpg',
+            quality=90,subsampling=0)
+          print('Actual four browser modes and WEST to SOUTH touch route passed')
+          PY
+      - name: Protected-file and actual-art change guard
+        run: |
+          python - <<'PY'
+          import subprocess
+          changed={s[3:] for s in subprocess.check_output(
+            ['git','status','--porcelain','-uall'],text=True).splitlines()}
+          allowed={
+            'v267-three-octagon-original-art-prototype.html',
+            'art-reviews/v267-original-source/south-cartway-edge-contact-unapproved.jpg',
+            'art-reviews/v267-south-cartway-edge-contact-review.md',
+            'art-reviews/v267-south-road-contact-actual-before-after.jpg'}
+          assert 'v267-three-octagon-original-art-prototype.html' in changed
+          assert all(p in allowed or p.startswith('art-reviews/v267-south-cartway-phone/')
+                     for p in changed),sorted(changed)
+          print('V121/V123/V94/sprites/saves/production unchanged')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-south-cartway-contact-actual-phone-before-after
+          path: |
+            art-reviews/v267-original-source/south-cartway-edge-contact-unapproved.jpg
+            art-reviews/v267-south-cartway-edge-contact-review.md
+            art-reviews/v267-south-road-contact-actual-before-after.jpg
+            art-reviews/v267-south-cartway-phone/
+          retention-days: 14
+      - name: Commit actual art and screenshot only on unchanged isolated branch
+        run: |
+          git config user.name "century-of-empires-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo "Branch advanced; preserve artifact, do not push stale work"
+            exit 0
+          fi
+          git add v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-original-source/south-cartway-edge-contact-unapproved.jpg \
+            art-reviews/v267-south-cartway-edge-contact-review.md \
+            art-reviews/v267-south-road-contact-actual-before-after.jpg
+          git diff --cached --quiet && exit 0
+          git commit -m "Align photographed SOUTH road entrance without forest-wide distortion"
+          git push origin HEAD:"$GITHUB_REF_NAME"

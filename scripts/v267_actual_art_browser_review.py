@@ -115,7 +115,7 @@ def main():
                   'javascriptErrors': errors, 'nativeIPhoneSafari': False,
                   'visualUserApproved': False, 'productionApproved': False, 'decorativeGapInlays': state['inlays'],
                   'nativeForestPreserved': native_comparison['equality'],
-                  'nativeCartwayRelocated': native_comparison['roadDelta'],
+                  'newSouthSourceUnwarped': native_comparison['algorithm'],
                   'inlayCenterPixels': inlay_colors}
         (out / f'{args.browser}-{args.orientation}-result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result, indent=2))

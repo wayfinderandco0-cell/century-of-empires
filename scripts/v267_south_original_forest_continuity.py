@@ -103,7 +103,9 @@ def harmonize_north(photo,edge):
  fade*=1-.43*np.exp(-.5*((xx-466)/85)**2)
  fade*=1-.48*smooth((xx-870)/110)
  out=np.uint8(np.clip(lab+fade[:,:,None]*delta[None,:,:],0,255))
- return cv2.cvtColor(out,cv2.COLOR_LAB2RGB)
+ rgb=cv2.cvtColor(out,cv2.COLOR_LAB2RGB)
+ rgb[fade<=0]=photo[fade<=0]
+ return rgb
 def main():
  html=HTML.read_text(encoding='utf-8')
  if MARK in html and OUT.exists():

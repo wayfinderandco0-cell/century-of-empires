@@ -111,6 +111,9 @@ def build(native):
     result=native.copy()
     alpha=transplant[:,:,None]
     result[:370]=np.uint8(np.clip(base*(1-alpha)+donor.astype(np.float32)*alpha,0,255))
+    # Roundoff must never alter protected road-bearing meadow or outer trees.
+    result[:370,:720]=native[:370,:720]
+    result[:370,1450:]=native[:370,1450:]
     assert np.array_equal(result[370:],native[370:])
     assert np.array_equal(result[:370,:720],native[:370,:720])
     assert np.array_equal(result[:370,1450:],native[:370,1450:])

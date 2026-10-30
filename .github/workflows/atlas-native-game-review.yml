@@ -1,0 +1,59 @@
+name: Approved-method Alpine atlas native game canvas review
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - index.html
+      - terrain-grid/atlas-integrated.js
+      - terrain-grid/atlas-cells.json
+      - terrain-grid/art/matrei-v121-original.webp
+      - scripts/test_atlas_manifest.js
+      - scripts/atlas_integrated_browser_review.py
+      - .github/workflows/atlas-native-game-review.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  atlas-native:
+    name: Native canvas / ${{ matrix.browser }} / ${{ matrix.orientation }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+        orientation: [portrait, landscape]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original V121/V123/V94 source and sprites unchanged
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          changed=$(git diff --name-only origin/main HEAD -- 'v121-*' 'v122-*' 'v123-*' 'v94-*' 'assets/**' 'saves/**')
+          if [ -n "$changed" ]; then
+            echo "$changed"
+            echo 'Protected originals changed. STOP.'
+            exit 1
+          fi
+      - name: Test 100-node graph and sparse atlas semantics
+        run: node scripts/test_atlas_manifest.js
+      - name: Install mobile browser engines
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow
+          python -m playwright install --with-deps ${{ matrix.browser }}
+      - name: Run real mobile browser with original source artwork in native game canvas
+        run: |
+          python scripts/atlas_integrated_browser_review.py --browser ${{ matrix.browser }} --orientation ${{ matrix.orientation }} --out art-reviews/atlas-native-game
+      - name: Preserve actual phone-sized screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-native-${{ matrix.browser }}-${{ matrix.orientation }}
+          path: art-reviews/atlas-native-game/
+          retention-days: 14
+          if-no-files-found: warn

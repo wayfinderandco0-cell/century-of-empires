@@ -1,0 +1,482 @@
+{
+  "schema": "coe-atlas-cells/v1",
+  "release": "isolated-integration-candidate",
+  "artMethodApprovedOn": "2026-10-30",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "scenario": {
+    "label": "1780–1880-inspired fictional Alpine art prototype",
+    "historicallyVerified": false,
+    "gameplayProvinceMapping": "not yet linked to V94"
+  },
+  "geometry": {
+    "shape": "cut-corner-octagon",
+    "width": 1536,
+    "height": 1024,
+    "corner": 256,
+    "worldCoordinates": "V123 local pixel world, NOT Europe geographic coordinates"
+  },
+  "cells": [
+    {
+      "id": "west",
+      "origin": [
+        0,
+        0
+      ],
+      "biome": "alpine-cirque",
+      "art": "art-reviews/v267-original-source/west-unified-native-border-unapproved.webp",
+      "source": "approved V267 WEST native cirque",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadKeys": [
+        "east"
+      ],
+      "artMethodApproved": true,
+      "geoVerified": false
+    },
+    {
+      "id": "matrei",
+      "origin": [
+        1536,
+        0
+      ],
+      "biome": "alpine-passage",
+      "art": "terrain-grid/art/matrei-v121-original.webp",
+      "source": "exact V121 embedded WebP bytes, extracted without edits",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadKeys": [
+        "west",
+        "north",
+        "south",
+        "bridge",
+        "village",
+        "southeast"
+      ],
+      "artMethodApproved": true,
+      "geoVerified": false
+    },
+    {
+      "id": "south",
+      "origin": [
+        1536,
+        1024
+      ],
+      "biome": "alpine-limestone-valley",
+      "art": "art-reviews/v267-original-source/south-unified-native-border-unapproved.webp",
+      "source": "approved V267 SOUTH reauthored native artwork",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadKeys": [
+        "north"
+      ],
+      "artMethodApproved": true,
+      "geoVerified": false
+    }
+  ],
+  "centerRoads": {
+    "west": [
+      [
+        99,
+        478
+      ],
+      [
+        160,
+        477
+      ],
+      [
+        216,
+        489
+      ],
+      [
+        268,
+        511
+      ],
+      [
+        328,
+        529
+      ],
+      [
+        396,
+        536
+      ],
+      [
+        448,
+        529
+      ],
+      [
+        484,
+        518
+      ],
+      [
+        518,
+        519
+      ]
+    ],
+    "north": [
+      [
+        518,
+        519
+      ],
+      [
+        516,
+        491
+      ],
+      [
+        504,
+        462
+      ],
+      [
+        477,
+        429
+      ],
+      [
+        457,
+        398
+      ],
+      [
+        465,
+        371
+      ],
+      [
+        492,
+        343
+      ],
+      [
+        527,
+        320
+      ],
+      [
+        562,
+        285
+      ],
+      [
+        558,
+        267
+      ],
+      [
+        527,
+        241
+      ]
+    ],
+    "south": [
+      [
+        518,
+        519
+      ],
+      [
+        517,
+        553
+      ],
+      [
+        515,
+        584
+      ],
+      [
+        503,
+        619
+      ],
+      [
+        487,
+        644
+      ],
+      [
+        462,
+        664
+      ],
+      [
+        430,
+        678
+      ],
+      [
+        405,
+        690
+      ],
+      [
+        378,
+        707
+      ],
+      [
+        381,
+        726
+      ],
+      [
+        399,
+        742
+      ],
+      [
+        427,
+        766
+      ],
+      [
+        457,
+        807
+      ],
+      [
+        478,
+        836
+      ],
+      [
+        487,
+        866
+      ],
+      [
+        480,
+        897
+      ],
+      [
+        466,
+        935
+      ],
+      [
+        466,
+        958
+      ]
+    ],
+    "bridge": [
+      [
+        518,
+        519
+      ],
+      [
+        566,
+        508
+      ],
+      [
+        618,
+        497
+      ],
+      [
+        660,
+        485
+      ],
+      [
+        707,
+        478
+      ],
+      [
+        741,
+        475
+      ],
+      [
+        773,
+        479
+      ],
+      [
+        813,
+        486
+      ],
+      [
+        855,
+        495
+      ],
+      [
+        898,
+        507
+      ],
+      [
+        953,
+        519
+      ],
+      [
+        1014,
+        535
+      ],
+      [
+        1069,
+        549
+      ],
+      [
+        1128,
+        563
+      ],
+      [
+        1150,
+        568
+      ]
+    ],
+    "village": [
+      [
+        1150,
+        568
+      ],
+      [
+        1165,
+        531
+      ],
+      [
+        1167,
+        503
+      ],
+      [
+        1153,
+        476
+      ],
+      [
+        1112,
+        444
+      ],
+      [
+        1062,
+        416
+      ],
+      [
+        1023,
+        393
+      ],
+      [
+        991,
+        371
+      ],
+      [
+        994,
+        339
+      ],
+      [
+        1019,
+        304
+      ],
+      [
+        1051,
+        270
+      ],
+      [
+        1061,
+        244
+      ],
+      [
+        1058,
+        220
+      ],
+      [
+        1040,
+        197
+      ],
+      [
+        1054,
+        167
+      ],
+      [
+        1093,
+        135
+      ],
+      [
+        1137,
+        112
+      ]
+    ],
+    "southeast": [
+      [
+        1150,
+        568
+      ],
+      [
+        1185,
+        594
+      ],
+      [
+        1226,
+        621
+      ],
+      [
+        1266,
+        650
+      ],
+      [
+        1304,
+        673
+      ],
+      [
+        1340,
+        695
+      ],
+      [
+        1352,
+        727
+      ],
+      [
+        1351,
+        749
+      ]
+    ]
+  },
+  "fixedSeams": [
+    {
+      "id": "west-matrei",
+      "world": [
+        1536,
+        478
+      ],
+      "localA": [
+        1536,
+        478
+      ],
+      "localB": [
+        0,
+        478
+      ],
+      "artReviewed": true
+    },
+    {
+      "id": "matrei-south",
+      "world": [
+        2002,
+        1024
+      ],
+      "localA": [
+        466,
+        1024
+      ],
+      "localB": [
+        466,
+        0
+      ],
+      "artReviewed": true
+    }
+  ],
+  "decorativeInlays": [
+    {
+      "id": "central-diamond",
+      "polygon": [
+        [
+          1536,
+          768
+        ],
+        [
+          1792,
+          1024
+        ],
+        [
+          1536,
+          1280
+        ],
+        [
+          1280,
+          1024
+        ]
+      ],
+      "sourceCell": "south",
+      "sourceRect": [
+        344,
+        474,
+        512,
+        512
+      ],
+      "playable": false,
+      "roads": []
+    }
+  ],
+  "semantics": {
+    "tileIsProvince": false,
+    "scenicIsCapturable": false,
+    "roadNodesAreProvinces": false,
+    "ownerControllerStoredSeparately": true
+  },
+  "immutable": {
+    "v121Source": "v121-octagon-1-painted-road.html",
+    "v123Graph": "terrain-grid/v123-atlas.js",
+    "v94Campaign": "index.html"
+  }
+}

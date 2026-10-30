@@ -920,4 +920,9 @@ switchScreen('map');if(restore()){initialEnvoy();selected=capitals[state.player]
  document.getElementById('alpineArtClose').addEventListener('click',close);
  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!layer.hidden)close()});
 })();
-</script></body></html>
+</script><!-- Native canvas atlas uses the original V121 art and V123 graph IN this game document.
+     The separate legacy iframe remains available for comparison; neither changes V94 saves. -->
+<script src="terrain-grid/v122-seam-engine.js"></script>
+<script src="terrain-grid/v123-atlas.js"></script>
+<script src="terrain-grid/atlas-integrated.js"></script>
+</body></html>

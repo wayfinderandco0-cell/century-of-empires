@@ -66,7 +66,7 @@ def build(native):
                      [949,966,1005,1050,native_exit,native_exit]).astype(np.float32)
     # Read actual SOUTH river water/stone downstream. Resample only water and
     # immediately adjoining bank material; native trees and road are immutable.
-    donor_y=np.minimum(ys+145,649).astype(np.float32)
+    donor_y=np.minimum(ys+22,649).astype(np.float32)
     donor_x=np.interp(donor_y,np.arange(100,651),actual).astype(np.float32)
     map_x=np.broadcast_to(xx+(donor_x-target)[:,None],(370,W)).copy()
     map_y=np.broadcast_to(donor_y[:,None],(370,W)).copy()
@@ -94,19 +94,19 @@ def build(native):
     # Eliminate displaced northern river mouth, avoiding parallel rivers.
     # Inpaint water well outside NEW gorge using surrounding native ground.
     old=np.zeros((H,W),np.uint8)
-    old[:255]=water[:255]*255
-    old[:255,:770]=0
-    old[:255,1450:]=0
+    old[:290]=water[:290]*255
+    old[:290,:770]=0
+    old[:290,1450:]=0
     protect=(np.abs(xx-target[:,None])<widths+23)
-    old[:255][protect[:255]]=0
-    old=cv2.dilate(old,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9)))
-    old[255:]=0
+    old[:290][protect[:290]]=0
+    old=cv2.dilate(old,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(15,15)))
+    old[290:]=0
     old[:,:720]=0
     old[:,1450:]=0
     background=cv2.inpaint(native,old,9,cv2.INPAINT_TELEA)
     # Preserve native river once the replacement corridor rejoins it.
     base=background[:370].astype(np.float32)
-    join=smooth((ys-215)/125)[:,None,None]
+    join=smooth((ys-255)/115)[:,None,None]
     base=base*(1-join)+native[:370].astype(np.float32)*join
     result=native.copy()
     alpha=transplant[:,:,None]
@@ -138,8 +138,8 @@ def main():
       "opt-in ?southArt=basin review mode. This is original fictional Alpine "
       "game artwork, not verified historical topography. The northern water "
       "throat is 55-70px radius rather than the previous 150px basin. Its "
-      "water and adjoining limestone bank come from one contiguous photographed "
-      "SOUTH river reach, not randomized material quilts or Matrei scenery. "
+      "water and adjoining limestone bank come from the ORIGINAL upper photographed "
+      "SOUTH river reach (22px downstream, avoiding a duplicate waterfall), not randomized material quilts or Matrei scenery. "
       "The old displaced northern water is locally inpainted with native "
       "terrain; the new throat converges to the untouched downstream river. "
       "All native trees, the x466 cartway, bridge, and everything below y370 "

@@ -45,6 +45,7 @@ jobs:
             for engine in ('webkit','chromium'):
               browser=getattr(pw,engine).launch(headless=True)
               images=[]
+              river_images=[]
               for mode in ('river','gorge'):
                 ctx=browser.new_context(viewport={'width':390,'height':844},
                   device_scale_factor=2,is_mobile=True,has_touch=True)
@@ -67,6 +68,17 @@ jobs:
                 p=out/f'{engine}-{mode}-actual-iphone.png'
                 page.screenshot(path=str(p))
                 images.append(Image.open(p).convert('RGB'))
+                # Inspect the ACTUAL riverbank seam 483 world pixels east of
+                # the fixed road junction, not only the unchanged x466 road.
+                # At 390px portrait zoom 5.7, a 310px drag pans ~480 world px.
+                page.mouse.move(350,390)
+                page.mouse.down()
+                page.mouse.move(40,390,steps=18)
+                page.mouse.up()
+                page.wait_for_timeout(650)
+                rp=out/f'{engine}-{mode}-river-seam-actual-iphone.png'
+                page.screenshot(path=str(rp))
+                river_images.append(Image.open(rp).convert('RGB'))
                 if mode=='gorge':
                   page.evaluate('COE.focusJoin("west")')
                   page.touchscreen.tap(195,422)
@@ -84,6 +96,16 @@ jobs:
               d.text((12,18),'BEFORE: native river photo - UNAPPROVED',fill='white')
               d.text((792,18),'AFTER: registered upper gorge - UNAPPROVED',fill='white')
               sheet.save(out/f'{engine}-same-camera-before-after.jpg',quality=88)
+              # Separate eyes-on RIVER comparison; previous join sheet
+              # centered on the road and concealed the actual gorge defect.
+              river_sheet=Image.new('RGB',(1560,1740),'#1c211d')
+              river_sheet.paste(river_images[0],(0,52))
+              river_sheet.paste(river_images[1],(780,52))
+              rd=ImageDraw.Draw(river_sheet)
+              rd.text((10,18),'BEFORE: SOUTH original river - UNAPPROVED',fill='white')
+              rd.text((790,18),'AFTER: reconstructed river throat - UNAPPROVED',fill='white')
+              river_sheet.save(out/f'{engine}-river-seam-actual-before-after.webp',
+                               format='WEBP',quality=85,method=6)
               browser.close()
           server.shutdown()
           print('Actual Chromium and WebKit 390x844 DPR2 screenshots + V123 touchscreen march passed; artwork NOT visually approved')

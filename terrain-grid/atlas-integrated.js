@@ -226,10 +226,14 @@ async function togglePhotoSources(){
    photoCamera={center:clone(center),zoom};
    photoMode=true;photoIndex=0;photoNext.hidden=false;
    photoButton.textContent="Alpine roads";
+   // Source-only photography has no approved route graph: do not present
+   // march/halt/road controls as if these eight candidate cells are playable.
+   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
    focusPhoto(0);
   } else {
    photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
    photoNext.hidden=true;photoButton.textContent="Photo sources";
+   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
    status("WEST · MATREI · SOUTH connected · tap a cartway");
   }
   scale=base*zoom;draw();

@@ -8,3 +8,7 @@ Still requires actual phone-size screenshot inspection. Inpainting may look arti
 
 Original SOUTH SHA256: 46efdd3cfd7df0163330445f7841e3e35502a317c3780f80cfd4a18444901103
 Candidate SHA256: a43e6629b8c27596d07d349082b7f99f6bb296c78d11582ee2f6841490be06a7
+
+## Actual 390x844 WebKit and Chromium visual verdict (30 Oct 2026)
+
+**REJECTED for approval.** [WebKit river comparison](v267-northern-basin-phone/webkit-river-actual-before-after.webp) and [WebKit road comparison](v267-northern-basin-phone/webkit-road-actual-before-after.webp) were captured from the real V267 HTML in a mobile WebKit browser at DPR2. The reconstructed SOUTH starts with conspicuous white rapids and an abrupt horizontal cliff/forest transition beneath Matrei's calmer turquoise river. The narrow throat does not read as a single natural river course across the border. It is a visually failed art candidate despite the 4 browser screenshots and 53-node touchscreen march passing. Do not promote, merge, or advertise as completed. The next meaningful fix requires a genuinely newly composed continuous northern SOUTH scene, not another mask/inpaint or patchwork of incompatible original water.

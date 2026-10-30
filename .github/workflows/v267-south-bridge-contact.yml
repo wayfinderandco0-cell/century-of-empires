@@ -4,6 +4,7 @@ on:
     branches: [terrain-v267-three-original-art-prototype-20261028]
     paths:
       - scripts/v267_recompose_south_bridge_contact.py
+      - scripts/v267_south_matrei_material_rebuild.py
       - .github/workflows/v267-south-bridge-contact.yml
   workflow_dispatch:
 permissions:
@@ -25,10 +26,70 @@ jobs:
           python -m playwright install --with-deps chromium webkit
       - name: Build real source-native SOUTH bridge photograph and opt-in preview
         run: |
-          python -m py_compile scripts/v267_recompose_south_bridge_contact.py
+          python -m py_compile scripts/v267_recompose_south_bridge_contact.py scripts/v267_south_matrei_material_rebuild.py
           python scripts/v267_recompose_south_bridge_contact.py
+          python scripts/v267_south_matrei_material_rebuild.py
       - name: Capture actual iPhone-size three-tile browser screenshots
         run: python scripts/v267_clean_visual_review.py
+      - name: Capture and compare actual SOUTH apron in iPhone-size Chromium/WebKit
+        run: |
+          python - <<'PY'
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          from functools import partial
+          from threading import Thread
+          from pathlib import Path
+          from io import BytesIO
+          from PIL import Image,ImageDraw
+          from playwright.sync_api import sync_playwright
+          root=Path.cwd()
+          out=root/'art-reviews/v267-original-source'
+          server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(root)))
+          Thread(target=server.serve_forever,daemon=True).start()
+          base=f'http://127.0.0.1:{server.server_port}/v267-three-octagon-original-art-prototype.html'
+          shots={}
+          with sync_playwright() as pw:
+            for engine in ('chromium','webkit'):
+              browser=getattr(pw,engine).launch(headless=True)
+              for orientation,(w,h) in {'portrait':(390,844),'landscape':(844,390)}.items():
+                context=browser.new_context(viewport={'width':w,'height':h},device_scale_factor=2,is_mobile=True,has_touch=True)
+                page=context.new_page()
+                errors=[]
+                page.on('pageerror',lambda e:errors.append(str(e)))
+                for name,mode in [('before','bridge'),('apron','apron')]:
+                  page.goto(base+'?southArt='+mode,wait_until='load')
+                  page.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=90000)
+                  assert page.evaluate('COE.nodes')==100
+                  assert page.evaluate('COE.westSouthConnected')
+                  assert all(s['pass'] and s['gap']==0 for s in page.evaluate('COE.roadSeams'))
+                  page.evaluate('COE.focusJoin("south")')
+                  page.evaluate("""() => {document.querySelector('header').style.display='none';document.querySelector('footer').style.display='none';}""")
+                  page.wait_for_timeout(250)
+                  png=page.screenshot()
+                  shots[(engine,orientation,name)]=Image.open(BytesIO(png)).convert('RGB')
+                  if engine=='webkit' and orientation=='portrait':
+                    (out/f'south-matrei-apron-{name}-webkit-iphone.png').write_bytes(png)
+                  if name=='apron':
+                    page.evaluate('COE.focusJoin("west")')
+                    page.touchscreen.tap(w/2,h/2)
+                    assert page.evaluate('COE.moving'),(engine,orientation,'touch')
+                    page.evaluate('COE.halt()')
+                    assert page.evaluate('COE.marchWestToSouth()')
+                    assert len(page.evaluate('COE.route'))==53
+                    assert page.evaluate('COE.stepToEnd()')==[2806,1629]
+                assert not errors,(engine,orientation,errors)
+                context.close()
+              browser.close()
+          server.shutdown()
+          before=shots['webkit','portrait','before']
+          after=shots['webkit','portrait','apron']
+          sheet=Image.new('RGB',(before.width*2+36,before.height+64),(21,35,29))
+          sheet.paste(before,(12,52));sheet.paste(after,(before.width+24,52))
+          draw=ImageDraw.Draw(sheet)
+          draw.text((18,18),'BEFORE - native SOUTH bridge source',fill=(245,233,198))
+          draw.text((before.width+30,18),'AFTER - material apron, same road/trees',fill=(245,233,198))
+          sheet.save(out/'south-matrei-apron-actual-webkit-side-by-side.jpg',quality=90,subsampling=0)
+          print('Actual four browser configurations and WEST to SOUTH touch march passed; UNAPPROVED')
+          PY
       - name: Open the REAL bridge-contact page in iPhone-size WebKit and march
         run: |
           python - <<'PY'
@@ -80,6 +141,10 @@ jobs:
           path: |
             art-reviews/v267-original-source/south-bridge-contact-unapproved.webp
             art-reviews/v267-original-source/south-bridge-contact-unapproved.json
+            art-reviews/v267-original-source/south-matrei-material-apron-unapproved.webp
+            art-reviews/v267-original-source/south-matrei-material-apron-unapproved.json
+            art-reviews/v267-original-source/south-matrei-apron-*-webkit-iphone.png
+            art-reviews/v267-original-source/south-matrei-apron-actual-webkit-side-by-side.jpg
             art-reviews/v267-original-south-playable-comparison.jpg
             art-reviews/v267-road-scene-current.jpg
             art-reviews/v267-original-source/south-bridge-contact-actual-webkit-iphone.png
@@ -95,11 +160,15 @@ jobs:
           fi
           git add art-reviews/v267-original-source/south-bridge-contact-unapproved.webp \
             art-reviews/v267-original-source/south-bridge-contact-unapproved.json \
+            art-reviews/v267-original-source/south-matrei-material-apron-unapproved.webp \
+            art-reviews/v267-original-source/south-matrei-material-apron-unapproved.json \
+            art-reviews/v267-original-source/south-matrei-apron-*-webkit-iphone.png \
+            art-reviews/v267-original-source/south-matrei-apron-actual-webkit-side-by-side.jpg \
             v267-three-octagon-original-art-prototype.html \
             art-reviews/v267-original-south-playable-comparison.jpg \
             art-reviews/v267-road-scene-current.jpg \
             art-reviews/v267-road-scene-current.json \
             art-reviews/v267-original-source/south-bridge-contact-actual-webkit-iphone.png
           git diff --cached --quiet && exit 0
-          git commit -m 'Stage native SOUTH bridge closer to V123 crossing in real mobile renderer (UNAPPROVED)'
+          git commit -m 'Stage original SOUTH Matrei material transition and real phone review (UNAPPROVED)'
           git push origin HEAD:"$GITHUB_REF_NAME"

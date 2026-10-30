@@ -23,8 +23,8 @@ SOURCES = (
          sourceKey="west", rect=(1536, 740, 3072, 1764),
          motif="Sharr limestone ridges and alpine spring meadows"),
     dict(id="eu-10-16", source="terrain-v224/source/south-wikimedia-3072-ccby.jpg",
-         sourceKey="south", rect=(1536, 890, 3072, 1914),
-         motif="Sharr wooded highland slopes and rocky pasture"),
+         sourceKey="south", rect=(1536, 0, 3072, 1024),
+         motif="Sharr wooded upland slope; upper native source crop"),
 )
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -103,7 +103,7 @@ def main() -> None:
         for r in records)
     (OUT/"index.html").write_text(
         '<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<title>Century of Empires: native photo art source candidates</title>'
+        '<meta charset="utf-8"><title>Century of Empires: native photo art source candidates</title>'
         '<style>body{margin:12px;background:#152820;color:#f4e6c9;font:15px system-ui}'
         'main{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}'
         'article{border:1px solid #a48b60;padding:8px;border-radius:8px;background:#22372e}'

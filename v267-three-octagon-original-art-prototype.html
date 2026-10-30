@@ -821,6 +821,7 @@ window.COE=Object.freeze({
 // candidate. It is intentionally NOT road-registered to immutable V123.
 // Default stays the established offline V267 image and movement experience.
 const SOUTH_ART_MODE=new URLSearchParams(location.search).get("southArt");
+const SOUTH_BASIN_PREVIEW=SOUTH_ART_MODE==="basin"; /* V267_NEW_NORTHERN_BASIN_SOURCE_20261030 */
 const SOUTH_GORGE_RIVER_PREVIEW=SOUTH_ART_MODE==="gorge"; /* SOUTH_GORGE_RIVER_SOURCE_REGISTERED_20261030 */
 const SOUTH_RIVER_EAST_PREVIEW=SOUTH_ART_MODE==="river"; /* SOUTH_RIVER_EAST_RIGID_CANDIDATE_20261029 */
 const SOUTH_APRON_PREVIEW=SOUTH_ART_MODE==="apron"; /* SOUTH_MATREI_MATERIAL_APRON_20261029 */
@@ -841,7 +842,9 @@ document.getElementById("southsource").onclick=()=>{
 async function boot(){
  // Default source is embedded and offline; the optional original source is
  // the durable 1536x1024 WebP committed beside this HTML in the same branch.
- const southArtSource=SOUTH_GORGE_RIVER_PREVIEW
+ const southArtSource=SOUTH_BASIN_PREVIEW
+  ? "art-reviews/v267-original-source/south-new-northern-basin-unapproved.webp"
+  : SOUTH_GORGE_RIVER_PREVIEW
   ? "art-reviews/v267-original-source/south-gorge-river-registered-unapproved.webp"
   : SOUTH_RIVER_EAST_PREVIEW
   ? "art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp"

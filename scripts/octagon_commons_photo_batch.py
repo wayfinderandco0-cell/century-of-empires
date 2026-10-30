@@ -127,7 +127,7 @@ def main():
  manifest_path.write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+"\n")
  rows=[]
  for c in manifest["cells"]:
-  rows.append('<article><img loading="lazy" src="'+Path(c["image"]).name+'" alt="'+html.escape(c["motif"])+'"><h2>'+c["id"]+
+  rows.append('<article><img loading="eager" decoding="sync" src="'+Path(c["image"]).name+'" alt="'+html.escape(c["motif"])+'"><h2>'+c["id"]+
    '</h2><p>'+html.escape(c["motif"])+' · '+html.escape(c["sourceRegion"])+
    '</p><p>Photo: '+html.escape(c["author"])+' · '+html.escape(c["license"])+
    '. Not a historical or road-certified playable tile.</p></article>')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Isolated, unapproved SOUTH upper-gorge art: align native river mouth to Matrei.
+"""Isolated SOUTH source-native river-throat reconstruction for Matrei contact.
 
 The northern Matrei display edge carries river water near x943; the current
 SOUTH photograph has its water near x1088. This reconstruction registers the
@@ -25,36 +25,82 @@ def smooth(t):
     t=np.clip(t,0.,1.)
     return t*t*(3-2*t)
 
+def find_bottom_seam(original, donor):
+    """Choose a native-pixel join, rather than compressing river and cliffs.
+
+    The donor is a rigid translation of a DIFFERENT photographed section of
+    the same SOUTH source. A shallow 2-D minimum-error cut runs through its
+    lower bank, with only a few pixels of feathering.
+    """
+    lo, hi, left, right = 222, 312, 720, 1370
+    a = cv2.cvtColor(original[lo:hi+1, left:right], cv2.COLOR_RGB2LAB)
+    b = cv2.cvtColor(donor[lo:hi+1, left:right], cv2.COLOR_RGB2LAB)
+    mismatch = np.mean(np.abs(a.astype(np.float32)-b.astype(np.float32)), axis=2)
+    ga = cv2.cvtColor(original[lo:hi+1,left:right],cv2.COLOR_RGB2GRAY)
+    gb = cv2.cvtColor(donor[lo:hi+1,left:right],cv2.COLOR_RGB2GRAY)
+    # Avoid cutting through sharp rock faces and trees where possible.
+    edge = (cv2.Laplacian(ga,cv2.CV_32F).astype(np.float32)**2 +
+            cv2.Laplacian(gb,cv2.CV_32F).astype(np.float32)**2)**0.5
+    energy = cv2.GaussianBlur(mismatch,(5,5),0) + 0.028*edge
+    ys = np.arange(lo,hi+1,dtype=np.float32)
+    energy += 0.020*(ys[:,None]-266.0)**2
+    n,m = energy.shape
+    dp = np.empty((n,m),np.float64)
+    parents = np.zeros((n,m),np.int8)
+    dp[:,0] = energy[:,0]
+    for x in range(1,m):
+        options = np.stack((
+            np.r_[dp[0,x-1]+1000,dp[:-1,x-1]+1.8],
+            dp[:,x-1],
+            np.r_[dp[1:,x-1]+1.8,dp[-1,x-1]+1000]),axis=1)
+        choice = np.argmin(options,axis=1)
+        dp[:,x] = energy[:,x]+options[np.arange(n),choice]
+        parents[:,x] = choice.astype(np.int8)-1
+    seam = np.zeros(m,np.float32)
+    row = int(np.argmin(dp[:,-1]))
+    for x in range(m-1,-1,-1):
+        seam[x] = lo+row
+        if x: row = int(np.clip(row+parents[row,x],0,n-1))
+    # The seam is a path through original photographic material, not
+    # an additional road, river line, or generated landscape texture.
+    return cv2.GaussianBlur(seam.reshape(1,-1),(0,0),3.0).ravel()
+
+
 def rebuild(source):
     assert source.shape==(H,W,3)
+    # The existing SOUTH upper waterfall begins abruptly at the shared
+    # Matrei boundary. Move a continuous, already photographed turquoise
+    # river reach and its natural limestone banks UP 220px and LEFT 70px.
+    # Every copied rock/tree/water pixel retains its original scale.
+    # The V123 road x466 and stone bridge below y~560 remain untouched.
+    donor=source.copy()
+    donor[:320,:1466]=source[220:540,70:1536]
+    seam=find_bottom_seam(source,donor)
     yy,xx=np.mgrid[:H,:W].astype(np.float32)
-    # Local, continuously bending riverbank registration; at y=0 the
-    # source water mouth x1088 is presented at x943. The displacement
-    # vanishes before the original stone bridge/road approach.
-    displacement=145*smooth((470-yy)/470)
-    shifted=cv2.remap(source,xx+displacement,yy,cv2.INTER_LINEAR,
-                      borderMode=cv2.BORDER_REFLECT_101)
-    # Keep grass, cartway, farmsteads and all trees in native geometry.
-    # Only exposed gray limestone/blue river material is re-registered.
-    hsv=cv2.cvtColor(source,cv2.COLOR_RGB2HSV)
-    vegetation=((hsv[:,:,0]>=24)&(hsv[:,:,0]<=90)&
-                (hsv[:,:,1]>40)&(hsv[:,:,2]<158)).astype(np.uint8)*255
-    vegetation=cv2.morphologyEx(vegetation,cv2.MORPH_CLOSE,
-                               np.ones((9,9),np.uint8))
-    vegetation=cv2.GaussianBlur(vegetation,(0,0),2.5).astype(np.float32)/255
-    scope=(smooth((xx-680)/30)*smooth((1380-xx)/30)*
-           smooth((470-yy)/30))
-    alpha=scope*(1-vegetation)
-    result=np.uint8(np.clip(source.astype(np.float32)*(1-alpha[:,:,None])+
-                    shifted.astype(np.float32)*alpha[:,:,None],0,255))
-    # Preserve entire lower river, bridge, all original road and forest
-    # outside the local upper limestone corridor. Never touch the graph.
-    assert np.array_equal(result[480:],source[480:])
-    assert np.array_equal(result[:,:650],source[:,:650])
+    # Only the existing river gorge and its banks are recomposed.
+    # These deliberately irregular shoulders stay well east of the road.
+    left=775 + .29*yy + 13*np.sin(yy/31)
+    right=1235 + .12*yy + 17*np.sin(yy/44)
+    left_alpha=smooth((xx-left)/21)
+    right_alpha=smooth((right-xx)/21)
+    seam_x=np.arange(720,1370,dtype=np.float32)
+    bottom=np.interp(xx[0],seam_x,seam,left=266,right=266)[None,:]
+    # A narrow source-aware bottom join prevents a second waterfall or
+    # horizontal ghosted river. Do not stretch SOUTH forest or cliff pixels.
+    bottom_alpha=smooth((bottom-yy+5)/10)
+    alpha=left_alpha*right_alpha*bottom_alpha
+    alpha[340:]=0
+    alpha[:,:690]=0
+    alpha[:,1420:]=0
+    result=np.uint8(np.clip(
+        source.astype(np.float32)*(1-alpha[:,:,None])+
+        donor.astype(np.float32)*alpha[:,:,None],0,255))
+    assert np.array_equal(result[340:],source[340:])
+    assert np.array_equal(result[:,:690],source[:,:690])
     assert np.array_equal(result[:,1420:],source[:,1420:])
     changed=np.abs(result.astype(np.int16)-source.astype(np.int16))
     pixels=int(np.count_nonzero(np.max(changed,axis=2)>8))
-    assert pixels>60000, f'Not a substantial river/rock reconstruction: {pixels}'
+    assert pixels>60000, f'Upper gorge reconstruction too small: {pixels}'
     return result,pixels
 
 def stage(html):
@@ -98,7 +144,7 @@ def main():
         'No global SOUTH warp, mirrored tile, digital road stripe, invented '
         'settlement, V121/V123/V94/sprite/save or production change.\n\n'
         f'Changed visible source pixels (>8 channel difference): {pixels}.\n'
-        'Review with ?southArt=gorge against ?southArt=river at the same '
+        'Review ?southArt=gorge against ?southArt=river at the same '
         'iPhone camera. Rock edges and forest transitions may still be '
         'visually imperfect. Passing movement tests does not approve art.\n\n'
         f'SOURCE SHA256: {hashlib.sha256(SOURCE.read_bytes()).hexdigest()}\n'

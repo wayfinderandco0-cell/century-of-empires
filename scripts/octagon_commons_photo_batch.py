@@ -78,13 +78,25 @@ def main():
    im=im.convert("RGB")
    # Native 1:1 crop. Upper sky/modern infrastructure is NOT guaranteed excluded;
    # these candidates remain quarantined until manual visual review.
-   left=(im.width-W)//2
-   top=max(0,min(im.height-H,round((im.height-H)*.58)))
+   # Eyes-on contact-sheet review: the default Dalmatia crop was all hazy
+   # mountains, missing the Adriatic coast. Reposition to native bottom-right
+   # shoreline WITHOUT inventing water, roads, or distorting source pixels.
+   if spec["id"]=="eu-08-15":
+    left=im.width-W
+    top=im.height-H
+   else:
+    left=(im.width-W)//2
+    top=max(0,min(im.height-H,round((im.height-H)*.58)))
    crop=(left,top,left+W,top+H)
    art=im.crop(crop)
-  art=ImageEnhance.Color(art).enhance(.87)
-  art=ImageEnhance.Contrast(art).enhance(1.035)
-  art=ImageEnhance.Brightness(art).enhance(.92)
+  if spec["id"]=="eu-08-15":
+   art=ImageEnhance.Color(art).enhance(.92)
+   art=ImageEnhance.Contrast(art).enhance(1.15)
+   art=ImageEnhance.Brightness(art).enhance(.95)
+  else:
+   art=ImageEnhance.Color(art).enhance(.87)
+   art=ImageEnhance.Contrast(art).enhance(1.035)
+   art=ImageEnhance.Brightness(art).enhance(.92)
   outfile=OUT/(spec["id"]+".webp")
   art.save(outfile,"WEBP",quality=92,method=6)
   expected[spec["id"]]={

@@ -1,101 +1,157 @@
 #!/usr/bin/env python3
-"""Rebuild the existing V267 SOUTH river/forest contact from native original art.
+"""Reconstruct SOUTH's river/forest join from two ORIGINAL unwarped photo artworks.
 
-Fictional Alpine game-art prototype, not verified historical geography.
-The previous 260px SOUTH forest was a cloned stand with a visible rectangular
-edge. This replacement restores the original unwarped rock/meadow/conifers,
-then performs multiscale photographic boundary registration against Matrei's
-existing rendered edge. No new route, invented road stripe, tree warp or tile.
-Only the opt-in ?southArt=river asset is rebuilt; production stays RED.
+Use a structure-aware photographic seam, not a recolor, forest clone, digital
+road overlay, or global terrain warp. The original bridge/contact image
+supplies intact meadow, road and trees to the west; the river-east artwork
+supplies the physically aligned gorge to the east. Preserve native pixels
+away from the seam. Fictional Alpine prototype, not historical topography.
 """
 from __future__ import annotations
-import hashlib,re
+import hashlib, re
 from pathlib import Path
 import cv2
 import numpy as np
 from PIL import Image
 
-ROOT=Path(__file__).resolve().parents[1]
-HTML=ROOT/'v267-three-octagon-original-art-prototype.html'
-SOURCE=ROOT/'art-reviews/v267-original-source/south-river-east-contact-unapproved.webp'
-OUTPUT=ROOT/'art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp'
-REPORT=ROOT/'art-reviews/v267-forest-river-continuity-review.md'
-W,H=1536,1024
+ROOT = Path(__file__).resolve().parents[1]
+HTML = ROOT / 'v267-three-octagon-original-art-prototype.html'
+WEST_SOURCE = ROOT / 'art-reviews/v267-original-source/south-bridge-contact-unapproved.webp'
+RIVER_SOURCE = ROOT / 'art-reviews/v267-original-source/south-river-east-contact-unapproved.webp'
+OUTPUT = ROOT / 'art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp'
+REPORT = ROOT / 'art-reviews/v267-forest-river-continuity-review.md'
+W, H = 1536, 1024
 
-def smooth(v):
-    v=np.clip(v,0,1)
-    return v*v*(3-2*v)
+def smooth(t):
+    t = np.clip(t, 0.0, 1.0)
+    return t*t*(3.0-2.0*t)
 
-def build(native,matrei):
-    """Restore original 1:1 SOUTH terrain; register border at multiple scales.
+def river_mask(rgb):
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    # Turquoise water, excluding green forest and tan road pigment.
+    return ((hsv[:, :, 0] >= 79) & (hsv[:, :, 0] <= 126) &
+            (hsv[:, :, 1] >= 38) & (hsv[:, :, 2] >= 54))
 
-    A narrow high-frequency correction matches individual photographic edge
-    pixels, while longer wavelength differences decay through the first 270px.
-    SOUTH's own tree/rock/water gradients remain intact; no pixel is moved.
+def find_photo_seam(west, east):
+    """Find a low-disruption seam through real meadow, away from both rivers.
+
+    A vertical dynamic-programming seam crosses the north-west meadow and
+    becomes the east-registered native riverbank by the south edge of the
+    replacement area. It never enters the road at x466 or the bridge.
     """
-    assert native.shape==matrei.shape==(H,W,3)
-    delta=matrei[1022].astype(np.float32)-native[0].astype(np.float32)
-    low=cv2.GaussianBlur(delta[None,:,:],(0,0),37)[0]
-    mid=cv2.GaussianBlur(delta[None,:,:],(0,0),7)[0]-low
-    high=delta-low-mid
-    xx=np.arange(W,dtype=np.float32)
-    # Matrei's bottom octagon edge is only x256..1280; do not copy its
-    # exterior black/gold frame into SOUTH or darken terrain outside it.
-    across=smooth((xx-256)/30)*smooth((1280-xx)/30)
-    result=native.copy()
-    for y in range(270):
-        slow=(1-y/270)**2
-        medium=(1-y/92)**2 if y<92 else 0
-        fine=(1-y/18)**2 if y<18 else 0
-        correction=(low*slow+mid*medium+high*fine)*across[:,None]
-        result[y]=np.uint8(np.clip(native[y].astype(np.float32)+correction,0,255))
-    assert np.array_equal(result[270:],native[270:])
-    assert np.array_equal(result[:270,:256],native[:270,:256])
-    assert np.array_equal(result[:270,1280:],native[:270,1280:])
-    # The V123 road at x466 and native stone bridge below y270 retain their
-    # actual source positions and unscaled geometry.
+    h = 405
+    lo, hi = 535, 815
+    lab_a = cv2.cvtColor(west[:h], cv2.COLOR_RGB2LAB).astype(np.float32)
+    lab_b = cv2.cvtColor(east[:h], cv2.COLOR_RGB2LAB).astype(np.float32)
+    # A photometric mismatch alone favors smooth empty grass; edge energy
+    # penalizes cutting a visible tree trunk, rock face or riverbank.
+    color = np.mean(np.abs(lab_a-lab_b), axis=2)
+    gray_a = cv2.cvtColor(west[:h], cv2.COLOR_RGB2GRAY)
+    gray_b = cv2.cvtColor(east[:h], cv2.COLOR_RGB2GRAY)
+    ga = cv2.magnitude(cv2.Sobel(gray_a, cv2.CV_32F, 1, 0),
+                       cv2.Sobel(gray_a, cv2.CV_32F, 0, 1))
+    gb = cv2.magnitude(cv2.Sobel(gray_b, cv2.CV_32F, 1, 0),
+                       cv2.Sobel(gray_b, cv2.CV_32F, 0, 1))
+    water = river_mask(west[:h]) | river_mask(east[:h])
+    energy = cv2.GaussianBlur(color, (5, 5), 0) + 0.045*(ga+gb) + water*250.0
+    xs = np.arange(lo, hi+1)
+    dp = np.full((h, len(xs)), np.inf, dtype=np.float64)
+    parent = np.zeros((h, len(xs)), dtype=np.int16)
+    for y in range(h):
+        # Follow the landward bank eastwards as the original river curves.
+        center = 594 + 0.30*y
+        valid = np.abs(xs-center) <= 55
+        row = energy[y, lo:hi+1].astype(np.float64)
+        row[~valid] += 2500
+        if y == 0:
+            dp[y] = row + 0.12*(xs-center)**2
+            continue
+        for step in (-3, -2, -1, 0, 1, 2, 3):
+            previous = np.arange(len(xs))-step
+            valid_previous = (previous >= 0) & (previous < len(xs))
+            inds = np.where(valid_previous)[0]
+            value = dp[y-1, previous[inds]] + 1.6*abs(step)
+            replace = value < dp[y, inds]
+            dp[y, inds[replace]] = value[replace]
+            parent[y, inds[replace]] = previous[inds[replace]]
+        dp[y] += row
+    result = np.zeros(h, dtype=np.float32)
+    pos = int(np.argmin(dp[-1]))
+    for y in range(h-1, -1, -1):
+        result[y] = xs[pos]
+        pos = int(parent[y, pos])
+    assert 530 <= result.min() and result.max() <= 815
     return result
 
+def build(west, east):
+    assert west.shape == east.shape == (H, W, 3)
+    seam = find_photo_seam(west, east)
+    out = east.copy()
+    # Left native meadow and undistorted trees; right registered gorge.
+    # A narrow 8px blend follows the photographed graph-cut seam; never
+    # stretch or move a tree, road or bridge pixel.
+    xx = np.arange(W, dtype=np.float32)[None, :]
+    yy = np.arange(405, dtype=np.float32)[:, None]
+    left = 1.0-smooth((xx-seam[:, None]+4.0)/8.0)
+    # End the west-source replacement through an irregular alpine meadow
+    # transition rather than a horizontal strip or rectangular patch.
+    bottom = 310 + 22*np.sin(xx/47) + 13*np.sin(xx/97)
+    fade = smooth((bottom-yy)/48.0)
+    mask = left*fade
+    out[:405] = np.uint8(np.clip(
+        west[:405].astype(np.float32)*mask[:, :, None] +
+        east[:405].astype(np.float32)*(1-mask[:, :, None]), 0, 255))
+    assert np.array_equal(out[405:], east[405:])
+    assert np.array_equal(out[:170, :490], west[:170, :490])
+    assert np.array_equal(out[:250, 930:], east[:250, 930:])
+    return out, seam
+
 def main():
-    html=HTML.read_text(encoding='utf-8')
-    original_matrei=re.search(r'ART_MATREI_CANONICAL="([^"]+)"',html)
-    west=re.search(r'const westRoad=([^;]+);',html)
-    south=re.search(r'const southRoad=([^;]+);',html)
-    assert original_matrei and west and south
-    assert '[1536,478]' in west.group(1) and '[466,0]' in south.group(1)
-    assert 'art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp' in html
-    matrei_hash=hashlib.sha256(original_matrei.group(1).encode()).hexdigest()
-    from rebuild_v267_south_natural_apron import decode,matrei_ground
-    matrei=matrei_ground(decode(html,'ART_MATREI_CANONICAL')[0])
-    native=np.asarray(Image.open(SOURCE).convert('RGB'))
-    result=build(native,matrei)
-    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
-    Image.fromarray(result).save(OUTPUT,'WEBP',quality=92,method=6)
-    assert hashlib.sha256(HTML.read_bytes()).hexdigest()==hashlib.sha256(html.encode()).hexdigest()
-    assert hashlib.sha256(re.search(r'ART_MATREI_CANONICAL="([^"]+)"',HTML.read_text()).group(1).encode()).hexdigest()==matrei_hash
+    html = HTML.read_text(encoding='utf-8')
+    matrei = re.search(r'ART_MATREI_CANONICAL="([^"]+)"', html)
+    west_road = re.search(r'const westRoad=([^;]+);', html)
+    south_road = re.search(r'const southRoad=([^;]+);', html)
+    assert matrei and west_road and south_road
+    assert '[1536,478]' in west_road.group(1)
+    assert '[466,0]' in south_road.group(1)
+    assert 'south-forest-river-continuity-unapproved.webp' in html
+    with Image.open(WEST_SOURCE) as f:
+        west = np.asarray(f.convert('RGB'))
+    with Image.open(RIVER_SOURCE) as f:
+        river = np.asarray(f.convert('RGB'))
+    result, seam = build(west, river)
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    Image.fromarray(result).save(OUTPUT, 'WEBP', quality=91, method=6)
+    # No HTML, V121, graph, game engine, campaign, sprite or save edits.
+    assert html == HTML.read_text(encoding='utf-8')
+    changed = np.mean(np.abs(result[:340].astype(np.int16)-river[:340].astype(np.int16)))
+    assert changed > 1.0, 'No substantive photographic source replacement'
     REPORT.write_text(
-        '# V267 native SOUTH riverbank and forest contact — UNAPPROVED\n\n'
-        'Fictional original Alpine game art, not historically verified terrain.\n\n'
-        'The previous cloned rectangular forest stand is removed. The full '
-        '1536×1024 native SOUTH photographic terrain is restored from the '
-        'earlier durable river-east source, preserving the original meadow, '
-        'individual conifers, cliff faces, turquoise gorge and stone bridge. '
-        'A 270px northern material-contact region uses a three-scale '
-        'photographic boundary reconstruction against the actual rendered '
-        'Matrei bottom edge: 18px fine, 92px medium and 270px broad. '
-        'No pixels are translated, resized or mirrored; no synthetic road '
-        'or route graph edges are introduced. The x466 original cartway '
-        'geometry, bridge below y270 and all lower SOUTH art are untouched. '
-        'The protected V121 source, 100-node V123 graph, V94 campaign, '
-        'sprites, saves and production are unchanged.\n\n'
-        'This remains an OPT-IN ?southArt=river candidate. Actual browser '
-        'phone-size views and physical iPhone review are needed. The cliff '
-        'and river morphology still differ across the boundary, and pixel '
-        'contact alone does not constitute visual approval. Production RED.\n\n'
-        'Input SHA256: '+hashlib.sha256(SOURCE.read_bytes()).hexdigest()+'\n'
+        '# SOUTH original-photo meadow and riverbank reconstruction — UNAPPROVED\n\n'
+        'Fictional Alpine atlas art, not historically verified topography.\n\n'
+        'Restored the natural, undistorted upper-west SOUTH meadow, road and '
+        'conifers from the original 1536x1024 stone-bridge artwork while '
+        'retaining the separately registered eastern gorge/river and its '
+        'original stone bridge. A photographic low-energy graph-cut seam '
+        'runs through meadow pixels rather than trees or water. The '
+        'replacement ends on an irregular ground boundary; neither '
+        'source photograph is globally warped, scaled, mirrored or '
+        'painted with a synthetic cartway. The V123 x466 cartway and '
+        'the original bridge stay in place.\n\n'
+        f'Seam x range: {int(seam.min())}..{int(seam.max())}; '
+        f'northern-region mean RGB change: {changed:.2f}.\n\n'
+        'Still an OPT-IN ?southArt=river review candidate. The Matrei/SOUTH '
+        'rock and river morphology requires eyes-on iPhone inspection; '
+        'numerical alignment does not establish artistic acceptance. '
+        'V121 source, V123 100-node graph, V94, sprites, saves and '
+        'production unchanged. Production RED.\n\n'
+        'WEST source SHA256: '+hashlib.sha256(WEST_SOURCE.read_bytes()).hexdigest()+'\n'
+        'RIVER source SHA256: '+hashlib.sha256(RIVER_SOURCE.read_bytes()).hexdigest()+'\n'
         'Output SHA256: '+hashlib.sha256(OUTPUT.read_bytes()).hexdigest()+'\n',
         encoding='utf-8')
-    print('Rebuilt native SOUTH riverbank and forest contact:',OUTPUT,
-          OUTPUT.stat().st_size,'bytes')
+    print('Original photographic SOUTH forest/river rebuilt:', OUTPUT,
+          OUTPUT.stat().st_size, 'bytes; seam', seam.min(), seam.max(),
+          'mean RGB change', round(float(changed),2))
 
-if __name__=='__main__': main()
+if __name__ == '__main__':
+    main()

@@ -77,7 +77,7 @@ def main() -> None:
             license=evidence["license"], licenseUrl=evidence["licenseUrl"],
             modernFeaturesQuarantined=False, originalTerrainSource=True,
             sourceBackedPhotographicArtComposed=True, artMethodApproved=False,
-            physicalRoadSeamChecked=False, paintedRoads=[], gameplayEnabled=False,
+            physicallyRoadSeamChecked=False, paintedRoads=[], gameplayEnabled=False,
             historicallyVerified=False, visuallyReviewedOnPhone=False,
             provinceIds=[], scenicSettlements=[], strategicTowns=[]
         ))

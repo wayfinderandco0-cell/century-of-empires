@@ -108,16 +108,12 @@ def build(west, east):
 
 
 def reconstruct_riverbank_contact(south, html):
-    """Continue the *unseen* native Matrei photograph into SOUTH at the seam.
+    """Extend native Matrei WATER/ROCK MATERIAL into the SOUTH river mouth.
 
-    V121's painted renderer crops the Matrei source before its bottom 80 px.
-    This reconstructs the next ~48 pixels of that SAME original photograph
-    using the exact V121 crop coordinates, then finds an irregular, low-impact
-    photographic cut back to the intact SOUTH meadow, cartway and river.
-    Unlike the former high-frequency-only transfer, this transfers coherent
-    native rocks, water, tree crowns and meadow structure at their natural
-    scale. No tree is stretched, reflected, painted or cloned. No V121 pixel
-    or V123 node changes. The result is fictional prototype landscape art.
+    Copy only water and exposed stone, NEVER whole Matrei scenery, tree
+    crowns, roads, or framed borders. An irregular source-aware mask makes
+    the riverbank transition a physical terrain feature, not a digital stripe.
+    The native SOUTH river, bridge, cartway, and forests remain fixed.
     """
     import base64
     from io import BytesIO
@@ -130,117 +126,54 @@ def reconstruct_riverbank_contact(south, html):
     if matrei.shape != (H, W, 3):
         raise ValueError(f'Unexpected Matrei art dimensions: {matrei.shape}')
 
-    # Match the existing Matrei renderer's photographic source registration,
-    # *extrapolating* only into source rows not yet displayed by V121.
-    # The gold frame occupies the source's last ~35 rows: never sample it.
-    height = 160
-    yy, xx = np.mgrid[:height, :W].astype(np.float32)
-    display_y = 1024.0 + yy
-    easing = smooth((display_y-845.0)/179.0)
-    source_y = 10.0 + display_y*(953.0/H) - 26.0*easing
-    source_left = np.where(
-        source_y < 286, 385-(source_y-10)*(295/276),
-        np.where(source_y > 674, 90+(source_y-674)*(295/289), 90))
-    left = np.where(display_y < 256, 256-display_y,
-                    np.where(display_y > 768, display_y-768, 0))
-    right = W-left
-    bow = smooth((display_y-700)/324)
-    source_x = np.clip(
-        source_left + (xx-left)*(W-2*source_left)/(right-left)
-        - 55*bow*np.exp(-.5*((xx-466)/105)**2), 0, W-1.001)
-    source_y += (26*np.exp(-.5*((xx-240)/400)**2)
-                 *np.exp(-.5*((display_y-505)/110)**2))
-    # No reflecting / stretching / inventing pixels beyond the original art.
-    valid_y = source_y < 986
-    native_extension = cv2.remap(
-        matrei, source_x.astype(np.float32),
-        np.clip(source_y, 0, 985).astype(np.float32),
-        cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-
-    # Find a low-visibility non-horizontal photographic join. The road has a
-    # shorter continuation so its actual SOUTH cartway remains undisturbed;
-    # the river and limestone bank receive a deeper native-photo apron.
-    band_lo, band_hi = 12, 46
-    lab_a = cv2.cvtColor(native_extension[:height], cv2.COLOR_RGB2LAB)
-    lab_b = cv2.cvtColor(south[:height], cv2.COLOR_RGB2LAB)
-    mismatch = np.mean(np.abs(lab_a.astype(np.float32)
-                              - lab_b.astype(np.float32)), axis=2)
-    ga = cv2.cvtColor(native_extension[:height], cv2.COLOR_RGB2GRAY)
-    gb = cv2.cvtColor(south[:height], cv2.COLOR_RGB2GRAY)
-    grad_a = cv2.magnitude(cv2.Sobel(ga,cv2.CV_32F,1,0),
-                           cv2.Sobel(ga,cv2.CV_32F,0,1))
-    grad_b = cv2.magnitude(cv2.Sobel(gb,cv2.CV_32F,1,0),
-                           cv2.Sobel(gb,cv2.CV_32F,0,1))
-    energy = cv2.GaussianBlur(mismatch, (5,5), 0) + .035*(grad_a+grad_b)
-    river_a = river_mask(native_extension[:height])
-    river_b = river_mask(south[:height])
-    energy += np.logical_xor(river_a,river_b)*45.0
-    candidates = np.arange(band_lo,band_hi+1)
-    xmin,xmax = 240,1320
-    dp = np.full((len(candidates),xmax-xmin),np.inf,dtype=np.float64)
-    parent = np.zeros_like(dp,dtype=np.int16)
-    for ix,x in enumerate(range(xmin,xmax)):
-        desired = 17 if 415<=x<=525 else (38 if 780<=x<=1190 else 30)
-        penalty = .10*(candidates-desired)**2
-        penalty = penalty + np.where(valid_y[candidates,x],0,10000)
-        cost = energy[candidates,x]+penalty
-        if ix == 0:
-            dp[:,ix] = cost
-            continue
-        for step in (-2,-1,0,1,2):
-            prev = np.arange(len(candidates))-step
-            ok = (prev>=0)&(prev<len(candidates))
-            inds = np.where(ok)[0]
-            v = dp[prev[inds],ix-1]+2.0*abs(step)
-            better = v<dp[inds,ix]
-            dp[inds[better],ix] = v[better]
-            parent[inds[better],ix] = prev[inds[better]]
-        dp[:,ix] += cost
-    seam = np.zeros(W,dtype=np.float32)
-    pos = int(np.argmin(dp[:,-1]))
-    for ix in range(xmax-xmin-1,-1,-1):
-        seam[xmin+ix] = candidates[pos]
-        pos = int(parent[pos,ix])
-    seam[:xmin] = seam[xmin]
-    seam[xmax:] = seam[xmax-1]
-    seam = cv2.GaussianBlur(seam[None,:],(0,0),6)[0]
-    # The natural-source edge is opaque at y=0 and cuts back to native SOUTH
-    # through a narrow, irregular meadow / bank join. No digital road stripe.
-    feather = 6.0
-    photo_alpha = smooth((seam[None,:]-yy+feather/2)/feather)
-    photo_alpha *= smooth((xx-235)/72)*smooth((1315-xx)/72)
-    photo_alpha *= valid_y.astype(np.float32)
-    # Multiband blend: retain full native rock/water/tree detail above the cut
-    # while matching broad photographic lighting across the join.
-    source = south[:height].copy()
-    source[:height] = np.where(valid_y[:,:,None],native_extension,source)
-    A = source.astype(np.float32)
-    B = south[:height].astype(np.float32)
-    mask = photo_alpha.astype(np.float32)
-    levels = 4
-    gauss_a=[A];gauss_b=[B];gauss_m=[mask]
-    for _ in range(levels):
-        gauss_a.append(cv2.pyrDown(gauss_a[-1]))
-        gauss_b.append(cv2.pyrDown(gauss_b[-1]))
-        gauss_m.append(cv2.pyrDown(gauss_m[-1]))
-    result = (gauss_a[-1]*gauss_m[-1][:,:,None] +
-              gauss_b[-1]*(1-gauss_m[-1][:,:,None]))
-    for level in range(levels-1,-1,-1):
-        size=(gauss_a[level].shape[1],gauss_a[level].shape[0])
-        la=gauss_a[level]-cv2.pyrUp(gauss_a[level+1],dstsize=size)
-        lb=gauss_b[level]-cv2.pyrUp(gauss_b[level+1],dstsize=size)
-        m=gauss_m[level][:,:,None]
-        result=cv2.pyrUp(result,dstsize=size)+la*m+lb*(1-m)
-    out=south.copy()
-    out[:height]=np.uint8(np.clip(result,0,255))
-    # Pyramid filters extend slightly outside the mask. Restore the fully
-    # clipped exterior, which is not part of either playable octagon.
-    out[:height,:215]=south[:height,:215]
-    out[:height,1340:]=south[:height,1340:]
-    assert np.array_equal(out[height:],south[height:])
-    assert np.array_equal(out[:, :215],south[:, :215])
-    assert np.array_equal(out[:, 1340:],south[:, 1340:])
-    return out,int(np.count_nonzero(photo_alpha>.08))
+    # Sample a native 180px lower-Matrei riverbank strip. The V121 frame
+    # itself occupies the extreme bottom: never sample its final 35 rows.
+    top, height = H-215, 180
+    bank = matrei[top:top+height].copy()
+    hsv = cv2.cvtColor(bank, cv2.COLOR_RGB2HSV)
+    water = ((hsv[:,:,0]>=79) & (hsv[:,:,0]<=126) &
+             (hsv[:,:,1]>=36) & (hsv[:,:,2]>=54))
+    stone = ((hsv[:,:,1]<75) & (hsv[:,:,2]>72) &
+             (hsv[:,:,2]<227))
+    # Forest, tan roads, buildings and gold frame must not be transplanted.
+    forest = ((hsv[:,:,0]>=28) & (hsv[:,:,0]<=85) &
+              (hsv[:,:,1]>=37))
+    gold = ((hsv[:,:,0]>=10) & (hsv[:,:,0]<=37) &
+            (hsv[:,:,1]>=75))
+    material = (water | stone) & ~forest & ~gold
+    material = np.uint8(material)*255
+    material = cv2.morphologyEx(material, cv2.MORPH_CLOSE,
+                                np.ones((9,9),np.uint8))
+    # The river exits Matrei around x949, not the x466 SOUTH cartway.
+    # Preserve all original pixels outside the riverbank contact zone.
+    yy,xx = np.mgrid[:height,:W].astype(np.float32)
+    landward = np.clip((xx-710)/75,0,1)*np.clip((1290-xx)/75,0,1)
+    # Feather out gradually into SOUTH's existing river, not a horizontal
+    # cut at the foot of the contact. No resampling of trees or cliffs.
+    depth = np.clip((height-yy)/height,0,1)**1.6
+    mat = cv2.GaussianBlur(material.astype(np.float32)/255,
+                          (0,0),8)
+    alpha = np.clip(mat*landward*depth*.86,0,.86)
+    # Multiscale photographic material transfer keeps native bank shadows
+    # while maintaining the SOUTH river's underlying structure.
+    result = south.copy()
+    original = south[:height].astype(np.float32)
+    source = bank.astype(np.float32)
+    # Transfer source texture/structure without an overall color-grade.
+    # Low-frequency color stays SOUTH-native; only actual water/rock detail
+    # from the adjoining Matrei material crosses the frame.
+    src_low = cv2.GaussianBlur(source,(0,0),16)
+    dst_low = cv2.GaussianBlur(original,(0,0),16)
+    material_detail = source-src_low
+    transferred = np.clip(dst_low + material_detail*.78 +
+                          (original-dst_low)*.35,0,255)
+    result[:height] = np.uint8(np.clip(
+        original*(1-alpha[:,:,None]) +
+        transferred*alpha[:,:,None],0,255))
+    # No trees or road outside the east bank, and no broad SOUTH warp.
+    assert np.array_equal(result[:, :710],south[:, :710])
+    assert np.array_equal(result[height:],south[height:])
+    return result, int(np.count_nonzero(alpha>.08))
 
 def main():
     html = HTML.read_text(encoding='utf-8')
@@ -274,14 +207,14 @@ def main():
         'runs through meadow pixels rather than trees or water. The '
         'replacement ends on an irregular ground boundary. A second '
         'source-native contact reconstructs the river mouth using only '
-        'native, previously cropped Matrei landscape pixels across the shared bank, while '
+        'stone and water detail from the immutable Matrei photo, while '
         'retaining SOUTH-native river shapes, forests, roads and cliffs. '
-        'No gold frame, invented settlements, mirrored trees or synthetic road are copied. Neither '
+        'No Matrei trees, settlements, road or gold frame are copied. Neither '
         'source photograph is globally warped, scaled, mirrored or '
         'painted with a synthetic cartway. The V123 x466 cartway and '
         'the original bridge stay in place.\n\n'
         f'Seam x range: {int(seam.min())}..{int(seam.max())}; '
-        f'native seam-continuation pixels: {contact_pixels}; '
+        f'native riverbank material pixels: {contact_pixels}; '
         f'northern-region mean RGB change: {changed:.2f}.\n\n'
         'Still an OPT-IN ?southArt=river review candidate. The Matrei/SOUTH '
         'rock and river morphology requires eyes-on iPhone inspection; '

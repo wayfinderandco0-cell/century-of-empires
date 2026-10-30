@@ -1,0 +1,125 @@
+name: V267 SOUTH native forest and river contact — real mobile review
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/rebuild_v267_south_forest_river_continuity.py
+      - .github/workflows/v267-south-forest-river-art.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-south-forest-river-art
+  cancel-in-progress: false
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install native photographic art and real mobile browsers
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless playwright==1.56.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Reconstruct native SOUTH forest, keep river/bridge/cartway untouched
+        run: python scripts/rebuild_v267_south_forest_river_continuity.py
+      - name: Render SAME-CAMERA real-art phone comparisons and verify tap-to-march
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from threading import Thread
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          from playwright.sync_api import sync_playwright
+          from PIL import Image,ImageDraw
+          out=Path('art-reviews/v267-forest-river-phone');out.mkdir(parents=True,exist_ok=True)
+          server=ThreadingHTTPServer(('127.0.0.1',0),SimpleHTTPRequestHandler)
+          Thread(target=server.serve_forever,daemon=True).start()
+          base=f'http://127.0.0.1:{server.server_port}/v267-three-octagon-original-art-prototype.html'
+          with sync_playwright() as pw:
+            for engine in ('chromium','webkit'):
+              browser=getattr(pw,engine).launch(headless=True)
+              images=[]
+              for mode in ('default','river'):
+                ctx=browser.new_context(viewport={'width':390,'height':844},
+                  device_scale_factor=2,is_mobile=True,has_touch=True)
+                page=ctx.new_page();errors=[]
+                page.on('pageerror',lambda e:errors.append(str(e)))
+                page.goto(base+('?southArt=river' if mode=='river' else ''),wait_until='load')
+                page.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=90000)
+                assert page.evaluate('COE.nodes')==100
+                assert page.evaluate('COE.westSouthConnected')
+                assert all(s['pass'] and s['gap']==0 for s in page.evaluate('COE.roadSeams'))
+                page.evaluate('COE.focusJoin("south")')
+                page.wait_for_timeout(300)
+                page.screenshot(path=str(out/f'{engine}-{mode}-actual-iphone.png'))
+                images.append(Image.open(out/f'{engine}-{mode}-actual-iphone.png').convert('RGB'))
+                # A separate screenshot of the ACTUAL rendered canvas without UI.
+                page.locator('canvas#map').screenshot(path=str(out/f'{engine}-{mode}-terrain-only.png'))
+                if mode=='river':
+                  page.evaluate('COE.focusJoin("west")')
+                  page.touchscreen.tap(195,422)
+                  assert page.evaluate('COE.moving'),'Touch-to-march failed'
+                  page.evaluate('COE.halt()')
+                  assert page.evaluate('COE.marchWestToSouth()')
+                  route=page.evaluate('COE.route')
+                  assert len(route)==53 and [1536,478] in route and [2002,1024] in route
+                  assert page.evaluate('COE.stepToEnd()')==[2806,1629]
+                assert not errors,errors
+                ctx.close()
+                print(engine,mode,'real phone art + 100 nodes + 53-node march verified')
+              sheet=Image.new('RGB',(1560,1740),'#191c19')
+              sheet.paste(images[0],(0,55));sheet.paste(images[1],(780,55))
+              d=ImageDraw.Draw(sheet)
+              d.text((16,16),'DEFAULT SOUTH - current',fill='white')
+              d.text((798,16),'NATIVE FOREST + RIVER - UNAPPROVED',fill='white')
+              sheet.save(out/f'{engine}-same-camera-before-after.jpg',quality=86)
+              browser.close()
+          server.shutdown()
+          PY
+      - name: Verify changes remain isolated from V121 V123 V94 and production
+        run: |
+          python - <<'PY'
+          import subprocess
+          names={s[3:] for s in subprocess.check_output(
+            ['git','status','--porcelain','-uall'],text=True).splitlines()}
+          allowed={'v267-three-octagon-original-art-prototype.html',
+            'art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp',
+            'art-reviews/v267-forest-river-continuity-review.md'}
+          unexpected={p for p in names if p not in allowed and
+            not p.startswith('art-reviews/v267-forest-river-phone/')}
+          assert not unexpected,unexpected
+          print('Only isolated art preview, original-source artwork and real screenshots changed')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v267-south-forest-river-actual-phone-review
+          path: |
+            art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp
+            art-reviews/v267-forest-river-continuity-review.md
+            art-reviews/v267-forest-river-phone/
+          retention-days: 14
+      - name: Commit substantive art and actual screenshots only on unchanged branch
+        run: |
+          git config user.name "century-of-empires-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$GITHUB_REF_NAME")" ]; then
+            echo "Branch advanced; preserve artifact, do not push stale work."
+            exit 0
+          fi
+          git add v267-three-octagon-original-art-prototype.html \
+            art-reviews/v267-original-source/south-forest-river-continuity-unapproved.webp \
+            art-reviews/v267-forest-river-continuity-review.md \
+            art-reviews/v267-forest-river-phone/
+          if git diff --cached --quiet; then
+            echo "No art change; no screenshot-only version bump."
+          else
+            git commit -m "Reconstruct SOUTH native forest contact and preserve real mobile views"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi

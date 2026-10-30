@@ -1,0 +1,498 @@
+{
+  "schema": "coe-photo-art/v1",
+  "status": "eight-cell-contiguous-photo-study-NOT-playable",
+  "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "studyGrid": [
+    9,
+    16,
+    4,
+    2
+  ],
+  "georegistered": false,
+  "geographyWarning": "Sharr source photography is NOT evidence of exact V94 cell location, route, province or 1780-era features.",
+  "photographicArtComposed": 8,
+  "nativePhotoPixelJoins": [
+    {
+      "a": "eu-09-16",
+      "b": "eu-10-16",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-16",
+      "b": "eu-09-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-16",
+      "b": "eu-10-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-17",
+      "b": "eu-10-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-16",
+      "b": "eu-12-16",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-16",
+      "b": "eu-11-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-16",
+      "b": "eu-12-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-17",
+      "b": "eu-12-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "unapprovedCrossSourceJoins": [
+    {
+      "a": "eu-10-16",
+      "b": "eu-11-16",
+      "sourceNativePixelAdjacent": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-17",
+      "b": "eu-11-17",
+      "sourceNativePixelAdjacent": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "visuallyChecked": 0,
+  "physicallyRoadConnected": 0,
+  "mobileRendered": 0,
+  "nativeGamePlayable": 0,
+  "historicallyVerified": 0,
+  "finishedToday": 0,
+  "cells": [
+    {
+      "id": "eu-09-16",
+      "grid": [
+        9,
+        16
+      ],
+      "origin": [
+        13824,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-09-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        256,
+        1536,
+        1280
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "716a07592956e7b2cd1733f240e1412a1753da6b26d1b828e0b176ebd0864b1e",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.264,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-10-16",
+      "grid": [
+        10,
+        16
+      ],
+      "origin": [
+        15360,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-10-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        256,
+        3072,
+        1280
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "988ed35b60138f277c8d1dac1b411e4352506b9dfa34e59c062dc4a542bde40c",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.009,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-11-16",
+      "grid": [
+        11,
+        16
+      ],
+      "origin": [
+        16896,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-11-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        256,
+        1536,
+        1280
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "331967700d652d8e52c593b6908fb1b2d5ba219014107db70f48b60b430ec86b",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.303,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-12-16",
+      "grid": [
+        12,
+        16
+      ],
+      "origin": [
+        18432,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-12-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        256,
+        3072,
+        1280
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "cdfcd4efd1521ebb51c5486a958c23ed6323851585f8d907dfea7eaaa66435bc",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.169,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-09-17",
+      "grid": [
+        9,
+        17
+      ],
+      "origin": [
+        13824,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-09-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        1280,
+        1536,
+        2304
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "0893c38b8626d9f94af040d5f358a69b95875ccebd06b881286a91e13d88bff8",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.61,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-10-17",
+      "grid": [
+        10,
+        17
+      ],
+      "origin": [
+        15360,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-10-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        1280,
+        3072,
+        2304
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "a8a6c13df71e797de16ac57ec92c5c9f4fc0e2ee6e5cd0ecd56b9215a57c8422",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.564,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-11-17",
+      "grid": [
+        11,
+        17
+      ],
+      "origin": [
+        16896,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-11-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        1280,
+        1536,
+        2304
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "4866ed61530ac889f9b9a1fdcd1e544e5cbd43e799afc60810c73036b2b3ba55",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.42,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-12-17",
+      "grid": [
+        12,
+        17
+      ],
+      "origin": [
+        18432,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-12-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        1280,
+        3072,
+        2304
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "1d522cf8e21e653482622eeb5404a7c33a8d1e6108079090f39fa31ccbbe61a4",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans \u2014 illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.379,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    }
+  ]
+}

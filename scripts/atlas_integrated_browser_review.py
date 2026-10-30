@@ -27,7 +27,7 @@ try:
   browser=getattr(pw,args.browser).launch(headless=True)
   context=browser.new_context(viewport={"width":w,"height":h},device_scale_factor=2,is_mobile=True,has_touch=True)
   page=context.new_page();page.on("pageerror",lambda e:errors.append(str(e)))
-  page.goto("http://127.0.0.1:8769/index.html",wait_until="domcontentloaded",timeout=60000)
+  page.goto("http://127.0.0.1:8769/index.html?photoBlock=carpathians",wait_until="domcontentloaded",timeout=60000)
   page.wait_for_function("window.COEAtlas && (COEAtlas.loaded || window.COEAtlasLoadError)",timeout=60000)
   assert not page.evaluate("window.COEAtlasLoadError"),page.evaluate("window.COEAtlasLoadError")
   before=page.evaluate("""() => ({
@@ -66,6 +66,25 @@ try:
   page.locator("#atlasPlus").click()
   assert page.evaluate("COEAtlas.zoom")>z
   page.locator("#atlasMinus").click()
+  # The same native canvas must fit the full eight-photo source block on a
+  # 390px-wide phone. These remain source studies, not gameplay routes.
+  page.locator("#atlasPhotoSources").click()
+  page.wait_for_function("COEAtlas.photoMode && COEAtlas.photoCells===8",timeout=45000)
+  page.locator("#atlasWhole").click()
+  page.wait_for_function("COEAtlas.photoLoaded===8",timeout=60000)
+  corners=page.evaluate("""() => ({
+    a:COEAtlas.screenFor([10*1536,12*1024]),
+    b:COEAtlas.screenFor([14*1536,14*1024]),
+    zoom:COEAtlas.zoom
+  })""")
+  assert 0<=corners["a"][0] and corners["b"][0]<=w,corners
+  assert 0<=corners["a"][1] and corners["b"][1]<=h,corners
+  assert corners["zoom"]>=.15,corners
+  page.wait_for_timeout(400)
+  page.screenshot(path=str(out/f"{args.browser}-{args.orientation}-eight-photo-whole.png"))
+  assert not page.evaluate("COEAtlas.tapWorld([10*1536+768,12*1024+512])"),"Unverified photo tile must not issue an army order"
+  page.locator("#atlasPhotoSources").click()
+  assert not page.evaluate("COEAtlas.photoMode")
   page.locator("#atlasClose").click()
   assert page.locator("#atlasIntegratedLayer").is_hidden()
   after=page.evaluate("""() => ({
@@ -81,7 +100,7 @@ try:
           "nativeCanvas":True,"images":before["images"],"nodes":before["nodes"],
           "uniqueWorldNodes":before["unique"],"seams":before["seams"],
           "routePoints":len(route),"touchToMarch":True,"halt":True,"arrival":arrived,
-          "zoom":True,"campaignStorageUnchanged":True,"pageErrors":errors}
+          "zoom":True,"photoEightCellWholeVisible":True,"photoLoaded":8,"photoGameplayBlocked":True,"campaignStorageUnchanged":True,"pageErrors":errors}
   (out/f"{args.browser}-{args.orientation}.json").write_text(json.dumps(report,indent=2))
   print(json.dumps(report,indent=2))
   context.close();browser.close()

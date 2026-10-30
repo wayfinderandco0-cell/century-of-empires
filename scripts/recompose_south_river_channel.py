@@ -67,7 +67,7 @@ def build(native):
     # Read actual SOUTH river water/stone downstream. Resample only water and
     # immediately adjoining bank material; native trees and road are immutable.
     donor_y=np.minimum(ys+145,649).astype(np.float32)
-    donor_x=np.interp(donor_y,np.arange(100,651),actual)
+    donor_x=np.interp(donor_y,np.arange(100,651),actual).astype(np.float32)
     map_x=np.broadcast_to(xx+(donor_x-target)[:,None],(370,W)).copy()
     map_y=np.broadcast_to(donor_y[:,None],(370,W)).copy()
     donor=cv2.remap(native,map_x,map_y,cv2.INTER_LINEAR,

@@ -141,8 +141,10 @@ def build(native,matrei,edge):
     contact=edge[-1].astype(np.float32)
     for row in range(24):
         f=.93*(1-smooth(row/24))
+        road_contact=np.exp(-.5*((x-466)/44)**4)
+        road_contact[np.abs(x-466)>75]=0
         mask=(smooth((x-685)/65)*smooth((1350-x)/65)+
-              np.exp(-.5*((x-466)/44)**4)).clip(0,1)
+              road_contact).clip(0,1)
         a=(f*mask)[:,None]
         result[row]=np.uint8(np.clip(result[row]*(1-a)+contact*a,0,255))
     assert np.array_equal(result[460:],native[460:])

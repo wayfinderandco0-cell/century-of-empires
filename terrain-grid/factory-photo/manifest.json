@@ -118,13 +118,13 @@
       "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
       "sourceCrop": [
         1536,
-        890,
+        0,
         3072,
-        1914
+        1024
       ],
       "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
-      "outputSha256": "9cad65ca81339973f5914a79f4b8930c8f9a267ed560fb4fb09734fef8b51e60",
-      "motif": "Sharr wooded highland slopes and rocky pasture",
+      "outputSha256": "9713f8d0a9448b9dc8f8710ed621be2ed640271a72f52c4b3ddc1745c3943119",
+      "motif": "Sharr wooded upland slope; upper native source crop",
       "sourceRegion": "Sharr Mountains, Kosovo; reference imagery, not georegistration",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
       "author": "SUHEJLO",

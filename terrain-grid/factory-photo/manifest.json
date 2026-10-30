@@ -1,0 +1,147 @@
+{
+  "schema": "coe-photo-art/v1",
+  "status": "source-backed-unapproved",
+  "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "batch": 1,
+  "photographicArtComposed": 2,
+  "visuallyChecked": 0,
+  "physicallyRoadConnected": 0,
+  "mobileRendered": 0,
+  "nativeGamePlayable": 0,
+  "historicallyVerified": 0,
+  "finishedToday": 0,
+  "cells": [
+    {
+      "id": "eu-09-16",
+      "grid": [
+        9,
+        16
+      ],
+      "origin": [
+        13824,
+        16384
+      ],
+      "geography": {
+        "elevationMetersApprox": -78,
+        "forestProxy": 1,
+        "biome": "coast-or-lowland",
+        "riverFeatures": [
+          {
+            "sourceName": "Drin",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Bojana",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Haliacmon",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen/Natural Earth broad geography; NOT 1780 survey"
+      },
+      "image": "terrain-grid/factory-photo/eu-09-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        740,
+        3072,
+        1764
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "080d38e8f142c0989824f8b0e5542c86c0fc9be813c9a67b5b8db1672ec5589e",
+      "motif": "Sharr limestone ridges and alpine spring meadows",
+      "sourceRegion": "Sharr Mountains, Kosovo; reference imagery, not georegistration",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-10-16",
+      "grid": [
+        10,
+        16
+      ],
+      "origin": [
+        15360,
+        16384
+      ],
+      "geography": {
+        "elevationMetersApprox": 421,
+        "forestProxy": 1,
+        "biome": "farmland-and-plains",
+        "riverFeatures": [
+          {
+            "sourceName": "Strymnas",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Strymnas",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Haliacmon",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen/Natural Earth broad geography; NOT 1780 survey"
+      },
+      "image": "terrain-grid/factory-photo/eu-10-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        890,
+        3072,
+        1914
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "9cad65ca81339973f5914a79f4b8930c8f9a267ed560fb4fb09734fef8b51e60",
+      "motif": "Sharr wooded highland slopes and rocky pasture",
+      "sourceRegion": "Sharr Mountains, Kosovo; reference imagery, not georegistration",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    }
+  ]
+}

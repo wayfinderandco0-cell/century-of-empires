@@ -176,6 +176,22 @@ const photoButton=document.createElement("button");
 photoButton.id="atlasPhotoSources";photoButton.type="button";
 photoButton.textContent="Photo sources";
 $("atlasBar").querySelector("div").appendChild(photoButton);
+const photoNext=document.createElement("button");
+photoNext.id="atlasPhotoNext";photoNext.type="button";
+photoNext.textContent="Next region";photoNext.hidden=true;
+$("atlasBar").querySelector("div").appendChild(photoNext);
+let photoIndex=0;
+function focusPhoto(index){
+ if(!photoMode||!photoStream||!photoStream.cells.length)return false;
+ photoIndex=(index+photoStream.cells.length)%photoStream.cells.length;
+ const cell=photoStream.cells[photoIndex];
+ center=[cell.origin[0]+768,cell.origin[1]+512];
+ zoom=1.5;scale=base*zoom;
+ status(cell.id+" · "+cell.sourceRegion+" · PHOTO REFERENCE ONLY, no route or conquest");
+ draw();
+ return cell.id;
+}
+photoNext.onclick=()=>focusPhoto(photoIndex+1);
 async function togglePhotoSources(){
  try {
   if(!photoStream){
@@ -192,12 +208,12 @@ async function togglePhotoSources(){
   }
   if(!photoMode){
    photoCamera={center:clone(center),zoom};
-   photoMode=true;center=[15360,16896];zoom=.96;
+   photoMode=true;photoIndex=0;photoNext.hidden=false;
    photoButton.textContent="Alpine roads";
-   status("Two distinct native photographs · NO road, province or historical certification");
+   focusPhoto(0);
   } else {
    photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
-   photoButton.textContent="Photo sources";
+   photoNext.hidden=true;photoButton.textContent="Photo sources";
    status("WEST · MATREI · SOUTH connected · tap a cartway");
   }
   scale=base*zoom;draw();
@@ -215,7 +231,7 @@ const API={
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
- get photoLoaded(){return photoStream?.stats.loaded||0},togglePhotoSources,
+ get photoLoaded(){return photoStream?.stats.loaded||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
  routeTo:p=>routeBetween(unit,p),tapWorld:tapRoad,screenFor:worldToScreen,setZoom:z=>centerAt(...center,z)
 };

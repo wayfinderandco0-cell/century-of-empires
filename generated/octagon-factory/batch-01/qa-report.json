@@ -1,0 +1,16 @@
+{
+  "batch": 1,
+  "geographyPreviews": 50,
+  "totalPlanned": 432,
+  "biomeCounts": {
+    "forest": 14,
+    "coast-and-islands": 22,
+    "sea": 8,
+    "hills-and-mountains": 6
+  },
+  "proposedIntercellLinks": 80,
+  "inBatchAdjacentLinks": 4,
+  "certifiedHistoricalTowns": 0,
+  "photoArtApproved": 0,
+  "gameplayValidated": 0
+}

@@ -1,0 +1,3126 @@
+{
+  "schema": "coe-octagon-factory/v1",
+  "status": "candidate-not-final-art",
+  "batch": 1,
+  "worldCellCount": 432,
+  "generated": 50,
+  "routeLinks": [
+    {
+      "id": "route-eu-13-07-eu-13-08",
+      "a": "eu-13-07",
+      "b": "eu-13-08",
+      "world": [
+        20584,
+        8192
+      ],
+      "localA": [
+        616,
+        1024
+      ],
+      "localB": [
+        616,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-08-eu-13-09",
+      "a": "eu-13-08",
+      "b": "eu-13-09",
+      "world": [
+        20595,
+        9216
+      ],
+      "localA": [
+        627,
+        1024
+      ],
+      "localB": [
+        627,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-09-eu-14-09",
+      "a": "eu-13-09",
+      "b": "eu-14-09",
+      "world": [
+        21504,
+        9812
+      ],
+      "localA": [
+        1536,
+        596
+      ],
+      "localB": [
+        0,
+        596
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-09-eu-13-10",
+      "a": "eu-13-09",
+      "b": "eu-13-10",
+      "world": [
+        20606,
+        10240
+      ],
+      "localA": [
+        638,
+        1024
+      ],
+      "localB": [
+        638,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-14-09-eu-15-09",
+      "a": "eu-14-09",
+      "b": "eu-15-09",
+      "world": [
+        23040,
+        9871
+      ],
+      "localA": [
+        1536,
+        655
+      ],
+      "localB": [
+        0,
+        655
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-10-eu-13-11",
+      "a": "eu-13-10",
+      "b": "eu-13-11",
+      "world": [
+        20617,
+        11264
+      ],
+      "localA": [
+        649,
+        1024
+      ],
+      "localB": [
+        649,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-11-eu-13-12",
+      "a": "eu-13-11",
+      "b": "eu-13-12",
+      "world": [
+        20628,
+        12288
+      ],
+      "localA": [
+        660,
+        1024
+      ],
+      "localB": [
+        660,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-04-12-eu-05-12",
+      "a": "eu-04-12",
+      "b": "eu-05-12",
+      "world": [
+        7680,
+        12776
+      ],
+      "localA": [
+        1536,
+        488
+      ],
+      "localB": [
+        0,
+        488
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-05-12-eu-06-12",
+      "a": "eu-05-12",
+      "b": "eu-06-12",
+      "world": [
+        9216,
+        12835
+      ],
+      "localA": [
+        1536,
+        547
+      ],
+      "localB": [
+        0,
+        547
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-12-12-eu-13-12",
+      "a": "eu-12-12",
+      "b": "eu-13-12",
+      "world": [
+        19968,
+        12648
+      ],
+      "localA": [
+        1536,
+        360
+      ],
+      "localB": [
+        0,
+        360
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-12-eu-14-12",
+      "a": "eu-13-12",
+      "b": "eu-14-12",
+      "world": [
+        21504,
+        12707
+      ],
+      "localA": [
+        1536,
+        419
+      ],
+      "localB": [
+        0,
+        419
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-12-eu-13-13",
+      "a": "eu-13-12",
+      "b": "eu-13-13",
+      "world": [
+        20639,
+        13312
+      ],
+      "localA": [
+        671,
+        1024
+      ],
+      "localB": [
+        671,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-14-12-eu-15-12",
+      "a": "eu-14-12",
+      "b": "eu-15-12",
+      "world": [
+        23040,
+        12766
+      ],
+      "localA": [
+        1536,
+        478
+      ],
+      "localB": [
+        0,
+        478
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "route-eu-13-17-eu-13-18",
+      "a": "eu-13-17",
+      "b": "eu-13-18",
+      "world": [
+        20694,
+        18432
+      ],
+      "localA": [
+        726,
+        1024
+      ],
+      "localB": [
+        726,
+        0
+      ],
+      "quality": "PROPOSED-FICTIONAL-ROUTE",
+      "historicallyVerified": false,
+      "artRoadPainted": false,
+      "gameplayEnabled": false
+    }
+  ],
+  "cells": [
+    {
+      "id": "eu-13-10",
+      "rank": 50,
+      "grid": [
+        13,
+        10
+      ],
+      "origin": [
+        19968,
+        10240
+      ],
+      "geographicBounds": [
+        31.5,
+        52.54166666666667,
+        35,
+        54.58333333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": 192,
+        "elevationRangeMetersApprox": [
+          139,
+          238
+        ],
+        "reliefMetersApprox": 99,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Desna",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Desna",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Desna",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-09-eu-13-10",
+        "route-eu-13-10-eu-13-11"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-11",
+      "rank": 51,
+      "grid": [
+        13,
+        11
+      ],
+      "origin": [
+        19968,
+        11264
+      ],
+      "geographicBounds": [
+        31.5,
+        50.5,
+        35,
+        52.54166666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 155,
+        "elevationRangeMetersApprox": [
+          112,
+          214
+        ],
+        "reliefMetersApprox": 102,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Seym",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Seym",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Desna",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-10-eu-13-11",
+        "route-eu-13-11-eu-13-12"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-12",
+      "rank": 52,
+      "grid": [
+        13,
+        12
+      ],
+      "origin": [
+        19968,
+        12288
+      ],
+      "geographicBounds": [
+        31.5,
+        48.45833333333333,
+        35,
+        50.5
+      ],
+      "geography": {
+        "elevationMetersApprox": 123,
+        "elevationRangeMetersApprox": [
+          61,
+          202
+        ],
+        "reliefMetersApprox": 141,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-11-eu-13-12",
+        "route-eu-12-12-eu-13-12",
+        "route-eu-13-12-eu-14-12",
+        "route-eu-13-12-eu-13-13"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-13",
+      "rank": 53,
+      "grid": [
+        13,
+        13
+      ],
+      "origin": [
+        19968,
+        13312
+      ],
+      "geographicBounds": [
+        31.5,
+        46.41666666666667,
+        35,
+        48.45833333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": 84,
+        "elevationRangeMetersApprox": [
+          1,
+          218
+        ],
+        "reliefMetersApprox": 217,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 0.92,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Southern Bug",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-12-eu-13-13"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-14",
+      "rank": 54,
+      "grid": [
+        13,
+        14
+      ],
+      "origin": [
+        19968,
+        14336
+      ],
+      "geographicBounds": [
+        31.5,
+        44.375,
+        35,
+        46.41666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -54,
+        "elevationRangeMetersApprox": [
+          -1744,
+          792
+        ],
+        "reliefMetersApprox": 2536,
+        "forestCoverPctApprox": 75,
+        "landFractionApprox": 0.56,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": null,
+            "rank": 10,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 11,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-15",
+      "rank": 55,
+      "grid": [
+        13,
+        15
+      ],
+      "origin": [
+        19968,
+        15360
+      ],
+      "geographicBounds": [
+        31.5,
+        42.333333333333336,
+        35,
+        44.375
+      ],
+      "geography": {
+        "elevationMetersApprox": -2006,
+        "elevationRangeMetersApprox": [
+          -2409,
+          -81
+        ],
+        "reliefMetersApprox": 2328,
+        "forestCoverPctApprox": 5,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-16",
+      "rank": 56,
+      "grid": [
+        13,
+        16
+      ],
+      "origin": [
+        19968,
+        16384
+      ],
+      "geographicBounds": [
+        31.5,
+        40.291666666666664,
+        35,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": 351,
+        "elevationRangeMetersApprox": [
+          -2212,
+          1662
+        ],
+        "reliefMetersApprox": 3874,
+        "forestCoverPctApprox": 83,
+        "landFractionApprox": 0.76,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-12-16",
+      "rank": 57,
+      "grid": [
+        12,
+        16
+      ],
+      "origin": [
+        18432,
+        16384
+      ],
+      "geographicBounds": [
+        28,
+        40.291666666666664,
+        31.5,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": -574,
+        "elevationRangeMetersApprox": [
+          -2154,
+          1231
+        ],
+        "reliefMetersApprox": 3385,
+        "forestCoverPctApprox": 60,
+        "landFractionApprox": 0.32,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Simav",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Sakarya",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Sakarya",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-11-16",
+      "rank": 58,
+      "grid": [
+        11,
+        16
+      ],
+      "origin": [
+        16896,
+        16384
+      ],
+      "geographicBounds": [
+        24.5,
+        40.291666666666664,
+        28,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": 209,
+        "elevationRangeMetersApprox": [
+          -727,
+          1367
+        ],
+        "reliefMetersApprox": 2094,
+        "forestCoverPctApprox": 99,
+        "landFractionApprox": 0.8,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Evros",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Evros",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Evros",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-10-16",
+      "rank": 59,
+      "grid": [
+        10,
+        16
+      ],
+      "origin": [
+        15360,
+        16384
+      ],
+      "geographicBounds": [
+        21,
+        40.291666666666664,
+        24.5,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": 683,
+        "elevationRangeMetersApprox": [
+          -370,
+          1898
+        ],
+        "reliefMetersApprox": 2268,
+        "forestCoverPctApprox": 99,
+        "landFractionApprox": 0.92,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Strymnas",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Strymnas",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Haliacmon",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-09-16",
+      "rank": 60,
+      "grid": [
+        9,
+        16
+      ],
+      "origin": [
+        13824,
+        16384
+      ],
+      "geographicBounds": [
+        17.5,
+        40.291666666666664,
+        21,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": 110,
+        "elevationRangeMetersApprox": [
+          -1168,
+          1916
+        ],
+        "reliefMetersApprox": 3084,
+        "forestCoverPctApprox": 63,
+        "landFractionApprox": 0.48,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Drin",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Bojana",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Haliacmon",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-08-16",
+      "rank": 61,
+      "grid": [
+        8,
+        16
+      ],
+      "origin": [
+        12288,
+        16384
+      ],
+      "geographicBounds": [
+        14,
+        40.291666666666664,
+        17.5,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": 124,
+        "elevationRangeMetersApprox": [
+          -1109,
+          1424
+        ],
+        "reliefMetersApprox": 2533,
+        "forestCoverPctApprox": 67,
+        "landFractionApprox": 0.6,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Ofanto",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Ofanto",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Volturno",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-07-16",
+      "rank": 62,
+      "grid": [
+        7,
+        16
+      ],
+      "origin": [
+        10752,
+        16384
+      ],
+      "geographicBounds": [
+        10.5,
+        40.291666666666664,
+        14,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": -794,
+        "elevationRangeMetersApprox": [
+          -3509,
+          1424
+        ],
+        "reliefMetersApprox": 4933,
+        "forestCoverPctApprox": 55,
+        "landFractionApprox": 0.28,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Tevere",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Salto",
+            "rank": 10,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Volturno",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-06-16",
+      "rank": 63,
+      "grid": [
+        6,
+        16
+      ],
+      "origin": [
+        9216,
+        16384
+      ],
+      "geographicBounds": [
+        7,
+        40.291666666666664,
+        10.5,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": -1151,
+        "elevationRangeMetersApprox": [
+          -2990,
+          1407
+        ],
+        "reliefMetersApprox": 4397,
+        "forestCoverPctApprox": 47,
+        "landFractionApprox": 0.24,
+        "biome": "coast-and-islands",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-16",
+      "rank": 64,
+      "grid": [
+        5,
+        16
+      ],
+      "origin": [
+        7680,
+        16384
+      ],
+      "geographicBounds": [
+        3.5,
+        40.291666666666664,
+        7,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": -2469,
+        "elevationRangeMetersApprox": [
+          -2990,
+          -434
+        ],
+        "reliefMetersApprox": 2556,
+        "forestCoverPctApprox": 1,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-15",
+      "rank": 65,
+      "grid": [
+        5,
+        15
+      ],
+      "origin": [
+        7680,
+        15360
+      ],
+      "geographicBounds": [
+        3.5,
+        42.333333333333336,
+        7,
+        44.375
+      ],
+      "geography": {
+        "elevationMetersApprox": -217,
+        "elevationRangeMetersApprox": [
+          -2682,
+          2171
+        ],
+        "reliefMetersApprox": 4853,
+        "forestCoverPctApprox": 68,
+        "landFractionApprox": 0.52,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Durance",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Durance",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Tarn",
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-14",
+      "rank": 66,
+      "grid": [
+        5,
+        14
+      ],
+      "origin": [
+        7680,
+        14336
+      ],
+      "geographicBounds": [
+        3.5,
+        44.375,
+        7,
+        46.41666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 919,
+        "elevationRangeMetersApprox": [
+          154,
+          2534
+        ],
+        "reliefMetersApprox": 2380,
+        "forestCoverPctApprox": 88,
+        "landFractionApprox": 1,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Dora Baltea",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Durance",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Durance",
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-13",
+      "rank": 67,
+      "grid": [
+        5,
+        13
+      ],
+      "origin": [
+        7680,
+        13312
+      ],
+      "geographicBounds": [
+        3.5,
+        46.41666666666667,
+        7,
+        48.45833333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": 385,
+        "elevationRangeMetersApprox": [
+          122,
+          1216
+        ],
+        "reliefMetersApprox": 1094,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Marne",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Marne",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Maas",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-12",
+      "rank": 68,
+      "grid": [
+        5,
+        12
+      ],
+      "origin": [
+        7680,
+        12288
+      ],
+      "geographicBounds": [
+        3.5,
+        48.45833333333333,
+        7,
+        50.5
+      ],
+      "geography": {
+        "elevationMetersApprox": 255,
+        "elevationRangeMetersApprox": [
+          29,
+          578
+        ],
+        "reliefMetersApprox": 549,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Marne",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Maas",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Maas",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-04-12-eu-05-12",
+        "route-eu-05-12-eu-06-12"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-11",
+      "rank": 69,
+      "grid": [
+        5,
+        11
+      ],
+      "origin": [
+        7680,
+        11264
+      ],
+      "geographicBounds": [
+        3.5,
+        50.5,
+        7,
+        52.54166666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 35,
+        "elevationRangeMetersApprox": [
+          -22,
+          381
+        ],
+        "reliefMetersApprox": 403,
+        "forestCoverPctApprox": 96,
+        "landFractionApprox": 0.92,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Maas",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Maas",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Schelde",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-10",
+      "rank": 70,
+      "grid": [
+        5,
+        10
+      ],
+      "origin": [
+        7680,
+        10240
+      ],
+      "geographicBounds": [
+        3.5,
+        52.54166666666667,
+        7,
+        54.58333333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": -23,
+        "elevationRangeMetersApprox": [
+          -48,
+          16
+        ],
+        "reliefMetersApprox": 64,
+        "forestCoverPctApprox": 39,
+        "landFractionApprox": 0.2,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "IJssel",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Vecht",
+            "rank": 11,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-09",
+      "rank": 71,
+      "grid": [
+        5,
+        9
+      ],
+      "origin": [
+        7680,
+        9216
+      ],
+      "geographicBounds": [
+        3.5,
+        54.58333333333333,
+        7,
+        56.625
+      ],
+      "geography": {
+        "elevationMetersApprox": -44,
+        "elevationRangeMetersApprox": [
+          -71,
+          -29
+        ],
+        "reliefMetersApprox": 42,
+        "forestCoverPctApprox": 0,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-08",
+      "rank": 72,
+      "grid": [
+        5,
+        8
+      ],
+      "origin": [
+        7680,
+        8192
+      ],
+      "geographicBounds": [
+        3.5,
+        56.625,
+        7,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -90,
+        "elevationRangeMetersApprox": [
+          -384,
+          534
+        ],
+        "reliefMetersApprox": 918,
+        "forestCoverPctApprox": 19,
+        "landFractionApprox": 0.04,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-06-08",
+      "rank": 73,
+      "grid": [
+        6,
+        8
+      ],
+      "origin": [
+        9216,
+        8192
+      ],
+      "geographicBounds": [
+        7,
+        56.625,
+        10.5,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -83,
+        "elevationRangeMetersApprox": [
+          -642,
+          715
+        ],
+        "reliefMetersApprox": 1357,
+        "forestCoverPctApprox": 61,
+        "landFractionApprox": 0.32,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Verkselv",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-07-08",
+      "rank": 74,
+      "grid": [
+        7,
+        8
+      ],
+      "origin": [
+        10752,
+        8192
+      ],
+      "geographicBounds": [
+        10.5,
+        56.625,
+        14,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 61,
+        "elevationRangeMetersApprox": [
+          -316,
+          289
+        ],
+        "reliefMetersApprox": 605,
+        "forestCoverPctApprox": 88,
+        "landFractionApprox": 0.6,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Klarälven",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Göta älv",
+            "rank": 6,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Göta",
+            "rank": 11,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-08-08",
+      "rank": 75,
+      "grid": [
+        8,
+        8
+      ],
+      "origin": [
+        12288,
+        8192
+      ],
+      "geographicBounds": [
+        14,
+        56.625,
+        17.5,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 101,
+        "elevationRangeMetersApprox": [
+          -128,
+          318
+        ],
+        "reliefMetersApprox": 446,
+        "forestCoverPctApprox": 93,
+        "landFractionApprox": 0.76,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Motala ström",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Motala ström",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Motala ström",
+            "rank": 8,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-09-08",
+      "rank": 76,
+      "grid": [
+        9,
+        8
+      ],
+      "origin": [
+        13824,
+        8192
+      ],
+      "geographicBounds": [
+        17.5,
+        56.625,
+        21,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -92,
+        "elevationRangeMetersApprox": [
+          -236,
+          43
+        ],
+        "reliefMetersApprox": 279,
+        "forestCoverPctApprox": 35,
+        "landFractionApprox": 0.08,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-10-08",
+      "rank": 77,
+      "grid": [
+        10,
+        8
+      ],
+      "origin": [
+        15360,
+        8192
+      ],
+      "geographicBounds": [
+        21,
+        56.625,
+        24.5,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -3,
+        "elevationRangeMetersApprox": [
+          -84,
+          119
+        ],
+        "reliefMetersApprox": 203,
+        "forestCoverPctApprox": 88,
+        "landFractionApprox": 0.36,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Daugava",
+            "rank": 5,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Venta",
+            "rank": 10,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Pärnu",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-11-08",
+      "rank": 78,
+      "grid": [
+        11,
+        8
+      ],
+      "origin": [
+        16896,
+        8192
+      ],
+      "geographicBounds": [
+        24.5,
+        56.625,
+        28,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 84,
+        "elevationRangeMetersApprox": [
+          0,
+          224
+        ],
+        "reliefMetersApprox": 224,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Narva",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Daugava",
+            "rank": 5,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Pärnu",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-12-08",
+      "rank": 79,
+      "grid": [
+        12,
+        8
+      ],
+      "origin": [
+        18432,
+        8192
+      ],
+      "geographicBounds": [
+        28,
+        56.625,
+        31.5,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 85,
+        "elevationRangeMetersApprox": [
+          17,
+          224
+        ],
+        "reliefMetersApprox": 207,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Volkhov",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Volkhov",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-08",
+      "rank": 80,
+      "grid": [
+        13,
+        8
+      ],
+      "origin": [
+        19968,
+        8192
+      ],
+      "geographicBounds": [
+        31.5,
+        56.625,
+        35,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 165,
+        "elevationRangeMetersApprox": [
+          17,
+          279
+        ],
+        "reliefMetersApprox": 262,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Volkhov",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-07-eu-13-08",
+        "route-eu-13-08-eu-13-09"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-08",
+      "rank": 81,
+      "grid": [
+        14,
+        8
+      ],
+      "origin": [
+        21504,
+        8192
+      ],
+      "geographicBounds": [
+        35,
+        56.625,
+        38.5,
+        58.66666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 149,
+        "elevationRangeMetersApprox": [
+          97,
+          214
+        ],
+        "reliefMetersApprox": 117,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Tvertsa",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Tvertsa",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Tvertsa",
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-09",
+      "rank": 82,
+      "grid": [
+        14,
+        9
+      ],
+      "origin": [
+        21504,
+        9216
+      ],
+      "geographicBounds": [
+        35,
+        54.58333333333333,
+        38.5,
+        56.625
+      ],
+      "geography": {
+        "elevationMetersApprox": 187,
+        "elevationRangeMetersApprox": [
+          122,
+          258
+        ],
+        "reliefMetersApprox": 136,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Moskva River",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Moskva River",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Moskva River",
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-09-eu-14-09",
+        "route-eu-14-09-eu-15-09"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-10",
+      "rank": 83,
+      "grid": [
+        14,
+        10
+      ],
+      "origin": [
+        21504,
+        10240
+      ],
+      "geographicBounds": [
+        35,
+        52.54166666666667,
+        38.5,
+        54.58333333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": 211,
+        "elevationRangeMetersApprox": [
+          160,
+          252
+        ],
+        "reliefMetersApprox": 92,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Oka",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Oka",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Oka",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-11",
+      "rank": 84,
+      "grid": [
+        14,
+        11
+      ],
+      "origin": [
+        21504,
+        11264
+      ],
+      "geographicBounds": [
+        35,
+        50.5,
+        38.5,
+        52.54166666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": 200,
+        "elevationRangeMetersApprox": [
+          142,
+          237
+        ],
+        "reliefMetersApprox": 95,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Seym",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Seym",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Donets",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-12",
+      "rank": 85,
+      "grid": [
+        14,
+        12
+      ],
+      "origin": [
+        21504,
+        12288
+      ],
+      "geographicBounds": [
+        35,
+        48.45833333333333,
+        38.5,
+        50.5
+      ],
+      "geography": {
+        "elevationMetersApprox": 144,
+        "elevationRangeMetersApprox": [
+          64,
+          194
+        ],
+        "reliefMetersApprox": 130,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "forest",
+        "riverFeatures": [
+          {
+            "sourceName": "Donets",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Donets",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-12-eu-14-12",
+        "route-eu-14-12-eu-15-12"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-13",
+      "rank": 86,
+      "grid": [
+        14,
+        13
+      ],
+      "origin": [
+        21504,
+        13312
+      ],
+      "geographicBounds": [
+        35,
+        46.41666666666667,
+        38.5,
+        48.45833333333333
+      ],
+      "geography": {
+        "elevationMetersApprox": 101,
+        "elevationRangeMetersApprox": [
+          -11,
+          283
+        ],
+        "reliefMetersApprox": 294,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 0.84,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Dnipro",
+            "rank": 4,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 11,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-14",
+      "rank": 87,
+      "grid": [
+        14,
+        14
+      ],
+      "origin": [
+        21504,
+        14336
+      ],
+      "geographicBounds": [
+        35,
+        44.375,
+        38.5,
+        46.41666666666667
+      ],
+      "geography": {
+        "elevationMetersApprox": -82,
+        "elevationRangeMetersApprox": [
+          -1615,
+          363
+        ],
+        "reliefMetersApprox": 1978,
+        "forestCoverPctApprox": 94,
+        "landFractionApprox": 0.32,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Kuban",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kuban",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-15",
+      "rank": 88,
+      "grid": [
+        14,
+        15
+      ],
+      "origin": [
+        21504,
+        15360
+      ],
+      "geographicBounds": [
+        35,
+        42.333333333333336,
+        38.5,
+        44.375
+      ],
+      "geography": {
+        "elevationMetersApprox": -1982,
+        "elevationRangeMetersApprox": [
+          -2375,
+          -168
+        ],
+        "reliefMetersApprox": 2207,
+        "forestCoverPctApprox": 3,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-16",
+      "rank": 89,
+      "grid": [
+        14,
+        16
+      ],
+      "origin": [
+        21504,
+        16384
+      ],
+      "geographicBounds": [
+        35,
+        40.291666666666664,
+        38.5,
+        42.333333333333336
+      ],
+      "geography": {
+        "elevationMetersApprox": -233,
+        "elevationRangeMetersApprox": [
+          -2105,
+          2200
+        ],
+        "reliefMetersApprox": 4305,
+        "forestCoverPctApprox": 62,
+        "landFractionApprox": 0.52,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Kelkit",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kelkit",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-14-17",
+      "rank": 90,
+      "grid": [
+        14,
+        17
+      ],
+      "origin": [
+        21504,
+        17408
+      ],
+      "geographicBounds": [
+        35,
+        38.25,
+        38.5,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": 1452,
+        "elevationRangeMetersApprox": [
+          809,
+          2102
+        ],
+        "reliefMetersApprox": 1293,
+        "forestCoverPctApprox": 84,
+        "landFractionApprox": 1,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Kelkit",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-13-17",
+      "rank": 91,
+      "grid": [
+        13,
+        17
+      ],
+      "origin": [
+        19968,
+        17408
+      ],
+      "geographicBounds": [
+        31.5,
+        38.25,
+        35,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": 1040,
+        "elevationRangeMetersApprox": [
+          670,
+          1531
+        ],
+        "reliefMetersApprox": 861,
+        "forestCoverPctApprox": 68,
+        "landFractionApprox": 1,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Kızılırmak",
+            "rank": 7,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": null,
+            "rank": 11,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Carsamba",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [
+        "route-eu-13-17-eu-13-18"
+      ],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-12-17",
+      "rank": 92,
+      "grid": [
+        12,
+        17
+      ],
+      "origin": [
+        18432,
+        17408
+      ],
+      "geographicBounds": [
+        28,
+        38.25,
+        31.5,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": 882,
+        "elevationRangeMetersApprox": [
+          38,
+          1600
+        ],
+        "reliefMetersApprox": 1562,
+        "forestCoverPctApprox": 100,
+        "landFractionApprox": 1,
+        "biome": "hills-and-mountains",
+        "riverFeatures": [
+          {
+            "sourceName": "Simav",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Simav",
+            "rank": 9,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Simav",
+            "rank": 9,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-11-17",
+      "rank": 93,
+      "grid": [
+        11,
+        17
+      ],
+      "origin": [
+        16896,
+        17408
+      ],
+      "geographicBounds": [
+        24.5,
+        38.25,
+        28,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -41,
+        "elevationRangeMetersApprox": [
+          -1003,
+          912
+        ],
+        "reliefMetersApprox": 1915,
+        "forestCoverPctApprox": 82,
+        "landFractionApprox": 0.48,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": null,
+            "rank": 11,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Gediz",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-10-17",
+      "rank": 94,
+      "grid": [
+        10,
+        17
+      ],
+      "origin": [
+        15360,
+        17408
+      ],
+      "geographicBounds": [
+        21,
+        38.25,
+        24.5,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": 198,
+        "elevationRangeMetersApprox": [
+          -1135,
+          1391
+        ],
+        "reliefMetersApprox": 2526,
+        "forestCoverPctApprox": 83,
+        "landFractionApprox": 0.64,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Haliacmon",
+            "rank": 8,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Aoos",
+            "rank": 10,
+            "historicallyVerified": false
+          },
+          {
+            "sourceName": "Enipefs",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-09-17",
+      "rank": 95,
+      "grid": [
+        9,
+        17
+      ],
+      "origin": [
+        13824,
+        17408
+      ],
+      "geographicBounds": [
+        17.5,
+        38.25,
+        21,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -850,
+        "elevationRangeMetersApprox": [
+          -3432,
+          1342
+        ],
+        "reliefMetersApprox": 4774,
+        "forestCoverPctApprox": 42,
+        "landFractionApprox": 0.2,
+        "biome": "coast-and-islands",
+        "riverFeatures": [
+          {
+            "sourceName": "Aoos",
+            "rank": 10,
+            "historicallyVerified": false
+          }
+        ],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-08-17",
+      "rank": 96,
+      "grid": [
+        8,
+        17
+      ],
+      "origin": [
+        12288,
+        17408
+      ],
+      "geographicBounds": [
+        14,
+        38.25,
+        17.5,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -906,
+        "elevationRangeMetersApprox": [
+          -3511,
+          1285
+        ],
+        "reliefMetersApprox": 4796,
+        "forestCoverPctApprox": 37,
+        "landFractionApprox": 0.24,
+        "biome": "coast-and-islands",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-07-17",
+      "rank": 97,
+      "grid": [
+        7,
+        17
+      ],
+      "origin": [
+        10752,
+        17408
+      ],
+      "geographicBounds": [
+        10.5,
+        38.25,
+        14,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -2548,
+        "elevationRangeMetersApprox": [
+          -3602,
+          -557
+        ],
+        "reliefMetersApprox": 3045,
+        "forestCoverPctApprox": 5,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-06-17",
+      "rank": 98,
+      "grid": [
+        6,
+        17
+      ],
+      "origin": [
+        9216,
+        17408
+      ],
+      "geographicBounds": [
+        7,
+        38.25,
+        10.5,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -1210,
+        "elevationRangeMetersApprox": [
+          -2863,
+          913
+        ],
+        "reliefMetersApprox": 3776,
+        "forestCoverPctApprox": 35,
+        "landFractionApprox": 0.24,
+        "biome": "coast-and-islands",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    },
+    {
+      "id": "eu-05-17",
+      "rank": 99,
+      "grid": [
+        5,
+        17
+      ],
+      "origin": [
+        7680,
+        17408
+      ],
+      "geographicBounds": [
+        3.5,
+        38.25,
+        7,
+        40.291666666666664
+      ],
+      "geography": {
+        "elevationMetersApprox": -2379,
+        "elevationRangeMetersApprox": [
+          -2993,
+          61
+        ],
+        "reliefMetersApprox": 3054,
+        "forestCoverPctApprox": 12,
+        "landFractionApprox": 0,
+        "biome": "sea",
+        "riverFeatures": [],
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
+      },
+      "routeLinkIds": [],
+      "scenicSettlements": [],
+      "historicalConquestTowns": [],
+      "provinceIds": [],
+      "scenicIsCapturable": false,
+      "art": {
+        "sourceType": "V94 atlas low-resolution preview",
+        "approvedV267PhotographicMethodApplied": false,
+        "finalNativeArtRendered": false,
+        "requiresFullResolutionOriginalArt": true
+      },
+      "usableForGameplay": false,
+      "historicallyCertified": false
+    }
+  ]
+}

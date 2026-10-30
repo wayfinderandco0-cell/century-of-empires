@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Eight source-native Carpathian autumn forest photo cells, quarantined from gameplay.
 
-A 3x2 contiguous native-pixel crop of one licensed Carpathian drone photograph,
-plus a 1x2 crop of a second. Never invent road ports or historical settlements.
-The two cross-source borders are NOT seamless or routable. Original photos are
+One continuous 4x2 native-pixel crop from a licensed 8000x2763 Carpathian
+forest drone panorama. All ten internal seams are original adjacent pixels. Never invent road ports or historical settlements.
+No road or historical province is inferred from photographic adjacency. Original photos are
 retrieved from Commons at build time; only durable derived art is committed.
 """
 from __future__ import annotations
@@ -16,10 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "terrain-grid/factory-photo/carpathian-8"
 W, H, X0, Y0 = 1536, 1024, 10, 12
 SOURCES = (
-    {"title": "Осіння дорога.jpg", "cols": 3, "x": 400, "y": 1400,
-     "motif": "Carpathian autumn canopy, mountain forest and natural clearings"},
-    {"title": "Туманна дорога.jpg", "cols": 1, "x": 2400, "y": 1400,
-     "motif": "Carpathian misty woodland and highland slopes"},
+    {"title": "Осінній ліс в хмарах туману.jpg", "cols": 4, "x": 900, "y": 700,
+     "motif": "Carpathian forest canopy, mist and wooded mountain slopes"},
 )
 USER_AGENT = "CenturyOfEmpiresArtFactory/1.0 (educational game; Wikimedia attribution)"
 def sha(b: bytes) -> str:
@@ -60,7 +58,7 @@ def main():
         photo = ImageEnhance.Color(photo).enhance(.88)
         photo = ImageEnhance.Contrast(photo).enhance(1.04)
         photo = ImageEnhance.Brightness(photo).enhance(.92)
-        xoffset = 0 if group == 0 else 3
+        xoffset = 0
         for row in range(2):
             for col in range(spec["cols"]):
                 gx, gy = X0 + xoffset + col, Y0 + row
@@ -111,8 +109,8 @@ def main():
                       "sourceNativePixelAdjacent": native, "roadPainted": False,
                       "routeEnabled": False, "visuallyApproved": False}
             (same if native else blocked).append(record)
-    if len(same) != 8 or len(blocked) != 2:
-        raise RuntimeError(f"Expected 8 native joins / 2 blocked; got {len(same)} / {len(blocked)}")
+    if len(same) != 10 or len(blocked) != 0:
+        raise RuntimeError(f"Expected 10 native joins / 0 blocked; got {len(same)} / {len(blocked)}")
     cells.sort(key=lambda c: (c["grid"][1], c["grid"][0]))
     sheet = Image.new("RGB", (3072, 1100), "#182b24")
     for c in cells:
@@ -120,13 +118,11 @@ def main():
         image = Image.open(ROOT / c["image"]).convert("RGB")
         sheet.paste(image.resize((768, 512), Image.Resampling.LANCZOS), (col * 768, row * 512))
     draw = ImageDraw.Draw(sheet)
-    for y in range(0, 1024, 20):
-        draw.line((2304, y, 2304, min(1024, y + 10)), fill="#ffbc74", width=5)
-    draw.text((18, 1035), "8 original-resolution Carpathian photo crops; 8 native joins; 2 cross-source seams BLOCKED", fill="#f5e3bd")
+    draw.text((18, 1035), "8 original-resolution Carpathian photo crops; 10 exact native joins; no cross-source seam", fill="#f5e3bd")
     draw.text((18, 1062), "ILLUSTRATIVE MODERN SOURCE: 0 roads approved, 0 historical provinces, 0 playable octagons", fill="#f5e3bd")
     sheet.save(OUT / "photo-block-review.webp", "WEBP", quality=91, method=6)
     manifest = {
-        "schema": "coe-photo-art/v1", "status": "Carpathian-autumn-8-photo-study-NOT-playable",
+        "schema": "coe-photo-art/v1", "status": "Carpathian-continuous-panorama-8-photo-study-NOT-playable",
         "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
         "studyGrid": [X0, Y0, 4, 2], "georegistered": False,
         "geographyWarning": "Modern source location is genuine; individual V94 cell alignment, 1780 roads and villages are NOT verified.",
@@ -148,13 +144,13 @@ def main():
         'main{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}'
         'article{min-width:0}img{width:100%;display:block}.sheet{width:100%}</style>'
         '<h1>Carpathian forest: eight source-native photographic candidates</h1>'
-        '<p>Original photo pixels, no mirrored trees or global warping. TWO boundaries between'
-        ' different photos are NOT visually approved. No fabricated roads or provinces.</p>'
+        '<p>Original photo pixels, no mirrored trees or global warping. No cross-source boundaries;'
+        ' no roads or provinces are inferred from seamless terrain.</p>'
         '<img class="sheet" src="photo-block-review.webp" alt="Eight-cell photo overview">'
         '<main>' + cards + '</main>'
         '<p>Photos © Ryzhkov Oleksandr, CC BY-SA 4.0. Adapted color/exposure; attribution and'
         ' share-alike apply to derivative imagery. NOT 1780 georegistration.</p></html>')
-    print(json.dumps({"photoArtComposed": 8, "sourceNativeJoins": 8,
-                      "crossSourceBlocked": 2, "finishedToday": 0}))
+    print(json.dumps({"photoArtComposed": 8, "sourceNativeJoins": 10,
+                      "crossSourceBlocked": 0, "finishedToday": 0}))
 if __name__ == "__main__":
     main()

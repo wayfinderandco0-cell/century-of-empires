@@ -27,14 +27,19 @@ W,H=1536,1024
 ROUTE=np.array([[466,0],[466,74],[470,160],[488,235],[540,310],[620,350],
  [700,400],[805,442],[930,510],[1050,550],[1140,585],[1270,605]],np.float32)
 MARK='V267_WHOLE_SOUTH_PHOTOGRAPHIC_SCENE_20261030'
+# Approximate abandoned road in the independent base photograph. It must be
+# REPLACED with clean pixels from the second photo, never left as a second fork.
+BASE_ROAD=np.array([[515,0],[515,90],[535,175],[590,245],[705,315],
+ [835,380],[960,440],[1100,483],[1260,502],[1536,528]],np.float32)
+
 
 def smooth(x):
  x=np.clip(x,0,1);return x*x*(3-2*x)
 
-def road_distance():
+def road_distance(route=ROUTE):
  yy,xx=np.mgrid[:H,:W].astype(np.float32)
  d=np.full((H,W),1e7,np.float32)
- for a,b in zip(ROUTE[:-1],ROUTE[1:]):
+ for a,b in zip(route[:-1],route[1:]):
   vx,vy=b-a;den=vx*vx+vy*vy
   t=np.clip(((xx-a[0])*vx+(yy-a[1])*vy)/den,0,1)
   d=np.minimum(d,np.hypot(xx-a[0]-t*vx,yy-a[1]-t*vy))
@@ -69,12 +74,13 @@ def scene():
  native=np.asarray(Image.open(CORRIDOR).convert('RGB'))
  assert base.shape==native.shape==(H,W,3)
  dist=road_distance()
+ base_dist=road_distance(BASE_ROAD)
  yy,xx=np.mgrid[:H,:W].astype(np.float32)
  # The road is photographic, including adjacent ground, fence lines, boulders
  # and its original bridge. A 120-185px variable corridor follows its curves.
  # Protect the entire northern approach at (466,0), and do not create an
  # artificial tan stripe atop a mismatched meadow.
- width=125+36*smooth((yy-180)/400)
+ width=164+40*smooth((yy-180)/400)
  width+=16*np.sin(yy/112+xx/230)
  road=smooth((dist-width+55)/-55)
  # The independent gorge source contains river/rock features. Retain those
@@ -105,6 +111,11 @@ def scene():
  mask*=smooth((900-yy)/120)
  # The road's lower end is protected independently of the river fade.
  mask=np.maximum(mask,road)
+ # Replace the original base photograph's differently curved cartway with
+ # actual natural ground from the independent corridor source. This is
+ # SOURCE-LEVEL ROAD REMOVAL, not a second painted or overlaid road.
+ old_road_removal=smooth((base_dist-96)/-55)
+ mask=np.maximum(mask,old_road_removal)
  mask=np.clip(mask,0,1).astype(np.float32)
  # Preserve the exact photographic road center and its 55px shoulder.
  mask[dist<60]=1

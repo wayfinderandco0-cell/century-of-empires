@@ -303,8 +303,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add terrain-grid/factory-photo/
           if ! git diff --cached --quiet; then
-            git commit -m "Compose two distinct source-backed native photo atlas cells and WebKit review"
-            git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+            git commit -m "Compose source-backed native photo atlas batches and WebKit review"
+            if ! git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then
+              # Concurrent code commits may advance the same isolated branch.
+              # Never force-push: replay this art-only commit on the latest head.
+              git fetch origin terrain-v267-three-original-art-prototype-20261028
+              git rebase origin/terrain-v267-three-original-art-prototype-20261028
+              git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+            fi
           fi
       - name: Upload staging manifests and real mobile screenshots
         uses: actions/upload-artifact@v4

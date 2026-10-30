@@ -52,7 +52,12 @@ def put(native,donor,box,dest,size,road_x=466):
  yy,xx=np.mgrid[y0:y1,x0:x1]
  # Do not alter the photographed V123 road or northern river gorge.
  road=np.abs(xx-road_x)>92+0.20*yy
- river=xx>930
+ # Protect only the actual photographed water and nearby stone banks;
+ # the eastern conifer hillside is NOT a river and may be reforested.
+ target_rgb=native[y0:y1,x0:x1]
+ water_hsv=cv2.cvtColor(target_rgb,cv2.COLOR_RGB2HSV)
+ river=(water_hsv[:,:,0]>=77)&(water_hsv[:,:,0]<=127)&(water_hsv[:,:,1]>=38)&(water_hsv[:,:,2]>=52)
+ river=cv2.dilate(np.uint8(river)*255,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(53,53)))>0
  protected=road & (~river)
  alpha*=protected.astype(np.float32)
  target=native[y0:y1,x0:x1]

@@ -29,7 +29,7 @@ document.head.append(style);
 const openButton=document.createElement("button");openButton.type="button";openButton.id="atlasIntegratedOpen";openButton.textContent="Integrated Alpine atlas";openButton.setAttribute("aria-controls",layer.id);
 document.body.append(openButton,layer);
 const canvas=$("atlasCanvas"),ctx=canvas.getContext("2d",{alpha:false});
-let manifest=null,atlas=null,images={},segments=[],loaded=false,shown=false,debug=false;
+let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
 const pointers=new Map();let tap=null,prevPinch=null;
@@ -55,7 +55,7 @@ function draw(){
  ctx.save();polygon(ctx,diamond.polygon.map(worldToScreen));ctx.clip();
  const dest=worldToScreen([1280,768]);ctx.drawImage(src,...diamond.sourceRect,dest[0],dest[1],512*scale,512*scale);ctx.restore();
  for(const tile of manifest.cells){
-  const image=images[tile.id],pos=worldToScreen(tile.origin),poly=worldPolygon(tile).map(worldToScreen);
+  const image=tile.id==="matrei"&&matreiRegistered?matreiRegistered:images[tile.id],pos=worldToScreen(tile.origin),poly=worldPolygon(tile).map(worldToScreen);
   ctx.save();polygon(ctx,poly);ctx.clip();
   ctx.drawImage(image,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
   // Frames never paint over occupied WEST/MATREI or MATREI/SOUTH road-bearing edges.
@@ -71,6 +71,42 @@ function draw(){
  ctx.save();ctx.translate(x,y);ctx.fillStyle="#193a2a";ctx.strokeStyle="#f4d78e";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,0,13,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#fff1c3";ctx.font="bold 16px Georgia";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("⚔",0,0);ctx.restore();
 }
 function imageLoad(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error("Missing atlas art: "+src));img.src=src;});}
+/* Exact approved V267 Matrei display registration (source:
+ * scripts/v267_unified_native_landscapes.py:matrei_display).
+ * The immutable V121 WebP remains byte-for-byte unchanged on disk. A
+ * once-only offscreen resampling makes the photographic cartway touch the
+ * V123 WEST and SOUTH borders, instead of exposing V121's black photo frame.
+ * This is NOT a global WEST/SOUTH warp and does not alter any road nodes.
+ */
+function registerMatrei(original){
+ const W=1536,H=1024;
+ const src=document.createElement("canvas");src.width=W;src.height=H;
+ const sc=src.getContext("2d",{willReadFrequently:true});sc.drawImage(original,0,0);
+ const pixels=sc.getImageData(0,0,W,H).data;
+ const dst=document.createElement("canvas");dst.width=W;dst.height=H;
+ const dc=dst.getContext("2d"),frame=dc.createImageData(W,H),out=frame.data;
+ const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+ const xWest=Float32Array.from({length:W},(_,x)=>Math.exp(-.5*((x-240)/400)**2));
+ const xSouth=Float32Array.from({length:W},(_,x)=>Math.exp(-.5*((x-466)/105)**2));
+ for(let y=0;y<H;y++){
+  const t=smooth((y-845)/179),sy0=10+y*(953/H)-26*t;
+  const sl=sy0<286?385-(sy0-10)*(295/276):sy0>674?90+(sy0-674)*(295/289):90;
+  const tl=y<256?256-y:y>768?y-768:0,tr=W-tl;
+  const b=smooth((y-700)/324),wy=26*Math.exp(-.5*((y-505)/110)**2);
+  for(let x=tl;x<tr;x++){
+   const sx=clamp(sl+(x-tl)*(W-2*sl)/(tr-tl)-55*b*xSouth[x],0,W-1.001);
+   const sy=clamp(sy0+wy*xWest[x],0,H-1.001);
+   const x0=Math.floor(sx),y0=Math.floor(sy),fx=sx-x0,fy=sy-y0;
+   const a=(y0*W+x0)*4,c=a+4,d=a+W*4,e=d+4,idx=(y*W+x)*4;
+   for(let k=0;k<3;k++)out[idx+k]=Math.round(
+    (1-fy)*((1-fx)*pixels[a+k]+fx*pixels[c+k])+
+    fy*((1-fx)*pixels[d+k]+fx*pixels[e+k]));
+   out[idx+3]=255;
+  }
+ }
+ dc.putImageData(frame,0,0);
+ return dst;
+}
 function collectSegments(network){
  const out=[],seen=new Set();
  for(const [key,node] of network.graph)for(const edge of node.edges){
@@ -136,7 +172,7 @@ const API={
  get moving(){return moving},get position(){return clone(unit)},get route(){return path.map(clone)},
  get zoom(){return zoom},get center(){return clone(center)},get manifest(){return manifest},
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
- get campaignOrdersUnchanged(){return true},
+ get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
  routeTo:p=>routeBetween(unit,p),tapWorld:tapRoad,screenFor:worldToScreen,setZoom:z=>centerAt(...center,z)
 };
@@ -150,6 +186,7 @@ root.COEAtlas=Object.freeze(API);
  const loadedImages=await Promise.all(manifest.cells.map(async cell=>[cell.id,await imageLoad(cell.art)]));
  images=Object.fromEntries(loadedImages);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
+ matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
 })().catch(error=>{status("Atlas load blocked: "+error.message);root.COEAtlasLoadError=error.message;});
 requestAnimationFrame(frame);

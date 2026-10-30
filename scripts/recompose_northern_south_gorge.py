@@ -3,7 +3,7 @@ import re, base64, io
 import numpy as np, math, hashlib
 from scipy.ndimage import gaussian_filter
 from pathlib import Path
-root=Path('/tmp/coe')
+root=Path(__file__).resolve().parents[1]
 html_path=root/'v267-three-octagon-original-art-prototype.html'
 html=html_path.read_text(encoding='utf-8')
 m=re.search(r'ART_SOUTH\s*=\s*"data:image/[^;]+;base64,([^"]+)',html)

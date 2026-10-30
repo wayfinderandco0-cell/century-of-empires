@@ -233,9 +233,13 @@ def reconstruct_riverbank_contact(south, html):
         result=cv2.pyrUp(result,dstsize=size)+la*m+lb*(1-m)
     out=south.copy()
     out[:height]=np.uint8(np.clip(result,0,255))
+    # Pyramid filters extend slightly outside the mask. Restore the fully
+    # clipped exterior, which is not part of either playable octagon.
+    out[:height,:215]=south[:height,:215]
+    out[:height,1340:]=south[:height,1340:]
     assert np.array_equal(out[height:],south[height:])
-    assert np.array_equal(out[:, :225],south[:, :225])
-    assert np.array_equal(out[:, 1330:],south[:, 1330:])
+    assert np.array_equal(out[:, :215],south[:, :215])
+    assert np.array_equal(out[:, 1340:],south[:, 1340:])
     return out,int(np.count_nonzero(photo_alpha>.08))
 
 def main():

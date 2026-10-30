@@ -48,10 +48,12 @@ def choose_natural_seam(base,native):
  gb=cv2.Sobel(cv2.cvtColor(base,cv2.COLOR_RGB2GRAY),cv2.CV_32F,1,1,ksize=3)
  gn=cv2.Sobel(cv2.cvtColor(native,cv2.COLOR_RGB2GRAY),cv2.CV_32F,1,1,ksize=3)
  cost=cv2.GaussianBlur(mismatch+0.055*(np.abs(gb)+np.abs(gn)),(0,0),4)
- ys=np.arange(0,891,2,dtype=np.int32)
- cx=np.interp(ys,ROAD[:,1],ROAD[:,0],left=466,right=1270)
- cx=np.where(ys>605,1270+(ys-605)*1.12,cx)
- target=np.clip(cx-260,100,1570)
+ ys=np.arange(0,H,2,dtype=np.int32)
+ # Use ONE continuous eastern gorge/forest photograph from north to south.
+ # Its irregular join with the independent western limestone photograph
+ # follows the rock/forest shoulder; never create a horizontal river patch.
+ target=np.interp(ys,[0,200,400,600,800,1023],
+                  [205,245,325,425,545,665])
  # DP over absolute x coordinates, restricted to a broad 210px band around the
  # approximate forest/cartway transition. Changes of <=14px per 2 y-pixels.
  lo=75;hi=W-15
@@ -79,9 +81,9 @@ def choose_natural_seam(base,native):
  for j in range(len(ys)-1,-1,-1):
   result[j]=xs[k]
   if j>0:k=int(np.clip(k+trace[j,k],0,len(xs)-1))
- # Source region narrows to nothing at the southern border.
+ # Both source regions extend to the southern edge: no horizontal cut
+ # through river, forest, or meadow.
  full=np.interp(np.arange(H),ys,result)
- full[891:]=np.linspace(full[890],W+150,H-891)
  return full
 
 def water_bank(native):
@@ -132,7 +134,6 @@ def compose():
  # The photographic source dominates on the EAST of a diagonal, natural
  # tree/rock boundary. No duplicate cartway from the independent base survives.
  main=smooth((x-seam[:,None]+55)/110)
- main*=smooth((905-y)/115)
  dist=distance_to_route()
  road=smooth((154-dist)/94)
  bank=water_bank(native)
@@ -183,7 +184,7 @@ def main():
  REVIEW.write_text(
   '# SOUTH terrain-aware photographic composition — UNAPPROVED\n\n'
   'This candidate uses two independent original fictional Alpine source '
-  'photographs. A dynamically selected diagonal seam follows natural '
+  'photographs. A dynamically selected full-height diagonal seam follows natural '
   'material transitions, avoiding a horizontal cut through forest. '
   'The entire physical cartway, bridge, river and immediate banks are '
   'native source pixels at their existing V123 coordinates; no global '

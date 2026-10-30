@@ -23,7 +23,7 @@ def smooth(a):
     return a*a*(3-2*a)
 
 def embedded(html, name):
-    m = re.search(r'(?<!\\w)' + name + r'="data:image/[^;]+;base64,([^"]+)"', html)
+    m = re.search(r'(?<!\w)' + name + r'="data:image/[^;]+;base64,([^"]+)"', html)
     if not m:
         raise RuntimeError("Missing source art " + name)
     im = Image.open(io.BytesIO(base64.b64decode(m.group(1)))).convert("RGB")
@@ -88,13 +88,13 @@ def main():
     # V123 arrays and the existing game renderer remain unchanged.
     old = 'const SOUTH_APRON_PREVIEW=SOUTH_ART_MODE==="apron";'
     new = ('const SOUTH_RIVER_EAST_PREVIEW=SOUTH_ART_MODE==="river"; '
-           '/* '+MARKER+' */\\n'+old)
+           '/* '+MARKER+' */\n'+old)
     if html.count(old)!=1:
         raise RuntimeError("Unexpected preview mode declaration")
     html=html.replace(old,new,1)
     old='const southArtSource=SOUTH_APRON_PREVIEW'
-    new=('const southArtSource=SOUTH_RIVER_EAST_PREVIEW\\n'
-         '  ? "art-reviews/v267-original-source/south-river-east-contact-unapproved.webp"\\n'
+    new=('const southArtSource=SOUTH_RIVER_EAST_PREVIEW\n'
+         '  ? "art-reviews/v267-original-source/south-river-east-contact-unapproved.webp"\n'
          '  : SOUTH_APRON_PREVIEW')
     if html.count(old)!=1:
         raise RuntimeError("Unexpected source selection")
@@ -103,20 +103,20 @@ def main():
     assert west_road.group(0) in html and south_road.group(0) in html
     HTML.write_text(html,encoding="utf-8")
     REPORT.write_text(
-        "# SOUTH river eastward native-source registration — UNAPPROVED\\n\\n"
-        "Fictional prototype Alpine game art, not verified historical terrain.\\n\\n"
+        "# SOUTH river eastward native-source registration — UNAPPROVED\n\n"
+        "Fictional prototype Alpine game art, not verified historical terrain.\n\n"
         "A physical mismatch was identified: Matrei's southern river exits near x949, "
         "but the embedded SOUTH river enters near x"+str(round(south_crossing))+
         ". The previous source mapping sampled x+116, moving that river further "
         "west. This candidate instead transfers upper-right native photographic "
         "material "+str(dx)+"px EAST as a rigid 1:1 source patch, with a curved "
         "transition confined above y~300 and east of the x466 cartway. No tree "
-        "scaling, bridge movement, new roads or V123 graph changes.\\n\\n"
+        "scaling, bridge movement, new roads or V123 graph changes.\n\n"
         "Review only with ?southArt=river. Default preview unchanged. The "
         "Matrei/SOUTH visual forest and river material seam still requires physical "
         "iPhone inspection and may require new authored terrain. Do not approve "
-        "based on water centroid or browser pass alone. Production RED.\\n\\n"
-        "WebP SHA256: "+hashlib.sha256(OUT.read_bytes()).hexdigest()+"\\n",
+        "based on water centroid or browser pass alone. Production RED.\n\n"
+        "WebP SHA256: "+hashlib.sha256(OUT.read_bytes()).hexdigest()+"\n",
         encoding="utf-8")
     print("Generated",OUT,"bytes",OUT.stat().st_size,
           "river x",round(south_crossing),"east shift",dx)

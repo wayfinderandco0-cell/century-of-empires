@@ -13,6 +13,7 @@ on:
       - scripts/octagon_factory_50.js
       - scripts/octagon_photo_batch.py
       - scripts/octagon_commons_photo_batch.py
+      - scripts/octagon_contiguous_photo_block.py
       - .github/workflows/octagon-factory-50.yml
 permissions:
   contents: write
@@ -108,6 +109,26 @@ jobs:
           assert m['finishedToday']==0
           print('PASS: 5 geographically varied source-photo candidates, 0 playable')
           PY
+      - name: Compose eight source-native photographic octagons in one 4x2 study
+        run: python scripts/octagon_contiguous_photo_block.py
+      - name: Check source-adjacent photographic joins and blocked roads
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          root=Path('terrain-grid/factory-photo/block-8')
+          m=json.loads((root/'manifest.json').read_text())
+          assert len(m['cells'])==8
+          assert len(m['nativePhotoPixelJoins'])==8
+          assert len(m['unapprovedCrossSourceJoins'])==2
+          assert m['finishedToday']==m['nativeGamePlayable']==m['physicallyRoadConnected']==0
+          for c in m['cells']:
+              assert Image.open(c['image']).size==(1536,1024)
+              assert not c['gameplayEnabled'] and not c['historicallyVerified']
+              assert c['nativePhotoUnderlay'] and not c['physicallyRoadSeamChecked']
+          print('PASS eight distinct native photo crops, 8 source joins, 2 blocked boundaries, ZERO playable')
+          PY
       - name: Install WebKit browser for actual iPhone-size render
         run: python -m playwright install --with-deps webkit
       - name: Render real WebKit 390x844 source-art review
@@ -163,6 +184,47 @@ jobs:
                   assert page.evaluate('window.COEAtlas.photoMode') is False
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   print('PASS: actual native game WebKit 390x844; 5 source cells manifest; at least 2 stream; V123 graph preserved; photo roads disabled')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Render actual eight-cell photographic source block in WebKit and game canvas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import subprocess,time
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+              stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          out=Path('terrain-grid/factory-photo/block-8')
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto('http://127.0.0.1:8765/terrain-grid/factory-photo/block-8/index.html')
+                  page.wait_for_function("Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)",timeout=60000)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-photo-block.png'),full_page=True)
+                  page.goto('http://127.0.0.1:8765/index.html?photoBlock=1',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=60000)
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  page.locator('#atlasIntegratedOpen').click()
+                  page.locator('#atlasPhotoSources').click()
+                  page.wait_for_function('window.COEAtlas.photoCells===8 && window.COEAtlas.photoLoaded>=1',timeout=60000)
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_timeout(1200)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-native-eight.png'))
+                  assert page.evaluate('window.COEAtlas.startMarch()') is False
+                  page.locator('#atlasPlus').click()
+                  page.locator('#atlasMinus').click()
+                  page.locator('#atlasPhotoNext').click()
+                  page.wait_for_timeout(500)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-native-next.png'))
+                  page.locator('#atlasPhotoSources').click()
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  print('PASS 390x844 actual WebKit: eight photos, native zoom/pan, roads disabled, protected V123 intact')
                   browser.close()
           finally:
               server.terminate()

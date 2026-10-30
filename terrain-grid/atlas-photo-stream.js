@@ -68,6 +68,13 @@ class PhotoAtlasStream {
     this.request(cell);
    if(intersects(box,[0,0,screenWidth,screenHeight]))visible.push({cell,p});
   }
+  // Native-pixel 2x2 source mosaics supply road-free decorative diamond infill.
+  // Never do this for unrelated photos: their boundaries are NOT certified.
+  for(const {cell,p} of visible) {
+   if(cell.nativePhotoUnderlay){const img=this.touch(cell.id);
+    if(img)ctx.drawImage(img,p[0],p[1],W*scale,H*scale);
+   }
+  }
   for(const {cell,p} of visible) {
    ctx.save();ctx.beginPath();
    oct.forEach(([x,y],i)=>i?ctx.lineTo(p[0]+x*scale,p[1]+y*scale):
@@ -84,7 +91,8 @@ class PhotoAtlasStream {
    ctx.save();ctx.beginPath();
    oct.forEach(([x,y],i)=>i?ctx.lineTo(p[0]+x*scale,p[1]+y*scale):
                                    ctx.moveTo(p[0]+x*scale,p[1]+y*scale));
-   ctx.closePath();ctx.strokeStyle="#bca16b";ctx.lineWidth=1.2;ctx.stroke();
+   ctx.closePath();
+   if(!cell.nativePhotoUnderlay){ctx.strokeStyle="#bca16b";ctx.lineWidth=1.2;ctx.stroke();}
    ctx.fillStyle="#f8e8c7";ctx.font="bold 11px system-ui";
    ctx.fillText(cell.id+" · PHOTO SOURCE ONLY",p[0]+Math.max(8,280*scale),p[1]+Math.max(20,45*scale));
    ctx.restore();

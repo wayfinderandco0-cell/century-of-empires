@@ -160,7 +160,12 @@ canvas.addEventListener("pointermove",e=>{
 function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.getBoundingClientRect();if(pointers.size===1&&tap&&distance(tap,[e.clientX,e.clientY])<9)tapRoad(screenToWorld([e.clientX-rect.left,e.clientY-rect.top]));pointers.delete(e.pointerId);if(pointers.size<2)prevPinch=null;tap=null;draw();}
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
-$("atlasWhole").onclick=()=>photoMode?centerAt(15360,16896,.96):centerAt(1536,1024,.96);
+$("atlasWhole").onclick=()=>{
+ if(photoMode&&photoStream?.cells.length){
+  const xs=photoStream.cells.map(c=>c.origin[0]),ys=photoStream.cells.map(c=>c.origin[1]);
+  centerAt((Math.min(...xs)+Math.max(...xs)+1536)/2,(Math.min(...ys)+Math.max(...ys)+1024)/2,.7);
+ }else centerAt(1536,1024,.96);
+};
 $("atlasWest").onclick=()=>centerAt(1536,478,3.2);
 $("atlasSouth").onclick=()=>centerAt(2002,1024,3.2);
 $("atlasPlus").onclick=()=>centerAt(...center,zoom*1.3);
@@ -203,8 +208,10 @@ async function togglePhotoSources(){
      document.head.appendChild(script);
     });
    }
-   photoStream=await new root.COEPhotoAtlasStream(
-    "terrain-grid/factory-photo/manifest.json",draw).init();
+   const photoURL=new URLSearchParams(root.location.search).has("photoBlock")
+     ?"terrain-grid/factory-photo/block-8/manifest.json"
+     :"terrain-grid/factory-photo/manifest.json";
+   photoStream=await new root.COEPhotoAtlasStream(photoURL,draw).init();
   }
   if(!photoMode){
    photoCamera={center:clone(center),zoom};

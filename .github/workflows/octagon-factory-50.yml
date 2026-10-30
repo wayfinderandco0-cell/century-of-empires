@@ -122,7 +122,9 @@ jobs:
                   is_mobile=True,has_touch=True)
               page.goto((p/'index.html').as_uri(),wait_until='load')
               page.locator('article img').first.wait_for()
-              page.wait_for_function("Array.from(document.querySelectorAll('article img')).every(i=>i.complete && i.naturalWidth===1536 && i.naturalHeight===1024)")
+              # Force offscreen lazy images to load before full-page visual review.
+              page.evaluate("document.querySelectorAll('article img').forEach(i=>i.loading='eager')")
+              page.wait_for_function("Array.from(document.querySelectorAll('article img')).every(i=>i.complete && i.naturalWidth===1536 && i.naturalHeight===1024)",timeout=60000)
               page.screenshot(path=str(p/'actual-webkit-iphone.png'),full_page=True)
               assert page.locator('article img').count()==5
               print('PASS actual WebKit mobile photographic review, 390x844, 5 source images')

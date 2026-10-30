@@ -106,6 +106,75 @@ def build(west, east):
     assert np.array_equal(out[:250, 930:], east[:250, 930:])
     return out, seam
 
+
+def reconstruct_riverbank_contact(south, html):
+    """Extend native Matrei WATER/ROCK MATERIAL into the SOUTH river mouth.
+
+    Copy only water and exposed stone, NEVER whole Matrei scenery, tree
+    crowns, roads, or framed borders. An irregular source-aware mask makes
+    the riverbank transition a physical terrain feature, not a digital stripe.
+    The native SOUTH river, bridge, cartway, and forests remain fixed.
+    """
+    import base64
+    from io import BytesIO
+    m = re.search(r'ART_MATREI_CANONICAL="([^"]+)"', html)
+    if not m or 'base64,' not in m.group(1):
+        raise ValueError('Canonical V121 Matrei art not found')
+    raw = base64.b64decode(m.group(1).split('base64,', 1)[1])
+    with Image.open(BytesIO(raw)) as photo:
+        matrei = np.asarray(photo.convert('RGB'))
+    if matrei.shape != (H, W, 3):
+        raise ValueError(f'Unexpected Matrei art dimensions: {matrei.shape}')
+
+    # Sample a native 180px lower-Matrei riverbank strip. The V121 frame
+    # itself occupies the extreme bottom: never sample its final 35 rows.
+    top, height = H-215, 180
+    bank = matrei[top:top+height].copy()
+    hsv = cv2.cvtColor(bank, cv2.COLOR_RGB2HSV)
+    water = ((hsv[:,:,0]>=79) & (hsv[:,:,0]<=126) &
+             (hsv[:,:,1]>=36) & (hsv[:,:,2]>=54))
+    stone = ((hsv[:,:,1]<75) & (hsv[:,:,2]>72) &
+             (hsv[:,:,2]<227))
+    # Forest, tan roads, buildings and gold frame must not be transplanted.
+    forest = ((hsv[:,:,0]>=28) & (hsv[:,:,0]<=85) &
+              (hsv[:,:,1]>=37))
+    gold = ((hsv[:,:,0]>=10) & (hsv[:,:,0]<=37) &
+            (hsv[:,:,1]>=75))
+    material = (water | stone) & ~forest & ~gold
+    material = np.uint8(material)*255
+    material = cv2.morphologyEx(material, cv2.MORPH_CLOSE,
+                                np.ones((9,9),np.uint8))
+    # The river exits Matrei around x949, not the x466 SOUTH cartway.
+    # Preserve all original pixels outside the riverbank contact zone.
+    yy,xx = np.mgrid[:height,:W].astype(np.float32)
+    landward = np.clip((xx-710)/75,0,1)*np.clip((1290-xx)/75,0,1)
+    # Feather out gradually into SOUTH's existing river, not a horizontal
+    # cut at the foot of the contact. No resampling of trees or cliffs.
+    depth = np.clip((height-yy)/height,0,1)**1.6
+    mat = cv2.GaussianBlur(material.astype(np.float32)/255,
+                          (0,0),8)
+    alpha = np.clip(mat*landward*depth*.86,0,.86)
+    # Multiscale photographic material transfer keeps native bank shadows
+    # while maintaining the SOUTH river's underlying structure.
+    result = south.copy()
+    original = south[:height].astype(np.float32)
+    source = bank.astype(np.float32)
+    # Transfer source texture/structure without an overall color-grade.
+    # Low-frequency color stays SOUTH-native; only actual water/rock detail
+    # from the adjoining Matrei material crosses the frame.
+    src_low = cv2.GaussianBlur(source,(0,0),16)
+    dst_low = cv2.GaussianBlur(original,(0,0),16)
+    material_detail = source-src_low
+    transferred = np.clip(dst_low + material_detail*.78 +
+                          (original-dst_low)*.35,0,255)
+    result[:height] = np.uint8(np.clip(
+        original*(1-alpha[:,:,None]) +
+        transferred*alpha[:,:,None],0,255))
+    # No trees or road outside the east bank, and no broad SOUTH warp.
+    assert np.array_equal(result[:, :710],south[:, :710])
+    assert np.array_equal(result[height:],south[height:])
+    return result, int(np.count_nonzero(alpha>.08))
+
 def main():
     html = HTML.read_text(encoding='utf-8')
     matrei = re.search(r'ART_MATREI_CANONICAL="([^"]+)"', html)
@@ -120,6 +189,8 @@ def main():
     with Image.open(RIVER_SOURCE) as f:
         river = np.asarray(f.convert('RGB'))
     result, seam = build(west, river)
+    result, contact_pixels = reconstruct_riverbank_contact(result, html)
+    assert contact_pixels > 5000, f'Riverbank contact too small: {contact_pixels}'
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     Image.fromarray(result).save(OUTPUT, 'WEBP', quality=91, method=6)
     # No HTML, V121, graph, game engine, campaign, sprite or save edits.
@@ -134,11 +205,16 @@ def main():
         'retaining the separately registered eastern gorge/river and its '
         'original stone bridge. A photographic low-energy graph-cut seam '
         'runs through meadow pixels rather than trees or water. The '
-        'replacement ends on an irregular ground boundary; neither '
+        'replacement ends on an irregular ground boundary. A second '
+        'source-native contact reconstructs the river mouth using only '
+        'stone and water detail from the immutable Matrei photo, while '
+        'retaining SOUTH-native river shapes, forests, roads and cliffs. '
+        'No Matrei trees, settlements, road or gold frame are copied. Neither '
         'source photograph is globally warped, scaled, mirrored or '
         'painted with a synthetic cartway. The V123 x466 cartway and '
         'the original bridge stay in place.\n\n'
         f'Seam x range: {int(seam.min())}..{int(seam.max())}; '
+        f'native riverbank material pixels: {contact_pixels}; '
         f'northern-region mean RGB change: {changed:.2f}.\n\n'
         'Still an OPT-IN ?southArt=river review candidate. The Matrei/SOUTH '
         'rock and river morphology requires eyes-on iPhone inspection; '
@@ -149,9 +225,10 @@ def main():
         'RIVER source SHA256: '+hashlib.sha256(RIVER_SOURCE.read_bytes()).hexdigest()+'\n'
         'Output SHA256: '+hashlib.sha256(OUTPUT.read_bytes()).hexdigest()+'\n',
         encoding='utf-8')
-    print('Original photographic SOUTH forest/river rebuilt:', OUTPUT,
+    print('Original photographic SOUTH riverbank contact rebuilt:', OUTPUT,
           OUTPUT.stat().st_size, 'bytes; seam', seam.min(), seam.max(),
-          'mean RGB change', round(float(changed),2))
+          'mean RGB change', round(float(changed),2),
+          'native contact pixels', contact_pixels)
 
 if __name__ == '__main__':
     main()

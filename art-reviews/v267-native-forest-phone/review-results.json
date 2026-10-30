@@ -1,0 +1,26 @@
+[
+  {
+    "browser": "chromium",
+    "viewport": [
+      390,
+      844
+    ],
+    "actual_browser_screenshots": true,
+    "touch_march": true,
+    "original_graph": true,
+    "user_approved": false,
+    "production": false
+  },
+  {
+    "browser": "webkit",
+    "viewport": [
+      390,
+      844
+    ],
+    "actual_browser_screenshots": true,
+    "touch_march": true,
+    "original_graph": true,
+    "user_approved": false,
+    "production": false
+  }
+]

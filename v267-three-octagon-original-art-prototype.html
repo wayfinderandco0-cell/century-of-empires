@@ -850,7 +850,8 @@ async function boot(){
  // the durable 1536x1024 WebP committed beside this HTML in the same branch.
  const SOUTH_WHOLE_SCENE_PREVIEW=SOUTH_ART_MODE==="whole"; /* V267_WHOLE_SOUTH_PHOTOGRAPHIC_SCENE_20261030 */
 const SOUTH_SLOPING_PHOTO_PREVIEW=SOUTH_ART_MODE==="slope"; /* V267_SLOPING_ORIGINAL_PHOTO_JOIN_20261030 */
-const southArtSource=SOUTH_SLOPING_PHOTO_PREVIEW ? "art-reviews/v267-original-source/south-sloping-photo-join-unapproved.webp" : SOUTH_WHOLE_SCENE_PREVIEW ? ART_SOUTH_WHOLE_INLINE : SOUTH_FOREST_SHOULDER_PREVIEW
+const SOUTH_NATIVE_FOREST_PREVIEW=SOUTH_ART_MODE==="nativeforest"; /* V267_SOUTH_NATIVE_FOREST_CONTINUITY_20261030 */
+const southArtSource=SOUTH_NATIVE_FOREST_PREVIEW ? "art-reviews/v267-original-source/south-original-forest-continuity-unapproved.webp" : SOUTH_SLOPING_PHOTO_PREVIEW ? "art-reviews/v267-original-source/south-sloping-photo-join-unapproved.webp" : SOUTH_WHOLE_SCENE_PREVIEW ? ART_SOUTH_WHOLE_INLINE : SOUTH_FOREST_SHOULDER_PREVIEW
    ? "art-reviews/v267-original-source/south-forest-shoulder-recomposed-unapproved.webp"
    : SOUTH_THROAT_PREVIEW
    ? "art-reviews/v267-original-source/south-river-throat-recomposed-unapproved.webp"

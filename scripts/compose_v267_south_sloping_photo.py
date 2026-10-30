@@ -87,7 +87,7 @@ def choose_natural_seam(base,native):
 def water_bank(native):
  hsv=cv2.cvtColor(native,cv2.COLOR_RGB2HSV)
  raw=np.uint8(((hsv[:,:,0]>=78)&(hsv[:,:,0]<=127)&
-  (hsv[:,:,1]>=42)&(hsv[:,:,2]>=55))*255
+  (hsv[:,:,1]>=42)&(hsv[:,:,2]>=55))*255)
  yy,xx=np.mgrid[:H,:W]
  raw[(xx<690)|(yy>870)]=0
  n,labels,stats,_=cv2.connectedComponentsWithStats(raw,8)

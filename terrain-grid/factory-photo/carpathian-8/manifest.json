@@ -1,0 +1,481 @@
+{
+  "schema": "coe-photo-art/v1",
+  "status": "Carpathian-continuous-panorama-8-photo-study-NOT-playable",
+  "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "studyGrid": [
+    10,
+    12,
+    4,
+    2
+  ],
+  "georegistered": false,
+  "geographyWarning": "Modern source location is genuine; individual V94 cell alignment, 1780 roads and villages are NOT verified.",
+  "photographicArtComposed": 8,
+  "nativePhotoPixelJoins": [
+    {
+      "a": "eu-10-12",
+      "b": "eu-11-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-12",
+      "b": "eu-10-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-12",
+      "b": "eu-12-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-12",
+      "b": "eu-11-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-12",
+      "b": "eu-13-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-12",
+      "b": "eu-12-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-13-12",
+      "b": "eu-13-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-13",
+      "b": "eu-11-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-13",
+      "b": "eu-12-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-13",
+      "b": "eu-13-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "unapprovedCrossSourceJoins": [],
+  "visuallyChecked": 0,
+  "physicallyRoadConnected": 0,
+  "mobileRendered": 0,
+  "nativeGamePlayable": 0,
+  "historicallyVerified": 0,
+  "finishedToday": 0,
+  "cells": [
+    {
+      "id": "eu-10-12",
+      "grid": [
+        10,
+        12
+      ],
+      "origin": [
+        15360,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-10-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        900,
+        700,
+        2436,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "c2075db0c1aa1a6f5534ab5e37f8566883d9f3813bc2a2984ecbd12c3f226637",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-11-12",
+      "grid": [
+        11,
+        12
+      ],
+      "origin": [
+        16896,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-11-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2436,
+        700,
+        3972,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "318cae34ae3e3a7d047a5095b0c90b8dc6e4cb67e1eebd37deee05fdc036fe22",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-12-12",
+      "grid": [
+        12,
+        12
+      ],
+      "origin": [
+        18432,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-12-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        3972,
+        700,
+        5508,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "4002bdf2de233f0030215c7b08062eab366821b6317345491e2561e766c95040",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-13-12",
+      "grid": [
+        13,
+        12
+      ],
+      "origin": [
+        19968,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-13-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5508,
+        700,
+        7044,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "b733214c56823cb660edeb6bf82ccfc6db7516f3f0196a5844ef1dd4a1186ab6",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-10-13",
+      "grid": [
+        10,
+        13
+      ],
+      "origin": [
+        15360,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-10-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        900,
+        1724,
+        2436,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "8b8c095c1582f354bad64f66262a816b37bd40758883ad35100e3ba018927edc",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-11-13",
+      "grid": [
+        11,
+        13
+      ],
+      "origin": [
+        16896,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-11-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2436,
+        1724,
+        3972,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "734b1552d0f94de1c0c4345bac8a8c653b54bb4aba94370bf4c2dd9e4383db7e",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-12-13",
+      "grid": [
+        12,
+        13
+      ],
+      "origin": [
+        18432,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-12-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        3972,
+        1724,
+        5508,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "5b79e5865c1ebfbe4d47b070f415e63fa88484b4fd8e38c754ac67019625fe87",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-13-13",
+      "grid": [
+        13,
+        13
+      ],
+      "origin": [
+        19968,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-13-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5508,
+        1724,
+        7044,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "8a9b954721e3103f1f2061a521b32a38c0211e10d3f421e6b5544fba5c0e4d95",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    }
+  ]
+}

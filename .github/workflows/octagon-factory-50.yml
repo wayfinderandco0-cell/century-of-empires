@@ -151,6 +151,12 @@ jobs:
                   page.wait_for_function('window.COEAtlas.photoMode && window.COEAtlas.photoCells===5 && window.COEAtlas.photoLoaded>=2',timeout=40000)
                   assert page.evaluate('window.COEAtlas.startMarch()') is False
                   page.screenshot(path=str(p/'actual-native-game-webkit-iphone.png'))
+                  # Traverse from two Sharr references to the new Western Alps cell
+                  # inside the SAME game canvas. This is art viewing, not gameplay.
+                  page.evaluate('window.COEAtlas.nextPhotoSource()')
+                  assert page.evaluate('window.COEAtlas.nextPhotoSource()')=='eu-05-14'
+                  page.wait_for_function('window.COEAtlas.photoLoaded>=3',timeout=40000)
+                  page.screenshot(path=str(p/'actual-native-western-alps-webkit-iphone.png'))
                   page.locator('#atlasPhotoSources').click()
                   assert page.evaluate('window.COEAtlas.photoMode') is False
                   assert page.evaluate('window.COEAtlas.nodes')==100

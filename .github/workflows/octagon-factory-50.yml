@@ -105,6 +105,38 @@ jobs:
               print('PASS actual WebKit mobile photographic review, 390x844, 2 original images')
               browser.close()
           PY
+      - name: Verify source-photo streaming inside actual native game canvas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import subprocess,time
+          p=Path('terrain-grid/factory-photo')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+              stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto('http://127.0.0.1:8765/index.html',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=60000)
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  page.locator('#atlasIntegratedOpen').click()
+                  page.locator('#atlasPhotoSources').click()
+                  page.wait_for_function('window.COEAtlas.photoMode && window.COEAtlas.photoCells===2 && window.COEAtlas.photoLoaded===2',timeout=40000)
+                  assert page.evaluate('window.COEAtlas.startMarch()') is False
+                  page.screenshot(path=str(p/'actual-native-game-webkit-iphone.png'))
+                  page.locator('#atlasPhotoSources').click()
+                  assert page.evaluate('window.COEAtlas.photoMode') is False
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  print('PASS: actual native game WebKit 390x844; 2 photo cells stream; V123 graph preserved; photo roads disabled')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
       - name: Commit durable source art and actual browser evidence to isolated branch
         run: |
           git config user.name "github-actions[bot]"

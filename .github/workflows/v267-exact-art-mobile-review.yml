@@ -29,7 +29,7 @@ jobs:
           python-version: '3.12'
       - name: Install browser test tools
         run: |
-          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow
           python -m playwright install --with-deps chromium webkit
       - name: Verify immutable production sources are unchanged
         run: |

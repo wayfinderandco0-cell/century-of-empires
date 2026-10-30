@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual embedded V267 art + unchanged V123 graph mobile review; NOT approval."""
-import argparse, json, pathlib
+import argparse, json, pathlib, base64
 from playwright.sync_api import sync_playwright
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
@@ -113,6 +113,57 @@ def main():
         assert len(path) > 40 and [1536, 478] in path and [2002, 1024] in path
         assert page.evaluate('COE.stepToEnd()') == [2806, 1629]
         assert not errors, errors
+        # Eyes-on review of the ACTUAL browser-rendered source artwork,
+        # not a synthetic pixel metric. Keep the default and unapproved
+        # northern river candidate in exactly the same iPhone camera.
+        from PIL import Image, ImageDraw
+        art_path=REPO / 'art-reviews/v267-original-source/south-river-throat-recomposed-unapproved.webp'
+        assert art_path.exists(), 'Missing durable opt-in photographic source'
+        data_uri='data:image/webp;base64,'+base64.b64encode(art_path.read_bytes()).decode()
+        mode_flag='const SOUTH_ART_MODE=new URLSearchParams(location.search).get("southArt");'
+        assert mode_flag in html and 'V267_NATIVE_SOUTH_RIVER_THROAT_ART_REVIEW' in html
+        photos={}
+        for mode in ('default','throat'):
+            review=ctx.new_page()
+            review.on('pageerror',lambda e: errors.append(str(e)))
+            source=html if mode=='default' else html.replace(mode_flag,'const SOUTH_ART_MODE="throat";').replace(
+                'art-reviews/v267-original-source/south-river-throat-recomposed-unapproved.webp',data_uri)
+            review.set_content(source,wait_until='load')
+            review.wait_for_function('window.COE && COE.originalMatreiLoaded && COE.sourceRegistered',timeout=60000)
+            assert review.evaluate('COE.nodes')==100
+            assert review.evaluate('COE.westSouthConnected')
+            review.evaluate('COE.focusJoin("south")')
+            review.wait_for_timeout(350)
+            for camera in ('road','river'):
+                if camera=='river':
+                    review.mouse.move(w*.89,h*.47)
+                    review.mouse.down()
+                    review.mouse.move(w*.12,h*.47,steps=18)
+                    review.mouse.up()
+                    review.wait_for_timeout(300)
+                shot=out/f'{args.browser}-{args.orientation}-{mode}-{camera}-actual-iphone.png'
+                review.screenshot(path=str(shot))
+                photos[(mode,camera)]=Image.open(shot).convert('RGB')
+            if mode=='throat':
+                review.evaluate('COE.focusJoin("west")')
+                review.touchscreen.tap(w/2,h/2)
+                assert review.evaluate('COE.moving'), 'candidate cartway touch did not start marching'
+                review.evaluate('COE.halt()')
+                assert review.evaluate('COE.marchWestToSouth()')
+                route2=review.evaluate('COE.route')
+                assert [1536,478] in route2 and [2002,1024] in route2
+                assert review.evaluate('COE.stepToEnd()')==[2806,1629]
+            review.close()
+        for camera in ('road','river'):
+            a,b=photos[('default',camera)],photos[('throat',camera)]
+            sheet=Image.new('RGB',(a.width+b.width,max(a.height,b.height)+40),'#17221c')
+            sheet.paste(a,(0,40));sheet.paste(b,(a.width,40))
+            label=ImageDraw.Draw(sheet)
+            label.text((8,12),'BEFORE existing V267 - UNAPPROVED',fill='white')
+            label.text((a.width+8,12),'AFTER rebuilt SOUTH gorge - UNAPPROVED',fill='white')
+            sheet.save(out/f'{args.browser}-{args.orientation}-{camera}-actual-before-after.webp',
+                       format='WEBP',quality=84,method=6)
+        assert not errors,errors
         result = {'browser': args.browser, 'orientation': args.orientation,
                   'viewport': [w, h], 'art': 'exact embedded original WEST/SOUTH + V121 Matrei',
                   'nodes': state['nodes'], 'uniqueWorldPositions': state['unique'],
@@ -123,6 +174,8 @@ def main():
                   'nativeForestPreserved': native_comparison['equality'],
                   'southRegistrationScope': native_comparison['algorithm'],
                   'southEntranceRegistration': native_comparison['entrance'],
+                  'candidateThroatMobileScreenshots': True,
+                  'candidateThroatTouchMarch': True,
                   'inlayCenterPixels': inlay_colors}
         (out / f'{args.browser}-{args.orientation}-result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result, indent=2))

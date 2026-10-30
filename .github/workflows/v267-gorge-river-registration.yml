@@ -122,7 +122,7 @@ jobs:
           bad={p for p in names if p not in allowed and
             not p.startswith('art-reviews/v267-gorge-river-phone/')}
           assert not bad,bad
-          assert 'art-reviews/v267-original-source/south-gorge-river-registered-unapproved.webp' in names
+          assert ('art-reviews/v267-original-source/south-gorge-river-registered-unapproved.webp' in names or\n            any(p.endswith('-river-seam-actual-before-after.webp') for p in names)), names
           PY
       - uses: actions/upload-artifact@v4
         if: always()

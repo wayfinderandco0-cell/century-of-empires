@@ -22,9 +22,15 @@
         16384
       ],
       "geography": {
-        "elevationMetersApprox": -78,
-        "forestProxy": 1,
-        "biome": "coast-or-lowland",
+        "elevationMetersApprox": 110,
+        "elevationRangeMetersApprox": [
+          -1168,
+          1916
+        ],
+        "reliefMetersApprox": 3084,
+        "forestCoverPctApprox": 63,
+        "landFractionApprox": 0.48,
+        "biome": "coast-and-islands",
         "riverFeatures": [
           {
             "sourceName": "Drin",
@@ -42,7 +48,7 @@
             "historicallyVerified": false
           }
         ],
-        "source": "V94 Mapzen/Natural Earth broad geography; NOT 1780 survey"
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
       },
       "image": "terrain-grid/factory-photo/eu-09-16.webp",
       "imageSize": [
@@ -88,9 +94,15 @@
         16384
       ],
       "geography": {
-        "elevationMetersApprox": 421,
-        "forestProxy": 1,
-        "biome": "farmland-and-plains",
+        "elevationMetersApprox": 683,
+        "elevationRangeMetersApprox": [
+          -370,
+          1898
+        ],
+        "reliefMetersApprox": 2268,
+        "forestCoverPctApprox": 99,
+        "landFractionApprox": 0.92,
+        "biome": "hills-and-mountains",
         "riverFeatures": [
           {
             "sourceName": "Strymnas",
@@ -108,7 +120,7 @@
             "historicallyVerified": false
           }
         ],
-        "source": "V94 Mapzen/Natural Earth broad geography; NOT 1780 survey"
+        "source": "V94 Mapzen DEM / Natural Earth II 0-1 woodland / Natural Earth 10m land; modern broad geography, NOT 1780 survey"
       },
       "image": "terrain-grid/factory-photo/eu-10-16.webp",
       "imageSize": [

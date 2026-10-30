@@ -107,7 +107,7 @@ jobs:
           unexpected={p for p in names if p not in allowed and
             not p.startswith('art-reviews/v267-unified-native-phone/')}
           assert not unexpected,unexpected
-          assert 'v267-three-octagon-original-art-prototype.html' in names
+          assert 'art-reviews/v267-original-source/south-unified-native-border-unapproved.webp' in names
           print('V121/V123/V94/sprites/saves/main untouched')
           PY
       - uses: actions/upload-artifact@v4

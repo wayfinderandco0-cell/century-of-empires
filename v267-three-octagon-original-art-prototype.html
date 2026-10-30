@@ -821,6 +821,7 @@ window.COE=Object.freeze({
 // candidate. It is intentionally NOT road-registered to immutable V123.
 // Default stays the established offline V267 image and movement experience.
 const SOUTH_ART_MODE=new URLSearchParams(location.search).get("southArt");
+const SOUTH_RIVER_EAST_PREVIEW=SOUTH_ART_MODE==="river"; /* SOUTH_RIVER_EAST_RIGID_CANDIDATE_20261029 */
 const SOUTH_APRON_PREVIEW=SOUTH_ART_MODE==="apron"; /* SOUTH_MATREI_MATERIAL_APRON_20261029 */
 const SOUTH_BRIDGE_CONTACT_PREVIEW=SOUTH_ART_MODE==="bridge";
 const SOUTH_ORIGINAL_PREVIEW=SOUTH_ART_MODE==="original"||SOUTH_BRIDGE_CONTACT_PREVIEW||SOUTH_APRON_PREVIEW;
@@ -839,7 +840,9 @@ document.getElementById("southsource").onclick=()=>{
 async function boot(){
  // Default source is embedded and offline; the optional original source is
  // the durable 1536x1024 WebP committed beside this HTML in the same branch.
- const southArtSource=SOUTH_APRON_PREVIEW
+ const southArtSource=SOUTH_RIVER_EAST_PREVIEW
+  ? "art-reviews/v267-original-source/south-river-east-contact-unapproved.webp"
+  : SOUTH_APRON_PREVIEW
   ? "art-reviews/v267-original-source/south-matrei-material-apron-unapproved.webp"
   : SOUTH_BRIDGE_CONTACT_PREVIEW
   ? "art-reviews/v267-original-source/south-bridge-contact-unapproved.webp"

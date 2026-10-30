@@ -14,6 +14,7 @@ on:
       - scripts/octagon_photo_batch.py
       - scripts/octagon_commons_photo_batch.py
       - scripts/octagon_contiguous_photo_block.py
+      - scripts/octagon_carpathian_photo_block.py
       - .github/workflows/octagon-factory-50.yml
 permissions:
   contents: write
@@ -226,6 +227,71 @@ jobs:
                   page.locator('#atlasPhotoSources').click()
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   print('PASS 390x844 actual WebKit: eight photos, native zoom/pan, roads disabled, protected V123 intact')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Compose Carpathian forest 8-cell source-native art batch
+        run: python scripts/octagon_carpathian_photo_block.py
+      - name: Verify Carpathian photographic source and conservative gameplay gates
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/factory-photo/carpathian-8')
+          m=json.loads((p/'manifest.json').read_text())
+          assert len(m['cells'])==8
+          assert len(m['nativePhotoPixelJoins'])==8
+          assert len(m['unapprovedCrossSourceJoins'])==2
+          assert m['finishedToday']==m['nativeGamePlayable']==m['physicallyRoadConnected']==0
+          assert len({c['outputSha256'] for c in m['cells']})==8
+          for c in m['cells']:
+              art=Path(c['image'])
+              assert Image.open(art).size==(1536,1024)
+              assert hashlib.sha256(art.read_bytes()).hexdigest()==c['outputSha256']
+              assert not c['gameplayEnabled'] and not c['historicallyVerified']
+              assert not c['physicallyRoadSeamChecked'] and not c['exactPhotoGeoreferenced']
+          print('PASS: 8 source-native Carpathian art cells, 8 joins, 2 blocked cross-source seams, 0 gameplay')
+          PY
+      - name: Inspect actual Carpathian artwork in mobile WebKit and native game
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import subprocess,time
+          out=Path('terrain-grid/factory-photo/carpathian-8')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+              stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto('http://127.0.0.1:8765/terrain-grid/factory-photo/carpathian-8/index.html')
+                  page.wait_for_function('Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)',timeout=60000)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-carpathian-contact.png'),full_page=True)
+                  page.goto('http://127.0.0.1:8765/index.html?photoBlock=carpathians',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=60000)
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  page.locator('#atlasIntegratedOpen').click()
+                  page.locator('#atlasPhotoSources').click()
+                  page.wait_for_function('window.COEAtlas.photoCells===8 && window.COEAtlas.photoLoaded>=2',timeout=60000)
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_function('window.COEAtlas.photoLoaded>=4',timeout=40000)
+                  page.wait_for_timeout(600)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-native-carpathian.png'))
+                  assert page.evaluate('window.COEAtlas.startMarch()') is False
+                  page.locator('#atlasPlus').click()
+                  page.locator('#atlasMinus').click()
+                  page.locator('#atlasPhotoNext').click()
+                  page.wait_for_timeout(500)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-native-carpathian-next.png'))
+                  page.locator('#atlasPhotoSources').click()
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  print('PASS: real mobile WebKit native canvas, 8 Carpathian photos, V123 unchanged, roads disabled')
                   browser.close()
           finally:
               server.terminate()

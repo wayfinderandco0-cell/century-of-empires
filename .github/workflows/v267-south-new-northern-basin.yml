@@ -8,6 +8,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
 concurrency:
   group: v267-south-new-northern-basin
   cancel-in-progress: false

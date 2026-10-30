@@ -101,6 +101,8 @@ def build(native):
     old[:255][protect[:255]]=0
     old=cv2.dilate(old,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9)))
     old[255:]=0
+    old[:,:720]=0
+    old[:,1450:]=0
     background=cv2.inpaint(native,old,9,cv2.INPAINT_TELEA)
     # Preserve native river once the replacement corridor rejoins it.
     base=background[:370].astype(np.float32)

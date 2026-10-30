@@ -243,8 +243,8 @@ jobs:
           p=Path('terrain-grid/factory-photo/carpathian-8')
           m=json.loads((p/'manifest.json').read_text())
           assert len(m['cells'])==8
-          assert len(m['nativePhotoPixelJoins'])==8
-          assert len(m['unapprovedCrossSourceJoins'])==2
+          assert len(m['nativePhotoPixelJoins'])==10
+          assert len(m['unapprovedCrossSourceJoins'])==0
           assert m['finishedToday']==m['nativeGamePlayable']==m['physicallyRoadConnected']==0
           assert len({c['outputSha256'] for c in m['cells']})==8
           for c in m['cells']:
@@ -253,7 +253,7 @@ jobs:
               assert hashlib.sha256(art.read_bytes()).hexdigest()==c['outputSha256']
               assert not c['gameplayEnabled'] and not c['historicallyVerified']
               assert not c['physicallyRoadSeamChecked'] and not c['exactPhotoGeoreferenced']
-          print('PASS: 8 source-native Carpathian art cells, 8 joins, 2 blocked cross-source seams, 0 gameplay')
+          print('PASS: 8 source-native Carpathian art cells, 10 native joins, zero cross-source seams, 0 gameplay')
           PY
       - name: Inspect actual Carpathian artwork in mobile WebKit and native game
         run: |

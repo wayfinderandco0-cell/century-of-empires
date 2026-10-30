@@ -208,9 +208,12 @@ async function togglePhotoSources(){
      document.head.appendChild(script);
     });
    }
-   const photoURL=new URLSearchParams(root.location.search).has("photoBlock")
-     ?"terrain-grid/factory-photo/block-8/manifest.json"
-     :"terrain-grid/factory-photo/manifest.json";
+   const photoBlock=new URLSearchParams(root.location.search).get("photoBlock");
+   const photoURL=photoBlock==="carpathians"
+     ?"terrain-grid/factory-photo/carpathian-8/manifest.json"
+     :photoBlock!==null
+       ?"terrain-grid/factory-photo/block-8/manifest.json"
+       :"terrain-grid/factory-photo/manifest.json";
    photoStream=await new root.COEPhotoAtlasStream(photoURL,draw).init();
   }
   if(!photoMode){

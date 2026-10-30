@@ -61,7 +61,7 @@ jobs:
                 assert page.evaluate('COE.westSouthConnected')
                 assert all(s['pass'] and s['gap']==0 for s in page.evaluate('COE.roadSeams'))
                 if mode=='whole':
-                  assert page.evaluate('SOUTH_WHOLE_SCENE_PREVIEW') is True
+                  assert page.evaluate("location.search.includes('southArt=whole')") is True
                 for join in ('west','south'):
                   page.evaluate(f'COE.focusJoin("{join}")')
                   page.wait_for_timeout(350)

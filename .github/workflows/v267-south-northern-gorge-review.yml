@@ -1,9 +1,9 @@
-name: V267 SOUTH northern photographic gorge — real mobile review
+name: V267 SOUTH native forest-shoulder artwork — real mobile review
 on:
   push:
     branches: [terrain-v267-three-original-art-prototype-20261028]
     paths:
-      - scripts/recompose_northern_south_gorge.py
+      - scripts/compose_v267_south_forest_swap.py
       - .github/workflows/v267-south-northern-gorge-review.yml
   workflow_dispatch:
 permissions:
@@ -26,10 +26,10 @@ jobs:
           python-version: '3.12'
       - name: Install photographic tools and mobile browser engines
         run: |
-          python -m pip install --disable-pip-version-check pillow numpy scipy playwright==1.56.0
+          python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless playwright==1.56.0
           python -m playwright install --with-deps chromium webkit
-      - name: Compose original northern SOUTH river gorge on SAME isolated candidate
-        run: python scripts/recompose_northern_south_gorge.py
+      - name: Compose relocated native SOUTH forest and meadow on SAME isolated candidate
+        run: python scripts/compose_v267_south_forest_swap.py
       - name: Capture actual phone-size visual evidence and test original V123 movement
         run: |
           python - <<'PY'
@@ -38,7 +38,7 @@ jobs:
           from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
           from PIL import Image,ImageDraw
           from playwright.sync_api import sync_playwright
-          out=Path('art-reviews/v267-northern-gorge-phone')
+          out=Path('art-reviews/v267-forest-shoulder-phone')
           out.mkdir(parents=True,exist_ok=True)
           server=ThreadingHTTPServer(('127.0.0.1',0),SimpleHTTPRequestHandler)
           Thread(target=server.serve_forever,daemon=True).start()
@@ -47,7 +47,7 @@ jobs:
             for engine in ('webkit','chromium'):
               browser=getattr(pw,engine).launch(headless=True)
               shots={}
-              for mode in ('default','continuity'):
+              for mode in ('default','forest'):
                 ctx=browser.new_context(viewport={'width':390,'height':844},
                   device_scale_factor=2,is_mobile=True,has_touch=True)
                 page=ctx.new_page()
@@ -76,7 +76,7 @@ jobs:
                 path=out/f'{engine}-{mode}-river-actual-iphone.png'
                 page.screenshot(path=str(path))
                 shots[(mode,'river')]=Image.open(path).convert('RGB')
-                if mode=='continuity':
+                if mode=='forest':
                   page.evaluate('COE.focusJoin("west")')
                   page.touchscreen.tap(195,422)
                   assert page.evaluate('COE.moving')
@@ -90,10 +90,10 @@ jobs:
               for camera in ('road','river'):
                 sheet=Image.new('RGB',(1560,1740),'#1c211d')
                 sheet.paste(shots[('default',camera)],(0,52))
-                sheet.paste(shots[('continuity',camera)],(780,52))
+                sheet.paste(shots[('forest',camera)],(780,52))
                 d=ImageDraw.Draw(sheet)
                 d.text((12,18),'BEFORE: current SOUTH - UNAPPROVED',fill='white')
-                d.text((792,18),'AFTER: northern photographic gorge - UNAPPROVED',fill='white')
+                d.text((792,18),'AFTER: native SOUTH forest shoulder - UNAPPROVED',fill='white')
                 sheet.save(out/f'{engine}-{camera}-actual-before-after.webp',
                            format='WEBP',quality=86,method=6)
               browser.close()
@@ -106,7 +106,7 @@ jobs:
           import base64,io
           from pathlib import Path
           from PIL import Image
-          folder=Path('art-reviews/v267-northern-gorge-phone')
+          folder=Path('art-reviews/v267-forest-shoulder-phone')
           for view in ('river','road'):
               image=Image.open(folder/f'webkit-{view}-actual-before-after.webp').convert('RGB')
               image.thumbnail((760,850),Image.Resampling.LANCZOS)
@@ -123,21 +123,21 @@ jobs:
           changed={x[3:] for x in subprocess.check_output(
             ['git','status','--porcelain','-uall'],text=True).splitlines()}
           allowed={'v267-three-octagon-original-art-prototype.html',
-            'art-reviews/v267-original-source/south-northern-photographic-gorge-review.webp',
-            'art-reviews/v267-northern-gorge-recomposition-review.md'}
+            'art-reviews/v267-original-source/south-forest-shoulder-recomposed-unapproved.webp',
+            'art-reviews/v267-south-forest-shoulder-review.md'}
           bad={p for p in changed if p not in allowed and
-            not p.startswith('art-reviews/v267-northern-gorge-phone/')}
+            not p.startswith('art-reviews/v267-forest-shoulder-phone/')}
           assert not bad,bad
-          assert 'art-reviews/v267-original-source/south-northern-photographic-gorge-review.webp' in changed
+          assert 'art-reviews/v267-original-source/south-forest-shoulder-recomposed-unapproved.webp' in changed
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v267-northern-gorge-actual-phone
+          name: v267-forest-shoulder-actual-phone
           path: |
-            art-reviews/v267-original-source/south-northern-photographic-gorge-review.webp
-            art-reviews/v267-northern-gorge-recomposition-review.md
-            art-reviews/v267-northern-gorge-phone/
+            art-reviews/v267-original-source/south-forest-shoulder-recomposed-unapproved.webp
+            art-reviews/v267-south-forest-shoulder-review.md
+            art-reviews/v267-forest-shoulder-phone/
           retention-days: 14
       - name: Commit original source art and actual screenshots on SAME branch
         run: |
@@ -149,12 +149,12 @@ jobs:
             exit 0
           fi
           git add v267-three-octagon-original-art-prototype.html \
-            art-reviews/v267-original-source/south-northern-photographic-gorge-review.webp \
-            art-reviews/v267-northern-gorge-recomposition-review.md \
-            art-reviews/v267-northern-gorge-phone/
+            art-reviews/v267-original-source/south-forest-shoulder-recomposed-unapproved.webp \
+            art-reviews/v267-south-forest-shoulder-review.md \
+            art-reviews/v267-forest-shoulder-phone/
           if git diff --cached --quiet; then
             echo "No new artwork; skip commit."
           else
-            git commit -m "Recompose original SOUTH northern gorge with real mobile evidence"
+            git commit -m "Recompose SOUTH native forest shoulder with actual mobile evidence"
             git push origin HEAD:"$GITHUB_REF_NAME"
           fi

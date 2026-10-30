@@ -145,7 +145,7 @@ function startOrder(to){if(photoMode){status("Photo candidates are NOT road-conn
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
 function tapRoad(point){if(photoMode)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
-function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,.6,8);scale=base*zoom;draw();}
+function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,photoMode?.15:.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
 function close(){shown=false;layer.hidden=true;openButton.hidden=false;openButton.focus();}
 canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1)tap=[e.clientX,e.clientY];if(pointers.size===2){const pts=[...pointers.values()];prevPinch=distance(pts[0],pts[1]);tap=null;}});
@@ -153,7 +153,7 @@ canvas.addEventListener("pointermove",e=>{
  if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
  const rect=canvas.getBoundingClientRect();
  if(pointers.size===2){const pts=[...pointers.values()],gap=distance(pts[0],pts[1]);const mid=[(pts[0][0]+pts[1][0])/2-rect.left,(pts[0][1]+pts[1][1])/2-rect.top];const anchor=screenToWorld(mid);
-  if(prevPinch>2){zoom=clamp(zoom*gap/prevPinch,.6,8);scale=base*zoom;const shifted=screenToWorld(mid);center=[center[0]+anchor[0]-shifted[0],center[1]+anchor[1]-shifted[1]];}prevPinch=gap;draw();return;}
+  if(prevPinch>2){zoom=clamp(zoom*gap/prevPinch,photoMode?.15:.6,8);scale=base*zoom;const shifted=screenToWorld(mid);center=[center[0]+anchor[0]-shifted[0],center[1]+anchor[1]-shifted[1]];}prevPinch=gap;draw();return;}
  if(tap&&distance(tap,[e.clientX,e.clientY])>9)tap=null;
  center=[center[0]-(e.clientX-prev[0])/scale,center[1]-(e.clientY-prev[1])/scale];draw();
 });
@@ -162,8 +162,14 @@ for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.add
 $("atlasClose").onclick=close;openButton.onclick=open;
 $("atlasWhole").onclick=()=>{
  if(photoMode&&photoStream?.cells.length){
+  // Fit the entire 4x2 or larger photographic block inside an actual iPhone
+  // viewport. The previous hard-coded .7 clipped both outer columns on
+  // 390px Safari; keep V123's original minimum zoom unchanged outside photo mode.
   const xs=photoStream.cells.map(c=>c.origin[0]),ys=photoStream.cells.map(c=>c.origin[1]);
-  centerAt((Math.min(...xs)+Math.max(...xs)+1536)/2,(Math.min(...ys)+Math.max(...ys)+1024)/2,.7);
+  const left=Math.min(...xs),right=Math.max(...xs)+1536,top=Math.min(...ys),bottom=Math.max(...ys)+1024;
+  const availableW=Math.max(100,w-24),availableH=Math.max(100,h-155);
+  const fitted=Math.min(availableW/(right-left),availableH/(bottom-top))/base;
+  centerAt((left+right)/2,(top+bottom)/2,fitted);
  }else centerAt(1536,1024,.96);
 };
 $("atlasWest").onclick=()=>centerAt(1536,478,3.2);

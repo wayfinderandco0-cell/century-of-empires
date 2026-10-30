@@ -1,11 +1,10 @@
-# V267 SOUTH native forest/river contact — UNAPPROVED
+# V267 native SOUTH riverbank and forest contact — UNAPPROVED
 
-Fictional Alpine artwork; not a claim about 1780–1880 topography.
+Fictional original Alpine game art, not historically verified terrain.
 
-Rebuilt approximately 260×260 pixels of the northern SOUTH forest with a 1:1 native photographic conifer stand. The Matrei boundary previously dropped directly into bare SOUTH meadow. The new forest line is irregular and ends naturally in the meadow; no global terrain warp or digital road stripe was added. The actual cartway at x466, river and stone bridge at x>900, and terrain below y370 are unchanged from the previous river-east candidate. The older source remains durably stored. This reuses the SAME opt-in ?southArt=river candidate, not a new mode.
+The previous cloned rectangular forest stand is removed. The full 1536×1024 native SOUTH photographic terrain is restored from the earlier durable river-east source, preserving the original meadow, individual conifers, cliff faces, turquoise gorge and stone bridge. A 270px northern material-contact region uses a three-scale photographic boundary reconstruction against the actual rendered Matrei bottom edge: 18px fine, 92px medium and 270px broad. No pixels are translated, resized or mirrored; no synthetic road or route graph edges are introduced. The x466 original cartway geometry, bridge below y270 and all lower SOUTH art are untouched. The protected V121 source, 100-node V123 graph, V94 campaign, sprites, saves and production are unchanged.
 
-Remaining visual risk: the Matrei/SOUTH cliff and water material transition may still be visible; physical iPhone review required. Passing browser route tests alone does not approve the art.
+This remains an OPT-IN ?southArt=river candidate. Actual browser phone-size views and physical iPhone review are needed. The cliff and river morphology still differ across the boundary, and pixel contact alone does not constitute visual approval. Production RED.
 
-Source SHA256: 40436e70d3306e836055161017f6514a00dec6875138beca2681db712dab667d
-Candidate SHA256: 217c639724744f0ae62ef14b8871890df6c03b84f7e73845d7efa2f77bdc6d8f
-Protected: V121 Matrei, V123 graph, V94 campaign, sprites, saves, main. Production RED.
+Input SHA256: 40436e70d3306e836055161017f6514a00dec6875138beca2681db712dab667d
+Output SHA256: e5e7babe4d8cedb0f26d10c96810623ef7496512cb7a0725717fc9eba607aa23

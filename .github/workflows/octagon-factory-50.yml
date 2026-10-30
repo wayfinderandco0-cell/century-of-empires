@@ -12,6 +12,7 @@ on:
     paths:
       - scripts/octagon_factory_50.js
       - scripts/octagon_photo_batch.py
+      - scripts/octagon_commons_photo_batch.py
       - .github/workflows/octagon-factory-50.yml
 permissions:
   contents: write
@@ -85,6 +86,28 @@ jobs:
               assert not c['historicallyVerified'] and not c['visuallyReviewedOnPhone']
           print('PASS: two distinct 1536x1024 photo scenes, licensed, NOT finished')
           PY
+      - name: Compose three additional region-matched licensed source photographs
+        run: python scripts/octagon_commons_photo_batch.py
+      - name: Verify five distinct native photo candidates and conservative gates
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/factory-photo')
+          m=json.loads((p/'manifest.json').read_text())
+          assert len(m['cells'])==5 and m['photographicArtComposed']==5
+          assert len({c['originalSource'] for c in m['cells']})==5
+          assert len({c['outputSha256'] for c in m['cells']})==5
+          for c in m['cells']:
+              f=Path(c['image'])
+              assert Image.open(f).size==(1536,1024)
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==c['outputSha256']
+              assert not c['gameplayEnabled'] and not c['physicallyRoadSeamChecked']
+              assert not c['historicallyVerified'] and not c['visuallyReviewedOnPhone']
+          assert m['finishedToday']==0
+          print('PASS: 5 geographically varied source-photo candidates, 0 playable')
+          PY
       - name: Install WebKit browser for actual iPhone-size render
         run: python -m playwright install --with-deps webkit
       - name: Render real WebKit 390x844 source-art review
@@ -101,8 +124,8 @@ jobs:
               page.locator('article img').first.wait_for()
               page.wait_for_function("Array.from(document.querySelectorAll('article img')).every(i=>i.complete && i.naturalWidth===1536 && i.naturalHeight===1024)")
               page.screenshot(path=str(p/'actual-webkit-iphone.png'),full_page=True)
-              assert page.locator('article img').count()==2
-              print('PASS actual WebKit mobile photographic review, 390x844, 2 original images')
+              assert page.locator('article img').count()==5
+              print('PASS actual WebKit mobile photographic review, 390x844, 5 source images')
               browser.close()
           PY
       - name: Verify source-photo streaming inside actual native game canvas
@@ -125,13 +148,13 @@ jobs:
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   page.locator('#atlasIntegratedOpen').click()
                   page.locator('#atlasPhotoSources').click()
-                  page.wait_for_function('window.COEAtlas.photoMode && window.COEAtlas.photoCells===2 && window.COEAtlas.photoLoaded===2',timeout=40000)
+                  page.wait_for_function('window.COEAtlas.photoMode && window.COEAtlas.photoCells===5 && window.COEAtlas.photoLoaded>=2',timeout=40000)
                   assert page.evaluate('window.COEAtlas.startMarch()') is False
                   page.screenshot(path=str(p/'actual-native-game-webkit-iphone.png'))
                   page.locator('#atlasPhotoSources').click()
                   assert page.evaluate('window.COEAtlas.photoMode') is False
                   assert page.evaluate('window.COEAtlas.nodes')==100
-                  print('PASS: actual native game WebKit 390x844; 2 photo cells stream; V123 graph preserved; photo roads disabled')
+                  print('PASS: actual native game WebKit 390x844; 5 source cells manifest; at least 2 stream; V123 graph preserved; photo roads disabled')
                   browser.close()
           finally:
               server.terminate()

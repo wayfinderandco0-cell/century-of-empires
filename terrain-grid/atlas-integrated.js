@@ -31,6 +31,7 @@ document.body.append(openButton,layer);
 const canvas=$("atlasCanvas"),ctx=canvas.getContext("2d",{alpha:false});
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
+let photoMode=false,photoStream=null,photoCamera=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
 const pointers=new Map();let tap=null,prevPinch=null;
 function status(s){$("atlasStatus").textContent=s;}
@@ -51,6 +52,10 @@ function draw(){
  if(!w||!h)return;
  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#15271f";ctx.fillRect(0,0,w,h);
  if(!loaded)return;
+ if(photoMode){
+  if(photoStream)photoStream.draw(ctx,worldToScreen,scale,w,h);
+  return;
+ }
  const diamond=manifest.decorativeInlays[0],src=images[diamond.sourceCell];
  ctx.save();polygon(ctx,diamond.polygon.map(worldToScreen));ctx.clip();
  const dest=worldToScreen([1280,768]);ctx.drawImage(src,...diamond.sourceRect,dest[0],dest[1],512*scale,512*scale);ctx.restore();
@@ -136,10 +141,10 @@ function routeBetween(from,to){
  return result;
 }
 function sample(points,amount){let left=amount;for(let i=1;i<points.length;i++){const n=distance(points[i-1],points[i]);if(left<=n)return [points[i-1][0]+(points[i][0]-points[i-1][0])*left/n,points[i-1][1]+(points[i][1]-points[i-1][1])*left/n];left-=n;}return clone(points.at(-1));}
-function startOrder(to){if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
+function startOrder(to){if(photoMode){status("Photo candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
-function tapRoad(point){const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
+function tapRoad(point){if(photoMode)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
 function close(){shown=false;layer.hidden=true;openButton.hidden=false;openButton.focus();}
@@ -155,14 +160,50 @@ canvas.addEventListener("pointermove",e=>{
 function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.getBoundingClientRect();if(pointers.size===1&&tap&&distance(tap,[e.clientX,e.clientY])<9)tapRoad(screenToWorld([e.clientX-rect.left,e.clientY-rect.top]));pointers.delete(e.pointerId);if(pointers.size<2)prevPinch=null;tap=null;draw();}
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
-$("atlasWhole").onclick=()=>centerAt(1536,1024,.96);
+$("atlasWhole").onclick=()=>photoMode?centerAt(15360,16896,.96):centerAt(1536,1024,.96);
 $("atlasWest").onclick=()=>centerAt(1536,478,3.2);
 $("atlasSouth").onclick=()=>centerAt(2002,1024,3.2);
 $("atlasPlus").onclick=()=>centerAt(...center,zoom*1.3);
 $("atlasMinus").onclick=()=>centerAt(...center,zoom/1.3);
 $("atlasMarch").onclick=()=>startOrder([2806,1629]);
 $("atlasHalt").onclick=halt;
-$("atlasRoads").onclick=()=>{debug=!debug;draw();};
+$("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
+/* Opt-in source photography is displayed on the SAME native game canvas.
+ * No route nodes or conquest towns are fabricated for unreviewed cells.
+ * The three approved Alpine octagons and their V123 army stay intact.
+ */
+const photoButton=document.createElement("button");
+photoButton.id="atlasPhotoSources";photoButton.type="button";
+photoButton.textContent="Photo sources";
+$("atlasBar").querySelector("div").appendChild(photoButton);
+async function togglePhotoSources(){
+ try {
+  if(!photoStream){
+   if(!root.COEPhotoAtlasStream){
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement("script");
+     script.src="terrain-grid/atlas-photo-stream.js";
+     script.onload=resolve;script.onerror=()=>reject(Error("Photo stream module unavailable"));
+     document.head.appendChild(script);
+    });
+   }
+   photoStream=await new root.COEPhotoAtlasStream(
+    "terrain-grid/factory-photo/manifest.json",draw).init();
+  }
+  if(!photoMode){
+   photoCamera={center:clone(center),zoom};
+   photoMode=true;center=[15360,16896];zoom=.96;
+   photoButton.textContent="Alpine roads";
+   status("Two distinct native photographs · NO road, province or historical certification");
+  } else {
+   photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
+   photoButton.textContent="Photo sources";
+   status("WEST · MATREI · SOUTH connected · tap a cartway");
+  }
+  scale=base*zoom;draw();
+ } catch(error){status("Photo sources unavailable: "+error.message);}
+}
+photoButton.onclick=togglePhotoSources;
 window.addEventListener("resize",()=>{if(shown)fit();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&shown)close();});
 const API={
@@ -173,6 +214,8 @@ const API={
  get zoom(){return zoom},get center(){return clone(center)},get manifest(){return manifest},
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
+ get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
+ get photoLoaded(){return photoStream?.stats.loaded||0},togglePhotoSources,
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
  routeTo:p=>routeBetween(unit,p),tapWorld:tapRoad,screenFor:worldToScreen,setZoom:z=>centerAt(...center,z)
 };

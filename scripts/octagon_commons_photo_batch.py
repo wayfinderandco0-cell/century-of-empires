@@ -30,7 +30,7 @@ SOURCES=[
       author="Bjoertvedt",region="Dalmatian coastal mountains, Croatia",
       lon=17.43,lat=43.21,biome="coast-or-lowland",
       motif="Adriatic coast, limestone mountains and coastal lowlands",
-      license="CC BY-SA 4.0"),
+      license="CC BY-SA 3.0"),
 ]
 USER_AGENT="CenturyOfEmpiresArtResearch/1.0 (GitHub open-source educational game; Wikimedia attribution retained)"
 def digest(data):return hashlib.sha256(data).hexdigest()
@@ -97,7 +97,7 @@ def main():
    "outputSha256":digest(outfile.read_bytes()),
    "sourcePage":"https://commons.wikimedia.org/wiki/File:"+urllib.parse.quote(spec["title"].replace(" ","_")),
    "downloadUrl":url,"author":spec["author"],"license":license_short,
-   "licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0/",
+   "licenseUrl":"https://creativecommons.org/licenses/by-sa/"+("3.0/" if license_short.endswith("3.0") else "4.0/"),
    "motif":spec["motif"],"sourceRegion":spec["region"],
    "approximateRegionCenter":[spec["lon"],spec["lat"]],
    "exactPhotoGeoreferenced":False,"periodSafe":False,

@@ -19,3 +19,11 @@ The optional review selector is ?southArt=throat. Default SOUTH, ?southArt=conti
 - Preserve the road-free central diamond and the non-playable inlays.
 
 **Approval gate: RED.** No promotion or production integration without physical iPhone visual acceptance and unchanged V94/gameplay regressions.
+
+## Actual browser evidence (October 30, 2026)
+
+GitHub Actions run 41064186161 passed all four Chromium/WebKit portrait/landscape jobs, including the opt-in candidate, 100 unchanged V123 tile nodes, valid WEST → MATREI → SOUTH touchscreen march, and a 53-point route to [2806,1629]. In-game review run 41064186295 and clean visual review run 41064186168 also passed. These are browser tests, not a physical iPhone approval.
+
+The exact WebKit iPhone-sized DPR2 side-by-side images are committed under art-reviews/v267-throat-phone/. Eyes-on inspection finds that the new river starts closer to Matrei's water exit and the large disconnected waterfall is gone. However the horizontal forest/meadow boundary is still conspicuous, and the new right-bank limestone looks diagonally pulled. The cartway x466 stays visually continuous across the join, but these terrain defects prevent approval.
+
+The next ART change must reconstruct the whole northern forest/rock transition as one coherent original composition, not add a narrow digital road or more numerical seam tests. Default and production remain RED.

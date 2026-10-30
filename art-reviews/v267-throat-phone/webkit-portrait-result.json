@@ -1,0 +1,152 @@
+{
+  "browser": "webkit",
+  "orientation": "portrait",
+  "viewport": [
+    390,
+    844
+  ],
+  "art": "exact embedded original WEST/SOUTH + V121 Matrei",
+  "nodes": 100,
+  "uniqueWorldPositions": 98,
+  "seams": [
+    {
+      "id": "west-matrei",
+      "pass": true,
+      "gap": 0,
+      "errors": []
+    },
+    {
+      "id": "matrei-south",
+      "pass": true,
+      "gap": 0,
+      "errors": []
+    }
+  ],
+  "touchMarch": true,
+  "halt": true,
+  "pathNodes": 53,
+  "destination": [
+    2806,
+    1629
+  ],
+  "javascriptErrors": [],
+  "nativeIPhoneSafari": false,
+  "visualUserApproved": false,
+  "productionApproved": false,
+  "decorativeGapInlays": [
+    "north",
+    "square",
+    "east"
+  ],
+  "nativeForestPreserved": [
+    {
+      "point": [
+        120,
+        300
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        180,
+        470
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        310,
+        640
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        900,
+        760
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        1400,
+        180
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        950,
+        920
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        466,
+        270
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        700,
+        400
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        930,
+        510
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        1270,
+        605
+      ],
+      "maxChannelDelta": 0
+    }
+  ],
+  "southRegistrationScope": "baked-SOUTH-photo-no-double-runtime-shift",
+  "southEntranceRegistration": [
+    {
+      "point": [
+        466,
+        0
+      ],
+      "maxChannelDelta": 0
+    },
+    {
+      "point": [
+        466,
+        160
+      ],
+      "maxChannelDelta": 0
+    }
+  ],
+  "candidateThroatMobileScreenshots": true,
+  "candidateThroatTouchMarch": true,
+  "inlayCenterPixels": [
+    [
+      100,
+      90,
+      88,
+      255
+    ],
+    [
+      46,
+      45,
+      15,
+      255
+    ],
+    [
+      136,
+      124,
+      74,
+      255
+    ]
+  ]
+}

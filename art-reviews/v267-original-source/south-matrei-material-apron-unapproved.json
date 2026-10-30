@@ -1,0 +1,26 @@
+{
+  "status": "UNAPPROVED; production RED",
+  "provenance": "fictional Alpine game artwork; not verified historic geography",
+  "source": "art-reviews/v267-original-source/south-bridge-contact-unapproved.webp",
+  "source_sha256": "46efdd3cfd7df0163330445f7841e3e35502a317c3780f80cfd4a18444901103",
+  "candidate": "art-reviews/v267-original-source/south-matrei-material-apron-unapproved.webp",
+  "candidate_sha256": "ed992c9b4cfb51921f21e0e6b8efc7698f3965fbe55168fd1c43d6bf560039ca",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "preview": "?southArt=apron",
+  "registration": "zero geometry shift; 300px photographic material apron; 14px road/river contact",
+  "road_seams_unchanged": {
+    "west": [
+      1536,
+      478
+    ],
+    "south": [
+      466,
+      0
+    ]
+  },
+  "requires": "real phone-size visual comparison, physical iPhone Safari approval",
+  "protected": "V121/V123/V94, sprites, saves, main unchanged"
+}

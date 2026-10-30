@@ -272,13 +272,13 @@
       ],
       "originalSource": "terrain-grid/factory-photo/source-cache/eu-08-15-commons.jpg",
       "sourceCrop": [
-        1152,
-        891,
-        2688,
-        1915
+        2304,
+        1536,
+        3840,
+        2560
       ],
       "sourceSha256": "92b127ef7d40a3516e968872e631d339f6d2ee922deacedadac7a0c954eea24e",
-      "outputSha256": "9dcfce0f25051f752b40dc3524e1dfe1a3e333509a6729a1a1cf9d5181946aca",
+      "outputSha256": "ea10b98cea06ecd4390160f1eb1c70aec9f296a42e96ab2f135055d832710903",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG",
       "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG/3840px-Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
       "author": "Bjoertvedt",

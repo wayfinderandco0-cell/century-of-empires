@@ -1,0 +1,62 @@
+name: 50-octagon geographic factory staging
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: '50-cell batch index 0..8 (last batch contains 32)'
+        required: false
+        default: '0'
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - scripts/octagon_factory_50.js
+      - .github/workflows/octagon-factory-50.yml
+permissions:
+  contents: read
+jobs:
+  generate-map-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out development branch
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Produce contiguous geography-backed candidates
+        env:
+          SELECTED_BATCH: ${{ github.event.inputs.batch || '0' }}
+        run: |
+          node scripts/octagon_factory_50.js --batch "$SELECTED_BATCH"
+      - name: Verify fifty unique candidates, seams and no false approvals
+        env:
+          SELECTED_BATCH: ${{ github.event.inputs.batch || '0' }}
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const idx=String(process.env.SELECTED_BATCH).padStart(2,'0');
+          const base='generated/octagon-factory/batch-'+idx;
+          const manifest=JSON.parse(fs.readFileSync(base+'/manifest.json'));
+          const report=JSON.parse(fs.readFileSync(base+'/qa-report.json'));
+          const expected=Number(process.env.SELECTED_BATCH)===8?32:50;
+          if(manifest.cells.length!==expected||report.geographyPreviews!==expected) throw Error('Unexpected batch count');
+          const ids=new Set(manifest.cells.map(c=>c.id));
+          if(ids.size!==expected)throw Error('Duplicate IDs');
+          for(const c of manifest.cells) {
+            if(!fs.existsSync(base+'/'+c.id+'.svg'))throw Error('Missing preview '+c.id);
+            if(c.historicalConquestTowns.length||c.art.finalNativeArtRendered||c.usableForGameplay)throw Error('False finished claim');
+          }
+          for(const link of manifest.routeLinks){
+            if(link.artRoadPainted||link.gameplayEnabled||link.historicallyVerified)throw Error('False route certification');
+          }
+          console.log('PASS',expected,'candidates, unique and no fake game/history/art approvals');
+          NODE
+      - name: Upload manifest and visible map atlas previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: octagon-factory-batch-${{ github.event.inputs.batch || '0' }}
+          path: generated/octagon-factory/
+          if-no-files-found: error
+          retention-days: 14

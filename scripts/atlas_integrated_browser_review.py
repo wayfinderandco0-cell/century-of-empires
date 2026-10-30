@@ -70,6 +70,8 @@ try:
   # 390px-wide phone. These remain source studies, not gameplay routes.
   page.locator("#atlasPhotoSources").click()
   page.wait_for_function("COEAtlas.photoMode && COEAtlas.photoCells===8",timeout=45000)
+  assert page.locator("#atlasMarch").is_hidden(),"Photo-only cells must not expose army orders"
+  assert page.locator("#atlasRoads").is_hidden(),"No unverified road trace may be presented as playable"
   page.locator("#atlasWhole").click()
   page.wait_for_function("COEAtlas.photoLoaded===8",timeout=60000)
   corners=page.evaluate("""() => ({
@@ -85,6 +87,7 @@ try:
   assert not page.evaluate("COEAtlas.tapWorld([10*1536+768,12*1024+512])"),"Unverified photo tile must not issue an army order"
   page.locator("#atlasPhotoSources").click()
   assert not page.evaluate("COEAtlas.photoMode")
+  assert page.locator("#atlasMarch").is_visible(),"Original V123 controls must return"
   page.locator("#atlasClose").click()
   assert page.locator("#atlasIntegratedLayer").is_hidden()
   after=page.evaluate("""() => ({

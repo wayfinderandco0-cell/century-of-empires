@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Century of Empires — iPhone-Safe Alpine Review</title>
+<style>html,body{margin:0;width:100%;height:100%;background:#101923;color:#f4ead8;font:16px system-ui,sans-serif;overflow:hidden}
+#boot{padding:24px;line-height:1.5}h1{font:26px Georgia,serif;color:#efd19a}p{max-width:720px}
+#game{display:none;width:100%;height:100%;border:0}small{color:#b0bdc3}
+</style></head><body>
+<div id="boot"><h1>Century of Empires</h1><p id="status" role="status">Loading the original three-octagon review with Safari-safe image pixels…</p>
+<small>This is the isolated unapproved V267 artwork candidate, not production. No game engine, saves, or road graph changes.</small></div>
+<iframe id="game" title="Century of Empires three Alpine octagon review" allow="fullscreen"></iframe>
+<script>
+"use strict";
+(async()=>{
+ const root="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/fa1ef8fa9ff084df8194e6cdda49ea19e7630327/";
+ const imagePaths={
+   west:"art-reviews/v267-original-source/west-unified-native-border-unapproved.webp",
+   south:"art-reviews/v267-original-source/south-unified-native-border-unapproved.webp"
+ };
+ const setStatus=t=>document.getElementById("status").textContent=t;
+ async function imageDataURL(path){
+   const urls=[root+path,new URL(path,location.href).href];
+   let last;
+   for(const url of urls){
+     try{
+       const response=await fetch(url,{mode:"cors"});
+       if(!response.ok)throw Error("image HTTP "+response.status);
+       const blob=await response.blob();
+       if(!blob.type.startsWith("image/"))throw Error("unexpected image content type "+blob.type);
+       return await new Promise((resolve,reject)=>{
+         const reader=new FileReader();
+         reader.onload=()=>resolve(reader.result);
+         reader.onerror=()=>reject(reader.error||Error("image read failed"));
+         reader.readAsDataURL(blob);
+       });
+     }catch(error){last=error}
+   }
+   throw Error("Could not load "+path+": "+(last?.message||"network error"));
+ }
+ const pageUrl=new URL("v267-three-octagon-original-art-prototype.html",location.href);
+ setStatus("Loading the Alpine preview and original image files…");
+ const [response,west,south]=await Promise.all([
+   fetch(pageUrl.href,{mode:"cors",cache:"no-store"}),
+   imageDataURL(imagePaths.west),
+   imageDataURL(imagePaths.south)
+ ]);
+ if(!response.ok)throw Error("preview HTTP "+response.status);
+ let source=await response.text();
+ const replaces=[
+  ['const SOUTH_ART_MODE=new URLSearchParams(location.search).get("southArt");','const SOUTH_ART_MODE="coherent"; // iOS-safe isolated review'],
+  ['const southArtSource=SOUTH_UNIFIED_NATIVE_PREVIEW ? "art-reviews/v267-original-source/south-unified-native-border-unapproved.webp"', 'const southArtSource=SOUTH_UNIFIED_NATIVE_PREVIEW ? '+JSON.stringify(south)],
+  ['const [west,south]=await Promise.all([loadImage(ART_WEST),loadImage(southArtSource)]);','const [west,south]=await Promise.all([loadImage(SOUTH_UNIFIED_NATIVE_PREVIEW ? '+JSON.stringify(west)+' : ART_WEST),loadImage(southArtSource)]);']
+ ];
+ for(const [before,after] of replaces){
+   if(!source.includes(before))throw Error("Preview source changed: cannot safely patch an expected Alpine asset hook");
+   source=source.replace(before,after);
+ }
+ // Data URLs are same-document origins, avoiding iOS WKWebView tainted-canvas getImageData SecurityError.
+ const iframe=document.getElementById("game");
+ iframe.onload=()=>{document.getElementById("boot").style.display="none";iframe.style.display="block"};
+ iframe.srcdoc=source;
+ setStatus("Starting game with inline WEST and SOUTH images…");
+})().catch(error=>{
+ document.getElementById("status").textContent="iPhone review load failed: "+(error.message||String(error))+
+ ". This is a preview-loading problem, not a problem with your iPhone.";
+});
+</script></body></html>

@@ -1,9 +1,9 @@
 {
   "schema": "coe-photo-art/v1",
-  "status": "source-backed-unapproved",
+  "status": "source-backed-unapproved-not-georegistered",
   "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
   "batch": 1,
-  "photographicArtComposed": 2,
+  "photographicArtComposed": 5,
   "visuallyChecked": 0,
   "physicallyRoadConnected": 0,
   "mobileRendered": 0,
@@ -142,6 +142,174 @@
       "provinceIds": [],
       "scenicSettlements": [],
       "strategicTowns": []
+    },
+    {
+      "id": "eu-05-14",
+      "grid": [
+        5,
+        14
+      ],
+      "origin": [
+        7680,
+        14336
+      ],
+      "geography": {
+        "biome": "alpine",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-05-14.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-05-14-commons.jpg",
+      "sourceCrop": [
+        1152,
+        1076,
+        2688,
+        2100
+      ],
+      "sourceSha256": "17fa2c41e817d431e3f965f39e6f1fa2c070eded5b54242ce0af3e3f8db8bc20",
+      "outputSha256": "64e75a950b7aa6d06cadc78c6fd30497f27e3dabb9605bcc05dd9bf81c45a971",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Alps_aerial_1.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Alps_aerial_1.jpg/3840px-Alps_aerial_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Kallerna",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "motif": "Western Alps high ridges and valley",
+      "sourceRegion": "Mont Blanc and Aosta Valley, western Alps",
+      "approximateRegionCenter": [
+        6.86,
+        45.83
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-07-12",
+      "grid": [
+        7,
+        12
+      ],
+      "origin": [
+        10752,
+        12288
+      ],
+      "geography": {
+        "biome": "hills-and-mountains",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-07-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-07-12-commons.jpg",
+      "sourceCrop": [
+        1152,
+        832,
+        2688,
+        1856
+      ],
+      "sourceSha256": "57fa638dcef3e3d997107c0842a995fdc18ceb0ee95e058b4fc7b9b328feb427",
+      "outputSha256": "ced9927d324099d8be33f54629822514673a1c0e8d8731cef76f2766e71a7100",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg/3840px-Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Carsten Steger",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "motif": "Forested Danube limestone gorge",
+      "sourceRegion": "Danube gorge, Bavaria, Germany",
+      "approximateRegionCenter": [
+        11.83,
+        48.9
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
+    },
+    {
+      "id": "eu-08-15",
+      "grid": [
+        8,
+        15
+      ],
+      "origin": [
+        12288,
+        15360
+      ],
+      "geography": {
+        "biome": "coast-or-lowland",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-08-15.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-08-15-commons.jpg",
+      "sourceCrop": [
+        1152,
+        891,
+        2688,
+        1915
+      ],
+      "sourceSha256": "92b127ef7d40a3516e968872e631d339f6d2ee922deacedadac7a0c954eea24e",
+      "outputSha256": "9dcfce0f25051f752b40dc3524e1dfe1a3e333509a6729a1a1cf9d5181946aca",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG/3840px-Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Bjoertvedt",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "motif": "Adriatic coast, limestone mountains and coastal lowlands",
+      "sourceRegion": "Dalmatian coastal mountains, Croatia",
+      "approximateRegionCenter": [
+        17.43,
+        43.21
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": []
     }
+  ],
+  "sourceDiversityRegions": [
+    "Dalmatian coastal mountains, Croatia",
+    "Danube gorge, Bavaria, Germany",
+    "Mont Blanc and Aosta Valley, western Alps",
+    "Sharr Mountains, Kosovo; reference imagery, not georegistration"
   ]
 }

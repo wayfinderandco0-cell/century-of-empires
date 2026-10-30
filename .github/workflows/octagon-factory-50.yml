@@ -212,9 +212,9 @@ jobs:
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   page.locator('#atlasIntegratedOpen').click()
                   page.locator('#atlasPhotoSources').click()
-                  page.wait_for_function('window.COEAtlas.photoCells===8 && window.COEAtlas.photoLoaded>=1',timeout=60000)
+                  page.wait_for_function('window.COEAtlas.photoCells===8 && window.COEAtlas.photoLoaded>=8',timeout=60000)
                   page.locator('#atlasWhole').click()
-                  page.wait_for_timeout(1200)
+                  page.wait_for_timeout(300)
                   page.screenshot(path=str(out/'actual-webkit-iphone-native-eight.png'))
                   assert page.evaluate('window.COEAtlas.startMarch()') is False
                   page.locator('#atlasPlus').click()

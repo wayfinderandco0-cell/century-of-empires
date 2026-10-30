@@ -14,7 +14,9 @@ class PhotoAtlasStream {
  constructor(url,onChange) {
   this.url=url;this.onChange=onChange||(()=>{});
   this.manifest=null;this.cache=new Map();this.pending=new Map();
-  this.maxCached=6;this.stats={requests:0,loaded:0,failed:0};
+  // Ten nearby native textures fit the 8-cell study without cache-eviction
+  // thrashing. Distant European cells remain lazily streamed, never all 432.
+  this.maxCached=10;this.stats={requests:0,loaded:0,failed:0};
  }
  async init() {
   const response=await fetch(this.url,{cache:"no-cache"});
@@ -93,8 +95,10 @@ class PhotoAtlasStream {
                                    ctx.moveTo(p[0]+x*scale,p[1]+y*scale));
    ctx.closePath();
    if(!cell.nativePhotoUnderlay){ctx.strokeStyle="#bca16b";ctx.lineWidth=1.2;ctx.stroke();}
-   ctx.fillStyle="#f8e8c7";ctx.font="bold 11px system-ui";
-   ctx.fillText(cell.id+" · PHOTO SOURCE ONLY",p[0]+Math.max(8,280*scale),p[1]+Math.max(20,45*scale));
+   // Do not cover the photographic terrain with repeated giant labels
+   // when the player zooms out to inspect a regional block.
+   if(scale>.22){ctx.fillStyle="#f8e8c7";ctx.font="bold 10px system-ui";
+    ctx.fillText(cell.id+" · SOURCE ONLY",p[0]+Math.max(8,280*scale),p[1]+Math.max(20,45*scale));}
    ctx.restore();
   }
  }

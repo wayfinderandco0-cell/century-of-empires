@@ -26,12 +26,12 @@
        const response=await fetch(url,{mode:"cors"});
        if(!response.ok)throw Error("image HTTP "+response.status);
        const blob=await response.blob();
-       if(!blob.type.startsWith("image/"))throw Error("unexpected image content type "+blob.type);
+       const webp=new Blob([blob],{type:"image/webp"});
        return await new Promise((resolve,reject)=>{
          const reader=new FileReader();
          reader.onload=()=>resolve(reader.result);
          reader.onerror=()=>reject(reader.error||Error("image read failed"));
-         reader.readAsDataURL(blob);
+         reader.readAsDataURL(webp);
        });
      }catch(error){last=error}
    }

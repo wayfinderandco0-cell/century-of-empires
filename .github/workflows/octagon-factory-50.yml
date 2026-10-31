@@ -403,6 +403,8 @@ jobs:
                   device_scale_factor=2,is_mobile=True,has_touch=True)
               page.goto((root.resolve()/'road-source-survey.html').as_uri())
               page.wait_for_function('Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)',timeout=60000)
+              page.evaluate('Promise.all(Array.from(document.images).map(i=>i.decode()))')
+              page.wait_for_timeout(700)  # actual WebKit paint after decode, not just metadata
               page.screenshot(path=str(root/'actual-webkit-iphone-road-survey.png'),full_page=True)
               assert page.locator('img').count()==2
               browser.close()

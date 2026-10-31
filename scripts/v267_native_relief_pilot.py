@@ -115,6 +115,9 @@ def build(root:Path, out:Path, scale:float=1):
     track=np.exp(-.5*((distance-2.5*scale)/(0.75*scale))**2)
     rgb-=track[...,None]*9
     im=Image.fromarray(np.clip(rgb,0,255).astype(np.uint8),'RGB')
+    # Preserve a separate original terrain-only material for true 3D trees.
+    # The native 2D fallback keeps its painted trees; 3D never double-stacks them.
+    ground_im=im.copy()
     dr=ImageDraw.Draw(im,'RGBA')
     trees=[]
     stride=max(7,round(21*scale))
@@ -152,9 +155,16 @@ def build(root:Path, out:Path, scale:float=1):
             tile=im.crop((x0,y0,x0+tw,y0+th)).convert('RGBA');tile.putalpha(mask)
             cid=f'pilot-{col}-{row}'
             file=out/(cid+'.png');tile.save(file,optimize=True)
+            ground_tile=ground_im.crop((x0,y0,x0+tw,y0+th)).convert('RGBA')
+            ground_tile.putalpha(mask)
+            ground_file=out/(cid+'-ground.png')
+            ground_tile.save(ground_file,optimize=True)
             sha=hashlib.sha256(file.read_bytes()).hexdigest()
             manifest['cells'].append({'id':cid,'grid':[col,row],'worldOrigin':[col*TW,row*TH],
-                'image':file.name,'sha256':sha,'nativeArt':True,'photographicCrop':False,
+                'image':file.name,'sha256':sha,
+                'meshGroundImage':ground_file.name,
+                'meshGroundSha256':hashlib.sha256(ground_file.read_bytes()).hexdigest(),
+                'nativeArt':True,'photographicCrop':False,
                 'visualApproved':False,'nativeGamePlayable':False,'historicallyVerified':False})
             thumb=tile.resize((384,256),Image.Resampling.LANCZOS)
             contact.paste(thumb,(col*384,row*256),thumb)
@@ -172,10 +182,16 @@ def build(root:Path, out:Path, scale:float=1):
         patch.putalpha(alpha)
         name=f'infill-{col}-0.png'
         patch.save(out/name,optimize=True)
+        ground_patch=ground_im.crop((ix-gap,iy-gap,ix+gap,iy+gap)).convert('RGBA')
+        ground_patch.putalpha(alpha)
+        ground_name=f'infill-{col}-0-ground.png'
+        ground_patch.save(out/ground_name,optimize=True)
         manifest['inlays'].append({
             'id':f'infill-{col}-0',
             'worldCenter':[(col+1)*TW,TH],
-            'image':name,'imageSize':[2*gap,2*gap],
+            'image':name,'meshGroundImage':ground_name,
+            'meshGroundSha256':hashlib.sha256((out/ground_name).read_bytes()).hexdigest(),
+            'imageSize':[2*gap,2*gap],
             'playable':False,'roadNodes':[],
             'sha256':hashlib.sha256((out/name).read_bytes()).hexdigest()
         })

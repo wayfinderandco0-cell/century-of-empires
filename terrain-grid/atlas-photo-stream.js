@@ -62,7 +62,9 @@ class PhotoAtlasStream {
  }
  get cells(){return this.manifest?.cells||[];}
  touch(id,preview=false) {
-  const cache=preview?this.thumbCache:this.cache;
+  // Older 4x2 source studies have no overview derivative: use their
+  // full native image rather than showing a blank low-zoom octagon.
+  const cache=preview&&this.thumbCache.has(id)?this.thumbCache:this.cache;
   if(!cache.has(id))return null;
   const img=cache.get(id);
   cache.delete(id);cache.set(id,img);

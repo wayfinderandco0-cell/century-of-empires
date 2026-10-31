@@ -7,8 +7,8 @@
       "a": "southern-terraces",
       "b": "southern-high-meadow",
       "axis": "vertical",
-      "medianEdgeColorDifferenceBefore": 66.0,
-      "medianEdgeColorDifferenceAfter": 45.87,
+      "medianEdgeColorDifferenceBefore": 39.5,
+      "medianEdgeColorDifferenceAfter": 20.12,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -16,8 +16,8 @@
       "a": "southern-high-meadow",
       "b": "dolomite-south-ridge",
       "axis": "vertical",
-      "medianEdgeColorDifferenceBefore": 89.5,
-      "medianEdgeColorDifferenceAfter": 69.54,
+      "medianEdgeColorDifferenceBefore": 63.0,
+      "medianEdgeColorDifferenceAfter": 43.53,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -25,8 +25,8 @@
       "a": "dolomite-south-ridge",
       "b": "dolomite-south-pass",
       "axis": "vertical",
-      "medianEdgeColorDifferenceBefore": 70.5,
-      "medianEdgeColorDifferenceAfter": 50.62,
+      "medianEdgeColorDifferenceBefore": 154.5,
+      "medianEdgeColorDifferenceAfter": 134.42,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -34,8 +34,8 @@
       "a": "dolomite-south-pass",
       "b": "alpine-southwest-slope",
       "axis": "vertical",
-      "medianEdgeColorDifferenceBefore": 101.5,
-      "medianEdgeColorDifferenceAfter": 82.04,
+      "medianEdgeColorDifferenceBefore": 86.0,
+      "medianEdgeColorDifferenceAfter": 66.02,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -43,8 +43,8 @@
       "a": "alpine-east-summit",
       "b": "alpine-east-lakeside",
       "axis": "horizontal",
-      "medianEdgeColorDifferenceBefore": 112.0,
-      "medianEdgeColorDifferenceAfter": 91.76,
+      "medianEdgeColorDifferenceBefore": 55.5,
+      "medianEdgeColorDifferenceAfter": 35.9,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -52,8 +52,8 @@
       "a": "alpine-east-lakeside",
       "b": "alpine-east-snowfield",
       "axis": "horizontal",
-      "medianEdgeColorDifferenceBefore": 43.0,
-      "medianEdgeColorDifferenceAfter": 23.87,
+      "medianEdgeColorDifferenceBefore": 67.5,
+      "medianEdgeColorDifferenceAfter": 47.34,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     },
@@ -61,8 +61,8 @@
       "a": "alpine-east-snowfield",
       "b": "alpine-southwest-slope",
       "axis": "horizontal",
-      "medianEdgeColorDifferenceBefore": 78.0,
-      "medianEdgeColorDifferenceAfter": 58.12,
+      "medianEdgeColorDifferenceBefore": 73.5,
+      "medianEdgeColorDifferenceAfter": 53.45,
       "physicalTerrainSeamVerified": false,
       "roadConnected": false
     }

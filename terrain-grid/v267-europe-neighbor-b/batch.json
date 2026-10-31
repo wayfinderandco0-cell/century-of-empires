@@ -1,8 +1,9 @@
 {
   "schema": "coe-v267-original-art-batch/v1",
   "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
-  "status": "unapproved-source-backed-European-scenic-art-study",
+  "status": "unapproved-native-ground-recomposition-from-prior-licensed-art",
   "scenario": "geographic analogues from Europe; NOT 1780–1880 surveyed roads",
+  "sourceDelivery": "prior committed licensed derivatives, no new downloads",
   "cells": [
     {
       "id": "southern-terraces",
@@ -12,7 +13,7 @@
       ],
       "biome": "tyrolean-wooded-valley",
       "art": "terrain-grid/v267-europe-neighbor-b/southern-terraces.webp",
-      "assetSha256": "9c865f6736a024b1cd9a979dea97d7d61851df67832bc500f32e4db248a5502c",
+      "assetSha256": "d77266bd73c4c7aa25f9668e4b77280b8d1a349eb0a2cee10466c36f1fabb3cd",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -27,11 +28,14 @@
           2553
         ],
         "crop": [
-          1106,
-          917,
-          2642,
-          1941
-        ]
+          206,
+          269,
+          1742,
+          1293
+        ],
+        "intermediateArtSha256": "9c865f6736a024b1cd9a979dea97d7d61851df67832bc500f32e4db248a5502c",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Dramatic Alpine scenery (Unsplash).jpg",
@@ -45,14 +49,29 @@
           2566
         ],
         "crop": [
-          991,
-          910,
-          2527,
-          1934
-        ]
+          184,
+          269,
+          1720,
+          1293
+        ],
+        "intermediateArtSha256": "273f62d906ad0efaa0fe0748fb718131a6b01c4a9c740f6259ff2354c66a63b8",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Tyrol, Austria",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          736.0,
+          852.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -66,7 +85,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -78,7 +97,7 @@
       ],
       "biome": "south-tyrol-high-meadow",
       "art": "terrain-grid/v267-europe-neighbor-b/southern-high-meadow.webp",
-      "assetSha256": "c503666373b606c93048f650493b461c37a497148560343f37b384a5fe896598",
+      "assetSha256": "4a976ceab721137a4cbb6f457f75ba0088adfb8e1dcad94e4dea0c9db37c5602",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -93,11 +112,14 @@
           2553
         ],
         "crop": [
-          1175,
-          872,
-          2711,
-          1896
-        ]
+          219,
+          269,
+          1755,
+          1293
+        ],
+        "intermediateArtSha256": "c503666373b606c93048f650493b461c37a497148560343f37b384a5fe896598",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Mountain peak in a lake (Unsplash).jpg",
@@ -111,14 +133,29 @@
           1600
         ],
         "crop": [
-          406,
-          340,
-          1942,
-          1364
-        ]
+          202,
+          269,
+          1738,
+          1293
+        ],
+        "intermediateArtSha256": "e19ecdbe90272d28e7b49eaf7832e230056d696ae716dc81ed532a48b1fd4c5b",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "South Tyrol, Italy",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          684.0,
+          880.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -132,7 +169,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -144,7 +181,7 @@
       ],
       "biome": "dolomite-limestone-ridge",
       "art": "terrain-grid/v267-europe-neighbor-b/dolomite-south-ridge.webp",
-      "assetSha256": "d2381e82e883e0b9646a03b07cc1e63c106e31cbfe584eada669db129c5637db",
+      "assetSha256": "9984afe79cee30c51b71a99c1e6709e499c5b029261cf2a9aabd62ef6bd7e673",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -159,11 +196,14 @@
           2884
         ],
         "crop": [
-          1129,
-          1042,
-          2665,
-          2066
-        ]
+          210,
+          269,
+          1746,
+          1293
+        ],
+        "intermediateArtSha256": "d2381e82e883e0b9646a03b07cc1e63c106e31cbfe584eada669db129c5637db",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Alpine village landscape (Unsplash).jpg",
@@ -177,14 +217,29 @@
           1600
         ],
         "crop": [
-          441,
-          340,
-          1977,
-          1364
-        ]
+          219,
+          269,
+          1755,
+          1293
+        ],
+        "intermediateArtSha256": "3926c1c35aa027167486a93295728e5d706135f8d14090b27133191768dd149e",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Dolomites, Italy",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          776.0,
+          880.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -198,7 +253,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -210,7 +265,7 @@
       ],
       "biome": "dolomite-open-pass",
       "art": "terrain-grid/v267-europe-neighbor-b/dolomite-south-pass.webp",
-      "assetSha256": "e4811baa18d39d378b37f74daa0bf9757ee98bfcd2c5ee7e2916c5ee9d7b2be9",
+      "assetSha256": "dfd3ac3e6df970c9b418cdbc23b82f3622a831ff0b13712e6ccde71dde426a6d",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -225,11 +280,14 @@
           2498
         ],
         "crop": [
-          1175,
-          884,
-          2711,
-          1908
-        ]
+          219,
+          269,
+          1755,
+          1293
+        ],
+        "intermediateArtSha256": "e4811baa18d39d378b37f74daa0bf9757ee98bfcd2c5ee7e2916c5ee9d7b2be9",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Tyrol, Austria (Unsplash).jpg",
@@ -243,14 +301,29 @@
           2553
         ],
         "crop": [
-          991,
-          902,
-          2527,
-          1926
-        ]
+          184,
+          269,
+          1720,
+          1293
+        ],
+        "intermediateArtSha256": "9c865f6736a024b1cd9a979dea97d7d61851df67832bc500f32e4db248a5502c",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Passo Sella, Italy",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          720.0,
+          844.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -264,7 +337,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -276,7 +349,7 @@
       ],
       "biome": "swiss-alpine-green-slope",
       "art": "terrain-grid/v267-europe-neighbor-b/alpine-southwest-slope.webp",
-      "assetSha256": "560cf9e26ee32b18f3b1bddfd362fa0f08fb142b8c2addc66995dfd5aa943485",
+      "assetSha256": "edc98f3f2f4990b8d5a5aa8d8823b73d263cb19cfece21171ffcad54b956421b",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -291,11 +364,14 @@
           1600
         ],
         "crop": [
-          415,
-          328,
-          1951,
-          1352
-        ]
+          206,
+          269,
+          1742,
+          1293
+        ],
+        "intermediateArtSha256": "560cf9e26ee32b18f3b1bddfd362fa0f08fb142b8c2addc66995dfd5aa943485",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Lost in the mountains of South Tyrol (Unsplash).jpg",
@@ -309,14 +385,29 @@
           2553
         ],
         "crop": [
-          1083,
-          902,
-          2619,
-          1926
-        ]
+          202,
+          269,
+          1738,
+          1293
+        ],
+        "intermediateArtSha256": "c503666373b606c93048f650493b461c37a497148560343f37b384a5fe896598",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Troistorrents, Switzerland",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          736.0,
+          880.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -330,7 +421,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -342,7 +433,7 @@
       ],
       "biome": "alpine-high-ridge",
       "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-summit.webp",
-      "assetSha256": "273f62d906ad0efaa0fe0748fb718131a6b01c4a9c740f6259ff2354c66a63b8",
+      "assetSha256": "4b7df16c8fd30293f6b4ea1b2d32f445802904261614280f4d5d6335e4d35ba4",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -357,11 +448,14 @@
           2566
         ],
         "crop": [
-          1152,
-          817,
-          2688,
-          1841
-        ]
+          215,
+          269,
+          1751,
+          1293
+        ],
+        "intermediateArtSha256": "273f62d906ad0efaa0fe0748fb718131a6b01c4a9c740f6259ff2354c66a63b8",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Snowy mountain in the Dolomites (Unsplash).jpg",
@@ -375,14 +469,29 @@
           2884
         ],
         "crop": [
-          1175,
-          1097,
-          2711,
-          2121
-        ]
+          219,
+          269,
+          1755,
+          1293
+        ],
+        "intermediateArtSha256": "d2381e82e883e0b9646a03b07cc1e63c106e31cbfe584eada669db129c5637db",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Kleine Scheidegg, Switzerland",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          740.0,
+          872.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -396,7 +505,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -408,7 +517,7 @@
       ],
       "biome": "austrian-lakeside-forest",
       "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-lakeside.webp",
-      "assetSha256": "e19ecdbe90272d28e7b49eaf7832e230056d696ae716dc81ed532a48b1fd4c5b",
+      "assetSha256": "083ed1b0bf16bc812709dc37795d34b4a87c4ad0fcbf4c0fe6461252ebaeaccf",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -423,11 +532,14 @@
           1600
         ],
         "crop": [
-          432,
-          317,
-          1968,
-          1341
-        ]
+          215,
+          269,
+          1751,
+          1293
+        ],
+        "intermediateArtSha256": "e19ecdbe90272d28e7b49eaf7832e230056d696ae716dc81ed532a48b1fd4c5b",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Passo Sella, Dolomites (Unsplash).jpg",
@@ -441,14 +553,29 @@
           2498
         ],
         "crop": [
-          991,
-          870,
-          2527,
-          1894
-        ]
+          184,
+          269,
+          1720,
+          1293
+        ],
+        "intermediateArtSha256": "e4811baa18d39d378b37f74daa0bf9757ee98bfcd2c5ee7e2916c5ee9d7b2be9",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Kitzbühel, Austria",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          668.0,
+          816.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -462,7 +589,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     },
@@ -474,7 +601,7 @@
       ],
       "biome": "snowy-alpine-settlement-reference",
       "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-snowfield.webp",
-      "assetSha256": "3926c1c35aa027167486a93295728e5d706135f8d14090b27133191768dd149e",
+      "assetSha256": "a0b7c8459535ddd92412280ea3530c139afab354cad9f7c73b68f9889829447a",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -489,11 +616,14 @@
           1600
         ],
         "crop": [
-          423,
-          334,
-          1959,
-          1358
-        ]
+          210,
+          269,
+          1746,
+          1293
+        ],
+        "intermediateArtSha256": "3926c1c35aa027167486a93295728e5d706135f8d14090b27133191768dd149e",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceForeground": {
         "title": "Swiss Alps, Switzerland (Unsplash).jpg",
@@ -507,14 +637,29 @@
           1600
         ],
         "crop": [
-          406,
-          340,
-          1942,
-          1364
-        ]
+          202,
+          269,
+          1738,
+          1293
+        ],
+        "intermediateArtSha256": "560cf9e26ee32b18f3b1bddfd362fa0f08fb142b8c2addc66995dfd5aa943485",
+        "inputType": "previously-committed-unapproved-CC0-derivative",
+        "freshRawSourceDownloaded": false
       },
       "sourceRegionReference": "Livigno, Italy",
-      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "sourceMethod": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend (offline re-authoring of prior CC0 derivative; not a new raw photograph)",
+      "recomposedFromPreviousDerivative": true,
+      "groundRegistration": {
+        "method": "native oblique ground crop; LAB material match; minimum-error terrain seam; five-level multiband photographic blend",
+        "seamYRange": [
+          696.0,
+          840.0
+        ],
+        "treeGeometryWarped": false,
+        "roadsAdded": 0,
+        "historicalRoadsVerified": 0,
+        "physicalTileEdgesVerified": false
+      },
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -528,7 +673,7 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "notes": "Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false
     }

@@ -361,6 +361,27 @@ jobs:
               server.terminate()
               server.wait(timeout=5)
           PY
+      - name: Save compact photographic and real WebKit evidence for eyes-on review
+        run: |
+          python - <<'PY'
+          import base64
+          from pathlib import Path
+          from PIL import Image
+          out=Path('terrain-grid/factory-photo/dulmen-road-8')
+          for stem,width in [('photo-block-review',1152),
+                             ('actual-webkit-iphone-dulmen-road-close',390),
+                             ('actual-webkit-iphone-dulmen-road-whole',390)]:
+              source=out/(stem+('.webp' if stem=='photo-block-review' else '.png'))
+              with Image.open(source) as image:
+                  image=image.convert('RGB')
+                  h=round(image.height*width/image.width)
+                  image=image.resize((width,h),Image.Resampling.LANCZOS)
+                  from io import BytesIO
+                  buf=BytesIO()
+                  image.save(buf,format='JPEG',quality=78,optimize=True)
+              (out/(stem+'-thumbnail.jpg.b64')).write_text(base64.b64encode(buf.getvalue()).decode('ascii'))
+              print(stem,'actual source',source.stat().st_size,'bytes; review JPEG',len(buf.getvalue()),'bytes')
+          PY
       - name: Compose 19-cell multi-region photographic native atlas coverage
         run: python scripts/octagon_photo_registry.py
       - name: Validate 19 photo overview derivatives and blocked cross-source joins

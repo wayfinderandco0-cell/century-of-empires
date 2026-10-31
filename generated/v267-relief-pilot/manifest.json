@@ -31,9 +31,9 @@
         0
       ],
       "image": "pilot-0-0.png",
-      "sha256": "7a3537dfc9b58c4972822228487e1bfe5cbd97c14ceba8d1f21ad22808ab268c",
+      "sha256": "d6a0daf7a54fcd0b158c5b0a6c90a53f6be8e302fc776c90ba92abcaf5191452",
       "meshGroundImage": "pilot-0-0-ground.png",
-      "meshGroundSha256": "faeb9d4d34c089e46175d8de718c6b3bbe35c1a58712b67f203057be9e38dc0e",
+      "meshGroundSha256": "31120a8ac40af434813ef2687d30c6f23884b4440d97a63cc8a74889936770ba",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -63,9 +63,9 @@
         0
       ],
       "image": "pilot-1-0.png",
-      "sha256": "e47639b8e37c8cf9abddf545194223b99e5659e05fc94f28061063e24d8a8088",
+      "sha256": "ab113a0e90d2bff9365f6ae27069c5ae3219f280ac76a7dfb716fdbf0b03138c",
       "meshGroundImage": "pilot-1-0-ground.png",
-      "meshGroundSha256": "d9a6c868420b72e66d3010380ba695b711389c86c0148fd0ffe7e861946b83a9",
+      "meshGroundSha256": "840f5e77416d36cf48b7bfe3568f76bb55aba7a80762cd34860cf2ff16c6cb9e",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -95,9 +95,9 @@
         0
       ],
       "image": "pilot-2-0.png",
-      "sha256": "7711657aa3fe9a932413afccd09889f6d66b73205ed4ef46afc3d080316ec64e",
+      "sha256": "0c160766c0859de45233cbe7d4c6b5b8cd6b92d882aea6a82e09896e6d520912",
       "meshGroundImage": "pilot-2-0-ground.png",
-      "meshGroundSha256": "278a0f7e8800f79dd66c18020f0e61466b564f4ad31be5bd8801144b61135aa6",
+      "meshGroundSha256": "909fd6623fca9ebd8410686cfcdd830efee6ed5c29797af939b2531dd5736e01",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -127,9 +127,9 @@
         0
       ],
       "image": "pilot-3-0.png",
-      "sha256": "f7aade3cf4ecec217c74b12864bf20104c311220f29a6182aa7cf5e2f50a116d",
+      "sha256": "ba5886d42ae7b0d6d70a0f846a7254d3d9afd6f4a3368c7e72849822f503bbcc",
       "meshGroundImage": "pilot-3-0-ground.png",
-      "meshGroundSha256": "dae1d1c6be78764fae317b7e29ed50e5df9e3946a4ea645e7719c1698c2da23f",
+      "meshGroundSha256": "ee76832e0a1a7673de178b134b6df45fdd239924aaa4bfe15ce9fbe22f5a7cdd",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -159,9 +159,9 @@
         1024
       ],
       "image": "pilot-0-1.png",
-      "sha256": "5927a231d22c54e10674f8057c52f2989125b62c5cd3e6343b8ddef864e9ebb8",
+      "sha256": "10a5cb68d9570af9b6f2180bcad11a302b8e1f410a793f75467c295d55ec4b79",
       "meshGroundImage": "pilot-0-1-ground.png",
-      "meshGroundSha256": "b265fa4b6c6ec6daf6427a2c4a0e6dd28b1013493b30b61a76da2401c6b046aa",
+      "meshGroundSha256": "e3680fd0b9a1712a80fd1a0b5c52c5f2f9717d61ce982fb5a99742ff5dc6349e",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -191,9 +191,9 @@
         1024
       ],
       "image": "pilot-1-1.png",
-      "sha256": "1552645edd86042eadc0fcebcf8211a5c61ac9f0a9d9d5939cd9cfd82af16a7c",
+      "sha256": "e89ba91c17964b047cf83dbbdb3fa038e05640d7f70361552f1070600c061297",
       "meshGroundImage": "pilot-1-1-ground.png",
-      "meshGroundSha256": "9d57eb183c088601842e70ef4b1adad68268d0c4d30c86fa4b5343906b5a6c20",
+      "meshGroundSha256": "e87d338b1bc55ba00925f350ce1298ca6fcff101e77f1b9f54df6adc5f69562d",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -223,9 +223,9 @@
         1024
       ],
       "image": "pilot-2-1.png",
-      "sha256": "4e506f742493d36af4bee7e13beb859a0c9241e5f9787f7e23f11f29ff13038e",
+      "sha256": "21efc9402c5429dab77c285d66d8d20086e8e075a89b0f4503cf3a13fba46130",
       "meshGroundImage": "pilot-2-1-ground.png",
-      "meshGroundSha256": "e61d626d09250ac862b2019aab82e7b4a123abfd9859765f4ee2617ae71b4cf3",
+      "meshGroundSha256": "b215e3a4ee5e104b1bb0d28a6a07c70784c5e2e6a6e53a03048009ee44ec6987",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -255,9 +255,9 @@
         1024
       ],
       "image": "pilot-3-1.png",
-      "sha256": "2913cdd769c5634e0674c5cdcdf6d0a507c8a9022026954ca175572a70d84045",
+      "sha256": "de3bcffea52d71b9301d31c515fbc7a64653cb89e369f4fa2c4e544e9e372b99",
       "meshGroundImage": "pilot-3-1-ground.png",
-      "meshGroundSha256": "497c5fc407193176e359580b6baa368ab0d6ca1e7748e5f65c4e3998e54ef6be",
+      "meshGroundSha256": "ab83fb97d329780669428bc04afc9a3f752e62bc4f5ec5dcccaf9961fc553a13",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -360,14 +360,14 @@
       ],
       "image": "infill-0-0.png",
       "meshGroundImage": "infill-0-0-ground.png",
-      "meshGroundSha256": "23668276d1f4ab469b2c583dc7a19c06a05e61aedf5c0d70cd063d19fb347c50",
+      "meshGroundSha256": "804362cd8dc427d71dbd7b19dfc9d762c999bbb847f4c8c6cd00ae7b09177ca4",
       "imageSize": [
         512,
         512
       ],
       "playable": false,
       "roadNodes": [],
-      "sha256": "fe13960c0a86f9567ac79ba485d99491c0c9cc50fea2d723f2bf445b7b6bf4aa"
+      "sha256": "becdc76a9054357bf021cb1826d5f6a118078dad9e16606aac1039621b82533a"
     },
     {
       "id": "infill-1-0",
@@ -377,14 +377,14 @@
       ],
       "image": "infill-1-0.png",
       "meshGroundImage": "infill-1-0-ground.png",
-      "meshGroundSha256": "ba7cf481b070e43a92ae64a44145367adb8de3a9c2fb0386b8342df411de8a0d",
+      "meshGroundSha256": "2c84ca4e16c080fc05a95d50f56b2c180cc453b5fb6e1d56613f7c11117790a8",
       "imageSize": [
         512,
         512
       ],
       "playable": false,
       "roadNodes": [],
-      "sha256": "8ad3abb1ff5186401de8354af306ae25768abecae4039118bfb4d79d8fda1d65"
+      "sha256": "fc659192bc77dc1da628c84edaec7715871933f80f76519f9a35b8bbf4d8a7a3"
     },
     {
       "id": "infill-2-0",
@@ -394,14 +394,14 @@
       ],
       "image": "infill-2-0.png",
       "meshGroundImage": "infill-2-0-ground.png",
-      "meshGroundSha256": "10583509459a725528dccd5951d755eab5326cd1407f0dc39791f6724bca6fb2",
+      "meshGroundSha256": "d202cf75d1e334c54031e320a1c0e8d5ea9c4e10c6e75a8c9c7492e4f4c0af5a",
       "imageSize": [
         512,
         512
       ],
       "playable": false,
       "roadNodes": [],
-      "sha256": "9d115659015a4caeb401e82c1dc0ac1547b6a9214a303d1ea2b8d491f607caa9"
+      "sha256": "a735c54c05f3b278aaeef17c4c7bbd59691f2e662b432d099e03c0e83dd20ef2"
     }
   ],
   "meshSourceHeightfield": "heightfield-step16.npy",

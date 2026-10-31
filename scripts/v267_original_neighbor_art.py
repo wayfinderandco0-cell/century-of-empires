@@ -16,11 +16,11 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"terrain-grid/v267-neighbor-original-art"
 W,H=1536,1024
 REF="456107f28c8db1f87522bbc7511809b2a215f6fb"
-# Eight DISTINCT CC0 primary landscape photographs; regional resemblance only.
+# Eight DISTINCT CC0 oblique landscape photographs; regional resemblance only.\n# Avoid aerial-view source crops: the approved V267 method uses natural\n# perspective and physically scaled photographic trees, not overhead tiles.
 # None establishes an eighteenth- or nineteenth-century road or settlement.
 SPEC=[
  ("east-matrei","Forested mountain valley (Unsplash).jpg",(3072,0),"wooded-alpine-valley",(.52,.57)),
- ("east-south","Alpine valley (Unsplash).jpg",(3072,1024),"limestone-pasture",(.50,.63)),
+ ("east-south","Green Alpine mountain ridge (Unsplash).jpg",(3072,1024),"alpine-ridge-pasture",(.50,.63)),
  ("west-south","Alpine landscape (Unsplash).jpg",(0,1024),"alpine-foothills",(.43,.55)),
  ("south-west","Gray clouds over green valley (Unsplash).jpg",(0,2048),"misty-high-valley",(.48,.64)),
  ("south-central","Alpine ridge (Unsplash).jpg",(1536,2048),"alpine-ridge",(.52,.53)),

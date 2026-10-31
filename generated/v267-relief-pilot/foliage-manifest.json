@@ -4,7 +4,7 @@
   "source": "V94 approximate modern forest mask + exact painted ground heightfield",
   "heightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
   "file": "foliage-instances.bin",
-  "sha256": "88fee3f6125db8bcd77d6b3efdd5d6a7439878b6704067261dad7ed8c2e4d3a4",
+  "sha256": "b1beabc156b6c373fe83442cb284530f55cc779367ce585308ccaa9deefb4a1f",
   "strideFloats": 8,
   "total": 7819,
   "groups": [
@@ -21,6 +21,297 @@
       "count": 1817
     }
   ],
+  "cellBatches": [
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 0,
+      "row": 0,
+      "offsetFloats": 0,
+      "count": 711,
+      "worldBounds": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "worldYRange": [
+        6.307211399078369,
+        105.86737060546875
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 1,
+      "row": 0,
+      "offsetFloats": 5688,
+      "count": 740,
+      "worldBounds": [
+        1536,
+        0,
+        3072,
+        1024
+      ],
+      "worldYRange": [
+        2.1151208877563477,
+        114.25030517578125
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 2,
+      "row": 0,
+      "offsetFloats": 11608,
+      "count": 726,
+      "worldBounds": [
+        3072,
+        0,
+        4608,
+        1024
+      ],
+      "worldYRange": [
+        1.0447254180908203,
+        160.96604919433594
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 3,
+      "row": 0,
+      "offsetFloats": 17416,
+      "count": 764,
+      "worldBounds": [
+        4608,
+        0,
+        6144,
+        1024
+      ],
+      "worldYRange": [
+        -6.3765764236450195,
+        125.63475799560547
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 0,
+      "row": 1,
+      "offsetFloats": 23528,
+      "count": 721,
+      "worldBounds": [
+        0,
+        1024,
+        1536,
+        2048
+      ],
+      "worldYRange": [
+        15.742911338806152,
+        204.8822479248047
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 1,
+      "row": 1,
+      "offsetFloats": 29296,
+      "count": 804,
+      "worldBounds": [
+        1536,
+        1024,
+        3072,
+        2048
+      ],
+      "worldYRange": [
+        -7.531622886657715,
+        191.83486938476562
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 2,
+      "row": 1,
+      "offsetFloats": 35728,
+      "count": 756,
+      "worldBounds": [
+        3072,
+        1024,
+        4608,
+        2048
+      ],
+      "worldYRange": [
+        -10.888459205627441,
+        72.90379333496094
+      ]
+    },
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "col": 3,
+      "row": 1,
+      "offsetFloats": 41776,
+      "count": 780,
+      "worldBounds": [
+        4608,
+        1024,
+        6144,
+        2048
+      ],
+      "worldYRange": [
+        -10.93093204498291,
+        162.34873962402344
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 0,
+      "row": 0,
+      "offsetFloats": 48016,
+      "count": 292,
+      "worldBounds": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "worldYRange": [
+        6.216444969177246,
+        79.79286193847656
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 1,
+      "row": 0,
+      "offsetFloats": 50352,
+      "count": 256,
+      "worldBounds": [
+        1536,
+        0,
+        3072,
+        1024
+      ],
+      "worldYRange": [
+        3.6559181213378906,
+        85.46389770507812
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 2,
+      "row": 0,
+      "offsetFloats": 52400,
+      "count": 254,
+      "worldBounds": [
+        3072,
+        0,
+        4608,
+        1024
+      ],
+      "worldYRange": [
+        0.8144097328186035,
+        79.74021911621094
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 3,
+      "row": 0,
+      "offsetFloats": 54432,
+      "count": 232,
+      "worldBounds": [
+        4608,
+        0,
+        6144,
+        1024
+      ],
+      "worldYRange": [
+        -6.281095027923584,
+        89.97156524658203
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 0,
+      "row": 1,
+      "offsetFloats": 56288,
+      "count": 90,
+      "worldBounds": [
+        0,
+        1024,
+        1536,
+        2048
+      ],
+      "worldYRange": [
+        20.100963592529297,
+        79.54469299316406
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 1,
+      "row": 1,
+      "offsetFloats": 57008,
+      "count": 185,
+      "worldBounds": [
+        1536,
+        1024,
+        3072,
+        2048
+      ],
+      "worldYRange": [
+        -7.172979831695557,
+        83.93737030029297
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 2,
+      "row": 1,
+      "offsetFloats": 58488,
+      "count": 260,
+      "worldBounds": [
+        3072,
+        1024,
+        4608,
+        2048
+      ],
+      "worldYRange": [
+        -9.098763465881348,
+        56.85612106323242
+      ]
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "col": 3,
+      "row": 1,
+      "offsetFloats": 60568,
+      "count": 248,
+      "worldBounds": [
+        4608,
+        1024,
+        6144,
+        2048
+      ],
+      "worldYRange": [
+        -9.389486312866211,
+        83.92079162597656
+      ]
+    }
+  ],
+  "lodLayout": "species-and-world-cell; per-cell prefix for mobile visibility",
   "minRoadClearancePixels": 27.003650127428475,
   "worldBounds": [
     0,

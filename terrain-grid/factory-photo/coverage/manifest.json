@@ -1,0 +1,1337 @@
+{
+  "schema": "coe-photo-art/v1",
+  "status": "unified-source-art-CANDIDATES-not-playable",
+  "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "description": "19 distinct preexisting photographic candidates in one native game canvas, NOT new final octagons",
+  "sourceArtworkRecords": 21,
+  "photographicArtComposed": 19,
+  "newArtworkComposedThisRun": 0,
+  "newLowZoomPhotographicDerivatives": 19,
+  "uniquePhotoCells": 19,
+  "supersededOverlaps": [
+    {
+      "id": "eu-09-16",
+      "replaced": "terrain-grid/factory-photo/manifest.json",
+      "chosen": "terrain-grid/factory-photo/block-8/manifest.json"
+    },
+    {
+      "id": "eu-10-16",
+      "replaced": "terrain-grid/factory-photo/manifest.json",
+      "chosen": "terrain-grid/factory-photo/block-8/manifest.json"
+    }
+  ],
+  "nativePhotoPixelJoins": [
+    {
+      "a": "eu-10-12",
+      "b": "eu-11-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-12",
+      "b": "eu-10-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-12",
+      "b": "eu-12-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-12",
+      "b": "eu-11-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-12",
+      "b": "eu-13-12",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-12",
+      "b": "eu-12-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-13-12",
+      "b": "eu-13-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-13",
+      "b": "eu-11-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-13",
+      "b": "eu-12-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-13",
+      "b": "eu-13-13",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-16",
+      "b": "eu-10-16",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-16",
+      "b": "eu-09-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-16",
+      "b": "eu-10-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-16",
+      "b": "eu-12-16",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-16",
+      "b": "eu-11-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-12-16",
+      "b": "eu-12-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-17",
+      "b": "eu-10-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-11-17",
+      "b": "eu-12-17",
+      "sourceNativePixelAdjacent": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "unapprovedCrossSourceJoins": [
+    {
+      "a": "eu-10-16",
+      "b": "eu-11-16",
+      "sourceNativePixelAdjacent": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-17",
+      "b": "eu-11-17",
+      "sourceNativePixelAdjacent": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "roadFreeNativeDiamondInlays": [
+    {
+      "worldCenter": [
+        15360,
+        17408
+      ],
+      "sourceCellIds": [
+        "eu-09-16",
+        "eu-10-16",
+        "eu-09-17",
+        "eu-10-17"
+      ],
+      "playable": false,
+      "roads": []
+    },
+    {
+      "worldCenter": [
+        16896,
+        13312
+      ],
+      "sourceCellIds": [
+        "eu-10-12",
+        "eu-11-12",
+        "eu-10-13",
+        "eu-11-13"
+      ],
+      "playable": false,
+      "roads": []
+    },
+    {
+      "worldCenter": [
+        18432,
+        13312
+      ],
+      "sourceCellIds": [
+        "eu-11-12",
+        "eu-12-12",
+        "eu-11-13",
+        "eu-12-13"
+      ],
+      "playable": false,
+      "roads": []
+    },
+    {
+      "worldCenter": [
+        18432,
+        17408
+      ],
+      "sourceCellIds": [
+        "eu-11-16",
+        "eu-12-16",
+        "eu-11-17",
+        "eu-12-17"
+      ],
+      "playable": false,
+      "roads": []
+    },
+    {
+      "worldCenter": [
+        19968,
+        13312
+      ],
+      "sourceCellIds": [
+        "eu-12-12",
+        "eu-13-12",
+        "eu-12-13",
+        "eu-13-13"
+      ],
+      "playable": false,
+      "roads": []
+    }
+  ],
+  "exactPhotoGeoreferenced": false,
+  "visuallyChecked": 0,
+  "physicallyRoadConnected": 0,
+  "mobileRendered": 0,
+  "nativeGamePlayable": 0,
+  "historicallyVerified": 0,
+  "finishedToday": 0,
+  "cells": [
+    {
+      "id": "eu-07-12",
+      "grid": [
+        7,
+        12
+      ],
+      "origin": [
+        10752,
+        12288
+      ],
+      "geography": {
+        "biome": "hills-and-mountains",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-07-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-07-12-commons.jpg",
+      "sourceCrop": [
+        1152,
+        832,
+        2688,
+        1856
+      ],
+      "sourceSha256": "57fa638dcef3e3d997107c0842a995fdc18ceb0ee95e058b4fc7b9b328feb427",
+      "outputSha256": "ced9927d324099d8be33f54629822514673a1c0e8d8731cef76f2766e71a7100",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg/3840px-Aerial_image_of_the_Danube_Gorge_near_Weltenburg.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Carsten Steger",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "motif": "Forested Danube limestone gorge",
+      "sourceRegion": "Danube gorge, Bavaria, Germany",
+      "approximateRegionCenter": [
+        11.83,
+        48.9
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "nativePhotoSourceGroup": "standalone-eu-07-12",
+      "nativePhotoUnderlay": false,
+      "sourceManifest": "terrain-grid/factory-photo/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-07-12.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "bd3e955e8867450140894e1fa2b311e9c6b805a573c0a3a879769f06d9a266ae"
+    },
+    {
+      "id": "eu-10-12",
+      "grid": [
+        10,
+        12
+      ],
+      "origin": [
+        15360,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-10-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        900,
+        700,
+        2436,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "c2075db0c1aa1a6f5534ab5e37f8566883d9f3813bc2a2984ecbd12c3f226637",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-10-12.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "5dcbf22797bd64058518f419400b1976d52e10e1ff3c54cfbf05bdd9231e688b"
+    },
+    {
+      "id": "eu-11-12",
+      "grid": [
+        11,
+        12
+      ],
+      "origin": [
+        16896,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-11-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2436,
+        700,
+        3972,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "318cae34ae3e3a7d047a5095b0c90b8dc6e4cb67e1eebd37deee05fdc036fe22",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-11-12.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "afdc279ed78f45f98874c81f38f47b743180a4b8d5f595b1387b4f014c987197"
+    },
+    {
+      "id": "eu-12-12",
+      "grid": [
+        12,
+        12
+      ],
+      "origin": [
+        18432,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-12-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        3972,
+        700,
+        5508,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "4002bdf2de233f0030215c7b08062eab366821b6317345491e2561e766c95040",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-12-12.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "95d6caab903e723eaa0160f131622f9fc9f3fe67ed3ed367102a8a677b31f9d0"
+    },
+    {
+      "id": "eu-13-12",
+      "grid": [
+        13,
+        12
+      ],
+      "origin": [
+        19968,
+        12288
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-13-12.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5508,
+        700,
+        7044,
+        1724
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "b733214c56823cb660edeb6bf82ccfc6db7516f3f0196a5844ef1dd4a1186ab6",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-13-12.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "c506cc615b6caff254037f518118b24135487b4841ce817622428cc1ef4fb6a6"
+    },
+    {
+      "id": "eu-10-13",
+      "grid": [
+        10,
+        13
+      ],
+      "origin": [
+        15360,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-10-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        900,
+        1724,
+        2436,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "8b8c095c1582f354bad64f66262a816b37bd40758883ad35100e3ba018927edc",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-10-13.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "bfdf692856d891f088e8056f36da8d07704cb314aa3c890bb1b715a74151a68b"
+    },
+    {
+      "id": "eu-11-13",
+      "grid": [
+        11,
+        13
+      ],
+      "origin": [
+        16896,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-11-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2436,
+        1724,
+        3972,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "734b1552d0f94de1c0c4345bac8a8c653b54bb4aba94370bf4c2dd9e4383db7e",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-11-13.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "d4408f42195957e621dcbf46c1e4f6a643586a38da0bdadec189d39f3ef2fe04"
+    },
+    {
+      "id": "eu-12-13",
+      "grid": [
+        12,
+        13
+      ],
+      "origin": [
+        18432,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-12-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        3972,
+        1724,
+        5508,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "5b79e5865c1ebfbe4d47b070f415e63fa88484b4fd8e38c754ac67019625fe87",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-12-13.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "2dedfc5ae1b5b0a023a8d5e2cc289fe01af17d7832ba44b17f4bcad73ee88357"
+    },
+    {
+      "id": "eu-13-13",
+      "grid": [
+        13,
+        13
+      ],
+      "origin": [
+        19968,
+        13312
+      ],
+      "image": "terrain-grid/factory-photo/carpathian-8/eu-13-13.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/0/07/%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D1%96%D0%BD%D0%BD%D1%96%D0%B9_%D0%BB%D1%96%D1%81_%D0%B2_%D1%85%D0%BC%D0%B0%D1%80%D0%B0%D1%85_%D1%82%D1%83%D0%BC%D0%B0%D0%BD%D1%83.jpg",
+      "author": "Ryzhkov Oleksandr",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5508,
+        1724,
+        7044,
+        2748
+      ],
+      "sourceSha256": "f3acb9f4a49fc818f3e7137d915856b9744b0ae30bc682c36638f1014019b09d",
+      "outputSha256": "8a9b954721e3103f1f2061a521b32a38c0211e10d3f421e6b5544fba5c0e4d95",
+      "motif": "Carpathian forest canopy, mist and wooded mountain slopes",
+      "sourceRegion": "Ukrainian Carpathians (modern illustrative photo, NOT precise V94 registration)",
+      "nativePhotoSourceGroup": "carpathian-original-0",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/carpathian-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-13-13.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "c9d3a73d1a0fba14aaebab3c43d70f72263e38d33346bc275966e39eaab0860b"
+    },
+    {
+      "id": "eu-05-14",
+      "grid": [
+        5,
+        14
+      ],
+      "origin": [
+        7680,
+        14336
+      ],
+      "geography": {
+        "biome": "alpine",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-05-14.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-05-14-commons.jpg",
+      "sourceCrop": [
+        1152,
+        1076,
+        2688,
+        2100
+      ],
+      "sourceSha256": "17fa2c41e817d431e3f965f39e6f1fa2c070eded5b54242ce0af3e3f8db8bc20",
+      "outputSha256": "64e75a950b7aa6d06cadc78c6fd30497f27e3dabb9605bcc05dd9bf81c45a971",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Alps_aerial_1.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Alps_aerial_1.jpg/3840px-Alps_aerial_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Kallerna",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "motif": "Western Alps high ridges and valley",
+      "sourceRegion": "Mont Blanc and Aosta Valley, western Alps",
+      "approximateRegionCenter": [
+        6.86,
+        45.83
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "nativePhotoSourceGroup": "standalone-eu-05-14",
+      "nativePhotoUnderlay": false,
+      "sourceManifest": "terrain-grid/factory-photo/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-05-14.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "2a663ac3d10ffc75d2eb15c69e9836762b0fc653763877a424ef5604a578232d"
+    },
+    {
+      "id": "eu-08-15",
+      "grid": [
+        8,
+        15
+      ],
+      "origin": [
+        12288,
+        15360
+      ],
+      "geography": {
+        "biome": "coast-or-lowland",
+        "source": "V94 geographic grid; approximate source region only"
+      },
+      "image": "terrain-grid/factory-photo/eu-08-15.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-grid/factory-photo/source-cache/eu-08-15-commons.jpg",
+      "sourceCrop": [
+        2304,
+        1536,
+        3840,
+        2560
+      ],
+      "sourceSha256": "92b127ef7d40a3516e968872e631d339f6d2ee922deacedadac7a0c954eea24e",
+      "outputSha256": "ea10b98cea06ecd4390160f1eb1c70aec9f296a42e96ab2f135055d832710903",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG/3840px-Dalmatia_Vrgora%C4%8Dko_Polje_and_Gradac_coastal_city_IMG_9880.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "author": "Bjoertvedt",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "motif": "Adriatic coast, limestone mountains and coastal lowlands",
+      "sourceRegion": "Dalmatian coastal mountains, Croatia",
+      "approximateRegionCenter": [
+        17.43,
+        43.21
+      ],
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "originalTerrainSource": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "nativePhotoSourceGroup": "standalone-eu-08-15",
+      "nativePhotoUnderlay": false,
+      "sourceManifest": "terrain-grid/factory-photo/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-08-15.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "641897e00aa5a932fa80143cbb7119b030a49816a279f76e422b13272a10ca1c"
+    },
+    {
+      "id": "eu-09-16",
+      "grid": [
+        9,
+        16
+      ],
+      "origin": [
+        13824,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-09-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        256,
+        1536,
+        1280
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "716a07592956e7b2cd1733f240e1412a1753da6b26d1b828e0b176ebd0864b1e",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.264,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-09-16.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "8ade53a274cbbde6238dbceca5a45c66a95874f0836b4a00f63f0528c47ba627"
+    },
+    {
+      "id": "eu-10-16",
+      "grid": [
+        10,
+        16
+      ],
+      "origin": [
+        15360,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-10-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        256,
+        3072,
+        1280
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "988ed35b60138f277c8d1dac1b411e4352506b9dfa34e59c062dc4a542bde40c",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.009,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-10-16.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "30dbc21aa67a4ce2f7a93a5d953d7e7964f4c1c5c0f2b8e0af9f7b8ef1e58b20"
+    },
+    {
+      "id": "eu-11-16",
+      "grid": [
+        11,
+        16
+      ],
+      "origin": [
+        16896,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-11-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        256,
+        1536,
+        1280
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "331967700d652d8e52c593b6908fb1b2d5ba219014107db70f48b60b430ec86b",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.303,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-11-16.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "17f6564e5bb9b8cdf8678fb7704c4f352cd2fa92ebd03c142d981e346644296f"
+    },
+    {
+      "id": "eu-12-16",
+      "grid": [
+        12,
+        16
+      ],
+      "origin": [
+        18432,
+        16384
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-12-16.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        256,
+        3072,
+        1280
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "cdfcd4efd1521ebb51c5486a958c23ed6323851585f8d907dfea7eaaa66435bc",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.169,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-12-16.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "5e5d2822e6b03cc421fa9704e0dde3e1a26748c162fa36840c93b3fea911ecae"
+    },
+    {
+      "id": "eu-09-17",
+      "grid": [
+        9,
+        17
+      ],
+      "origin": [
+        13824,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-09-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        1280,
+        1536,
+        2304
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "0893c38b8626d9f94af040d5f358a69b95875ccebd06b881286a91e13d88bff8",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.61,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-09-17.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "0589e09590239acb3fbf20c4751370457ef865a829dd585fdae34fc78a1a4581"
+    },
+    {
+      "id": "eu-10-17",
+      "grid": [
+        10,
+        17
+      ],
+      "origin": [
+        15360,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-10-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/west-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        1280,
+        3072,
+        2304
+      ],
+      "sourceSha256": "21f3a17dff092cc8e8ec2ae5012a5aea29350bfcd69d5af62e4e35d1455a84c4",
+      "outputSha256": "a8a6c13df71e797de16ac57ec92c5c9f4fc0e2ee6e5cd0ecd56b9215a57c8422",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drone_image_of_Sharr_Mountains_during_Spring_Season.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr high limestone and mountain meadow",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-west-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.564,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-10-17.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "cfb27b7c5c93a2f7b1e4dd625bab7873a398b17c1c42e05226857169ed0c52d8"
+    },
+    {
+      "id": "eu-11-17",
+      "grid": [
+        11,
+        17
+      ],
+      "origin": [
+        16896,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-11-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        0,
+        1280,
+        1536,
+        2304
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "4866ed61530ac889f9b9a1fdcd1e544e5cbd43e799afc60810c73036b2b3ba55",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.42,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-11-17.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "ce8f0a516edbbcebb9fe1749c40d8bbe537cfc8a5995680ac6bb8b47f5179b0e"
+    },
+    {
+      "id": "eu-12-17",
+      "grid": [
+        12,
+        17
+      ],
+      "origin": [
+        18432,
+        17408
+      ],
+      "image": "terrain-grid/factory-photo/block-8/eu-12-17.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "terrain-v224/source/south-wikimedia-3072-ccby.jpg",
+      "sourceCrop": [
+        1536,
+        1280,
+        3072,
+        2304
+      ],
+      "sourceSha256": "8416c7ddd2544637a2a7c556f7ce109f80cd2a0e6e5e7122bd0cd9a22814c3c8",
+      "outputSha256": "1d522cf8e21e653482622eeb5404a7c33a8d1e6108079090f39fa31ccbbe61a4",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_Sharr_Mountains_in_Kosovo.jpg",
+      "author": "SUHEJLO",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "motif": "Sharr wooded mountain valley and slopes",
+      "sourceRegion": "Sharr Mountains, Balkans — illustrative photo, NOT grid georegistration",
+      "nativePhotoSourceGroup": "sharr-south-native-2x2",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "terrainSourceSeamVerifiedWithinGroup": true,
+      "photoEncodingMeanError": 1.379,
+      "exactPhotoGeoreferenced": false,
+      "periodSafe": false,
+      "modernFeaturesQuarantined": false,
+      "sourceBackedPhotographicArtComposed": true,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "paintedRoads": [],
+      "gameplayEnabled": false,
+      "historicallyVerified": false,
+      "visuallyReviewedOnPhone": false,
+      "provinceIds": [],
+      "scenicSettlements": [],
+      "strategicTowns": [],
+      "sourceManifest": "terrain-grid/factory-photo/block-8/manifest.json",
+      "previewImage": "terrain-grid/factory-photo/coverage/thumbs/eu-12-17.webp",
+      "previewSize": [
+        384,
+        256
+      ],
+      "previewSha256": "5cc8baa69992209695e2de219e7dfe7b9c3ecfc5dc25018a0d59dd253a6414ae"
+    }
+  ]
+}

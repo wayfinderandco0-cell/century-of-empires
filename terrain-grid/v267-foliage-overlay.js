@@ -13,6 +13,8 @@ function compile(gl,type,source){
  return shader;
 }
 function makeGeometry(kind){
+ // Entirely original world-scale branching geometry, not photo billboards.
+ // Keep tree roots at y=0; existing heightfield contact stays exact.
  const vertices=[];
  function triangle(a,b,c,mat){
   const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
@@ -20,42 +22,59 @@ function makeGeometry(kind){
   const l=Math.hypot(...n)||1;
   for(const p of [a,b,c])vertices.push(...p,mat,n[0]/l,n[1]/l,n[2]/l);
  }
- function cylinder(radius,y0,y1,mat,segments=7){
-  for(let i=0;i<segments;i++){
-   const a=2*Math.PI*i/segments,b=2*Math.PI*(i+1)/segments;
-   const p=[Math.cos(a)*radius,y0,Math.sin(a)*radius];
-   const q=[Math.cos(b)*radius,y0,Math.sin(b)*radius];
-   const r=[Math.cos(a)*radius,y1,Math.sin(a)*radius];
-   const s=[Math.cos(b)*radius,y1,Math.sin(b)*radius];
-   triangle(p,q,r,mat);triangle(q,s,r,mat);
+ function trunk(){
+  const sides=8;
+  for(let i=0;i<sides;i++){
+   const a=2*Math.PI*i/sides,b=2*Math.PI*(i+1)/sides;
+   const p=[.085*Math.cos(a),0,.085*Math.sin(a)];
+   const q=[.085*Math.cos(b),0,.085*Math.sin(b)];
+   const r=[.043*Math.cos(a),.57,.043*Math.sin(a)];
+   const s=[.043*Math.cos(b),.57,.043*Math.sin(b)];
+   triangle(p,q,r,0);triangle(q,s,r,0);
   }
  }
- cylinder(.10,0,.38,0);
+ trunk();
  if(kind==="conifer"){
-  // Overlapping crown tiers create actual depth and silhouette, not
-  // billboard triangles painted on a flat terrain photograph.
-  for(const [y0,y1,r] of [[.19,.58,1],[.42,.81,.76],[.65,1,.48]]){
-   for(let i=0;i<10;i++){
-    const a=2*Math.PI*i/10,b=2*Math.PI*(i+1)/10;
-    triangle([r*Math.cos(a),y0,r*Math.sin(a)],
-             [r*Math.cos(b),y0,r*Math.sin(b)],
-             [0,y1,0],1);
+  // Distinct descending branch whorls replace repeated stacked cones.
+  // Triangular sprays have actual front/back faces and directional depth.
+  for(let tier=0;tier<6;tier++){
+   const t=tier/6,y=.18+t*.68,reach=.92*Math.pow(1-t,.86);
+   const branches=8;
+   for(let i=0;i<branches;i++){
+    const angle=2*Math.PI*(i+.42*(tier%2))/branches;
+    const dx=Math.cos(angle),dz=Math.sin(angle),px=-dz,pz=dx;
+    const swing=.92+.10*Math.sin(3*i+2*tier);
+    const tip=[reach*swing*dx,y-.055*(1-t),reach*swing*dz];
+    const inside=[.055*dx,y+.13*(1-t),.055*dz];
+    const left=[.56*reach*dx+.19*reach*px,y+.028,.56*reach*dz+.19*reach*pz];
+    const right=[.56*reach*dx-.19*reach*px,y+.028,.56*reach*dz-.19*reach*pz];
+    triangle(inside,left,tip,1);triangle(inside,tip,right,1);
+    triangle(left,right,tip,2);
    }
   }
- } else {
-  // Three overlapping faceted ellipsoids give broadleaf crowns volume.
-  for(const [cx,cy,cz,r] of [[-.32,.68,0,.76],[.33,.69,.12,.72],[0,.83,-.18,.75]]){
-   const rings=5,sides=9;
+  // Irregular narrow leader, not a flat triangular cap.
+  for(let i=0;i<8;i++){
+   const a=2*Math.PI*i/8,b=2*Math.PI*(i+1)/8;
+   triangle([.17*Math.cos(a),.80,.17*Math.sin(a)],
+            [.17*Math.cos(b),.80,.17*Math.sin(b)],[0,1.06,0],1);
+  }
+ }else{
+  // Overlapping volumetric leaf masses, asymmetric and spatially separated.
+  const lobes=[[-.30,.68,-.06,.68],[.30,.73,.08,.63],
+               [-.04,.89,-.20,.64],[.05,.78,.28,.53]];
+  for(let k=0;k<lobes.length;k++){
+   const [cx,cy,cz,r]=lobes[k],rings=4,sides=9;
    for(let j=0;j<rings;j++)for(let i=0;i<sides;i++){
     const a=Math.PI*j/rings,b=Math.PI*(j+1)/rings;
     const t=2*Math.PI*i/sides,u=2*Math.PI*(i+1)/sides;
     function point(phi,theta){
-     return [cx+r*Math.sin(phi)*Math.cos(theta),
-             cy+r*.55*Math.cos(phi),
-             cz+r*Math.sin(phi)*Math.sin(theta)];
+     const rough=1+.09*Math.sin(3*theta+2*k)+.06*Math.cos(5*theta+phi*2+k);
+     return [cx+r*rough*Math.sin(phi)*Math.cos(theta),
+             cy+r*.53*Math.cos(phi),
+             cz+r*rough*Math.sin(phi)*Math.sin(theta)];
     }
     const p=point(a,t),q=point(a,u),s=point(b,t),v=point(b,u);
-    triangle(p,s,q,1);triangle(q,s,v,1);
+    triangle(p,s,q,3);triangle(q,s,v,3);
    }
   }
  }
@@ -84,22 +103,41 @@ out vec3 vNormal;
 out float vMaterial;
 out float vHue;
 out float vSeed;
+out float vSpecies;
 void main(){
- vec3 position=aTreeA.xyz+vec3(aLocal.x*aTreeA.w,
-                                aLocal.y*aTreeB.x,aLocal.z*aTreeA.w);
+ // World-anchored instance rotation breaks identical crown silhouettes.
+ float angle=6.2831853*aTreeB.w;
+ float cs=cos(angle),sn=sin(angle);
+ vec3 local=vec3(aLocal.x*cs-aLocal.z*sn,aLocal.y,
+                 aLocal.x*sn+aLocal.z*cs);
+ vec3 n=vec3(aNormal.x*cs-aNormal.z*sn,aNormal.y,
+             aNormal.x*sn+aNormal.z*cs);
+ vec3 position=aTreeA.xyz+vec3(local.x*aTreeA.w,
+                                local.y*aTreeB.x,local.z*aTreeA.w);
  gl_Position=uVP*vec4(position,1.0);
- vNormal=aNormal;vMaterial=aLocal.w;vHue=aTreeB.y;vSeed=aTreeB.w;
+ vNormal=n;vMaterial=aLocal.w;vHue=aTreeB.y;
+ vSeed=aTreeB.w;vSpecies=aTreeB.z;
 }`;
   const frag=`#version 300 es
 precision highp float;
-in vec3 vNormal;in float vMaterial;in float vHue;in float vSeed;
+in vec3 vNormal;in float vMaterial;in float vHue;
+in float vSeed;in float vSpecies;
 out vec4 fragColor;
 void main(){
- float lit=.55+.45*max(0.0,dot(normalize(vNormal),normalize(vec3(-.5,.78,.36))));
- vec3 bark=vec3(.28,.22,.16);
- vec3 needles=vec3(.11,.29,.15)*vHue+vec3(.015*vSeed,.035*vSeed,.012);
- vec3 color=mix(bark,needles,step(.5,vMaterial));
- fragColor=vec4(color*lit,1.0);
+ vec3 n=normalize(vNormal);
+ float direct=max(0.0,dot(n,normalize(vec3(-.48,.81,.32))));
+ float ambient=.48+.40*direct;
+ float variation=.86+.22*fract(sin(vSeed*47.1)*43758.5453);
+ vec3 bark=vec3(.25,.20,.15)*variation;
+ vec3 conifer=vec3(.105,.255,.135)*vHue*variation;
+ vec3 underside=vec3(.070,.165,.085)*vHue*variation;
+ vec3 broadleaf=vec3(.19,.315,.125)*vHue*variation;
+ vec3 color=vMaterial<.5?bark:
+            vMaterial<1.5?conifer:
+            vMaterial<2.5?underside:broadleaf;
+ // Distant broadleaf masses retain different color and light response.
+ float shade=vMaterial<.5?.79:ambient;
+ fragColor=vec4(color*shade,1.0);
 }`;
   const program=gl.createProgram();
   gl.attachShader(program,compile(gl,gl.VERTEX_SHADER,vert));
@@ -123,10 +161,10 @@ void main(){
    gl.vertexAttribDivisor(2,1);
    gl.enableVertexAttribArray(3);gl.vertexAttribPointer(3,4,gl.FLOAT,false,32,16);
    gl.vertexAttribDivisor(3,1);
-   groups.push({vao,count:g.count,vertices:mesh.length/7});
+   groups.push({vao,kind:g.kind,count:g.count,vertices:mesh.length/7,triangles:mesh.length/21});
   }
   gl.bindVertexArray(null);
-  state.total=m.total;state.groups=groups;state.ready=true;
+  state.total=m.total;state.groups=groups;state.geometryTrianglesPerTree=Object.fromEntries(groups.map(g=>[g.kind,g.triangles]));state.ready=true;
   state.draw=(vpMatrix,center,span)=>{
    if(span>7000){state.drawn=0;return}
    const old=gl.getParameter(gl.CURRENT_PROGRAM);

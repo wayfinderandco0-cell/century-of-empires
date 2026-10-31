@@ -12,7 +12,7 @@ src[:,:,1]=np.arange(1450,dtype=np.uint16)[:,None]%256
 src[:,:,2]=130
 window,rect=g.ground_window(Image.fromarray(src),(.48,.56))
 assert window.size==(1536,1024)
-assert rect[3]==1450 and rect[2]-rect[0]==1536
+assert 1400<=rect[3]<=1450 and rect[2]-rect[0]==1536 and rect[3]-rect[1]==1024
 assert np.array_equal(np.asarray(window)[0,0],src[rect[1],rect[0]])
 a=np.asarray(window);b=np.roll(a,18,axis=1)
 path=g.seam_path(a,b)

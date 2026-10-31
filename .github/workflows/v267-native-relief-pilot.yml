@@ -7,6 +7,8 @@ on:
       - scripts/v267_native_relief_pilot.py
       - scripts/v267_relief_materials.py
       - scripts/v267_heightmesh_export.py
+      - scripts/v267_foliage_instances.py
+      - terrain-grid/v267-foliage-overlay.js
       - scripts/v267_validate_heightmesh_seams.py
       - terrain-grid/v267-heightmesh-review.html
       - terrain-grid/atlas-integrated.js
@@ -63,6 +65,37 @@ jobs:
           PY
       - name: Export actual indexed 3D heightmesh geometry from shared V94 world space
         run: python scripts/v267_heightmesh_export.py --root . --out generated/v267-relief-pilot
+      - name: Generate world-anchored original 3D foliage on exact painted terrain
+        run: python scripts/v267_foliage_instances.py --root . --out generated/v267-relief-pilot
+      - name: Validate binary 3D foliage, source alignment, conservative status and JavaScript
+        run: |
+          node --check terrain-grid/v267-foliage-overlay.js
+          python - <<'PY'
+          import json,hashlib,numpy as np
+          from pathlib import Path
+          from scipy.ndimage import map_coordinates
+          p=Path('generated/v267-relief-pilot')
+          m=json.loads((p/'foliage-manifest.json').read_text())
+          z=np.load(p/'heightfield-step16.npy',allow_pickle=False)
+          raw=(p/m['file']).read_bytes()
+          trees=np.frombuffer(raw,dtype='<f4').reshape(-1,8)
+          assert m['schema']=='coe-v267-world-locked-foliage/v1'
+          assert len(trees)==m['total']>50 and len(raw)==m['total']*32
+          assert hashlib.sha256(raw).hexdigest()==m['sha256']
+          assert hashlib.sha256((p/'heightfield-step16.npy').read_bytes()).hexdigest()==m['heightfieldSha256']
+          assert sum(g['count'] for g in m['groups'])==len(trees)
+          assert all(g['offsetFloats']%8==0 for g in m['groups'])
+          assert m['minRoadClearancePixels']>27
+          assert not m['sourcePhotosUsed'] and not m['historicalVegetationVerified']
+          assert m['finishedToday']==m['visuallyApprovedV267']==m['nativeGamePlayable']==0
+          assert np.isfinite(trees).all()
+          assert np.all((trees[:,0]>0)&(trees[:,0]<6144))
+          assert np.all((trees[:,2]<0)&(trees[:,2]>-2048))
+          ground=map_coordinates(z,[-trees[:,2]/16,trees[:,0]/16],order=1,mode='nearest')
+          assert np.max(np.abs(ground-trees[:,1]))<.0001
+          assert np.all(trees[:,3]>0) and np.all(trees[:,4]>0)
+          print('PASS original 3D tree instances anchored to painted heightfield; zero approvals')
+          PY
       - name: Validate independently exported glTF buffers, true neighbor seams, and painted ground alignment
         run: python scripts/v267_validate_heightmesh_seams.py --out generated/v267-relief-pilot
       - name: Validate eight textured glTF meshes and exact shared-border contracts
@@ -164,9 +197,13 @@ jobs:
                   page.wait_for_function('window.COEMeshReview && (window.COEMeshReview.loaded || window.COEMeshReview.failed)',timeout=90000)
                   state=page.evaluate('window.COEMeshReview')
                   assert state['webgl2'] and state['loaded'] and state['cells']==8 and state['inlays']==3 and not state['failed'],state
+                  page.wait_for_function('window.COEFoliage && (window.COEFoliage.ready || window.COEFoliage.failed)',timeout=90000)
+                  foliage=page.evaluate('({ready:COEFoliage.ready,failed:COEFoliage.failed,total:COEFoliage.total})')
+                  assert foliage['ready'] and foliage['total']>50 and not foliage['failed'],foliage
                   page.locator('#plus').click()
                   page.locator('#minus').click()
                   page.locator('#next').click()
+                  assert page.evaluate('COEFoliage.drawn')>0, 'No actual 3D tree instances drawn at close zoom'
                   page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-close-iphone.png')
                   page.locator('#whole').click()
                   page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-iphone.png')

@@ -4,6 +4,8 @@
   "source": "V94 DEM plus explicitly synthetic microrelief",
   "true3DMesh": true,
   "sourcePhotosUsed": false,
+  "geometryUsesExactPaintedHeightfield": true,
+  "paintedHeightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
   "meshStepPixels": 16,
   "cells": [
     {
@@ -12,7 +14,7 @@
       "binary": "pilot-0-0.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "5673eff57afe2c2f82a66c62981aac346524db424f9cebd1cb2c8e69aff745e7",
+      "sha256": "556e2b5f97f1db5b9288889ed06788af2d51ff6287ddea08318958c927fdf180",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -23,7 +25,7 @@
       "binary": "pilot-1-0.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "a7b2e9e0f59f17e14e5d67d1ca01efdd7c7421adfe195b810591a1a229e16958",
+      "sha256": "a22e89e979b3cc8d348f7f095f3e60785c0b3341a14a9c200a168b09fd0a534f",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -34,7 +36,7 @@
       "binary": "pilot-2-0.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "3669e497d69075cb203ebca5d27f0a440c34d93590ad534aad130e0aba549114",
+      "sha256": "e6de4b7b7135b05f4a4c3cd657dcc5ccfec6717620c89cf7ab61972e6af9092e",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -45,7 +47,7 @@
       "binary": "pilot-3-0.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "ec1aab310d03ab0f836450e02aac05888a0e5ff44b89266279c0a1ac8b2d2821",
+      "sha256": "7f53b7fc820f230978dc8c23ad527b765db69e9ead2df258a89abe4ce39b5def",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -56,7 +58,7 @@
       "binary": "pilot-0-1.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "208119a4e5a568fad9babc96952c65664b091e8575e58dd70e121fa105660398",
+      "sha256": "aab63e41336c40bcddc9bd72f4c1704f052f7fd534c830b77483f7e3c15833d9",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -67,7 +69,7 @@
       "binary": "pilot-1-1.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "2021f7c224781dfa3954a1124178bfd03dd1f1d3a556df87956390f1e6093250",
+      "sha256": "34525a9f98700fef7fa4bd2d882f2154ec37e1db9744f5e63710392db28ff64b",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -78,7 +80,7 @@
       "binary": "pilot-2-1.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "9a8e599c529ba86133ea57dad11963603595613fb1af99c1bc8bb2515b42d6bd",
+      "sha256": "97f385c92126a7b23c200fd188c411f32da1ebba5e6270a15c27b2ca680a619b",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -89,7 +91,7 @@
       "binary": "pilot-3-1.bin",
       "vertexCount": 6305,
       "triangleCount": 12288,
-      "sha256": "de4c9a4d047ceaeb891cc007e0632a408f40dd8947f622d6126bf4aa611b54ec",
+      "sha256": "b526ceb5d6abdb97b1dc00133a6f26e82407021a7a6ad6f2bedc553a4cc58717",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -102,7 +104,7 @@
       "binary": "infill-0-0.bin",
       "vertexCount": 1089,
       "triangleCount": 2048,
-      "sha256": "14856d99b66773e0228ccadc13f3940a4cc24f022b6fb29ca5921ff1bba588dc",
+      "sha256": "5ac842fdc1f5171ce0e90f3c4e460793fd6a4453d491e94e4a0d3572db865c8e",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -113,7 +115,7 @@
       "binary": "infill-1-0.bin",
       "vertexCount": 1089,
       "triangleCount": 2048,
-      "sha256": "15a1b1c47a7c7a9ded56261e359173e6f64016ea0913bb2a9065cdfc025f5a75",
+      "sha256": "5edecc6385c1b51fb889aad779e79550b908d957a746136c1e9b4fc0d32558a0",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false
@@ -124,7 +126,7 @@
       "binary": "infill-2-0.bin",
       "vertexCount": 1089,
       "triangleCount": 2048,
-      "sha256": "020e72aac4219f3cf61c281ef8dc86162474f90daa3763b484cb6eaf16d305c3",
+      "sha256": "87e988692f1179daa9d7c15ea1b270b185e50f0a52ebd103eb7bec5ea191fb61",
       "nativeGamePlayable": false,
       "visuallyApproved": false,
       "playable": false

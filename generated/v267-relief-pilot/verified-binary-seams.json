@@ -1,0 +1,70 @@
+{
+  "independentBinaryPositionAndNormalSeams": 10,
+  "artAndMeshGroundHeightAligned": 8,
+  "provisionalArtRoadSeams": 8,
+  "historicallyVerified": 0,
+  "newlyPlayable": 0,
+  "finishedToday": 0,
+  "checks": [
+    {
+      "a": "pilot-0-0",
+      "b": "pilot-1-0",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-2-0",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-2-0",
+      "b": "pilot-3-0",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-0-1",
+      "b": "pilot-1-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-1-1",
+      "b": "pilot-2-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-2-1",
+      "b": "pilot-3-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-0-0",
+      "b": "pilot-0-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-1-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-2-0",
+      "b": "pilot-2-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    },
+    {
+      "a": "pilot-3-0",
+      "b": "pilot-3-1",
+      "positionError": 0.0,
+      "normalError": 0.0
+    }
+  ]
+}

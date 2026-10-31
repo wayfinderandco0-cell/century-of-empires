@@ -285,5 +285,8 @@
       "roadNodes": [],
       "sha256": "9d115659015a4caeb401e82c1dc0ac1547b6a9214a303d1ea2b8d491f607caa9"
     }
-  ]
+  ],
+  "meshSourceHeightfield": "heightfield-step16.npy",
+  "meshSourceHeightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
+  "meshGroundArtAligned": true
 }

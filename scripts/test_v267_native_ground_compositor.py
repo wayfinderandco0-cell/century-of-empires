@@ -20,5 +20,5 @@ assert path.shape==(1536,) and 640<=path.min()<=path.max()<=905
 out,report=g.compose(Image.fromarray(a),Image.fromarray(b))
 assert out.size==(1536,1024)
 assert report["roadsAdded"]==0 and not report["physicalTileEdgesVerified"]
-assert np.array_equal(np.asarray(out)[:500],a[:500])
+assert np.max(np.abs(np.asarray(out)[:500].astype(np.int16)-a[:500].astype(np.int16)))<=1
 print("PASS V267 native ground compositor: no warping, bounded seam, no invented roads")

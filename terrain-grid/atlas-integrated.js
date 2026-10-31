@@ -150,10 +150,10 @@ function routeBetween(from,to){
  return result;
 }
 function sample(points,amount){let left=amount;for(let i=1;i<points.length;i++){const n=distance(points[i-1],points[i]);if(left<=n)return [points[i-1][0]+(points[i][0]-points[i-1][0])*left/n,points[i-1][1]+(points[i][1]-points[i-1][1])*left/n];left-=n;}return clone(points.at(-1));}
-function startOrder(to){if(photoMode){status("Photo candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
+function startOrder(to){if(photoMode||neighborPilotShown){status("Unapproved scenic candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
-function tapRoad(point){if(photoMode)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
+function tapRoad(point){if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,(photoMode||neighborPilotShown)?.15:.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
 function close(){shown=false;layer.hidden=true;openButton.hidden=false;openButton.focus();}
@@ -208,6 +208,7 @@ pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 pilotButton.onclick=async()=>{
  if(neighborPilotShown){neighborPilotShown=false;
+  for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
   if(neighborPilotCamera){center=neighborPilotCamera.center;zoom=neighborPilotCamera.zoom;scale=base*zoom;}
   status("Protected WEST / MATREI / SOUTH roads restored");draw();return;
  }
@@ -240,6 +241,8 @@ pilotButton.onclick=async()=>{
    neighborPilotCells=all;neighborPilotImages=Object.fromEntries(pairs);
   }
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
+  halt();
+  for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
   $("atlasWhole").click();
   status(neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message);}

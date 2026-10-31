@@ -14,6 +14,7 @@ import urllib.parse
 from pathlib import Path
 from PIL import Image, ImageDraw
 import v267_original_neighbor_art as v267
+import v267_native_ground_compositor as ground
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"terrain-grid/v267-europe-neighbor-b"
@@ -80,11 +81,11 @@ def main():
     for i,(ident,title,origin,biome,focus,region,unsplash_id) in enumerate(SPEC):
         photo,provenance=sources[i]
         donor,donor_provenance=sources[(i+5)%8]
-        primary,crop=v267.window(photo,focus)
-        foreground,foreground_crop=v267.window(donor,(.43+.04*(i%3),.59))
+        primary,crop=ground.ground_window(photo,focus)
+        foreground,foreground_crop=ground.ground_window(donor,(.43+.04*(i%3),.59))
         # A whole-scene layered perspective composition, NOT aerial tiles,
         # raster-distorted trees, clone imagery or a procedural heightmesh.
-        composed=v267.compose(primary,foreground,i+23)
+        composed,ground_report=ground.compose(primary,foreground)
         target=OUT/(ident+".webp")
         composed.save(target,"WEBP",quality=91,method=6)
         cells.append({
@@ -96,14 +97,15 @@ def main():
             "sourcePrimary":dict(provenance,crop=crop),
             "sourceForeground":dict(donor_provenance,crop=foreground_crop),
             "sourceRegionReference":region,
-            "sourceMethod":"Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+            "sourceMethod":ground_report["method"],
+            "groundRegistration":ground_report,
             "scenicSettlements":[],"strategicNodes":[],"provinceIds":[],
             "roadPorts":[],"roadSeamsVerified":False,
             "riverCrossingsVerified":False,"geoVerified":False,
             "historicalVerified":False,"historicallyVerified":False,
             "visuallyReviewed":False,"mobileWebkitRendered":False,
             "nativePlayable":False,"userApproved":False,
-            "notes":"Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review."
+            "notes":"Unapproved terrain-aware photographic study, NOT approved V267-quality art; source location is not a historical survey or exact world-cell placement. No new roads. Sky, modern structures and material seams require manual visual review."
         })
     # Adjacent image-edge COLOR grading does not verify geometry or roads.
     edge=v267.harmonize_candidate_edge_light(cells)

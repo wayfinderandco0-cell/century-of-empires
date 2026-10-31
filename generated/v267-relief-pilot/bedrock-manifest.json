@@ -1,0 +1,29 @@
+{
+  "schema": "coe-v267-original-3d-bedrock/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "heightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
+  "source": "V94 modern DEM plus synthetic facets",
+  "gltf": "bedrock-outcrops.gltf",
+  "binary": "bedrock-outcrops.bin",
+  "sha256": "54e3ca234f726eea838c1226b470bfe208323bfe6168726ce0b7998b033c0031",
+  "outcrops": 1908,
+  "byCell": [
+    111,
+    156,
+    311,
+    191,
+    503,
+    335,
+    71,
+    230
+  ],
+  "vertexCount": 137376,
+  "triangleCount": 45792,
+  "minimumCartwayClearance": 30.428718264499405,
+  "photographicCropsUsed": false,
+  "historicalGeologyVerified": false,
+  "visuallyApprovedV267": 0,
+  "nativeGamePlayable": 0,
+  "finishedToday": 0,
+  "status": "UNAPPROVED_3D_BEDROCK_STUDY"
+}

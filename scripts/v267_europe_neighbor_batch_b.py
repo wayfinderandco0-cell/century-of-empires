@@ -8,7 +8,9 @@ settlements, river crossings, conquest nodes or historical route claims.
 """
 from __future__ import annotations
 import hashlib
+import io
 import json
+import urllib.parse
 from pathlib import Path
 from PIL import Image, ImageDraw
 import v267_original_neighbor_art as v267
@@ -20,25 +22,62 @@ REF=v267.REF
 # coordinates. Source landscapes are geographic analogues, not surveyed tiles.
 # Titles have individually documented CC0 licenses on Wikimedia Commons.
 SPEC=[
- ("southern-terraces","Tyrol, Austria (Unsplash).jpg",(0,3072),"tyrolean-wooded-valley",(.48,.60),"Tyrol, Austria"),
- ("southern-high-meadow","Lost in the mountains of South Tyrol (Unsplash).jpg",(1536,3072),"south-tyrol-high-meadow",(.51,.57),"South Tyrol, Italy"),
- ("dolomite-south-ridge","Snowy mountain in the Dolomites (Unsplash).jpg",(3072,3072),"dolomite-limestone-ridge",(.49,.56),"Dolomites, Italy"),
- ("dolomite-south-pass","Passo Sella, Dolomites (Unsplash).jpg",(4608,3072),"dolomite-open-pass",(.51,.60),"Passo Sella, Italy"),
- ("alpine-southwest-slope","Swiss Alps, Switzerland (Unsplash).jpg",(6144,3072),"swiss-alpine-green-slope",(.48,.57),"Troistorrents, Switzerland"),
- ("alpine-east-summit","Dramatic Alpine scenery (Unsplash).jpg",(6144,0),"alpine-high-ridge",(.50,.53),"Kleine Scheidegg, Switzerland"),
- ("alpine-east-lakeside","Mountain peak in a lake (Unsplash).jpg",(6144,1024),"austrian-lakeside-forest",(.50,.55),"Kitzbühel, Austria"),
- ("alpine-east-snowfield","Alpine village landscape (Unsplash).jpg",(6144,2048),"snowy-alpine-settlement-reference",(.49,.58),"Livigno, Italy"),
+ ("southern-terraces","Tyrol, Austria (Unsplash).jpg",(0,3072),"tyrolean-wooded-valley",(.48,.60),"Tyrol, Austria","dM4ppxLsxbM"),
+ ("southern-high-meadow","Lost in the mountains of South Tyrol (Unsplash).jpg",(1536,3072),"south-tyrol-high-meadow",(.51,.57),"South Tyrol, Italy","7oxd5HfTLiE"),
+ ("dolomite-south-ridge","Snowy mountain in the Dolomites (Unsplash).jpg",(3072,3072),"dolomite-limestone-ridge",(.49,.56),"Dolomites, Italy","b3YPoXpvp4M"),
+ ("dolomite-south-pass","Passo Sella, Dolomites (Unsplash).jpg",(4608,3072),"dolomite-open-pass",(.51,.60),"Passo Sella, Italy","OzhhqIQuoO0"),
+ ("alpine-southwest-slope","Swiss Alps, Switzerland (Unsplash).jpg",(6144,3072),"swiss-alpine-green-slope",(.48,.57),"Troistorrents, Switzerland","HzaT5l4Fzqc"),
+ ("alpine-east-summit","Dramatic Alpine scenery (Unsplash).jpg",(6144,0),"alpine-high-ridge",(.50,.53),"Kleine Scheidegg, Switzerland","h4_Dq9CYugM"),
+ ("alpine-east-lakeside","Mountain peak in a lake (Unsplash).jpg",(6144,1024),"austrian-lakeside-forest",(.50,.55),"Kitzbühel, Austria","bWuy_tqJPOA"),
+ ("alpine-east-snowfield","Alpine village landscape (Unsplash).jpg",(6144,2048),"snowy-alpine-settlement-reference",(.49,.58),"Livigno, Italy","WCm0wjn1y04"),
 ]
+def licensed_source(spec):
+    """Commons verifies CC0 first. Same-source Unsplash original is a fallback.
+
+    Commons 429 on shared runners must not cause a replacement photograph.
+    The immutable Unsplash ID is transcribed from that exact Commons file page.
+    """
+    title=spec[1]
+    try:
+        return v267.commons(title)
+    except RuntimeError as first:
+        # Only network delivery errors are eligible. A failed CC0 license
+        # check must never be bypassed.
+        if "429" not in str(first) and "404" not in str(first):
+            raise
+        unsplash_id=spec[6]
+        url="https://unsplash.com/photos/"+unsplash_id+"/download?force=true&w=2400"
+        try:
+            raw=v267.get(url,fast_fail_429=True)
+            photo=Image.open(io.BytesIO(raw)).convert("RGB")
+        except Exception as second:
+            raise RuntimeError("Both CC0 source delivery paths failed for "+title+
+                               "; Commons: "+str(first)+"; Unsplash: "+str(second))
+        if photo.width<1600 or photo.height<1050:
+            raise RuntimeError("Insufficient same-source Unsplash dimensions: "+title)
+        return photo,{
+            "title":title,
+            "page":"https://commons.wikimedia.org/wiki/File:"+
+                   urllib.parse.quote(title.replace(" ","_")),
+            "license":"CC0 1.0",
+            "licenseUrl":"https://creativecommons.org/publicdomain/zero/1.0/",
+            "sourceSha256":hashlib.sha256(raw).hexdigest(),
+            "download":url,
+            "sourceDimensions":list(photo.size),
+            "sameSourceUnsplashId":unsplash_id,
+            "rightsVerifiedBy":"Commons CC0 page; immutable pre-2017 Unsplash photo ID"
+        }
+
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
     # Reuse tested V267 photo provenance, crop, scene-composition and edge
     # color preflight; it records physical seams as UNVERIFIED.
     v267.OUT=OUT
-    sources=[v267.commons(s[1]) for s in SPEC]
+    sources=[licensed_source(s) for s in SPEC]
     if len({p["sourceSha256"] for _,p in sources})!=8:
         raise RuntimeError("Primary sources must be eight unique original photographs")
     cells=[]
-    for i,(ident,title,origin,biome,focus,region) in enumerate(SPEC):
+    for i,(ident,title,origin,biome,focus,region,unsplash_id) in enumerate(SPEC):
         photo,provenance=sources[i]
         donor,donor_provenance=sources[(i+5)%8]
         primary,crop=v267.window(photo,focus)

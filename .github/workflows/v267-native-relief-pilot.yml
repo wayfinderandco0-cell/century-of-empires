@@ -70,7 +70,7 @@ jobs:
           p=Path('generated/v267-relief-pilot')
           m=json.loads((p/'heightmesh-manifest.json').read_text())
           assert m['true3DMesh'] and not m['sourcePhotosUsed']
-          assert len(m['cells'])==8 and len(m['geometricSeamChecks'])==10
+          assert len(m['cells'])==8 and len(m['inlays'])==3 and len(m['geometricSeamChecks'])==10
           assert m['roadContracts']==8
           assert m['historicalRoadsVerified']==m['nativeGamePlayable']==m['visuallyApprovedV267']==m['finishedToday']==0
           for c in m['cells']:
@@ -80,8 +80,12 @@ jobs:
               assert g['meshes'][0]['primitives'][0]['mode']==4
               assert hashlib.sha256((p/c['binary']).read_bytes()).hexdigest()==c['sha256']
               assert not c['nativeGamePlayable'] and not c['visuallyApproved']
+          for g in m['inlays']:
+              gltf=json.loads((p/g['gltf']).read_text())
+              assert gltf['accessors'][0]['count']==1089 and gltf['accessors'][3]['count']==6144
+              assert not g['playable'] and not g['nativeGamePlayable']
           assert all(c['sameWorldGrid'] and c['maxHeightDifference']==0 for c in m['geometricSeamChecks'])
-          print('PASS: 8 true heightmeshes, 50,440 vertices, 98,304 triangles, 10 exact geometric seams; 0 approved/playable')
+          print('PASS: 8 true heightmeshes + 3 3D diamond infills, 10 exact geometric seams; 0 approved/playable')
           PY
       - name: Install WebKit for mobile screenshot
         run: python -m playwright install --with-deps webkit
@@ -154,7 +158,7 @@ jobs:
                   page.goto('http://127.0.0.1:8765/terrain-grid/v267-heightmesh-review.html')
                   page.wait_for_function('window.COEMeshReview && (window.COEMeshReview.loaded || window.COEMeshReview.failed)',timeout=90000)
                   state=page.evaluate('window.COEMeshReview')
-                  assert state['webgl2'] and state['loaded'] and state['cells']==8 and not state['failed'],state
+                  assert state['webgl2'] and state['loaded'] and state['cells']==8 and state['inlays']==3 and not state['failed'],state
                   page.locator('#plus').click()
                   page.locator('#minus').click()
                   page.locator('#next').click()

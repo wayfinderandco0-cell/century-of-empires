@@ -98,7 +98,9 @@ jobs:
           assert np.all((trees[:,0]>0)&(trees[:,0]<6144))
           assert np.all((trees[:,2]<0)&(trees[:,2]>-2048))
           ground=map_coordinates(z,[-trees[:,2]/16,trees[:,0]/16],order=1,mode='nearest')
-          assert np.max(np.abs(ground-trees[:,1]))<.0001
+          max_root_error=float(np.max(np.abs(ground-trees[:,1])))
+          print('Maximum 3D tree-root ground mismatch:',max_root_error)
+          assert max_root_error<.0001
           assert np.all(trees[:,3]>0) and np.all(trees[:,4]>0)
           print('PASS original 3D tree instances anchored to painted heightfield; zero approvals')
           PY

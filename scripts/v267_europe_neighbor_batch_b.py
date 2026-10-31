@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import os
 import urllib.parse
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -69,12 +70,41 @@ def licensed_source(spec):
             "rightsVerifiedBy":"Commons CC0 page; immutable pre-2017 Unsplash photo ID"
         }
 
+def prior_source(spec,old_by_id):
+    """Offline re-authoring from a PREVIOUSLY licensed derivative, not raw source.
+
+    Transparent fallback for Commons 429/Unsplash 401. Never claim this input
+    is a fresh photograph or a new European geographic location.
+    """
+    cell=old_by_id[spec[0]]
+    asset=ROOT/cell["art"]
+    raw=asset.read_bytes()
+    with Image.open(io.BytesIO(raw)) as im:
+        previous=im.convert("RGB")
+        if previous.size!=(1536,1024):
+            raise RuntimeError("Prior scenic art has unexpected dimensions")
+        # Uniform zoom permits a lower ground window without distorting trees.
+        previous=previous.resize((1966,1311),Image.Resampling.LANCZOS)
+    provenance=dict(cell["sourcePrimary"])
+    provenance["intermediateArtSha256"]=hashlib.sha256(raw).hexdigest()
+    provenance["inputType"]="previously-committed-unapproved-CC0-derivative"
+    provenance["freshRawSourceDownloaded"]=False
+    return previous,provenance
+
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
     # Reuse tested V267 photo provenance, crop, scene-composition and edge
     # color preflight; it records physical seams as UNVERIFIED.
     v267.OUT=OUT
-    sources=[licensed_source(s) for s in SPEC]
+    offline=os.environ.get("V267_OFFLINE_RECOMPOSE")=="1"
+    if offline:
+        prior=json.loads((OUT/"batch.json").read_text())
+        old_by_id={c["id"]:c for c in prior["cells"]}
+        if set(old_by_id)!={s[0] for s in SPEC}:
+            raise RuntimeError("Offline source cache IDs do not match the eight existing cells")
+        sources=[prior_source(s,old_by_id) for s in SPEC]
+    else:
+        sources=[licensed_source(s) for s in SPEC]
     if len({p["sourceSha256"] for _,p in sources})!=8:
         raise RuntimeError("Primary sources must be eight unique original photographs")
     cells=[]
@@ -97,7 +127,8 @@ def main():
             "sourcePrimary":dict(provenance,crop=crop),
             "sourceForeground":dict(donor_provenance,crop=foreground_crop),
             "sourceRegionReference":region,
-            "sourceMethod":ground_report["method"],
+            "sourceMethod":ground_report["method"]+(" (offline re-authoring of prior CC0 derivative; not a new raw photograph)" if offline else ""),
+            "recomposedFromPreviousDerivative":offline,
             "groundRegistration":ground_report,
             "scenicSettlements":[],"strategicNodes":[],"provinceIds":[],
             "roadPorts":[],"roadSeamsVerified":False,
@@ -115,8 +146,9 @@ def main():
         raise RuntimeError("Repeated art output")
     batch={
         "schema":"coe-v267-original-art-batch/v1","referenceCommit":REF,
-        "status":"unapproved-source-backed-European-scenic-art-study",
+        "status":"unapproved-native-ground-recomposition-from-prior-licensed-art" if offline else "unapproved-source-backed-European-scenic-art-study",
         "scenario":"geographic analogues from Europe; NOT 1780–1880 surveyed roads",
+        "sourceDelivery":"prior committed licensed derivatives, no new downloads" if offline else "fresh source download",
         "cells":cells,"links":[],"decorativeInlays":[],
         "generatedCandidates":8,"originalArtComposed":8,
         "lightingEdgePairsGraded":7,"physicalTerrainSeamsVerified":0,

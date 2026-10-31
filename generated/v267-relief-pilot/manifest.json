@@ -1,0 +1,239 @@
+{
+  "schema": "coe-v267-native-relief-pilot/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "status": "original-3d-relief-candidates-NOT-V267-approved",
+  "sourceElevation": "V94 Mapzen/AWS Terrarium DEM",
+  "sourceForest": "V94 Natural Earth II approximate modern cover",
+  "historicalRoadsVerified": false,
+  "artRoads": "fictional provisional corridors; not gameplay routes",
+  "grid": [
+    4,
+    2
+  ],
+  "nativeSize": [
+    1536,
+    1024
+  ],
+  "scale": 1.0,
+  "treesRendered": 13498,
+  "cells": [
+    {
+      "id": "pilot-0-0",
+      "grid": [
+        0,
+        0
+      ],
+      "worldOrigin": [
+        0,
+        0
+      ],
+      "image": "pilot-0-0.png",
+      "sha256": "8e126de4aa69c9d73a29bd8d3693ed329a8d4e2f092603c395cde2c573d7b72d",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-1-0",
+      "grid": [
+        1,
+        0
+      ],
+      "worldOrigin": [
+        1536,
+        0
+      ],
+      "image": "pilot-1-0.png",
+      "sha256": "78477b62617b175fa87bbb33b825d5f0ce0289fe1c80658d2a2e716f06e4777b",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-2-0",
+      "grid": [
+        2,
+        0
+      ],
+      "worldOrigin": [
+        3072,
+        0
+      ],
+      "image": "pilot-2-0.png",
+      "sha256": "240ab055e7c8a2262f98f0206b64364777780dc882b08a24cb9a5b7a292a40a5",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-3-0",
+      "grid": [
+        3,
+        0
+      ],
+      "worldOrigin": [
+        4608,
+        0
+      ],
+      "image": "pilot-3-0.png",
+      "sha256": "4ab15f41897a1b1da570fecb7fcfb564784aca8f2a051169802bfc2f01a828c1",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-0-1",
+      "grid": [
+        0,
+        1
+      ],
+      "worldOrigin": [
+        0,
+        1024
+      ],
+      "image": "pilot-0-1.png",
+      "sha256": "0c1ac6ef6353cd704dbea182a693448cc9f4ec851a1082f92ae376c54edd6033",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-1-1",
+      "grid": [
+        1,
+        1
+      ],
+      "worldOrigin": [
+        1536,
+        1024
+      ],
+      "image": "pilot-1-1.png",
+      "sha256": "dd1cfc9a0d0c3b88449185cf1b08dbf13f3316beeed072d4ea2aaa6a14b75a46",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-2-1",
+      "grid": [
+        2,
+        1
+      ],
+      "worldOrigin": [
+        3072,
+        1024
+      ],
+      "image": "pilot-2-1.png",
+      "sha256": "a0bd9bda52218f5168605ef294de8f7b511cdca792c159509c76a1ff8cd28f2c",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    },
+    {
+      "id": "pilot-3-1",
+      "grid": [
+        3,
+        1
+      ],
+      "worldOrigin": [
+        4608,
+        1024
+      ],
+      "image": "pilot-3-1.png",
+      "sha256": "5621b179fd92c6b1e3a7bd049d5d262407af90a6f50d6940f4060f3012eba1bf",
+      "nativeArt": true,
+      "photographicCrop": false,
+      "visualApproved": false,
+      "nativeGamePlayable": false,
+      "historicallyVerified": false
+    }
+  ],
+  "seams": [
+    {
+      "a": "pilot-0-0",
+      "b": "pilot-1-0",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        516
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-2-0",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        418
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-2-0",
+      "b": "pilot-3-0",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        562
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-0-1",
+      "b": "pilot-1-1",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        459
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-1-1",
+      "b": "pilot-2-1",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        470
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-2-1",
+      "b": "pilot-3-1",
+      "side": "east-west",
+      "roadCrossingLocalY": [
+        526
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-1-1",
+      "side": "north-south",
+      "roadCrossingLocalX": [
+        745
+      ],
+      "sameWorldRaster": true
+    },
+    {
+      "a": "pilot-3-0",
+      "b": "pilot-3-1",
+      "side": "north-south",
+      "roadCrossingLocalX": [
+        660
+      ],
+      "sameWorldRaster": true
+    }
+  ]
+}

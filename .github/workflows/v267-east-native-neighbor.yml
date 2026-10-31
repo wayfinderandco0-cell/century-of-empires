@@ -124,7 +124,11 @@ jobs:
           with Image.open(source) as im:
             im.convert('RGB').resize((390,844),Image.Resampling.LANCZOS).save(
               out/'actual-webkit-iphone-east-matrei-thumbnail.jpg',quality=86,optimize=True)
-          print('PASS: real WebKit screenshot thumbnail', (out/'actual-webkit-iphone-east-matrei-thumbnail.jpg').stat().st_size)
+          import base64
+          thumbnail=out/'actual-webkit-iphone-east-matrei-thumbnail.jpg'
+          (out/'actual-webkit-iphone-east-matrei-thumbnail.jpg.b64').write_text(
+              base64.b64encode(thumbnail.read_bytes()).decode('ascii')+'\n')
+          print('PASS: real WebKit screenshot thumbnail', thumbnail.stat().st_size)
           PY
       - name: Mark only this candidate as WebKit-rendered, not approved or playable
         run: |
@@ -142,7 +146,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-neighbor-original-art/east-matrei-fresh-native-ground.webp terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-close.png terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg terrain-grid/v267-neighbor-original-art/batch.json
+          git add terrain-grid/v267-neighbor-original-art/east-matrei-fresh-native-ground.webp terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-close.png terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg.b64 terrain-grid/v267-neighbor-original-art/batch.json
           git diff --cached --quiet && exit 0
           git commit -m "art(v267): one fresh CC0 source-backed Matrei east scene and real WebKit evidence [skip ci]"
           for n in 1 2 3; do
@@ -164,5 +168,6 @@ jobs:
             terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json
             terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png
             terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg
+            terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg.b64
           retention-days: 14
           if-no-files-found: warn

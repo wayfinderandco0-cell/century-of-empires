@@ -51,7 +51,9 @@ function draw(){
  let aspect=w/h,eye=[center[0]+1650,center[1]+3500,center[2]+3400];
  let p=ortho(-span*aspect/2,span*aspect/2,-span/2,span/2,10,15000),v=lookAt(eye,center);
  for(const m of meshes){if(m.inlay){gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-1)}else gl.disable(gl.POLYGON_OFFSET_FILL);gl.uniformMatrix4fv(mvpLoc,false,mul(mul(p,v),m.model));gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,m.tex);gl.bindVertexArray(m.vao);gl.drawElements(gl.TRIANGLES,m.count,gl.UNSIGNED_INT,0)}
- gl.bindVertexArray(null)
+ gl.bindVertexArray(null);
+ // Real instanced 3D crowns overlay the shared terrain mesh at close zoom.
+ if(window.COEFoliage?.ready)window.COEFoliage.draw(mul(p,v),center,span);
 }
 document.getElementById("plus").onclick=()=>{span=Math.max(1400,span*.72);draw()};
 document.getElementById("minus").onclick=()=>{span=Math.min(19000,span*1.38);draw()};
@@ -63,4 +65,4 @@ canvas.addEventListener("pointerup",()=>start=null);canvas.addEventListener("poi
 canvas.addEventListener("wheel",e=>{e.preventDefault();span=Math.min(19000,Math.max(1400,span*(e.deltaY>0?1.15:.87)));draw()},{passive:false});
 window.addEventListener("resize",draw);
 (async()=>{try{for(let row=0;row<2;row++)for(let col=0;col<4;col++){meshes.push(await loadMesh("pilot-"+col+"-"+row,col*1536,row*1024));window.COEMeshReview.cells++;status.textContent="Loaded "+window.COEMeshReview.cells+"/8 real 3D octagons";draw()}for(let col=0;col<3;col++){meshes.push(await loadMesh("infill-"+col+"-0",(col+1)*1536-256,1024-256));window.COEMeshReview.inlays++;draw()}window.COEMeshReview.loaded=true;status.textContent="8 true 3D octagons + 3 seamless terrain inlays · 0 approved · 0 playable";draw()}catch(e){window.COEMeshReview.failed=String(e);status.textContent="3D viewer failed: "+e;throw e}})();
-</script></html>
+</script><script src="v267-foliage-overlay.js"></script></html>

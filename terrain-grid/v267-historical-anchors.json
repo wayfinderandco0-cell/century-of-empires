@@ -1,0 +1,50 @@
+{
+  "schema": "coe-v267-sourced-historic-place-anchors/v1",
+  "purpose": "Non-rendered source-backed city anchors for the 4x2 regional 3D pilot. No roads, captures, or period borders are inferred.",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "period": "1780-1880",
+  "coordinateInterpretation": "Present-day UNESCO heritage-property representative points, NOT georeferenced 1780 city plans or individual historic buildings.",
+  "places": [
+    {
+      "id": "prague-historic-centre",
+      "name": "Prague",
+      "cellId": "pilot-1-0",
+      "coordinateWGS84": [
+        14.419444,
+        50.089722
+      ],
+      "source": "https://whc.unesco.org/en/list/616/maps/",
+      "historySource": "https://whc.unesco.org/en/list/616",
+      "historyEvidence": "UNESCO documents medieval and eighteenth-century urban fabric; historical existence within 1780-1880 supported.",
+      "existenceDuringPeriodVerified": true,
+      "exactHistoricalFootprintVerified": false,
+      "historicalRoadsVerified": false,
+      "renderedIn3D": false,
+      "strategicNodeEnabled": false,
+      "scenicVillage": false
+    },
+    {
+      "id": "vienna-historic-centre",
+      "name": "Vienna",
+      "cellId": "pilot-1-1",
+      "coordinateWGS84": [
+        16.3699,
+        48.2094
+      ],
+      "source": "https://whc.unesco.org/en/list/1033",
+      "historySource": "https://whc.unesco.org/en/list/1033",
+      "historyEvidence": "UNESCO documents Vienna as the Habsburg capital from 1683, its Baroque city and nineteenth-century transformation.",
+      "existenceDuringPeriodVerified": true,
+      "exactHistoricalFootprintVerified": false,
+      "historicalRoadsVerified": false,
+      "renderedIn3D": false,
+      "strategicNodeEnabled": false,
+      "scenicVillage": false
+    }
+  ],
+  "historicalPlaceExistenceVerified": 2,
+  "historicalRoadSegmentsVerified": 0,
+  "historicallyVerified3DCells": 0,
+  "playableNewStrategicNodes": 0,
+  "finishedToday": 0
+}

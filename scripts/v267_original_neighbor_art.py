@@ -7,7 +7,7 @@ synthetic road stripes, historically surveyed terrain, or approved gameplay.
 Never uses pixels from protected WEST/MATREI/SOUTH. Source rights checked.
 """
 from __future__ import annotations
-import hashlib, io, json, math, re, time, urllib.parse, urllib.request
+import hashlib, io, json, math, re, time, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageFilter, ImageEnhance, ImageDraw

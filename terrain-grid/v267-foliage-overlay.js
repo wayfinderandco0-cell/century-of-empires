@@ -145,37 +145,77 @@ void main(){
   gl.linkProgram(program);
   if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
   const vp=gl.getUniformLocation(program,"uVP");
-  const groups=[];
+  // One reusable 3D mesh per species; instances are packed by geographic
+  // cell so a zoomed-in iPhone never draws forests on offscreen octagons.
+  const species=new Map(),groups=[],batches=[];
   for(const g of m.groups){
    if(g.kind!=="conifer"&&g.kind!=="broadleaf")throw Error("Unknown tree type");
-   const mesh=makeGeometry(g.kind);
+   const mesh=makeGeometry(g.kind),vb=gl.createBuffer();
+   gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);
+   const geometry={vb,vertices:mesh.length/7,triangles:mesh.length/21};
+   species.set(g.kind,geometry);
+   groups.push({kind:g.kind,count:g.count,triangles:geometry.triangles});
+  }
+  if(!Array.isArray(m.cellBatches)||m.cellBatches.length!==16)
+   throw Error("Missing 8-cell foliage streaming layout");
+  let nextOffset=0;
+  for(const b of m.cellBatches){
+   const geometry=species.get(b.kind);
+   if(!geometry||b.offsetFloats!==nextOffset||b.offsetFloats%8!==0||
+      b.col<0||b.col>=4||b.row<0||b.row>=2||
+      !Number.isInteger(b.count)||b.count<0||
+      !Array.isArray(b.worldBounds)||b.worldBounds.length!==4||
+      !Array.isArray(b.worldYRange)||b.worldYRange.length!==2)
+    throw Error("Invalid foliage cell batch");
    const vao=gl.createVertexArray();gl.bindVertexArray(vao);
-   const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);
-   gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);
+   gl.bindBuffer(gl.ARRAY_BUFFER,geometry.vb);
    gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,28,0);
    gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,28,16);
    const ib=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,ib);
-   const offset=g.offsetFloats*4;
-   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(bytes,offset,g.count*8),gl.STATIC_DRAW);
+   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(bytes,b.offsetFloats*4,b.count*8),gl.STATIC_DRAW);
    gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,4,gl.FLOAT,false,32,0);
    gl.vertexAttribDivisor(2,1);
    gl.enableVertexAttribArray(3);gl.vertexAttribPointer(3,4,gl.FLOAT,false,32,16);
    gl.vertexAttribDivisor(3,1);
-   groups.push({vao,kind:g.kind,count:g.count,vertices:mesh.length/7,triangles:mesh.length/21});
+   batches.push({vao,vertices:geometry.vertices,count:b.count,
+                 bounds:b.worldBounds,yRange:b.worldYRange});
+   nextOffset+=b.count*8;
   }
+  if(nextOffset!==m.total*8)throw Error("Foliage batch total mismatch");
   gl.bindVertexArray(null);
-  state.total=m.total;state.groups=groups;state.geometryTrianglesPerTree=Object.fromEntries(groups.map(g=>[g.kind,g.triangles]));state.ready=true;
+  // Test all 8 corners of the tree batch AABB against the real camera
+  // projection, not an arbitrary center-distance estimate. The y bounds
+  // include crowns and terrain elevation; the padding prevents edge popping.
+  function inFrustum(batch,matrix){
+   const [left,top,right,bottom]=batch.bounds;
+   const [minY,maxY]=batch.yRange;
+   let loX=Infinity,hiX=-Infinity,loY=Infinity,hiY=-Infinity;
+   for(const x of [left,right])for(const y of [minY,maxY])
+    for(const z of [-top,-bottom]){
+     const w=matrix[3]*x+matrix[7]*y+matrix[11]*z+matrix[15];
+     if(w<=0)return true;
+     const px=(matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12])/w;
+     const py=(matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13])/w;
+     loX=Math.min(loX,px);hiX=Math.max(hiX,px);
+     loY=Math.min(loY,py);hiY=Math.max(hiY,py);
+    }
+   return hiX>=-1.12&&loX<=1.12&&hiY>=-1.12&&loY<=1.12;
+  }
+  state.total=m.total;state.groups=groups;state.totalBatches=batches.length;
+  state.geometryTrianglesPerTree=Object.fromEntries(groups.map(g=>[g.kind,g.triangles]));
+  state.ready=true;
   state.draw=(vpMatrix,center,span)=>{
-   if(span>7000){state.drawn=0;return}
+   state.drawn=0;state.visibleBatches=0;state.culledBatches=0;
+   if(span>7000){state.culledBatches=batches.length;return}
    const old=gl.getParameter(gl.CURRENT_PROGRAM);
    gl.useProgram(program);gl.uniformMatrix4fv(vp,false,vpMatrix);
    const fraction=span>4500?.33:1;
-   state.drawn=0;
-   for(const group of groups){
-    gl.bindVertexArray(group.vao);
-    const count=Math.ceil(group.count*fraction);
-    gl.drawArraysInstanced(gl.TRIANGLES,0,group.vertices,count);
-    state.drawn+=count;
+   for(const batch of batches){
+    if(!batch.count||!inFrustum(batch,vpMatrix)){state.culledBatches++;continue}
+    gl.bindVertexArray(batch.vao);
+    const count=Math.ceil(batch.count*fraction);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,batch.vertices,count);
+    state.drawn+=count;state.visibleBatches++;
    }
    gl.bindVertexArray(null);gl.useProgram(old);
   };

@@ -55,8 +55,17 @@ def commons(title):
         raw=get(info["url"])
         source_url=info["url"]
     except RuntimeError:
-        raw=get(info.get("thumburl") or info["url"])
-        source_url=info.get("thumburl") or info["url"]
+        try:
+            raw=get(info.get("thumburl") or info["url"])
+            source_url=info.get("thumburl") or info["url"]
+        except RuntimeError:
+            # Wikimedia CDN 429 on shared CI IPs: a read-through cache may
+            # fetch the SAME Commons CC0 original, not a replacement source.
+            # Do not accept proxy output without a decoded image + source record.
+            proxy="https://wsrv.nl/?"+urllib.parse.urlencode({
+                "url":info["url"],"w":"2400","output":"jpg"})
+            raw=get(proxy)
+            source_url=proxy
     im=Image.open(io.BytesIO(raw)).convert("RGB")
     if im.width<1600 or im.height<1050:raise RuntimeError("Insufficient source resolution "+title)
     return im,{"title":title,"page":"https://commons.wikimedia.org/wiki/File:"+

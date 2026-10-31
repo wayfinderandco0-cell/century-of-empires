@@ -192,7 +192,7 @@ def harmonize_candidate_edge_light(cells):
     report={"schema":"coe-v267-scenic-edge-color-preflight/v1",
             "status":"color-only, NOT terrain or road seam verification",
             "protectedOriginalsModified":False,"pairs":results}
-    (OUT/"edge-color-preflight.json").write_text(json.dumps(report,indent=2)+"\\n")
+    (OUT/"edge-color-preflight.json").write_text(json.dumps(report,indent=2)+"\n")
     return report
 
 def main():

@@ -215,7 +215,9 @@ async function togglePhotoSources(){
     });
    }
    const photoBlock=new URLSearchParams(root.location.search).get("photoBlock");
-   const photoURL=photoBlock==="coverage"
+   const photoURL=photoBlock==="dulmenRoad"
+     ?"terrain-grid/factory-photo/dulmen-road-8/manifest.json"
+     :photoBlock==="coverage"
      ?"terrain-grid/factory-photo/coverage/manifest.json"
      :photoBlock==="carpathians"
      ?"terrain-grid/factory-photo/carpathian-8/manifest.json"

@@ -1,0 +1,129 @@
+name: V267 original east ridge - art, native WebKit and graph QA
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - terrain-grid/v267-original-art-batch-01/**
+      - terrain-grid/atlas-integrated.js
+      - scripts/v267_new_original_art_ingest.py
+      - scripts/test_v267_new_original_batch.js
+      - .github/workflows/v267-new-original-ridge-qa.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-new-original-ridge-qa
+  cancel-in-progress: false
+jobs:
+  v267-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify protected source art and V123 graph are untouched
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          changed=$(git diff --name-only origin/main HEAD -- 'v121-*' 'v122-*' 'v123-*' 'v94-*' 'assets/**' 'saves/**')
+          if [ -n "$changed" ]; then echo "$changed"; echo 'Protected gameplay source changed'; exit 1; fi
+          sha256sum terrain-grid/art/matrei-v121-original.webp art-reviews/v267-original-source/west-unified-native-border-unapproved.webp art-reviews/v267-original-source/south-unified-native-border-unapproved.webp > /tmp/v267-locked.sha256
+      - name: Verify new original pixels and conservative batch manifest
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python scripts/v267_new_original_art_ingest.py
+          node scripts/test_atlas_manifest.js
+          node scripts/test_v267_art_factory_contract.js
+          node scripts/test_v267_new_original_batch.js
+          sha256sum -c /tmp/v267-locked.sha256
+      - name: Install real iPhone-sized WebKit
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Verify original new tile, pinch-compatible zoom, V123 march and safe isolation
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-original-art-batch-01')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                                  stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+            time.sleep(1.5)
+            with sync_playwright() as pw:
+              browser=pw.webkit.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},
+                                    device_scale_factor=2,is_mobile=True,has_touch=True)
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=v267-new',
+                        wait_until='domcontentloaded')
+              page.wait_for_function('window.COEAtlas && COEAtlas.loaded',timeout=90000)
+              page.locator('#atlasIntegratedOpen').click()
+              assert page.evaluate('COEAtlas.startMarch()') is True
+              page.evaluate('COEAtlas.finishMarch()')
+              page.locator('#atlasOriginalNeighbors').click()
+              page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===1',
+                                     timeout=30000)
+              assert page.evaluate('COEAtlas.startMarch()') is False
+              page.evaluate('COEAtlas.centerAt(3072,512,2.9)')
+              page.wait_for_timeout(850)
+              page.screenshot(path=str(out/'actual-webkit-iphone-new-ridge.png'))
+              page.locator('#atlasPlus').click()
+              page.locator('#atlasMinus').click()
+              page.locator('#atlasOriginalNeighbors').click()
+              assert page.evaluate('COEAtlas.approvedBaselineLocked') is True
+              assert page.evaluate('COEAtlas.nodes') == 100
+              assert page.evaluate('COEAtlas.startMarch()') is True
+              assert not errors,errors
+              print('PASS: new original V267-like art visible, zoom, V123 march, no phantom candidate road')
+              browser.close()
+          finally:
+            server.terminate()
+            server.wait(timeout=5)
+          PY
+      - name: Mark mobile-rendered only after actual screenshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('terrain-grid/v267-original-art-batch-01/batch.json')
+          j=json.loads(p.read_text())
+          c=next(c for c in j['cells'] if c['id']=='matrei-east-ridge')
+          assert Path('terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png').stat().st_size>30000
+          c['mobileWebkitRendered']=True
+          j['mobileWebkitRendered']=1
+          assert j['netFinishedToday']==0 and not c['nativePlayable'] and not c['userApproved']
+          p.write_text(json.dumps(j,indent=2,ensure_ascii=False)+'\n')
+          PY
+          python scripts/v267_new_original_art_ingest.py
+          node scripts/test_v267_new_original_batch.js
+          sha256sum -c /tmp/v267-locked.sha256
+      - name: Commit actual WebKit evidence to development branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png
+          git diff --cached --quiet && exit 0
+          git commit -m "qa(v267): real iPhone WebKit evidence for new original ridge [skip ci]"
+          for n in 1 2 3; do
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
+            sleep 5
+          done
+          exit 1
+      - name: Retain screenshot if commit fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-new-original-ridge-webkit
+          path: terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png
+          retention-days: 14
+          if-no-files-found: warn

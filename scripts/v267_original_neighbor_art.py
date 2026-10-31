@@ -65,10 +65,36 @@ def commons(title):
             # Wikimedia CDN 429 on shared CI IPs: a read-through cache may
             # fetch the SAME Commons CC0 original, not a replacement source.
             # Do not accept proxy output without a decoded image + source record.
-            proxy="https://wsrv.nl/?"+urllib.parse.urlencode({
-                "url":info["url"],"w":"2400","output":"jpg"})
-            raw=get(proxy)
-            source_url=proxy
+            # The Commons API metadata is the authority for CC0 rights.
+            # If the shared CI runner is throttled by the Wikimedia CDN,
+            # request the *same original file* through independent image
+            # caches. The service's URL parameter expects a hostname/path,
+            # not a percent-encoded scheme; 429/404 never imply success.
+            origin=urllib.parse.urlsplit(info["url"])
+            upstream=origin.netloc+origin.path
+            candidates=[
+                "https://images.weserv.nl/?"+urllib.parse.urlencode({
+                    "url":upstream,"w":"2400","output":"jpg","q":"94"}),
+                "https://wsrv.nl/?"+urllib.parse.urlencode({
+                    "url":upstream,"w":"2400","output":"jpg","q":"94"}),
+                "https://images.weserv.nl/?"+urllib.parse.urlencode({
+                    "url":info.get("thumburl") or info["url"],
+                    "w":"2400","output":"jpg","q":"94"})
+            ]
+            errors=[]
+            for proxy in candidates:
+                try:
+                    candidate=get(proxy,fast_fail_429=True)
+                    with Image.open(io.BytesIO(candidate)) as decoded:
+                        decoded.verify()
+                    raw=candidate
+                    source_url=proxy
+                    break
+                except (RuntimeError, OSError, ValueError) as err:
+                    errors.append(str(err))
+            else:
+                raise RuntimeError("All same-source CDN mirrors unavailable for "+
+                                   title+": "+"; ".join(errors))
     im=Image.open(io.BytesIO(raw)).convert("RGB")
     if im.width<1600 or im.height<1050:raise RuntimeError("Insufficient source resolution "+title)
     return im,{"title":title,"page":"https://commons.wikimedia.org/wiki/File:"+

@@ -6,6 +6,8 @@ on:
     paths:
       - scripts/v267_native_relief_pilot.py
       - scripts/v267_relief_materials.py
+      - scripts/v267_heightmesh_export.py
+      - terrain-grid/v267-heightmesh-review.html
       - terrain-grid/atlas-integrated.js
       - terrain-grid/atlas-photo-stream.js
       - .github/workflows/v267-native-relief-pilot.yml
@@ -57,6 +59,29 @@ jobs:
               vals=s.get('roadCrossingLocalY',s.get('roadCrossingLocalX',[]))
               assert vals and all(256<=v<=768 if s['side']=='east-west' else 256<=v<=1280 for v in vals),s
           print('PASS: eight original relief octagons, eight world-space road seams, zero finished or playable claims')
+          PY
+      - name: Export actual indexed 3D heightmesh geometry from shared V94 world space
+        run: python scripts/v267_heightmesh_export.py --root . --out generated/v267-relief-pilot
+      - name: Validate eight textured glTF meshes and exact shared-border contracts
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('generated/v267-relief-pilot')
+          m=json.loads((p/'heightmesh-manifest.json').read_text())
+          assert m['true3DMesh'] and not m['sourcePhotosUsed']
+          assert len(m['cells'])==8 and len(m['geometricSeamChecks'])==10
+          assert m['roadContracts']==8
+          assert m['historicalRoadsVerified']==m['nativeGamePlayable']==m['visuallyApprovedV267']==m['finishedToday']==0
+          for c in m['cells']:
+              g=json.loads((p/c['gltf']).read_text())
+              assert g['asset']['version']=='2.0'
+              assert g['accessors'][0]['count']==6305 and g['accessors'][3]['count']==36864
+              assert g['meshes'][0]['primitives'][0]['mode']==4
+              assert hashlib.sha256((p/c['binary']).read_bytes()).hexdigest()==c['sha256']
+              assert not c['nativeGamePlayable'] and not c['visuallyApproved']
+          assert all(c['sameWorldGrid'] and c['maxHeightDifference']==0 for c in m['geometricSeamChecks'])
+          print('PASS: 8 true heightmeshes, 50,440 vertices, 98,304 triangles, 10 exact geometric seams; 0 approved/playable')
           PY
       - name: Install WebKit for mobile screenshot
         run: python -m playwright install --with-deps webkit
@@ -111,6 +136,35 @@ jobs:
           finally:
               server.terminate();server.wait(timeout=5)
           print('PASS: native WebKit terrain study, 3 decorative infills, V123 march, zero fake playable relief')
+          PY
+      - name: Render actual 3D geometry in iPhone-sized WebKit and test zoom/pan
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from playwright.sync_api import sync_playwright
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                                  stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+                  errors=[]
+                  page.on('pageerror',lambda e:errors.append(str(e)))
+                  page.goto('http://127.0.0.1:8765/terrain-grid/v267-heightmesh-review.html')
+                  page.wait_for_function('window.COEMeshReview && (window.COEMeshReview.loaded || window.COEMeshReview.failed)',timeout=90000)
+                  state=page.evaluate('window.COEMeshReview')
+                  assert state['webgl2'] and state['loaded'] and state['cells']==8 and not state['failed'],state
+                  page.locator('#plus').click()
+                  page.locator('#minus').click()
+                  page.locator('#next').click()
+                  page.locator('#whole').click()
+                  page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-iphone.png')
+                  assert not errors,errors
+                  browser.close()
+          finally:
+              server.terminate();server.wait(timeout=5)
+          print('PASS: real WebGL2 3D terrain rendered in 390x844 WebKit, zoom/pan controls; not gameplay integration')
           PY
       - name: Commit generated candidate assets and mobile evidence to development branch only
         run: |

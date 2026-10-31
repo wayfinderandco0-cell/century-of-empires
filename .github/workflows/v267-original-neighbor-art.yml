@@ -1,0 +1,131 @@
+name: V267 original layered neighbor art - eight scenic studies
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_original_neighbor_art.py
+      - terrain-grid/atlas-integrated.js
+      - .github/workflows/v267-original-neighbor-art.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-original-neighbors
+  cancel-in-progress: false
+jobs:
+  original-layered-scenes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install natural scene composition and iPhone browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Compose eight independent original layered scenic landscapes
+        run: python scripts/v267_original_neighbor_art.py
+      - name: Validate original provenance, protected graph and conservative accounting
+        run: |
+          node scripts/test_atlas_manifest.js
+          node scripts/test_v267_art_factory_contract.js
+          node - <<'NODE'
+          const fs=require('fs'),c=require('./terrain-grid/v267-art-factory-contract.js');
+          const base=JSON.parse(fs.readFileSync('terrain-grid/atlas-cells.json'));
+          const batch=JSON.parse(fs.readFileSync('terrain-grid/v267-neighbor-original-art/batch.json'));
+          const report=c.validateBatch(batch,base);
+          if(report.candidateMetadata!==8||report.originalArtComposed!==8||report.netFinishedToday!==0||
+             report.roadConnected!==0||report.nativePlayable!==0||report.historicallyVerified!==0)
+            throw Error('False approval or unexpected candidate accounting: '+JSON.stringify(report));
+          console.log('PASS original layered scene metadata, no fictional roads/history/finish');
+          NODE
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          from PIL import Image
+          root=Path('terrain-grid/v267-neighbor-original-art')
+          m=json.loads((root/'batch.json').read_text())
+          assert len(m['cells'])==8
+          assert len({c['sourcePrimary']['sourceSha256'] for c in m['cells']})==8
+          assert len({c['assetSha256'] for c in m['cells']})==8
+          for c in m['cells']:
+              p=Path(c['art'])
+              assert Image.open(p).size==(1536,1024)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==c['assetSha256']
+              assert c['originalArtComposed'] and not c['nativePlayable'] and not c['userApproved']
+              assert not c['roadPorts'] and not c['historicalVerified']
+          print('PASS eight different original composed images with eight different CC0 primary sources')
+          PY
+      - name: Render actual original-art native game canvas in iPhone WebKit
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-neighbor-original-art')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+              stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=1',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=70000)
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  assert len(page.evaluate('window.COEAtlas.seams'))==2
+                  page.locator('#atlasIntegratedOpen').click()
+                  assert page.evaluate('window.COEAtlas.startMarch()') is True
+                  page.evaluate('window.COEAtlas.finishMarch()')
+                  page.locator('#atlasOriginalNeighbors').click()
+                  page.wait_for_function('window.COEAtlas.originalNeighborVisible && window.COEAtlas.originalNeighborCells===8',timeout=70000)
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_timeout(1000)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-eight-originals.png'))
+                  page.evaluate('window.COEAtlas.centerAt(3840,512,2.5)')
+                  page.wait_for_timeout(450)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-original-close.png'))
+                  page.locator('#atlasPlus').click()
+                  page.locator('#atlasMinus').click()
+                  page.locator('#atlasOriginalNeighbors').click()
+                  assert page.evaluate('window.COEAtlas.originalNeighborVisible') is False
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  assert page.evaluate('window.COEAtlas.approvedBaselineLocked') is True
+                  print('PASS 390x844 iPhone WebKit original neighbor display, V123 march, zoom, protected baseline')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Publish composed source-backed art and actual WebKit evidence to development branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-neighbor-original-art/
+          if git diff --cached --quiet; then
+            echo "No changed original scene assets"
+            exit 0
+          fi
+          git commit -m "art(v267): eight distinct layered CC0 Alpine scenes and real mobile WebKit review evidence [skip ci]"
+          for n in 1 2 3; do
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
+            sleep 4
+          done
+          exit 1
+      - name: Preserve screenshots as CI artifacts even if push fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-original-neighbors-iphone-webkit
+          path: terrain-grid/v267-neighbor-original-art/
+          retention-days: 14
+          if-no-files-found: warn

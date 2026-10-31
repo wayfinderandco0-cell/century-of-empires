@@ -12,7 +12,7 @@
       ],
       "biome": "wooded-alpine-valley",
       "art": "terrain-grid/v267-neighbor-original-art/east-matrei.webp",
-      "assetSha256": "b31b17ade81b73915448fffb5b860480331799f6e4bedd0b5b7838dc02cfb65d",
+      "assetSha256": "5ac5b9445a9d3ef7e8b9751b3a8b4bc05562c11eeae660971b89b0d6c976c4a4",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -65,7 +65,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "east-south",
@@ -75,7 +77,7 @@
       ],
       "biome": "alpine-ridge-pasture",
       "art": "terrain-grid/v267-neighbor-original-art/east-south.webp",
-      "assetSha256": "5a596946949f9b646992ddaf637cc681194d63e53743ecbea4ff8b824e189609",
+      "assetSha256": "6feb82a2bdfcb4802c6987a33e5690840b4a0507e59a7984b6e4c57d2ab95407",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -128,7 +130,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "west-south",
@@ -138,7 +142,7 @@
       ],
       "biome": "alpine-foothills",
       "art": "terrain-grid/v267-neighbor-original-art/west-south.webp",
-      "assetSha256": "a70714bdedeead744586334c0e9b9bb1f943606b858b4e7c6964fa4bf1503277",
+      "assetSha256": "8d75ed92c862a6682317ce90a14df23ad777d5dd69d2c6a1e5b88f5d72fc35eb",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -147,7 +151,7 @@
         "sourceSha256": "03d99e451e294a8cf42dcc67d1eff0dcaae1368882b4e77a0934fcad4f224d67",
         "license": "CC0 1.0",
         "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "download": "https://images.weserv.nl/?url=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg%3Futm_source%3Dcommons.wikimedia.org%26utm_campaign%3Dimageinfo%26utm_content%3Dthumbnail_unscaled&w=2400&output=jpg&q=94",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
         "sourceDimensions": [
           2400,
           1600
@@ -191,7 +195,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "south-west",
@@ -201,7 +207,7 @@
       ],
       "biome": "misty-high-valley",
       "art": "terrain-grid/v267-neighbor-original-art/south-west.webp",
-      "assetSha256": "f5a016bdd46159d610d0aa1aebe474d52bea6d8eb61331897b4f136dbb7423c5",
+      "assetSha256": "5f6ce7ff8811d9b269d6ea0034a65f0c583451161c7eb262c714018d753230f3",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -254,7 +260,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "south-central",
@@ -264,7 +272,7 @@
       ],
       "biome": "alpine-ridge",
       "art": "terrain-grid/v267-neighbor-original-art/south-central.webp",
-      "assetSha256": "a906b07b40e55ece3fd1683ac8017da1685d2464c920b28ce2047a12cdc3a713",
+      "assetSha256": "46475516a2c7c2b67f069fc2e9982bdb43fd9ede07acdd36cef6a89ddc039e84",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -317,7 +325,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "south-east",
@@ -327,7 +337,7 @@
       ],
       "biome": "high-alpine-ice",
       "art": "terrain-grid/v267-neighbor-original-art/south-east.webp",
-      "assetSha256": "4ff0e68ad0fe97e6b6d94398212739d701860ada57eb84c32d28a5cfd23323c8",
+      "assetSha256": "d8600c950c2851e2bee82c6d8c12d1ceb06904a0109f8fb6cdf0472fbfc41650",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -380,7 +390,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "far-east-north",
@@ -390,7 +402,7 @@
       ],
       "biome": "mountain-winter-valley",
       "art": "terrain-grid/v267-neighbor-original-art/far-east-north.webp",
-      "assetSha256": "c449ceee001b0c0a644e2e4e6ee2466b951b6a7b367811b50ec85e62d0775d23",
+      "assetSha256": "ab58fa70e0b63ae029f26044090603cd7d41edcba979796e52b675919775e361",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -443,7 +455,9 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     },
     {
       "id": "far-east-south",
@@ -453,7 +467,7 @@
       ],
       "biome": "lower-alpine-meadow",
       "art": "terrain-grid/v267-neighbor-original-art/far-east-south.webp",
-      "assetSha256": "5b27f5395188636adfe8f4c2d0b795a9f12fafeba67df44b791eda2620717e5e",
+      "assetSha256": "498b9a45e02c9789fca8a41eed25da60e017d595655ec78ea23725e7ce2f2a19",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -480,7 +494,7 @@
         "sourceSha256": "03d99e451e294a8cf42dcc67d1eff0dcaae1368882b4e77a0934fcad4f224d67",
         "license": "CC0 1.0",
         "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "download": "https://images.weserv.nl/?url=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg%3Futm_source%3Dcommons.wikimedia.org%26utm_campaign%3Dimageinfo%26utm_content%3Dthumbnail_unscaled&w=2400&output=jpg&q=94",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
         "sourceDimensions": [
           2400,
           1600
@@ -506,13 +520,17 @@
       "mobileWebkitRendered": false,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
     }
   ],
   "links": [],
   "decorativeInlays": [],
   "generatedCandidates": 8,
   "originalArtComposed": 8,
+  "lightingEdgePairsGraded": 8,
+  "physicalTerrainSeamsVerified": 0,
   "visuallyReviewed": 0,
   "roadConnected": 0,
   "mobileWebkitRendered": 0,

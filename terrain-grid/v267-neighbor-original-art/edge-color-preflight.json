@@ -1,0 +1,79 @@
+{
+  "schema": "coe-v267-scenic-edge-color-preflight/v1",
+  "status": "color-only, NOT terrain or road seam verification",
+  "protectedOriginalsModified": false,
+  "pairs": [
+    {
+      "a": "east-matrei",
+      "b": "far-east-north",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 54.5,
+      "medianEdgeColorDifferenceAfter": 36.14,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "east-matrei",
+      "b": "east-south",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 150.5,
+      "medianEdgeColorDifferenceAfter": 130.69,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "east-south",
+      "b": "far-east-south",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 60.5,
+      "medianEdgeColorDifferenceAfter": 40.85,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "east-south",
+      "b": "south-east",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 97.64,
+      "medianEdgeColorDifferenceAfter": 77.56,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "west-south",
+      "b": "south-west",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 38.0,
+      "medianEdgeColorDifferenceAfter": 18.44,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "south-west",
+      "b": "south-central",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 98.0,
+      "medianEdgeColorDifferenceAfter": 77.77,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "south-central",
+      "b": "south-east",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 35.51,
+      "medianEdgeColorDifferenceAfter": 20.24,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "far-east-north",
+      "b": "far-east-south",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 32.0,
+      "medianEdgeColorDifferenceAfter": 21.63,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    }
+  ]
+}

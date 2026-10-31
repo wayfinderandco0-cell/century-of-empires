@@ -126,7 +126,7 @@ def main():
     }
     (OUT / "manifest.json").write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
     (OUT / "README.md").write_text(
-        "# Native Europe photo coverage — review only\\n\\n"
+        "# Native Europe photo coverage — review only\n\n"
         f"{len(cells)} distinct previously committed 1536×1024 licensed photographic candidates "
         f"({source_records} source records, {len(superseded)} superseded overlaps) plus "
         f"{len(cells)} derived 384×256 low-zoom assets are streamed in one atlas. "
@@ -138,7 +138,7 @@ def main():
         "is exactly V94 georeferenced or historically road certified. "
         "**0 newly finished octagons.** Open `?photoBlock=coverage` and choose "
         "Integrated Alpine atlas → Photo sources → Whole. V94 campaign, V121 "
-        "Matrei, V123 roads and saves remain unchanged.\\n"
+        "Matrei, V123 roads and saves remain unchanged.\n"
     )
     print(json.dumps({"uniquePhotoCells": len(cells), "sourceNativeJoins": len(native),
                       "blockedSourceJoins": len(blocked), "roadFreeDiamondInlays": len(diamonds),

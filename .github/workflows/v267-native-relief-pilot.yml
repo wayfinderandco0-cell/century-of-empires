@@ -14,7 +14,6 @@ on:
       - terrain-grid/v267-historical-anchors.json
       - scripts/v267_validate_heightmesh_seams.py
       - terrain-grid/v267-heightmesh-review.html
-      - terrain-grid/atlas-integrated.js
       - terrain-grid/atlas-photo-stream.js
       - .github/workflows/v267-native-relief-pilot.yml
   workflow_dispatch:

@@ -29,13 +29,16 @@ SPEC=[
  ("far-east-south","Shallow mountain valley (Unsplash).jpg",(4608,1024),"lower-alpine-meadow",(.49,.61))
 ]
 UA="CenturyOfEmpiresOriginalArt/1.0 (CC0 provenance audit; github.com/wayfinderandco0-cell/century-of-empires/issues/9)"
-def get(url):
+def get(url,fast_fail_429=False):
     last=None
     for pause in (0,15,35):
         if pause:time.sleep(pause)
         try:
             req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/json,image/*"})
             with urllib.request.urlopen(req,timeout=65) as response:return response.read()
+        except urllib.error.HTTPError as e:
+            last=e
+            if e.code==429 and fast_fail_429:break
         except Exception as e:last=e
     raise RuntimeError("Source unavailable; no invented replacement: "+str(last))
 def commons(title):
@@ -52,11 +55,11 @@ def commons(title):
     # Original file CDN often has a different throttle from Commons thumbnails.
     # Never replace a failed source with a different image or unlicensed bytes.
     try:
-        raw=get(info["url"])
+        raw=get(info["url"],fast_fail_429=True)
         source_url=info["url"]
     except RuntimeError:
         try:
-            raw=get(info.get("thumburl") or info["url"])
+            raw=get(info.get("thumburl") or info["url"],fast_fail_429=True)
             source_url=info.get("thumburl") or info["url"]
         except RuntimeError:
             # Wikimedia CDN 429 on shared CI IPs: a read-through cache may

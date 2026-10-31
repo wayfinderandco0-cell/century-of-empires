@@ -32,6 +32,8 @@
       ],
       "image": "pilot-0-0.png",
       "sha256": "7a3537dfc9b58c4972822228487e1bfe5cbd97c14ceba8d1f21ad22808ab268c",
+      "meshGroundImage": "pilot-0-0-ground.png",
+      "meshGroundSha256": "faeb9d4d34c089e46175d8de718c6b3bbe35c1a58712b67f203057be9e38dc0e",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -50,6 +52,8 @@
       ],
       "image": "pilot-1-0.png",
       "sha256": "e47639b8e37c8cf9abddf545194223b99e5659e05fc94f28061063e24d8a8088",
+      "meshGroundImage": "pilot-1-0-ground.png",
+      "meshGroundSha256": "d9a6c868420b72e66d3010380ba695b711389c86c0148fd0ffe7e861946b83a9",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -68,6 +72,8 @@
       ],
       "image": "pilot-2-0.png",
       "sha256": "7711657aa3fe9a932413afccd09889f6d66b73205ed4ef46afc3d080316ec64e",
+      "meshGroundImage": "pilot-2-0-ground.png",
+      "meshGroundSha256": "278a0f7e8800f79dd66c18020f0e61466b564f4ad31be5bd8801144b61135aa6",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -86,6 +92,8 @@
       ],
       "image": "pilot-3-0.png",
       "sha256": "f7aade3cf4ecec217c74b12864bf20104c311220f29a6182aa7cf5e2f50a116d",
+      "meshGroundImage": "pilot-3-0-ground.png",
+      "meshGroundSha256": "dae1d1c6be78764fae317b7e29ed50e5df9e3946a4ea645e7719c1698c2da23f",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -104,6 +112,8 @@
       ],
       "image": "pilot-0-1.png",
       "sha256": "5927a231d22c54e10674f8057c52f2989125b62c5cd3e6343b8ddef864e9ebb8",
+      "meshGroundImage": "pilot-0-1-ground.png",
+      "meshGroundSha256": "b265fa4b6c6ec6daf6427a2c4a0e6dd28b1013493b30b61a76da2401c6b046aa",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -122,6 +132,8 @@
       ],
       "image": "pilot-1-1.png",
       "sha256": "1552645edd86042eadc0fcebcf8211a5c61ac9f0a9d9d5939cd9cfd82af16a7c",
+      "meshGroundImage": "pilot-1-1-ground.png",
+      "meshGroundSha256": "9d57eb183c088601842e70ef4b1adad68268d0c4d30c86fa4b5343906b5a6c20",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -140,6 +152,8 @@
       ],
       "image": "pilot-2-1.png",
       "sha256": "4e506f742493d36af4bee7e13beb859a0c9241e5f9787f7e23f11f29ff13038e",
+      "meshGroundImage": "pilot-2-1-ground.png",
+      "meshGroundSha256": "e61d626d09250ac862b2019aab82e7b4a123abfd9859765f4ee2617ae71b4cf3",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -158,6 +172,8 @@
       ],
       "image": "pilot-3-1.png",
       "sha256": "2913cdd769c5634e0674c5cdcdf6d0a507c8a9022026954ca175572a70d84045",
+      "meshGroundImage": "pilot-3-1-ground.png",
+      "meshGroundSha256": "497c5fc407193176e359580b6baa368ab0d6ca1e7748e5f65c4e3998e54ef6be",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -247,6 +263,8 @@
         1024
       ],
       "image": "infill-0-0.png",
+      "meshGroundImage": "infill-0-0-ground.png",
+      "meshGroundSha256": "23668276d1f4ab469b2c583dc7a19c06a05e61aedf5c0d70cd063d19fb347c50",
       "imageSize": [
         512,
         512
@@ -262,6 +280,8 @@
         1024
       ],
       "image": "infill-1-0.png",
+      "meshGroundImage": "infill-1-0-ground.png",
+      "meshGroundSha256": "ba7cf481b070e43a92ae64a44145367adb8de3a9c2fb0386b8342df411de8a0d",
       "imageSize": [
         512,
         512
@@ -277,6 +297,8 @@
         1024
       ],
       "image": "infill-2-0.png",
+      "meshGroundImage": "infill-2-0-ground.png",
+      "meshGroundSha256": "10583509459a725528dccd5951d755eab5326cd1407f0dc39791f6724bca6fb2",
       "imageSize": [
         512,
         512

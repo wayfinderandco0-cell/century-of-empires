@@ -1,0 +1,39 @@
+{
+  "schema": "coe-v267-world-locked-foliage/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "source": "V94 approximate modern forest mask + exact painted ground heightfield",
+  "heightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
+  "file": "foliage-instances.bin",
+  "sha256": "88fee3f6125db8bcd77d6b3efdd5d6a7439878b6704067261dad7ed8c2e4d3a4",
+  "strideFloats": 8,
+  "total": 7819,
+  "groups": [
+    {
+      "kind": "conifer",
+      "kindCode": 1,
+      "offsetFloats": 0,
+      "count": 6002
+    },
+    {
+      "kind": "broadleaf",
+      "kindCode": 0,
+      "offsetFloats": 48016,
+      "count": 1817
+    }
+  ],
+  "minRoadClearancePixels": 27.003650127428475,
+  "worldBounds": [
+    0,
+    0,
+    6144,
+    2048
+  ],
+  "treeType": "GPU-instanced original 3D crown and trunk geometry",
+  "sourcePhotosUsed": false,
+  "historicalVegetationVerified": false,
+  "historicalRoadsVerified": 0,
+  "visuallyApprovedV267": 0,
+  "nativeGamePlayable": 0,
+  "finishedToday": 0,
+  "note": "Technical 3D foliage candidate; NOT photorealistic V267 parity or playable integration."
+}

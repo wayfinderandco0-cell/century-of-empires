@@ -135,6 +135,66 @@ def compose(primary,secondary,index):
     scene=ImageEnhance.Color(scene).enhance(.92)
     scene=ImageEnhance.Contrast(scene).enhance(1.035)
     return scene
+
+def harmonize_candidate_edge_light(cells):
+    """Color-only edge grading across neighboring NEW scenic candidates.
+
+    This never warps a photographed tree, copies a protected V267 tile,
+    invents a cartway, or claims physical seam continuity.  It is a
+    conservative *lighting* preflight, not a road/relief certification.
+    """
+    pictures={c["id"]:np.asarray(Image.open(ROOT/c["art"]).convert("RGB"),
+                                    dtype=np.float32).copy() for c in cells}
+    by_origin={tuple(c["origin"]):c["id"] for c in cells}
+    pairs=[]
+    for c in cells:
+        x,y=c["origin"]
+        for neighbor,axis in (((x+W,y),"vertical"),((x,y+H),"horizontal")):
+            other=by_origin.get(neighbor)
+            if other:pairs.append((c["id"],other,axis))
+    def soften(values,radius=25):
+        kernel=np.ones(2*radius+1,dtype=np.float32)/(2*radius+1)
+        return np.stack([np.convolve(np.pad(values[:,k],(radius,radius),
+                   mode="edge"),kernel,mode="valid") for k in range(3)],axis=1)
+    results=[]
+    band=40
+    fade=np.linspace(0,1,220,dtype=np.float32)**2
+    for left,right,axis in pairs:
+        a,b=pictures[left],pictures[right]
+        if axis=="vertical":
+            difference=np.median(a[:,-band:,:],axis=1)-np.median(b[:,:band,:],axis=1)
+            before=float(np.median(np.abs(difference)))
+            delta=np.clip(soften(difference),-24,24)
+            a[:,-220:,:]-=delta[:,None,:]*(fade[None,:,None]*.5)
+            b[:,:220,:]+=delta[:,None,:]*(fade[None,::-1,None]*.5)
+            after=float(np.median(np.abs(
+                np.median(a[:,-band:,:],axis=1)-np.median(b[:,:band,:],axis=1))))
+        else:
+            difference=np.median(a[-band:,:,:],axis=0)-np.median(b[:band,:,:],axis=0)
+            before=float(np.median(np.abs(difference)))
+            delta=np.clip(soften(difference),-24,24)
+            a[-220:,:,:]-=delta[None,:,:]*(fade[:,None,None]*.5)
+            b[:220,:,:]+=delta[None,:,:]*(fade[::-1,None,None]*.5)
+            after=float(np.median(np.abs(
+                np.median(a[-band:,:,:],axis=0)-np.median(b[:band,:,:],axis=0))))
+        results.append({"a":left,"b":right,"axis":axis,
+                        "medianEdgeColorDifferenceBefore":round(before,2),
+                        "medianEdgeColorDifferenceAfter":round(after,2),
+                        "physicalTerrainSeamVerified":False,
+                        "roadConnected":False})
+    for c in cells:
+        p=ROOT/c["art"]
+        Image.fromarray(np.uint8(np.clip(pictures[c["id"]],0,255))).save(
+            p,"WEBP",quality=91,method=6)
+        c["assetSha256"]=hashlib.sha256(p.read_bytes()).hexdigest()
+        c["lightingEdgeGraded"]=True
+        c["physicalTerrainSeamVerified"]=False
+    report={"schema":"coe-v267-scenic-edge-color-preflight/v1",
+            "status":"color-only, NOT terrain or road seam verification",
+            "protectedOriginalsModified":False,"pairs":results}
+    (OUT/"edge-color-preflight.json").write_text(json.dumps(report,indent=2)+"\\n")
+    return report
+
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
     sources=[commons(spec[1]) for spec in SPEC]
@@ -166,11 +226,14 @@ def main():
             "notes":"Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
         })
     if len({c["assetSha256"] for c in cells})!=8:raise RuntimeError("Duplicate composed output")
+    seam_report=harmonize_candidate_edge_light(cells)
+    if len(seam_report["pairs"])!=8:raise RuntimeError("Expected eight neighboring scenic color seams")
     manifest={"schema":"coe-v267-original-art-batch/v1","referenceCommit":REF,
        "status":"original-photo-layered-unapproved-neighbor-study",
        "scenario":"fictional Alpine scenic composition, not historical topography",
        "cells":cells,"links":[],"decorativeInlays":[],
        "generatedCandidates":8,"originalArtComposed":8,
+       "lightingEdgePairsGraded":len(seam_report["pairs"]),"physicalTerrainSeamsVerified":0,
        "visuallyReviewed":0,"roadConnected":0,"mobileWebkitRendered":0,
        "historicallyVerified":0,"nativePlayable":0,"userApproved":0,
        "netFinishedToday":0}

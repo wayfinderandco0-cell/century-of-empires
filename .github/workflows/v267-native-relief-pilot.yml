@@ -160,6 +160,20 @@ jobs:
           assert hashlib.sha256((p/'heightfield-step16.npy').read_bytes()).hexdigest()==m['heightfieldSha256']
           assert sum(g['count'] for g in m['groups'])==len(trees)
           assert all(g['offsetFloats']%8==0 for g in m['groups'])
+          batches=m['cellBatches']
+          assert len(batches)==16 and sum(b['count'] for b in batches)==len(trees)
+          next_offset=0
+          for b in batches:
+              assert b['offsetFloats']==next_offset and 0<=b['col']<4 and 0<=b['row']<2
+              assert b['worldBounds']==[b['col']*1536,b['row']*1024,(b['col']+1)*1536,(b['row']+1)*1024]
+              subset=trees[next_offset//8:next_offset//8+b['count']]
+              if len(subset):
+                  assert np.all((subset[:,0]>=b['worldBounds'][0])&(subset[:,0]<b['worldBounds'][2]))
+                  assert np.all((-subset[:,2]>=b['worldBounds'][1])&(-subset[:,2]<b['worldBounds'][3]))
+                  assert np.min(subset[:,1])>=b['worldYRange'][0]-.0001
+                  assert np.max(subset[:,1]+subset[:,4])<=b['worldYRange'][1]+.0001
+              next_offset+=b['count']*8
+          assert next_offset==m['total']*8
           assert m['minRoadClearancePixels']>27
           assert not m['sourcePhotosUsed'] and not m['historicalVegetationVerified']
           assert m['finishedToday']==m['visuallyApprovedV267']==m['nativeGamePlayable']==0
@@ -284,7 +298,10 @@ jobs:
                   page.locator('#plus').click()
                   page.locator('#minus').click()
                   page.locator('#next').click()
-                  assert page.evaluate('COEFoliage.drawn')>0, 'No actual 3D tree instances drawn at close zoom'
+                  foliage_draw=page.evaluate('({drawn:COEFoliage.drawn,visible:COEFoliage.visibleBatches,culled:COEFoliage.culledBatches,total:COEFoliage.totalBatches})')
+                  assert foliage_draw['drawn']>0 and foliage_draw['total']==16,foliage_draw
+                  assert 0<foliage_draw['visible']<16 and foliage_draw['culled']>0,foliage_draw
+                  assert foliage_draw['visible']+foliage_draw['culled']==16,foliage_draw
                   page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-close-iphone.png')
                   page.locator('#whole').click()
                   page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-iphone.png')

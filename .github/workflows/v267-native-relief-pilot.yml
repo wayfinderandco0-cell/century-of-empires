@@ -278,6 +278,9 @@ jobs:
                   page.wait_for_function('window.COEFoliage && (window.COEFoliage.ready || window.COEFoliage.failed)',timeout=90000)
                   foliage=page.evaluate('({ready:COEFoliage.ready,failed:COEFoliage.failed,total:COEFoliage.total})')
                   assert foliage['ready'] and foliage['total']>50 and not foliage['failed'],foliage
+                  geometry=page.evaluate('COEFoliage.geometryTrianglesPerTree')
+                  assert geometry=={'conifer':168,'broadleaf':304},geometry
+                  assert page.evaluate("document.getElementById('view').getContext('webgl2').getError()") == 0, 'WebGL error after 3D foliage geometry upload'
                   page.locator('#plus').click()
                   page.locator('#minus').click()
                   page.locator('#next').click()

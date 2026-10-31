@@ -53,10 +53,16 @@ def build_heightfield(root):
     z = z*(1-strength) + smoothed*strength
     return x, y, z.astype(np.float32), distance
 
-def pack_gltf(tile, z, out, col, row):
+def pack_gltf(tile, z, out, col, row, inlay=False):
     """Write indexed textured glTF with actual 3D vertices and shared edges."""
-    w, h = TW//STEP+1, TH//STEP+1
-    sx, sy = col*(w-1), row*(h-1)
+    if inlay:
+        w = h = 512//STEP+1
+        sx, sy = (col+1)*(TW//STEP)-256//STEP, TH//STEP-256//STEP
+        world_x, world_y = (col+1)*TW-256, TH-256
+    else:
+        w, h = TW//STEP+1, TH//STEP+1
+        sx, sy = col*(w-1), row*(h-1)
+        world_x, world_y = col*TW, row*TH
     zz = z[sy:sy+h, sx:sx+w]
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     # glTF is Y-up; south on the map is negative Z.
@@ -90,7 +96,7 @@ def pack_gltf(tile, z, out, col, row):
             ac["min"] = [float(t) for t in arr.min(axis=0)]
             ac["max"] = [float(t) for t in arr.max(axis=0)]
         accessors.append(ac)
-    name = "pilot-%d-%d"%(col,row)
+    name = ("infill-%d-0"%col) if inlay else ("pilot-%d-%d"%(col,row))
     bin_name = name+".bin"
     (out/bin_name).write_bytes(buf)
     gltf = {
@@ -105,7 +111,7 @@ def pack_gltf(tile, z, out, col, row):
                     "alphaMode":"BLEND","doubleSided":True}],
       "meshes":[{"name":name,"primitives":[{"attributes":{"POSITION":0,"NORMAL":1,"TEXCOORD_0":2},
                                                "indices":3,"material":0,"mode":4}]}],
-      "nodes":[{"mesh":0,"translation":[col*TW,0,-row*TH]}],
+      "nodes":[{"mesh":0,"translation":[world_x,0,-world_y]}],
       "scenes":[{"nodes":[0]}],"scene":0
     }
     gltf_name = name+".gltf"
@@ -113,7 +119,7 @@ def pack_gltf(tile, z, out, col, row):
     return {"id":name,"gltf":gltf_name,"binary":bin_name,"vertexCount":int(w*h),
             "triangleCount":int(2*(w-1)*(h-1)),
             "sha256":hashlib.sha256(buf).hexdigest(),
-            "nativeGamePlayable":False,"visuallyApproved":False}
+            "nativeGamePlayable":False,"visuallyApproved":False,"playable":False if inlay else False}
 
 def main(root, out):
     manifest_path = out/"manifest.json"
@@ -128,6 +134,11 @@ def main(root, out):
             tile = "pilot-%d-%d.png"%(col,row)
             assert (out/tile).exists()
             cells.append(pack_gltf(tile,z,out,col,row))
+    inlays = []
+    for col in range(COLS-1):
+        tile = "infill-%d-0.png"%col
+        assert (out/tile).exists(), "Original continuous-raster infill missing"
+        inlays.append(pack_gltf(tile,z,out,col,0,inlay=True))
     # Shared border heights and normals MUST be identical in world space.
     checks = []
     for row in range(ROWS):
@@ -146,13 +157,13 @@ def main(root, out):
     m = {"schema":"coe-v267-real-heightmesh-candidates/v1",
          "referenceCommit":REF,"source":"V94 DEM plus explicitly synthetic microrelief",
          "true3DMesh":True,"sourcePhotosUsed":False,
-         "meshStepPixels":STEP,"cells":cells,"geometricSeamChecks":checks,
+         "meshStepPixels":STEP,"cells":cells,"inlays":inlays,"geometricSeamChecks":checks,
          "roadContracts":len(original["seams"]),
          "historicalRoadsVerified":0,"nativeGamePlayable":0,
          "visuallyApprovedV267":0,"finishedToday":0,
          "note":"Actual 3D terrain geometry with procedural texture, NOT photoreal V267 parity or playable integration."}
     (out/"heightmesh-manifest.json").write_text(json.dumps(m,indent=2))
-    print(json.dumps({"heightmeshCandidates":len(cells),
+    print(json.dumps({"heightmeshCandidates":len(cells),"threeDGapInlays":len(inlays),
                       "triangles":sum(c["triangleCount"] for c in cells),
                       "vertices":sum(c["vertexCount"] for c in cells),
                       "seamsVerified":len(checks),

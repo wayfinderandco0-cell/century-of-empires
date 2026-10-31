@@ -4,7 +4,6 @@ on:
     branches: [terrain-v267-three-original-art-prototype-20261028]
     paths:
       - scripts/v267_europe_neighbor_batch_b.py
-      - terrain-grid/atlas-integrated.js
       - .github/workflows/v267-europe-neighbor-b.yml
   workflow_dispatch:
 permissions:

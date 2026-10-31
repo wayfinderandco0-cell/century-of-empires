@@ -40,8 +40,10 @@ def build(root: Path, out: Path):
     # Generate ONCE in global world space. No per-octagon random resets or
     # cloned vegetation. Neighbor boundaries cannot duplicate a tree.
     xx, yy = np.meshgrid(np.arange(21, W, 34), np.arange(21, H, 34))
-    x = np.clip(xx.ravel().astype(np.float32) + rng.uniform(-10, 10, xx.size), 1, W - 2)
-    y = np.clip(yy.ravel().astype(np.float32) + rng.uniform(-10, 10, yy.size), 1, H - 2)
+    # Quantize coordinates BEFORE ground sampling. Otherwise float64 jitter
+    # is rounded to float32 only when packed, moving steep-slope tree roots.
+    x = np.clip(xx.ravel().astype(np.float32) + rng.uniform(-10, 10, xx.size), 1, W - 2).astype(np.float32)
+    y = np.clip(yy.ravel().astype(np.float32) + rng.uniform(-10, 10, yy.size), 1, H - 2).astype(np.float32)
     gx = (C0 + x / TW) * 512 / 18
     gy = (R0 + y / TH) * 384 / 24
     e = map_coordinates(elev, [gy, gx], order=1, mode="nearest")

@@ -16,7 +16,7 @@ class PhotoAtlasStream {
   this.manifest=null;this.cache=new Map();this.thumbCache=new Map();this.pending=new Map();
   // Ten nearby native textures fit the 8-cell study without cache-eviction
   // thrashing. Distant European cells remain lazily streamed, never all 432.
-  this.maxCached=10;this.maxThumbCached=32;this.inlays=[];this.stats={requests:0,loaded:0,failed:0};
+  this.maxCached=10;this.maxThumbCached=32;this.inlays=[];this.stats={requests:0,loaded:0,thumbLoaded:0,fullLoaded:0,failed:0};
  }
  async init() {
   const response=await fetch(this.url,{cache:"no-cache"});
@@ -82,6 +82,7 @@ class PhotoAtlasStream {
      this.stats.failed++;resolve(false);this.onChange();return;
     }
     cache.set(cell.id,img);this.stats.loaded++;
+    if(preview)this.stats.thumbLoaded++;else this.stats.fullLoaded++;
     const max=preview?this.maxThumbCached:this.maxCached;
     while(cache.size>max)cache.delete(cache.keys().next().value);
     resolve(true);this.onChange();

@@ -13,10 +13,10 @@ function intersects(a,b) {
 class PhotoAtlasStream {
  constructor(url,onChange) {
   this.url=url;this.onChange=onChange||(()=>{});
-  this.manifest=null;this.cache=new Map();this.pending=new Map();
+  this.manifest=null;this.cache=new Map();this.thumbCache=new Map();this.pending=new Map();
   // Ten nearby native textures fit the 8-cell study without cache-eviction
   // thrashing. Distant European cells remain lazily streamed, never all 432.
-  this.maxCached=10;this.inlays=[];this.stats={requests:0,loaded:0,failed:0};
+  this.maxCached=10;this.maxThumbCached=32;this.inlays=[];this.stats={requests:0,loaded:0,failed:0};
  }
  async init() {
   const response=await fetch(this.url,{cache:"no-cache"});
@@ -61,38 +61,47 @@ class PhotoAtlasStream {
   return this;
  }
  get cells(){return this.manifest?.cells||[];}
- touch(id) {
-  if(!this.cache.has(id))return null;
-  const img=this.cache.get(id);
-  this.cache.delete(id);this.cache.set(id,img);
+ touch(id,preview=false) {
+  const cache=preview?this.thumbCache:this.cache;
+  if(!cache.has(id))return null;
+  const img=cache.get(id);
+  cache.delete(id);cache.set(id,img);
   return img;
  }
- request(cell) {
-  if(this.cache.has(cell.id)||this.pending.has(cell.id))return;
+ request(cell,wantPreview=false) {
+  const preview=wantPreview&&!!cell.previewImage;
+  const cache=preview?this.thumbCache:this.cache;
+  const key=cell.id+(preview?"@preview":"@full");
+  if(cache.has(cell.id)||this.pending.has(key))return;
   this.stats.requests++;
   const img=new Image();
+  const expected=preview?(cell.previewSize||[384,256]):[W,H];
   const done=new Promise((resolve)=>{
    img.onload=()=>{
-    if(img.naturalWidth!==W||img.naturalHeight!==H) {
-     this.stats.failed++;resolve(false);return;
+    if(img.naturalWidth!==expected[0]||img.naturalHeight!==expected[1]) {
+     this.stats.failed++;resolve(false);this.onChange();return;
     }
-    this.cache.set(cell.id,img);this.stats.loaded++;
-    while(this.cache.size>this.maxCached)this.cache.delete(this.cache.keys().next().value);
+    cache.set(cell.id,img);this.stats.loaded++;
+    const max=preview?this.maxThumbCached:this.maxCached;
+    while(cache.size>max)cache.delete(cache.keys().next().value);
     resolve(true);this.onChange();
    };
    img.onerror=()=>{this.stats.failed++;resolve(false);this.onChange();};
   });
-  this.pending.set(cell.id,done);
-  img.src=cell.image;
-  done.finally(()=>this.pending.delete(cell.id));
+  this.pending.set(key,done);
+  img.src=preview?cell.previewImage:cell.image;
+  done.finally(()=>this.pending.delete(key));
  }
  draw(ctx,toScreen,scale,screenWidth,screenHeight) {
   if(!this.manifest)return;
   const visible=[];
+  // At continent/regional zoom load actual photo thumbnails instead of
+  // decoding 19+ full 1536x1024 canvases on a memory-limited iPhone.
+  const preview=scale<.14;
   for(const cell of this.cells) {
    const p=toScreen(cell.origin),box=[p[0],p[1],p[0]+W*scale,p[1]+H*scale];
    if(intersects(box,[-W*scale,-H*scale,screenWidth+W*scale,screenHeight+H*scale]))
-    this.request(cell);
+    this.request(cell,preview);
    if(intersects(box,[0,0,screenWidth,screenHeight]))visible.push({cell,p});
   }
   // The ONLY unmasked photographic fill is a clipped, non-playable
@@ -107,7 +116,7 @@ class PhotoAtlasStream {
    ctx.lineTo(p[0],p[1]-r);ctx.lineTo(p[0]+r,p[1]);
    ctx.lineTo(p[0],p[1]+r);ctx.closePath();ctx.clip();
    for(const cell of gap.cells) {
-    const img=this.touch(cell.id);
+    const img=this.touch(cell.id,preview);
     if(img) {const q=toScreen(cell.origin);
      ctx.drawImage(img,q[0],q[1],W*scale,H*scale);}
    }
@@ -118,7 +127,7 @@ class PhotoAtlasStream {
    oct.forEach(([x,y],i)=>i?ctx.lineTo(p[0]+x*scale,p[1]+y*scale):
                                    ctx.moveTo(p[0]+x*scale,p[1]+y*scale));
    ctx.closePath();ctx.clip();
-   const img=this.touch(cell.id);
+   const img=this.touch(cell.id,preview);
    if(img)ctx.drawImage(img,p[0],p[1],W*scale,H*scale);
    else {
     ctx.fillStyle="#35483c";ctx.fillRect(p[0],p[1],W*scale,H*scale);

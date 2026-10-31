@@ -1,0 +1,549 @@
+{
+  "schema": "coe-v267-original-art-batch/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "status": "unapproved-source-backed-European-scenic-art-study",
+  "scenario": "geographic analogues from Europe; NOT 1780–1880 surveyed roads",
+  "cells": [
+    {
+      "id": "southern-terraces",
+      "origin": [
+        0,
+        3072
+      ],
+      "biome": "tyrolean-wooded-valley",
+      "art": "terrain-grid/v267-europe-neighbor-b/southern-terraces.webp",
+      "assetSha256": "9c865f6736a024b1cd9a979dea97d7d61851df67832bc500f32e4db248a5502c",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Tyrol, Austria (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Tyrol%2C_Austria_%28Unsplash%29.jpg",
+        "sourceSha256": "10157d96bc51e26063a75f398f9081b5bb5aed4e881b819e8fb86f3178a1e926",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Tyrol%2C_Austria_%28Unsplash%29.jpg/3840px-Tyrol%2C_Austria_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2553
+        ],
+        "crop": [
+          1106,
+          917,
+          2642,
+          1941
+        ]
+      },
+      "sourceForeground": {
+        "title": "Dramatic Alpine scenery (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Dramatic_Alpine_scenery_%28Unsplash%29.jpg",
+        "sourceSha256": "9313794923f484cad6e2b5da82001bb54dac05c536ff98be4db2b1572c8dca02",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Dramatic_Alpine_scenery_%28Unsplash%29.jpg/3840px-Dramatic_Alpine_scenery_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2566
+        ],
+        "crop": [
+          991,
+          910,
+          2527,
+          1934
+        ]
+      },
+      "sourceRegionReference": "Tyrol, Austria",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "southern-high-meadow",
+      "origin": [
+        1536,
+        3072
+      ],
+      "biome": "south-tyrol-high-meadow",
+      "art": "terrain-grid/v267-europe-neighbor-b/southern-high-meadow.webp",
+      "assetSha256": "c503666373b606c93048f650493b461c37a497148560343f37b384a5fe896598",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Lost in the mountains of South Tyrol (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg",
+        "sourceSha256": "9e857b66b1314e254d391148a073cab3ec03cfcf41b088d5e2462056b6b06367",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg/3840px-Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2553
+        ],
+        "crop": [
+          1175,
+          872,
+          2711,
+          1896
+        ]
+      },
+      "sourceForeground": {
+        "title": "Mountain peak in a lake (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Mountain_peak_in_a_lake_%28Unsplash%29.jpg",
+        "sourceSha256": "ab6d346dd724db72dc82a41508a7a6c4dd2d7224125c16fdf241dd0292046105",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F84%2FMountain_peak_in_a_lake_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          406,
+          340,
+          1942,
+          1364
+        ]
+      },
+      "sourceRegionReference": "South Tyrol, Italy",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "dolomite-south-ridge",
+      "origin": [
+        3072,
+        3072
+      ],
+      "biome": "dolomite-limestone-ridge",
+      "art": "terrain-grid/v267-europe-neighbor-b/dolomite-south-ridge.webp",
+      "assetSha256": "d2381e82e883e0b9646a03b07cc1e63c106e31cbfe584eada669db129c5637db",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Snowy mountain in the Dolomites (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg",
+        "sourceSha256": "123d480bfda33c2f751c09496e37048d774c3abd7641ac5afee72865f5202f15",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg/3840px-Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2884
+        ],
+        "crop": [
+          1129,
+          1042,
+          2665,
+          2066
+        ]
+      },
+      "sourceForeground": {
+        "title": "Alpine village landscape (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_village_landscape_%28Unsplash%29.jpg",
+        "sourceSha256": "711f039a24516fdc756f3ca759bab6ec1c88cc03a804586d778c7e803628366a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F8a%2FAlpine_village_landscape_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          441,
+          340,
+          1977,
+          1364
+        ]
+      },
+      "sourceRegionReference": "Dolomites, Italy",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "dolomite-south-pass",
+      "origin": [
+        4608,
+        3072
+      ],
+      "biome": "dolomite-open-pass",
+      "art": "terrain-grid/v267-europe-neighbor-b/dolomite-south-pass.webp",
+      "assetSha256": "e4811baa18d39d378b37f74daa0bf9757ee98bfcd2c5ee7e2916c5ee9d7b2be9",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Passo Sella, Dolomites (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg",
+        "sourceSha256": "0ffd6f0efb68d0ca87908f3c415b6fe62fb496189b2c810f855bcc49a2696532",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg/3840px-Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2498
+        ],
+        "crop": [
+          1175,
+          884,
+          2711,
+          1908
+        ]
+      },
+      "sourceForeground": {
+        "title": "Tyrol, Austria (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Tyrol%2C_Austria_%28Unsplash%29.jpg",
+        "sourceSha256": "10157d96bc51e26063a75f398f9081b5bb5aed4e881b819e8fb86f3178a1e926",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Tyrol%2C_Austria_%28Unsplash%29.jpg/3840px-Tyrol%2C_Austria_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2553
+        ],
+        "crop": [
+          991,
+          902,
+          2527,
+          1926
+        ]
+      },
+      "sourceRegionReference": "Passo Sella, Italy",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "alpine-southwest-slope",
+      "origin": [
+        6144,
+        3072
+      ],
+      "biome": "swiss-alpine-green-slope",
+      "art": "terrain-grid/v267-europe-neighbor-b/alpine-southwest-slope.webp",
+      "assetSha256": "560cf9e26ee32b18f3b1bddfd362fa0f08fb142b8c2addc66995dfd5aa943485",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Swiss Alps, Switzerland (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Swiss_Alps%2C_Switzerland_%28Unsplash%29.jpg",
+        "sourceSha256": "7296a5b289eb2517e3157b175214757ee92fc471797907b0670cea64ec4bc98a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F1%2F1a%2FSwiss_Alps%252C_Switzerland_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          415,
+          328,
+          1951,
+          1352
+        ]
+      },
+      "sourceForeground": {
+        "title": "Lost in the mountains of South Tyrol (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg",
+        "sourceSha256": "9e857b66b1314e254d391148a073cab3ec03cfcf41b088d5e2462056b6b06367",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg/3840px-Lost_in_the_mountains_of_South_Tyrol_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2553
+        ],
+        "crop": [
+          1083,
+          902,
+          2619,
+          1926
+        ]
+      },
+      "sourceRegionReference": "Troistorrents, Switzerland",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "alpine-east-summit",
+      "origin": [
+        6144,
+        0
+      ],
+      "biome": "alpine-high-ridge",
+      "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-summit.webp",
+      "assetSha256": "273f62d906ad0efaa0fe0748fb718131a6b01c4a9c740f6259ff2354c66a63b8",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Dramatic Alpine scenery (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Dramatic_Alpine_scenery_%28Unsplash%29.jpg",
+        "sourceSha256": "9313794923f484cad6e2b5da82001bb54dac05c536ff98be4db2b1572c8dca02",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Dramatic_Alpine_scenery_%28Unsplash%29.jpg/3840px-Dramatic_Alpine_scenery_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2566
+        ],
+        "crop": [
+          1152,
+          817,
+          2688,
+          1841
+        ]
+      },
+      "sourceForeground": {
+        "title": "Snowy mountain in the Dolomites (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg",
+        "sourceSha256": "123d480bfda33c2f751c09496e37048d774c3abd7641ac5afee72865f5202f15",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg/3840px-Snowy_mountain_in_the_Dolomites_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2884
+        ],
+        "crop": [
+          1175,
+          1097,
+          2711,
+          2121
+        ]
+      },
+      "sourceRegionReference": "Kleine Scheidegg, Switzerland",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "alpine-east-lakeside",
+      "origin": [
+        6144,
+        1024
+      ],
+      "biome": "austrian-lakeside-forest",
+      "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-lakeside.webp",
+      "assetSha256": "e19ecdbe90272d28e7b49eaf7832e230056d696ae716dc81ed532a48b1fd4c5b",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Mountain peak in a lake (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Mountain_peak_in_a_lake_%28Unsplash%29.jpg",
+        "sourceSha256": "ab6d346dd724db72dc82a41508a7a6c4dd2d7224125c16fdf241dd0292046105",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F84%2FMountain_peak_in_a_lake_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          432,
+          317,
+          1968,
+          1341
+        ]
+      },
+      "sourceForeground": {
+        "title": "Passo Sella, Dolomites (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg",
+        "sourceSha256": "0ffd6f0efb68d0ca87908f3c415b6fe62fb496189b2c810f855bcc49a2696532",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg/3840px-Passo_Sella%2C_Dolomites_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2498
+        ],
+        "crop": [
+          991,
+          870,
+          2527,
+          1894
+        ]
+      },
+      "sourceRegionReference": "Kitzbühel, Austria",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    },
+    {
+      "id": "alpine-east-snowfield",
+      "origin": [
+        6144,
+        2048
+      ],
+      "biome": "snowy-alpine-settlement-reference",
+      "art": "terrain-grid/v267-europe-neighbor-b/alpine-east-snowfield.webp",
+      "assetSha256": "3926c1c35aa027167486a93295728e5d706135f8d14090b27133191768dd149e",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Alpine village landscape (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_village_landscape_%28Unsplash%29.jpg",
+        "sourceSha256": "711f039a24516fdc756f3ca759bab6ec1c88cc03a804586d778c7e803628366a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F8a%2FAlpine_village_landscape_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          423,
+          334,
+          1959,
+          1358
+        ]
+      },
+      "sourceForeground": {
+        "title": "Swiss Alps, Switzerland (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Swiss_Alps%2C_Switzerland_%28Unsplash%29.jpg",
+        "sourceSha256": "7296a5b289eb2517e3157b175214757ee92fc471797907b0670cea64ec4bc98a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F1%2F1a%2FSwiss_Alps%252C_Switzerland_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          406,
+          340,
+          1942,
+          1364
+        ]
+      },
+      "sourceRegionReference": "Livigno, Italy",
+      "sourceMethod": "Unique CC0 oblique European landscape source, secondary photographic foreground layer, graded illumination, preserved natural perspective",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Unapproved scenic source-composition study; photograph location is not a historical survey or exact world-cell placement. No new roads. Modern structures or seasonality require visual review.",
+      "lightingEdgeGraded": true,
+      "physicalTerrainSeamVerified": false
+    }
+  ],
+  "links": [],
+  "decorativeInlays": [],
+  "generatedCandidates": 8,
+  "originalArtComposed": 8,
+  "lightingEdgePairsGraded": 7,
+  "physicalTerrainSeamsVerified": 0,
+  "visuallyReviewed": 0,
+  "roadConnected": 0,
+  "mobileWebkitRendered": 0,
+  "historicallyVerified": 0,
+  "nativePlayable": 0,
+  "userApproved": 0,
+  "netFinishedToday": 0
+}

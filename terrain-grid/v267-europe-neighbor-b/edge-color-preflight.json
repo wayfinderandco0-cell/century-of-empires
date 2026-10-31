@@ -1,0 +1,70 @@
+{
+  "schema": "coe-v267-scenic-edge-color-preflight/v1",
+  "status": "color-only, NOT terrain or road seam verification",
+  "protectedOriginalsModified": false,
+  "pairs": [
+    {
+      "a": "southern-terraces",
+      "b": "southern-high-meadow",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 66.0,
+      "medianEdgeColorDifferenceAfter": 45.87,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "southern-high-meadow",
+      "b": "dolomite-south-ridge",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 89.5,
+      "medianEdgeColorDifferenceAfter": 69.54,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "dolomite-south-ridge",
+      "b": "dolomite-south-pass",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 70.5,
+      "medianEdgeColorDifferenceAfter": 50.62,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "dolomite-south-pass",
+      "b": "alpine-southwest-slope",
+      "axis": "vertical",
+      "medianEdgeColorDifferenceBefore": 101.5,
+      "medianEdgeColorDifferenceAfter": 82.04,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "alpine-east-summit",
+      "b": "alpine-east-lakeside",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 112.0,
+      "medianEdgeColorDifferenceAfter": 91.76,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "alpine-east-lakeside",
+      "b": "alpine-east-snowfield",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 43.0,
+      "medianEdgeColorDifferenceAfter": 23.87,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    },
+    {
+      "a": "alpine-east-snowfield",
+      "b": "alpine-southwest-slope",
+      "axis": "horizontal",
+      "medianEdgeColorDifferenceBefore": 78.0,
+      "medianEdgeColorDifferenceAfter": 58.12,
+      "physicalTerrainSeamVerified": false,
+      "roadConnected": false
+    }
+  ]
+}

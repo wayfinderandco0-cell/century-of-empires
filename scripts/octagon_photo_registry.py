@@ -18,16 +18,19 @@ SOURCES = (
     ("terrain-grid/factory-photo/manifest.json", "single"),
     ("terrain-grid/factory-photo/block-8/manifest.json", "sharr"),
     ("terrain-grid/factory-photo/carpathian-8/manifest.json", "carpathian"),
+    ("terrain-grid/factory-photo/dulmen-road-8/manifest.json", "dulmen"),
 )
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     by_id = {}
     superseded = []
+    source_records = 0
     for path, kind in SOURCES:
         source = json.loads((ROOT / path).read_text())
         if source["schema"] != "coe-photo-art/v1":
             raise RuntimeError("Unexpected source schema " + path)
+        source_records += len(source["cells"])
         for item in source["cells"]:
             c = dict(item)
             if c.get("gameplayEnabled") or c.get("historicallyVerified") or c.get("physicallyRoadSeamChecked"):
@@ -68,8 +71,8 @@ def main():
         c["previewImage"] = "terrain-grid/factory-photo/coverage/thumbs/" + dest.name
         c["previewSize"] = [384, 256]
         c["previewSha256"] = hashlib.sha256(dest.read_bytes()).hexdigest()
-    if len(cells) != 19 or len(superseded) != 2:
-        raise RuntimeError(f"Expected 19 unique cells and 2 superseded originals, got {len(cells)}, {len(superseded)}")
+    if len(cells) < 27 or len(superseded) != 2 or source_records != len(cells)+len(superseded):
+        raise RuntimeError(f"Expected at least 27 unique source cells, two superseded originals; got {len(cells)}, {len(superseded)}")
     grid = {tuple(c["grid"]): c for c in cells}
     native, blocked = [], []
     for c in cells:
@@ -92,8 +95,8 @@ def main():
             row = {"a": c["id"], "b": b["id"], "sourceNativePixelAdjacent": bool(same),
                    "roadPainted": False, "routeEnabled": False, "visuallyApproved": False}
             (native if same else blocked).append(row)
-    if len(native) != 18 or len(blocked) != 2:
-        raise RuntimeError(f"Expected 18 exact source joins, 2 blocked, got {len(native)}, {len(blocked)}")
+    if len(native) < 28 or len(blocked) != 2:
+        raise RuntimeError(f"Expected at least 28 source joins and 2 blocked, got {len(native)}, {len(blocked)}")
     # Four matching, original-source neighboring cells can fill a road-free
     # central corner diamond. A seam between different photographs CANNOT.
     diamonds = []
@@ -106,13 +109,13 @@ def main():
                     diamonds.append({"worldCenter": [x * W, y * H],
                                      "sourceCellIds": [q["id"] for q in quartet],
                                      "playable": False, "roads": []})
-    if len(diamonds) != 5:
-        raise RuntimeError(f"Expected five authentic source-native corner diamonds, got {len(diamonds)}")
+    if len(diamonds) < 8:
+        raise RuntimeError(f"Expected at least eight source-native road-free diamonds, got {len(diamonds)}")
     result = {
         "schema": "coe-photo-art/v1", "status": "unified-source-art-CANDIDATES-not-playable",
         "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
-        "description": "19 distinct preexisting photographic candidates in one native game canvas, NOT new final octagons",
-        "sourceArtworkRecords": 21, "photographicArtComposed": 19,
+        "description": f"{len(cells)} distinct preexisting photographic candidates in one native game canvas, NOT final octagons",
+        "sourceArtworkRecords": source_records, "photographicArtComposed": len(cells),
         "newArtworkComposedThisRun": 0, "newLowZoomPhotographicDerivatives": len(cells), "uniquePhotoCells": len(cells),
         "supersededOverlaps": superseded, "nativePhotoPixelJoins": native,
         "unapprovedCrossSourceJoins": blocked, "roadFreeNativeDiamondInlays": diamonds,
@@ -123,15 +126,19 @@ def main():
     }
     (OUT / "manifest.json").write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
     (OUT / "README.md").write_text(
-        "# Native Europe photo coverage — review only\n\n"
-        "Nineteen distinct **previously committed** 1536×1024 licensed photographic candidates plus nineteen newly derived 384×256 photographic overview assets are now streamed "
-        "in one atlas. Two overlapping Sharr source records are superseded by the coherent 4×2 block. "
-        "Eighteen original-source adjacent photo joins and five four-cell road-free corner diamonds are "
-        "eligible for native-pixel decorative infill. Two cross-source joins remain blocked. "
-        "None of these source photographs is exactly georeferenced or 1780–1880 road certified. "
-        "**0 newly finished octagons.** Open the native game with `?photoBlock=coverage`, "
-        "choose Integrated Alpine atlas → Photo sources → Whole, then zoom or inspect Next region. "
-        "This is an opt-in artwork layer and does not alter the V94 campaign, V121 Matrei, V123 roads or saves.\n"
+        "# Native Europe photo coverage — review only\\n\\n"
+        f"{len(cells)} distinct previously committed 1536×1024 licensed photographic candidates "
+        f"({source_records} source records, {len(superseded)} superseded overlaps) plus "
+        f"{len(cells)} derived 384×256 low-zoom assets are streamed in one atlas. "
+        f"{len(native)} original-source photo joins and {len(diamonds)} road-free "
+        f"corner diamonds are eligible for native-pixel decorative infill; "
+        f"{len(blocked)} cross-source joins remain blocked. "
+        "The German lowland block contains a photographed MODERN farm road, NOT a "
+        "historically verified 1780 route or gameplay edge. None of these sources "
+        "is exactly V94 georeferenced or historically road certified. "
+        "**0 newly finished octagons.** Open `?photoBlock=coverage` and choose "
+        "Integrated Alpine atlas → Photo sources → Whole. V94 campaign, V121 "
+        "Matrei, V123 roads and saves remain unchanged.\\n"
     )
     print(json.dumps({"uniquePhotoCells": len(cells), "sourceNativeJoins": len(native),
                       "blockedSourceJoins": len(blocked), "roadFreeDiamondInlays": len(diamonds),

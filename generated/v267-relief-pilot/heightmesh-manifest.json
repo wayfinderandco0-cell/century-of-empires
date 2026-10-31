@@ -1,0 +1,158 @@
+{
+  "schema": "coe-v267-real-heightmesh-candidates/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "source": "V94 DEM plus explicitly synthetic microrelief",
+  "true3DMesh": true,
+  "sourcePhotosUsed": false,
+  "meshStepPixels": 16,
+  "cells": [
+    {
+      "id": "pilot-0-0",
+      "gltf": "pilot-0-0.gltf",
+      "binary": "pilot-0-0.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "5673eff57afe2c2f82a66c62981aac346524db424f9cebd1cb2c8e69aff745e7",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-1-0",
+      "gltf": "pilot-1-0.gltf",
+      "binary": "pilot-1-0.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "a7b2e9e0f59f17e14e5d67d1ca01efdd7c7421adfe195b810591a1a229e16958",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-2-0",
+      "gltf": "pilot-2-0.gltf",
+      "binary": "pilot-2-0.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "3669e497d69075cb203ebca5d27f0a440c34d93590ad534aad130e0aba549114",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-3-0",
+      "gltf": "pilot-3-0.gltf",
+      "binary": "pilot-3-0.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "ec1aab310d03ab0f836450e02aac05888a0e5ff44b89266279c0a1ac8b2d2821",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-0-1",
+      "gltf": "pilot-0-1.gltf",
+      "binary": "pilot-0-1.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "208119a4e5a568fad9babc96952c65664b091e8575e58dd70e121fa105660398",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-1-1",
+      "gltf": "pilot-1-1.gltf",
+      "binary": "pilot-1-1.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "2021f7c224781dfa3954a1124178bfd03dd1f1d3a556df87956390f1e6093250",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-2-1",
+      "gltf": "pilot-2-1.gltf",
+      "binary": "pilot-2-1.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "9a8e599c529ba86133ea57dad11963603595613fb1af99c1bc8bb2515b42d6bd",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    },
+    {
+      "id": "pilot-3-1",
+      "gltf": "pilot-3-1.gltf",
+      "binary": "pilot-3-1.bin",
+      "vertexCount": 6305,
+      "triangleCount": 12288,
+      "sha256": "de4c9a4d047ceaeb891cc007e0632a408f40dd8947f622d6126bf4aa611b54ec",
+      "nativeGamePlayable": false,
+      "visuallyApproved": false
+    }
+  ],
+  "geometricSeamChecks": [
+    {
+      "a": "pilot-0-0",
+      "b": "pilot-1-0",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-2-0",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-2-0",
+      "b": "pilot-3-0",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-0-1",
+      "b": "pilot-1-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-1-1",
+      "b": "pilot-2-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-2-1",
+      "b": "pilot-3-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-0-0",
+      "b": "pilot-0-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-1-0",
+      "b": "pilot-1-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-2-0",
+      "b": "pilot-2-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    },
+    {
+      "a": "pilot-3-0",
+      "b": "pilot-3-1",
+      "maxHeightDifference": 0,
+      "sameWorldGrid": true
+    }
+  ],
+  "roadContracts": 8,
+  "historicalRoadsVerified": 0,
+  "nativeGamePlayable": 0,
+  "visuallyApprovedV267": 0,
+  "finishedToday": 0,
+  "note": "Actual 3D terrain geometry with procedural texture, NOT photoreal V267 parity or playable integration."
+}

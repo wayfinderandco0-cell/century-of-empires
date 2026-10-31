@@ -16,7 +16,7 @@ permissions:
   contents: write
 concurrency:
   group: coe-v267-native-relief-pilot
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   build-original-relief:
     runs-on: ubuntu-latest
@@ -178,5 +178,21 @@ jobs:
           git add generated/v267-relief-pilot
           if ! git diff --cached --quiet; then
             git commit -m "Render eight connected original 3D relief candidates and mobile WebKit evidence"
-            git push
+            # Another development commit may arrive while the renderer runs.
+            # Never force-push or discard it. Rebase and retry a bounded number
+            # of times, failing visibly if generated asset conflicts occur.
+            for attempt in 1 2 3; do
+              if git push; then
+                echo "PASS: generated 3D assets committed without overwriting newer source"
+                exit 0
+              fi
+              git fetch origin terrain-v267-three-original-art-prototype-20261028
+              if ! git rebase origin/terrain-v267-three-original-art-prototype-20261028; then
+                git rebase --abort || true
+                echo "ERROR: concurrent generated asset conflict; manual reconciliation required"
+                exit 1
+              fi
+            done
+            echo "ERROR: failed to push generated 3D assets after 3 safe retries"
+            exit 1
           fi

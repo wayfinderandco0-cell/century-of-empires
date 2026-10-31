@@ -183,9 +183,12 @@ $("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
  * No route nodes or conquest towns are fabricated for unreviewed cells.
  * The three approved Alpine octagons and their V123 army stay intact.
  */
+const studyParams=new URLSearchParams(root.location.search);
 const photoButton=document.createElement("button");
 photoButton.id="atlasPhotoSources";photoButton.type="button";
-photoButton.textContent=new URLSearchParams(root.location.search).has("terrainStudy")?"3D terrain study":"Photo sources";
+// Keep experimental photo/heightmesh references out of the default approved-art UI.
+photoButton.hidden=!(studyParams.has("terrainStudy")||studyParams.has("photoBlock"));
+photoButton.textContent=studyParams.has("terrainStudy")?"Unapproved 3D study":"Photo references only";
 $("atlasBar").querySelector("div").appendChild(photoButton);
 const photoNext=document.createElement("button");
 photoNext.id="atlasPhotoNext";photoNext.type="button";
@@ -237,7 +240,7 @@ async function togglePhotoSources(){
    focusPhoto(0);
   } else {
    photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
-   photoNext.hidden=true;photoButton.textContent=new URLSearchParams(root.location.search).has("terrainStudy")?"3D terrain study":"Photo sources";
+   photoNext.hidden=true;photoButton.textContent=studyParams.has("terrainStudy")?"Unapproved 3D study":"Photo references only";
    for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
    status("WEST · MATREI · SOUTH connected · tap a cartway");
   }
@@ -255,6 +258,7 @@ const API={
  get zoom(){return zoom},get center(){return clone(center)},get manifest(){return manifest},
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
+ get approvedBaselineLocked(){return !!manifest&&root.COEV267ArtContract?.assertBase(manifest)===true},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
  get photoLoaded(){return photoStream?.stats.loaded||0},get photoThumbLoaded(){return photoStream?.stats.thumbLoaded||0},get photoFullLoaded(){return photoStream?.stats.fullLoaded||0},get photoInlays(){return photoStream?.inlays.length||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
@@ -263,7 +267,9 @@ const API={
 root.COEAtlas=Object.freeze(API);
 (async()=>{
  const response=await fetch(M);if(!response.ok)throw Error("Atlas manifest HTTP "+response.status);
- manifest=await response.json();if(manifest.schema!=="coe-atlas-cells/v1"||manifest.cells.length!==3)throw Error("Unexpected atlas manifest");
+ manifest=await response.json();
+ if(!root.COEV267ArtContract)throw Error("V267 approved original-art contract script missing");
+ root.COEV267ArtContract.assertBase(manifest);
  atlas=root.V123Atlas.create(manifest.centerRoads,{experimentalSeams:true});
  if(atlas.network.graph.size!==100||atlas.network.seams.length!==2||atlas.network.seams.some(s=>!s.pass||s.endpointGapPx!==0))throw Error("Protected V123 road seam drift");
  segments=collectSegments(atlas.network);

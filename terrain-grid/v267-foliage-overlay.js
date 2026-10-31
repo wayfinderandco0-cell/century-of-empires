@@ -104,24 +104,32 @@ out float vMaterial;
 out float vHue;
 out float vSeed;
 out float vSpecies;
+out float vCanopyGrain;
 void main(){
  // World-anchored instance rotation breaks identical crown silhouettes.
  float angle=6.2831853*aTreeB.w;
  float cs=cos(angle),sn=sin(angle);
  vec3 local=vec3(aLocal.x*cs-aLocal.z*sn,aLocal.y,
                  aLocal.x*sn+aLocal.z*cs);
- vec3 n=vec3(aNormal.x*cs-aNormal.z*sn,aNormal.y,
-             aNormal.x*sn+aNormal.z*cs);
+ // Non-uniform crown height/width needs the inverse-transpose normal.
+ // Rotating an unscaled normal made branch faces unnaturally flat-lit.
+ vec3 ns=vec3(aNormal.x/max(aTreeA.w,.001),
+              aNormal.y/max(aTreeB.x,.001),
+              aNormal.z/max(aTreeA.w,.001));
+ vec3 n=normalize(vec3(ns.x*cs-ns.z*sn,ns.y,ns.x*sn+ns.z*cs));
  vec3 position=aTreeA.xyz+vec3(local.x*aTreeA.w,
                                 local.y*aTreeB.x,local.z*aTreeA.w);
  gl_Position=uVP*vec4(position,1.0);
  vNormal=n;vMaterial=aLocal.w;vHue=aTreeB.y;
  vSeed=aTreeB.w;vSpecies=aTreeB.z;
+ // Small nonrepeating light breakup follows each original 3D branch face.
+ vCanopyGrain=fract(sin(dot(aLocal.xyz*vec3(11.2,9.7,14.9)+
+                            vec3(aTreeB.w*31.0),vec3(12.9898,78.233,37.719)))*43758.5453);
 }`;
   const frag=`#version 300 es
 precision highp float;
 in vec3 vNormal;in float vMaterial;in float vHue;
-in float vSeed;in float vSpecies;
+in float vSeed;in float vSpecies;in float vCanopyGrain;
 out vec4 fragColor;
 void main(){
  vec3 n=normalize(vNormal);
@@ -137,7 +145,9 @@ void main(){
             vMaterial<2.5?underside:broadleaf;
  // Distant broadleaf masses retain different color and light response.
  float shade=vMaterial<.5?.79:ambient;
- fragColor=vec4(color*shade,1.0);
+ float canopyGrain=vMaterial<.5?1.0:mix(.89,1.09,smoothstep(.08,.92,vCanopyGrain));
+ float skyBounce=vMaterial<.5?1.0:mix(.80,1.08,clamp(n.y*.5+.5,0.0,1.0));
+ fragColor=vec4(color*shade*canopyGrain*skyBounce,1.0);
 }`;
   const program=gl.createProgram();
   gl.attachShader(program,compile(gl,gl.VERTEX_SHADER,vert));

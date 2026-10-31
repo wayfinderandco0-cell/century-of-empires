@@ -7,18 +7,33 @@
 "use strict";
 const canvas=document.getElementById('view'),status=document.getElementById('status');
 const gl=canvas.getContext('webgl2',{alpha:false,antialias:true});
-window.COEMeshReview={loaded:false,cells:0,inlays:0,cartwaysLoaded:false,cartwayTriangles:0,bedrockLoaded:false,bedrockOutcrops:0,bedrockTriangles:0,webgl2:!!gl,failed:null};
+window.COEMeshReview={loaded:false,cells:0,inlays:0,cartwaysLoaded:false,cartwayTriangles:0,bedrockLoaded:false,bedrockOutcrops:0,bedrockTriangles:0,webgl2:!!gl,lightingModel:"world-space diffuse and distance haze",failed:null};
 if(!gl){status.textContent="WebGL2 unavailable; this is not a verified mobile 3D render";window.COEMeshReview.failed="no-webgl2";throw Error("WebGL2 unavailable")}
 const vert=`#version 300 es
 layout(location=0) in vec3 aPosition; layout(location=1) in vec3 aNormal; layout(location=2) in vec2 aUV;
-uniform mat4 uMVP; out vec3 vNormal; out vec2 vUV;
-void main(){gl_Position=uMVP*vec4(aPosition,1.0);vNormal=aNormal;vUV=aUV;}`;
+uniform mat4 uMVP;uniform mat4 uModel;
+out vec3 vNormal;out vec2 vUV;out vec3 vWorld;
+void main(){gl_Position=uMVP*vec4(aPosition,1.0);vNormal=aNormal;vUV=aUV;vWorld=(uModel*vec4(aPosition,1.0)).xyz;}`;
 const frag=`#version 300 es
-precision highp float; in vec3 vNormal; in vec2 vUV; uniform sampler2D uTexture; out vec4 fragColor;
-void main(){vec4 c=texture(uTexture,vUV);if(c.a<0.08)discard;float light=0.82+0.18*max(0.0,dot(normalize(vNormal),normalize(vec3(-0.45,0.82,0.33))));fragColor=vec4(c.rgb*light,1.0);}`;
+precision highp float;
+in vec3 vNormal;in vec2 vUV;in vec3 vWorld;
+uniform sampler2D uTexture;uniform vec3 uEye;out vec4 fragColor;
+void main(){
+ vec4 c=texture(uTexture,vUV);if(c.a<0.08)discard;
+ vec3 n=normalize(vNormal);
+ float diffuse=max(0.0,dot(n,normalize(vec3(-0.45,0.82,0.33))));
+ float skylight=clamp(.55+.25*n.y,0.35,0.80);
+ vec3 terrain=c.rgb*(skylight+.27*diffuse);
+ // Air perspective supplies continuous depth across the actual 3D ridges;
+ // never a photographic overlay or a fabricated geographic feature.
+ float haze=clamp((length(vWorld-uEye)-3200.0)/7000.0,0.0,.30);
+ fragColor=vec4(mix(terrain,vec3(.38,.47,.46),haze),1.0);
+}`;
 function shader(type,src){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vert));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,frag));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
-gl.useProgram(program);const mvpLoc=gl.getUniformLocation(program,"uMVP");gl.uniform1i(gl.getUniformLocation(program,"uTexture"),0);
+gl.useProgram(program);const mvpLoc=gl.getUniformLocation(program,"uMVP");
+const modelLoc=gl.getUniformLocation(program,"uModel"),eyeLoc=gl.getUniformLocation(program,"uEye");
+gl.uniform1i(gl.getUniformLocation(program,"uTexture"),0);
 gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);
 function dot(a,b){return a.reduce((s,v,i)=>s+v*b[i],0)}
 function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]}
@@ -124,7 +139,7 @@ function draw(){
  gl.clearColor(.055,.09,.075,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  let aspect=w/h,eye=[center[0]+1650,center[1]+3500,center[2]+3400];
  let p=ortho(-span*aspect/2,span*aspect/2,-span/2,span/2,10,15000),v=lookAt(eye,center);
- for(const m of meshes){if(m.inlay){gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-1)}else gl.disable(gl.POLYGON_OFFSET_FILL);gl.uniformMatrix4fv(mvpLoc,false,mul(mul(p,v),m.model));gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,m.tex);gl.bindVertexArray(m.vao);gl.drawElements(gl.TRIANGLES,m.count,gl.UNSIGNED_INT,0)}
+ for(const m of meshes){if(m.inlay){gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-1)}else gl.disable(gl.POLYGON_OFFSET_FILL);gl.uniformMatrix4fv(mvpLoc,false,mul(mul(p,v),m.model));gl.uniformMatrix4fv(modelLoc,false,m.model);gl.uniform3fv(eyeLoc,eye);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,m.tex);gl.bindVertexArray(m.vao);gl.drawElements(gl.TRIANGLES,m.count,gl.UNSIGNED_INT,0)}
  gl.bindVertexArray(null);
  if(roadMesh){
   gl.disable(gl.POLYGON_OFFSET_FILL);gl.useProgram(roadProgram);

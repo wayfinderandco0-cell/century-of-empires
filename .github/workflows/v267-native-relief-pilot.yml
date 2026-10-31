@@ -162,6 +162,7 @@ jobs:
                   page.locator('#plus').click()
                   page.locator('#minus').click()
                   page.locator('#next').click()
+                  page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-close-iphone.png')
                   page.locator('#whole').click()
                   page.screenshot(path='generated/v267-relief-pilot/actual-webkit-heightmesh-iphone.png')
                   assert not errors,errors

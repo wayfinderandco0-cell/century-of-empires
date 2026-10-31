@@ -1,0 +1,523 @@
+{
+  "schema": "coe-v267-original-art-batch/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "status": "original-photo-layered-unapproved-neighbor-study",
+  "scenario": "fictional Alpine scenic composition, not historical topography",
+  "cells": [
+    {
+      "id": "east-matrei",
+      "origin": [
+        3072,
+        0
+      ],
+      "biome": "wooded-alpine-valley",
+      "art": "terrain-grid/v267-neighbor-original-art/east-matrei.webp",
+      "assetSha256": "b31b17ade81b73915448fffb5b860480331799f6e4bedd0b5b7838dc02cfb65d",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Forested mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Forested_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "ab155ff5b1d3f1097b3ce572fa75a5ab445529783b1ad94d7f980dd6be96a5d9",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Forested_mountain_valley_%28Unsplash%29.jpg/3840px-Forested_mountain_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2550
+        ],
+        "crop": [
+          1198,
+          870,
+          2734,
+          1894
+        ]
+      },
+      "sourceForeground": {
+        "title": "Gray clouds over green valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Gray_clouds_over_green_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "f4c12d4880fe264506cdc915f8f66a3a1f22cbd7ba1eb7e4a81829352f1130db",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Gray_clouds_over_green_valley_%28Unsplash%29.jpg/3840px-Gray_clouds_over_green_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          852,
+          922,
+          2388,
+          1946
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "east-south",
+      "origin": [
+        3072,
+        1024
+      ],
+      "biome": "alpine-ridge-pasture",
+      "art": "terrain-grid/v267-neighbor-original-art/east-south.webp",
+      "assetSha256": "5a596946949f9b646992ddaf637cc681194d63e53743ecbea4ff8b824e189609",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Green Alpine mountain ridge (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Green_Alpine_mountain_ridge_%28Unsplash%29.jpg",
+        "sourceSha256": "369cbe01289f150ff9413efb3d2393a4e4bf0f47674f5c6dee934feccc607dda",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Green_Alpine_mountain_ridge_%28Unsplash%29.jpg/3840px-Green_Alpine_mountain_ridge_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1152,
+          968,
+          2688,
+          1992
+        ]
+      },
+      "sourceForeground": {
+        "title": "Alpine ridge (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_ridge_%28Unsplash%29.jpg",
+        "sourceSha256": "d1454fba5ec7735499d894642e028beac4632c9ec0be86a85b512b392d66c539",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Alpine_ridge_%28Unsplash%29.jpg/3840px-Alpine_ridge_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2880
+        ],
+        "crop": [
+          1014,
+          1114,
+          2550,
+          2138
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "west-south",
+      "origin": [
+        0,
+        1024
+      ],
+      "biome": "alpine-foothills",
+      "art": "terrain-grid/v267-neighbor-original-art/west-south.webp",
+      "assetSha256": "a70714bdedeead744586334c0e9b9bb1f943606b858b4e7c6964fa4bf1503277",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Alpine landscape (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_landscape_%28Unsplash%29.jpg",
+        "sourceSha256": "03d99e451e294a8cf42dcc67d1eff0dcaae1368882b4e77a0934fcad4f224d67",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg%3Futm_source%3Dcommons.wikimedia.org%26utm_campaign%3Dimageinfo%26utm_content%3Dthumbnail_unscaled&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          372,
+          317,
+          1908,
+          1341
+        ]
+      },
+      "sourceForeground": {
+        "title": "Alpine glacier (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_glacier_%28Unsplash%29.jpg",
+        "sourceSha256": "c6dfc69d842b076f2fd9a266f1dce9baa6a3da15bcac0780532be741ac0cb3bd",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Alpine_glacier_%28Unsplash%29.jpg/3840px-Alpine_glacier_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1175,
+          922,
+          2711,
+          1946
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "south-west",
+      "origin": [
+        0,
+        2048
+      ],
+      "biome": "misty-high-valley",
+      "art": "terrain-grid/v267-neighbor-original-art/south-west.webp",
+      "assetSha256": "f5a016bdd46159d610d0aa1aebe474d52bea6d8eb61331897b4f136dbb7423c5",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Gray clouds over green valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Gray_clouds_over_green_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "f4c12d4880fe264506cdc915f8f66a3a1f22cbd7ba1eb7e4a81829352f1130db",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Gray_clouds_over_green_valley_%28Unsplash%29.jpg/3840px-Gray_clouds_over_green_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1106,
+          983,
+          2642,
+          2007
+        ]
+      },
+      "sourceForeground": {
+        "title": "Flachau mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Flachau_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "9a920a558f1103feeb105aef6bbe82f7c79a17f904bbe8f85664aa5bac4a672a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Flachau_mountain_valley_%28Unsplash%29.jpg/3840px-Flachau_mountain_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          852,
+          922,
+          2388,
+          1946
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "south-central",
+      "origin": [
+        1536,
+        2048
+      ],
+      "biome": "alpine-ridge",
+      "art": "terrain-grid/v267-neighbor-original-art/south-central.webp",
+      "assetSha256": "a906b07b40e55ece3fd1683ac8017da1685d2464c920b28ce2047a12cdc3a713",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Alpine ridge (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_ridge_%28Unsplash%29.jpg",
+        "sourceSha256": "d1454fba5ec7735499d894642e028beac4632c9ec0be86a85b512b392d66c539",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Alpine_ridge_%28Unsplash%29.jpg/3840px-Alpine_ridge_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2880
+        ],
+        "crop": [
+          1198,
+          984,
+          2734,
+          2008
+        ]
+      },
+      "sourceForeground": {
+        "title": "Shallow mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Shallow_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "96eca3b0c54a742eec405e0e6604f37aea482fa8a1849a55cf93a90a0a206d1e",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F8b%2FShallow_mountain_valley_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1800
+        ],
+        "crop": [
+          380,
+          466,
+          1916,
+          1490
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "south-east",
+      "origin": [
+        3072,
+        2048
+      ],
+      "biome": "high-alpine-ice",
+      "art": "terrain-grid/v267-neighbor-original-art/south-east.webp",
+      "assetSha256": "4ff0e68ad0fe97e6b6d94398212739d701860ada57eb84c32d28a5cfd23323c8",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Alpine glacier (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_glacier_%28Unsplash%29.jpg",
+        "sourceSha256": "c6dfc69d842b076f2fd9a266f1dce9baa6a3da15bcac0780532be741ac0cb3bd",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Alpine_glacier_%28Unsplash%29.jpg/3840px-Alpine_glacier_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1221,
+          814,
+          2757,
+          1838
+        ]
+      },
+      "sourceForeground": {
+        "title": "Forested mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Forested_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "ab155ff5b1d3f1097b3ce572fa75a5ab445529783b1ad94d7f980dd6be96a5d9",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Forested_mountain_valley_%28Unsplash%29.jpg/3840px-Forested_mountain_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2550
+        ],
+        "crop": [
+          1175,
+          916,
+          2711,
+          1940
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "far-east-north",
+      "origin": [
+        4608,
+        0
+      ],
+      "biome": "mountain-winter-valley",
+      "art": "terrain-grid/v267-neighbor-original-art/far-east-north.webp",
+      "assetSha256": "c449ceee001b0c0a644e2e4e6ee2466b951b6a7b367811b50ec85e62d0775d23",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Flachau mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Flachau_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "9a920a558f1103feeb105aef6bbe82f7c79a17f904bbe8f85664aa5bac4a672a",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Flachau_mountain_valley_%28Unsplash%29.jpg/3840px-Flachau_mountain_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1175,
+          937,
+          2711,
+          1961
+        ]
+      },
+      "sourceForeground": {
+        "title": "Green Alpine mountain ridge (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Green_Alpine_mountain_ridge_%28Unsplash%29.jpg",
+        "sourceSha256": "369cbe01289f150ff9413efb3d2393a4e4bf0f47674f5c6dee934feccc607dda",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Green_Alpine_mountain_ridge_%28Unsplash%29.jpg/3840px-Green_Alpine_mountain_ridge_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          852,
+          922,
+          2388,
+          1946
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    },
+    {
+      "id": "far-east-south",
+      "origin": [
+        4608,
+        1024
+      ],
+      "biome": "lower-alpine-meadow",
+      "art": "terrain-grid/v267-neighbor-original-art/far-east-south.webp",
+      "assetSha256": "5b27f5395188636adfe8f4c2d0b795a9f12fafeba67df44b791eda2620717e5e",
+      "visualGrammar": "v267-original-layered-landscape",
+      "originalArtComposed": true,
+      "sourcePrimary": {
+        "title": "Shallow mountain valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Shallow_mountain_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "96eca3b0c54a742eec405e0e6604f37aea482fa8a1849a55cf93a90a0a206d1e",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=upload.wikimedia.org%2Fwikipedia%2Fcommons%2F8%2F8b%2FShallow_mountain_valley_%2528Unsplash%2529.jpg&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1800
+        ],
+        "crop": [
+          423,
+          473,
+          1959,
+          1497
+        ]
+      },
+      "sourceForeground": {
+        "title": "Alpine landscape (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Alpine_landscape_%28Unsplash%29.jpg",
+        "sourceSha256": "03d99e451e294a8cf42dcc67d1eff0dcaae1368882b4e77a0934fcad4f224d67",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://images.weserv.nl/?url=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff4%2FAlpine_landscape_%2528Unsplash%2529.jpg%3Futm_source%3Dcommons.wikimedia.org%26utm_campaign%3Dimageinfo%26utm_content%3Dthumbnail_unscaled&w=2400&output=jpg&q=94",
+        "sourceDimensions": [
+          2400,
+          1600
+        ],
+        "crop": [
+          380,
+          346,
+          1916,
+          1370
+        ]
+      },
+      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "roadPorts": [],
+      "roadSeamsVerified": false,
+      "riverCrossingsVerified": false,
+      "geoVerified": false,
+      "historicalVerified": false,
+      "historicallyVerified": false,
+      "visuallyReviewed": false,
+      "mobileWebkitRendered": false,
+      "nativePlayable": false,
+      "userApproved": false,
+      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free"
+    }
+  ],
+  "links": [],
+  "decorativeInlays": [],
+  "generatedCandidates": 8,
+  "originalArtComposed": 8,
+  "visuallyReviewed": 0,
+  "roadConnected": 0,
+  "mobileWebkitRendered": 0,
+  "historicallyVerified": 0,
+  "nativePlayable": 0,
+  "userApproved": 0,
+  "netFinishedToday": 0
+}

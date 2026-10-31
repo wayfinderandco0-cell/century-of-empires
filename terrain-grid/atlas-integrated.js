@@ -32,6 +32,8 @@ const canvas=$("atlasCanvas"),ctx=canvas.getContext("2d",{alpha:false});
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
+// Opt-in source-layered scenic art. Never changes the protected V123 road graph.
+let neighborPilotCells=[],neighborPilotImages={},neighborPilotShown=false,neighborPilotCamera=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
 const pointers=new Map();let tap=null,prevPinch=null;
 function status(s){$("atlasStatus").textContent=s;}
@@ -56,6 +58,13 @@ function draw(){
   return;
  }
  if(!loaded)return;
+ // Draw only composed original neighbor candidates, under immutable approved art.
+ if(neighborPilotShown)for(const tile of neighborPilotCells){
+  const img=neighborPilotImages[tile.id];if(!img)continue;
+  const pos=worldToScreen(tile.origin),poly=worldPolygon(tile).map(worldToScreen);
+  ctx.save();polygon(ctx,poly);ctx.clip();
+  ctx.drawImage(img,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+ }
  const diamond=manifest.decorativeInlays[0],src=images[diamond.sourceCell];
  ctx.save();polygon(ctx,diamond.polygon.map(worldToScreen));ctx.clip();
  const dest=worldToScreen([1280,768]);ctx.drawImage(src,...diamond.sourceRect,dest[0],dest[1],512*scale,512*scale);ctx.restore();
@@ -161,7 +170,13 @@ function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.ge
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
 $("atlasWhole").onclick=()=>{
- if(photoMode&&photoStream?.cells.length){
+ if(neighborPilotShown&&neighborPilotCells.length){
+  const all=[...manifest.cells,...neighborPilotCells];
+  const xs=all.map(c=>c.origin[0]),ys=all.map(c=>c.origin[1]);
+  const left=Math.min(...xs),right=Math.max(...xs)+1536,top=Math.min(...ys),bottom=Math.max(...ys)+1024;
+  const fit=Math.min(Math.max(100,w-24)/(right-left),Math.max(100,h-155)/(bottom-top))/base;
+  centerAt((left+right)/2,(top+bottom)/2,Math.max(.15,fit));
+ }else if(photoMode&&photoStream?.cells.length){
   // Fit the entire 4x2 or larger photographic block inside an actual iPhone
   // viewport. The previous hard-coded .7 clipped both outer columns on
   // 390px Safari; keep V123's original minimum zoom unchanged outside photo mode.
@@ -184,6 +199,34 @@ $("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
  * The three approved Alpine octagons and their V123 army stay intact.
  */
 const studyParams=new URLSearchParams(root.location.search);
+// Original scene expansion is a review-only opt-in; no invented road nodes.
+const pilotButton=document.createElement("button");
+pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
+pilotButton.textContent="Original neighbors";
+pilotButton.hidden=!studyParams.has("originalArtPilot");
+$("atlasBar").querySelector("div").appendChild(pilotButton);
+pilotButton.onclick=async()=>{
+ if(neighborPilotShown){neighborPilotShown=false;
+  if(neighborPilotCamera){center=neighborPilotCamera.center;zoom=neighborPilotCamera.zoom;scale=base*zoom;}
+  status("Protected WEST / MATREI / SOUTH roads restored");draw();return;
+ }
+ try{
+  if(!neighborPilotCells.length){
+   status("Loading eight original scenic candidates (no new roads)…");
+   const response=await fetch("terrain-grid/v267-neighbor-original-art/batch.json");
+   if(!response.ok)throw Error("Neighbor manifest HTTP "+response.status);
+   const batch=await response.json();
+   if(!root.COEV267ArtContract)throw Error("Original-art validator missing");
+   root.COEV267ArtContract.validateBatch(batch,manifest);
+   const pairs=await Promise.all(batch.cells.map(async c=>[c.id,await imageLoad(c.art)]));
+   if(pairs.some(([,img])=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Neighbor art dimensions mismatch");
+   neighborPilotCells=batch.cells;neighborPilotImages=Object.fromEntries(pairs);
+  }
+  neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
+  $("atlasWhole").click();
+  status("Eight NEW original layered scenic candidates · roads unverified · V123 movement remains only on approved 3");
+ }catch(e){status("Neighbor art not available: "+e.message);}
+};
 const photoButton=document.createElement("button");
 photoButton.id="atlasPhotoSources";photoButton.type="button";
 // Keep experimental photo/heightmesh references out of the default approved-art UI.
@@ -259,6 +302,7 @@ const API={
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  get approvedBaselineLocked(){return !!manifest&&root.COEV267ArtContract?.assertBase(manifest)===true},
+ get originalNeighborCells(){return neighborPilotCells.length},get originalNeighborVisible(){return neighborPilotShown},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
  get photoLoaded(){return photoStream?.stats.loaded||0},get photoThumbLoaded(){return photoStream?.stats.thumbLoaded||0},get photoFullLoaded(){return photoStream?.stats.fullLoaded||0},get photoInlays(){return photoStream?.inlays.length||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},

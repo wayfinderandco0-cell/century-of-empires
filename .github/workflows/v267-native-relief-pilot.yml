@@ -1,0 +1,79 @@
+name: V267 original 3D relief octagon pilot
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - scripts/v267_native_relief_pilot.py
+      - .github/workflows/v267-native-relief-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-native-relief-pilot
+  cancel-in-progress: false
+jobs:
+  build-original-relief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install open-source terrain renderer
+        run: python -m pip install --disable-pip-version-check numpy scipy Pillow playwright
+      - name: Render eight ORIGINAL DEM-driven shaded 3D relief octagons
+        run: python scripts/v267_native_relief_pilot.py --root . --out generated/v267-relief-pilot --scale 1
+      - name: Verify eight native octagons, road crossings and no false approval
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          from PIL import Image
+          p=Path('generated/v267-relief-pilot')
+          m=json.loads((p/'manifest.json').read_text())
+          assert len(m['cells'])==8 and len(m['seams'])==8
+          assert m['status']=='original-3d-relief-candidates-NOT-V267-approved'
+          assert not m['historicalRoadsVerified']
+          assert len({c['sha256'] for c in m['cells']})==8
+          for c in m['cells']:
+              im=Image.open(p/c['image'])
+              assert im.size==(1536,1024) and im.mode=='RGBA'
+              assert im.getpixel((0,0))[3]==0 and im.getpixel((768,512))[3]==255
+              assert hashlib.sha256((p/c['image']).read_bytes()).hexdigest()==c['sha256']
+              assert c['nativeArt'] and not c['photographicCrop']
+              assert not c['visualApproved'] and not c['nativeGamePlayable'] and not c['historicallyVerified']
+          for s in m['seams']:
+              vals=s.get('roadCrossingLocalY',s.get('roadCrossingLocalX',[]))
+              assert vals and all(256<=v<=768 if s['side']=='east-west' else 256<=v<=1280 for v in vals),s
+          print('PASS: eight original relief octagons, eight world-space road seams, zero finished or playable claims')
+          PY
+      - name: Install WebKit for mobile screenshot
+        run: python -m playwright install --with-deps webkit
+      - name: Check actual mobile WebKit image loading
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          p=Path('generated/v267-relief-pilot').resolve()
+          with sync_playwright() as w:
+              browser=w.webkit.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              page.goto((p/'index.html').as_uri(),wait_until='load')
+              page.wait_for_function("document.images.length===1 && document.images[0].complete && document.images[0].naturalWidth===1536",timeout=60000)
+              page.screenshot(path=str(p/'actual-webkit-iphone.png'),full_page=True)
+              browser.close()
+          print('PASS: original relief contact sheet visible in 390x844 WebKit; native game NOT integrated')
+          PY
+      - name: Commit generated candidate assets and mobile evidence to development branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/v267-relief-pilot
+          if ! git diff --cached --quiet; then
+            git commit -m "Render eight connected original 3D relief candidates and mobile WebKit evidence"
+            git push
+          fi

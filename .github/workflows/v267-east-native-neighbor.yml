@@ -87,7 +87,7 @@ jobs:
               page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
               errors=[]
               page.on('pageerror',lambda e:errors.append(str(e)))
-              page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=1',wait_until='domcontentloaded')
+              page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=east',wait_until='domcontentloaded')
               page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=90000)
               page.locator('#atlasIntegratedOpen').click()
               assert page.evaluate('COEAtlas.startMarch()') is True
@@ -95,7 +95,7 @@ jobs:
               page.locator('#atlasOriginalNeighbors').click()
               page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===8',timeout=120000)
               assert page.evaluate('COEAtlas.startMarch()') is False
-              page.evaluate('COEAtlas.centerAt(3100,560,1.2)')
+              page.evaluate('COEAtlas.centerAt(3072,512,2.9)')
               page.wait_for_timeout(900)
               page.screenshot(path=str(out/'actual-webkit-iphone-east-matrei-registered.png'))
               page.evaluate('COEAtlas.centerAt(3750,520,2.5)')
@@ -108,7 +108,7 @@ jobs:
               assert page.evaluate('COEAtlas.nodes')==100
               assert page.evaluate('COEAtlas.startMarch()') is True
               assert not errors,errors
-              print('PASS iPhone WebKit: new forest art displayed, pan/zoom, V123 march and protected art')
+              print('PASS iPhone WebKit: focused new Alpine art displayed, pan/zoom, V123 march and protected art')
               browser.close()
           finally:
             server.terminate()

@@ -16,6 +16,9 @@
   ],
   "scale": 1.0,
   "treesRendered": 13498,
+  "depthRendering": "directional terrain self-shadow, slope-aware limestone and tiered tree crowns",
+  "true3DMesh": false,
+  "visuallyApprovedV267": false,
   "cells": [
     {
       "id": "pilot-0-0",
@@ -28,7 +31,7 @@
         0
       ],
       "image": "pilot-0-0.png",
-      "sha256": "8e126de4aa69c9d73a29bd8d3693ed329a8d4e2f092603c395cde2c573d7b72d",
+      "sha256": "7a3537dfc9b58c4972822228487e1bfe5cbd97c14ceba8d1f21ad22808ab268c",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -46,7 +49,7 @@
         0
       ],
       "image": "pilot-1-0.png",
-      "sha256": "78477b62617b175fa87bbb33b825d5f0ce0289fe1c80658d2a2e716f06e4777b",
+      "sha256": "e47639b8e37c8cf9abddf545194223b99e5659e05fc94f28061063e24d8a8088",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -64,7 +67,7 @@
         0
       ],
       "image": "pilot-2-0.png",
-      "sha256": "240ab055e7c8a2262f98f0206b64364777780dc882b08a24cb9a5b7a292a40a5",
+      "sha256": "7711657aa3fe9a932413afccd09889f6d66b73205ed4ef46afc3d080316ec64e",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -82,7 +85,7 @@
         0
       ],
       "image": "pilot-3-0.png",
-      "sha256": "4ab15f41897a1b1da570fecb7fcfb564784aca8f2a051169802bfc2f01a828c1",
+      "sha256": "f7aade3cf4ecec217c74b12864bf20104c311220f29a6182aa7cf5e2f50a116d",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -100,7 +103,7 @@
         1024
       ],
       "image": "pilot-0-1.png",
-      "sha256": "0c1ac6ef6353cd704dbea182a693448cc9f4ec851a1082f92ae376c54edd6033",
+      "sha256": "5927a231d22c54e10674f8057c52f2989125b62c5cd3e6343b8ddef864e9ebb8",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -118,7 +121,7 @@
         1024
       ],
       "image": "pilot-1-1.png",
-      "sha256": "dd1cfc9a0d0c3b88449185cf1b08dbf13f3316beeed072d4ea2aaa6a14b75a46",
+      "sha256": "1552645edd86042eadc0fcebcf8211a5c61ac9f0a9d9d5939cd9cfd82af16a7c",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -136,7 +139,7 @@
         1024
       ],
       "image": "pilot-2-1.png",
-      "sha256": "a0bd9bda52218f5168605ef294de8f7b511cdca792c159509c76a1ff8cd28f2c",
+      "sha256": "4e506f742493d36af4bee7e13beb859a0c9241e5f9787f7e23f11f29ff13038e",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -154,7 +157,7 @@
         1024
       ],
       "image": "pilot-3-1.png",
-      "sha256": "5621b179fd92c6b1e3a7bd049d5d262407af90a6f50d6940f4060f3012eba1bf",
+      "sha256": "2913cdd769c5634e0674c5cdcdf6d0a507c8a9022026954ca175572a70d84045",
       "nativeArt": true,
       "photographicCrop": false,
       "visualApproved": false,
@@ -234,6 +237,53 @@
         660
       ],
       "sameWorldRaster": true
+    }
+  ],
+  "inlays": [
+    {
+      "id": "infill-0-0",
+      "worldCenter": [
+        1536,
+        1024
+      ],
+      "image": "infill-0-0.png",
+      "imageSize": [
+        512,
+        512
+      ],
+      "playable": false,
+      "roadNodes": [],
+      "sha256": "fe13960c0a86f9567ac79ba485d99491c0c9cc50fea2d723f2bf445b7b6bf4aa"
+    },
+    {
+      "id": "infill-1-0",
+      "worldCenter": [
+        3072,
+        1024
+      ],
+      "image": "infill-1-0.png",
+      "imageSize": [
+        512,
+        512
+      ],
+      "playable": false,
+      "roadNodes": [],
+      "sha256": "8ad3abb1ff5186401de8354af306ae25768abecae4039118bfb4d79d8fda1d65"
+    },
+    {
+      "id": "infill-2-0",
+      "worldCenter": [
+        4608,
+        1024
+      ],
+      "image": "infill-2-0.png",
+      "imageSize": [
+        512,
+        512
+      ],
+      "playable": false,
+      "roadNodes": [],
+      "sha256": "9d115659015a4caeb401e82c1dc0ac1547b6a9214a303d1ea2b8d491f607caa9"
     }
   ]
 }

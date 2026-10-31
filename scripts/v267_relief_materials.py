@@ -52,6 +52,33 @@ def enrich_surface(rgb, z, elevation, forest, road_distance, fine, micro, scale)
     out += stone * rock[..., None]
     del stone, rock, strata, slope, gx, gy
 
+    # WORLD-CONTINUOUS material breakup. A DEM slope must not turn into a
+    # uniform green/brown gradient: exposed shoulders, sheltered soils and
+    # downslope talus have different albedo even within the same biome.
+    # This pass only paints terrain; it invents NO streams, roads or towns.
+    # All filters operate on the complete world raster, never per tile.
+    local_ground = gaussian_filter(z, max(2, round(13 * scale)))
+    deviation = (z - local_ground) / max(3.0, 15.0 * scale)
+    exposed = np.clip(deviation * .75 + .25, 0, 1)
+    sheltered = np.clip(-deviation * .7 + .12, 0, 1)
+    # Fine/micro noise are continuous world-coordinate fields from the
+    # generator; avoid repeated tiling or perfectly periodic contour stripes.
+    talus = np.clip((np.abs(deviation) - .32) * .85 + .13 * fine, 0, .55)
+    highland = np.clip((elevation - 950) / 950, 0, 1)
+    bare = (1 - np.clip(forest, 0, 1)) * (.20 + .80 * highland)
+    talus *= bare
+    # Small pale stones on convex shoulders; earth-darkened gullies beneath.
+    limestone = np.array([160., 151., 129.], dtype=np.float32)
+    earth = np.array([67., 75., 50.], dtype=np.float32)
+    out *= (1 - talus[..., None] * .43)
+    out += limestone[None, None, :] * (talus[..., None] * .43)
+    soil = sheltered * (1 - highland) * .12
+    out *= (1 - soil[..., None])
+    out += earth[None, None, :] * soil[..., None]
+    # Sunlit grass edges remain subtle; don't turn forest into flat lime green.
+    out += (exposed * (1 - highland) * (1 - np.clip(forest, 0, 1)) * 2.8)[..., None]
+    del local_ground, deviation, exposed, sheltered, talus, highland, bare, limestone, earth, soil
+
     # Very small-scale meadow and forest-floor variation. Roads are applied
     # AFTER this pass so ruts and their native-width shoulders stay visible.
     meadow = (1 - np.clip(forest, 0, 1)) * (1 - altitude * .65)

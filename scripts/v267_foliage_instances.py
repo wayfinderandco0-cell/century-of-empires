@@ -82,7 +82,11 @@ def build(root: Path, out: Path):
                 cell_batches.append({
                     "kind": name, "kindCode": k, "col": col, "row": row,
                     "offsetFloats": offset, "count": count,
-                    "worldBounds": [col * TW, row * TH, (col + 1) * TW, (row + 1) * TH]
+                    "worldBounds": [col * TW, row * TH, (col + 1) * TW, (row + 1) * TH],
+                    "worldYRange": [
+                        float(np.min(subset[:, 1])) if count else 0.0,
+                        float(np.max(subset[:, 1] + subset[:, 4])) if count else 0.0
+                    ]
                 })
                 packed.append(subset)
                 offset += subset.size

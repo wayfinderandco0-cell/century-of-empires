@@ -87,6 +87,17 @@ jobs:
               assert page.evaluate('COEAtlas.startMarch()') is True
               assert not errors,errors
               print('PASS: new original V267-like art visible, zoom, V123 march, no phantom candidate road')
+              direct=browser.new_page(viewport={'width':390,'height':844},
+                                      device_scale_factor=2,is_mobile=True,has_touch=True)
+              direct.goto('http://127.0.0.1:8765/index.html?originalArtPilot=v267-new&autoOpen=1',
+                          wait_until='domcontentloaded')
+              direct.wait_for_function(
+                'COEAtlas.loaded && COEAtlas.shown && COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===1',
+                timeout=90000)
+              assert direct.evaluate('COEAtlas.approvedBaselineLocked') is True
+              assert direct.evaluate('COEAtlas.startMarch()') is False
+              direct.close()
+              print('PASS: direct one-link iPhone review auto-opens the NEW art without altering V123')
               browser.close()
           finally:
             server.terminate()

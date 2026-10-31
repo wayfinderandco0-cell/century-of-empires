@@ -7,6 +7,7 @@ on:
       - scripts/v267_native_relief_pilot.py
       - scripts/v267_relief_materials.py
       - scripts/v267_heightmesh_export.py
+      - scripts/v267_validate_heightmesh_seams.py
       - terrain-grid/v267-heightmesh-review.html
       - terrain-grid/atlas-integrated.js
       - terrain-grid/atlas-photo-stream.js
@@ -62,6 +63,8 @@ jobs:
           PY
       - name: Export actual indexed 3D heightmesh geometry from shared V94 world space
         run: python scripts/v267_heightmesh_export.py --root . --out generated/v267-relief-pilot
+      - name: Validate independently exported glTF buffers, true neighbor seams, and painted ground alignment
+        run: python scripts/v267_validate_heightmesh_seams.py --out generated/v267-relief-pilot
       - name: Validate eight textured glTF meshes and exact shared-border contracts
         run: |
           python - <<'PY'
@@ -70,6 +73,8 @@ jobs:
           p=Path('generated/v267-relief-pilot')
           m=json.loads((p/'heightmesh-manifest.json').read_text())
           assert m['true3DMesh'] and not m['sourcePhotosUsed']
+          assert m['geometryUsesExactPaintedHeightfield']
+          assert m['paintedHeightfieldSha256']==hashlib.sha256((p/'heightfield-step16.npy').read_bytes()).hexdigest()
           assert len(m['cells'])==8 and len(m['inlays'])==3 and len(m['geometricSeamChecks'])==10
           assert m['roadContracts']==8
           assert m['historicalRoadsVerified']==m['nativeGamePlayable']==m['visuallyApprovedV267']==m['finishedToday']==0

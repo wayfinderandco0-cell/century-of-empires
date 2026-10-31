@@ -16,42 +16,22 @@ TW, TH, COLS, ROWS, STEP = 1536, 1024, 4, 2, 16
 C0, R0 = 7, 12
 REF = "456107f28c8db1f87522bbc7511809b2a215f6fb"
 
-def build_heightfield(root):
-    dem = json.loads((root / "terrain-v94/heights.json").read_text())
-    assert dem["width"] == 512 and dem["height"] == 384
-    heights = np.asarray(dem["heights"], dtype=np.float32).reshape(384, 512)
-    x = np.arange(0, TW * COLS + 1, STEP, dtype=np.float32)
-    y = np.arange(0, TH * ROWS + 1, STEP, dtype=np.float32)
-    xx, yy = np.meshgrid(x, y)
-    gx = (C0 + xx / TW) * 512 / 18
-    gy = (R0 + yy / TH) * 384 / 24
-    elev = map_coordinates(heights, [gy, gx], order=3, mode="nearest")
-    # Continuous world-coordinate microrelief; NEVER seeded per tile.
-    detail = (17*np.sin(xx/93 + yy/157)*np.cos(yy/71)
-              + 8*np.sin(xx/29 + yy/39)
-              + 3*np.sin(xx/11 - yy/23))
-    z = (elev + detail - 150) / 11.0
-    # Road locations share the exact equations in v267_native_relief_pilot.py.
-    from v267_native_relief_pilot import road_centerlines
-    roads = road_centerlines(TW*COLS, TH*ROWS, 1.0)
-    distance = np.full(z.shape, 1e6, dtype=np.float32)
-    for row in range(ROWS):
-        curve = roads[row]
-        road_y = np.interp(x, curve[:, 0], curve[:, 1])
-        distance = np.minimum(distance, np.abs(yy - road_y[None, :]))
-    for col in (1, 3):
-        curve = roads[ROWS + (0 if col == 1 else 1)]
-        if not len(curve):
-            continue
-        road_x = np.interp(y, curve[:, 1], curve[:, 0])
-        valid = (y >= curve[0, 1]) & (y <= curve[-1, 1])
-        d = np.abs(xx - road_x[:, None])
-        distance = np.minimum(distance, np.where(valid[:, None], d, 1e6))
-    # Physically flatten cartway shoulders on the 3D mesh.
-    smoothed = gaussian_filter(z, sigma=1.8, mode="nearest")
-    strength = .8 * np.exp(-.5*(distance/21)**2)
-    z = z*(1-strength) + smoothed*strength
-    return x, y, z.astype(np.float32), distance
+def build_heightfield(root, out):
+    """Read the SAME continuous ground heightfield used for the painted art.
+
+    A separately generated DEM + sine field was a false geometry/art match.
+    The renderer must run first at native scale and export this shared source.
+    """
+    source=out/"heightfield-step16.npy"
+    if not source.exists():
+        raise FileNotFoundError("Native original relief raster must export "+str(source))
+    z=np.load(source,allow_pickle=False)
+    expected=(TH*ROWS//STEP+1,TW*COLS//STEP+1)
+    if z.shape!=expected or z.dtype!=np.float32 or not np.isfinite(z).all():
+        raise ValueError(f"Invalid ground-art heightfield: {z.shape} {z.dtype}")
+    x=np.arange(0,TW*COLS+1,STEP,dtype=np.float32)
+    y=np.arange(0,TH*ROWS+1,STEP,dtype=np.float32)
+    return x,y,z,None
 
 def pack_gltf(tile, z, out, col, row, inlay=False):
     """Write indexed textured glTF with actual 3D vertices and shared edges."""
@@ -126,7 +106,10 @@ def main(root, out):
     assert manifest_path.exists(), "Run original native relief renderer before mesh export"
     original = json.loads(manifest_path.read_text())
     assert len(original["cells"])==8 and original["visuallyApprovedV267"] is False
-    x, y, z, distance = build_heightfield(root)
+    x, y, z, distance = build_heightfield(root, out)
+    source=out/"heightfield-step16.npy"
+    assert original["meshGroundArtAligned"]
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==original["meshSourceHeightfieldSha256"]
     out.mkdir(parents=True, exist_ok=True)
     cells = []
     for row in range(ROWS):
@@ -157,6 +140,8 @@ def main(root, out):
     m = {"schema":"coe-v267-real-heightmesh-candidates/v1",
          "referenceCommit":REF,"source":"V94 DEM plus explicitly synthetic microrelief",
          "true3DMesh":True,"sourcePhotosUsed":False,
+         "geometryUsesExactPaintedHeightfield":True,
+         "paintedHeightfieldSha256":hashlib.sha256(source.read_bytes()).hexdigest(),
          "meshStepPixels":STEP,"cells":cells,"inlays":inlays,"geometricSeamChecks":checks,
          "roadContracts":len(original["seams"]),
          "historicalRoadsVerified":0,"nativeGamePlayable":0,

@@ -72,6 +72,23 @@ def build(root:Path, out:Path, scale:float=1):
     distance=distance_transform_edt(1-center).astype(np.float32)
     corridor=np.exp(-.5*(distance/(12*scale))**2)
     z=z*(1-.4*corridor)+gaussian_filter(z,max(1,9*scale))*.4*corridor
+    # Export the ACTUAL heightfield used to shade and paint the terrain.
+    # Previously the glTF exporter independently invented another field:
+    # its meshes could be seamless yet visibly disagree with the ground art.
+    # Sample once in world coordinates so adjoining tile vertices are identical.
+    heightfield_name=None
+    if scale == 1:
+        out.mkdir(parents=True,exist_ok=True)
+        step=16
+        grid=np.empty((h//step+1,w//step+1),dtype=np.float32)
+        grid[:-1,:-1]=z[::step,::step]
+        grid[-1,:-1]=z[-1,::step]
+        grid[:-1,-1]=z[::step,-1]
+        grid[-1,-1]=z[-1,-1]
+        grid=(grid-150)/11.0
+        heightfield_name='heightfield-step16.npy'
+        np.save(out/heightfield_name,grid,allow_pickle=False)
+        del grid
     dy,dx=np.gradient(z)
     dx/=max(.2,scale);dy/=max(.2,scale)
     nx=-dx*.028;ny=-dy*.028
@@ -119,7 +136,10 @@ def build(root:Path, out:Path, scale:float=1):
       'artRoads':'fictional provisional corridors; not gameplay routes','grid':[COLS,ROWS],
       'nativeSize':[TW,TH],'scale':scale,'treesRendered':len(trees),
       'depthRendering':'directional terrain self-shadow, slope-aware limestone and tiered tree crowns',
-      'true3DMesh':False,'visuallyApprovedV267':False,'cells':[],'seams':[],'inlays':[]}
+      'true3DMesh':False,'visuallyApprovedV267':False,'cells':[],'seams':[],'inlays':[],
+      'meshSourceHeightfield':heightfield_name,
+      'meshSourceHeightfieldSha256':hashlib.sha256((out/heightfield_name).read_bytes()).hexdigest() if heightfield_name else None,
+      'meshGroundArtAligned':bool(heightfield_name)}
     tw,th=round(TW*scale),round(TH*scale)
     mask=Image.new('L',(tw,th),0);md=ImageDraw.Draw(mask)
     bevel=round(256*scale)

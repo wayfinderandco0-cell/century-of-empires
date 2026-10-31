@@ -1,5 +1,5 @@
 {
-  "schema": "coe-v267-visual-qa/v1",
+  "schema": "coe-v267-visual-qa/v2",
   "date": "2026-10-31",
   "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
   "candidate": "east-matrei",
@@ -7,7 +7,24 @@
     3072,
     0
   ],
+  "art": "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
+  "assetSha256": "3cfde1251de0e71017ed7a4ffd066dc23400c6c77777cf2ad0cd4a69ea748fb6",
+  "sources": [
+    {
+      "title": "Peaceful Austrian valley (Unsplash).jpg",
+      "region": "Gries am Brenner, Austria",
+      "license": "CC0 1.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Peaceful_Austrian_valley_(Unsplash).jpg"
+    },
+    {
+      "title": "Idyllic Seiser Alm meadow (Unsplash).jpg",
+      "region": "Seiser Alm, South Tyrol, Italy",
+      "license": "CC0 1.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Idyllic_Seiser_Alm_meadow_(Unsplash).jpg"
+    }
+  ],
   "evidence": [
+    "terrain-grid/v267-neighbor-original-art/east-matrei-fresh-native-ground.webp",
     "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
     "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp",
     "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json",
@@ -17,21 +34,21 @@
   "inspected": 1,
   "passedApprovedV267VisualStandard": 0,
   "originalArtIterationCommitted": 1,
-  "finding": "Inspected the new 1536x1024 asset, 2x2 before/after contact sheet, and actual 390x844 WebKit screenshot. Forest is native photographed and unwarped, with no sky, but is blue/cool relative to the approved warm Matrei scene; the east border is visually abrupt, the forest perspective/tree scale does not match Matrei, and the camera screenshot shows a large empty upper area and decorative diamond gaps. Modern-looking farm building/paths are visible. The measured LAB edge improvement 25.486 -> 19.149 is color-only, not a physically continuous landscape or a verified route. REJECTED as finished art.",
+  "finding": "Inspected the real 390x844 WebKit screenshot of the newly downloaded CC0 Alpine ground composition. Natural source trees, meadow relief and foreground depth are present, but the east-of-Matrei candidate is visibly a broad photographic landscape band with an abrupt transition to the approved MATREI cell. Large unused dark area at top of whole-eight camera and black decorative diamond gaps remain. The new scene does not yet reproduce the protected WEST/MATREI/SOUTH layered 3D grammar or embedded V123 cartway. Color-only LAB edge delta improved 24.009 to 18.792, not physical terrain continuity. Rejected as finished.",
   "roadSeamsVerified": 0,
   "riverCrossingsVerified": 0,
   "historicallyVerified": 0,
   "nativePlayable": 0,
   "userApproved": 0,
   "netFinishedToday": 0,
-  "status": "VISUALLY REVIEWED AND NOT APPROVED AS FINISHED V267 ART; isolated scenic study only",
+  "status": "VISUALLY INSPECTED: REJECTED AS FINISHED V267 ART; SOURCE-BACKED SCENIC CANDIDATE ONLY",
   "actualIPhoneSizedWebkitScreenshotInspected": true,
   "mobileWebkitRendered": 1,
   "defects": [
-    "Abrupt Matrei-to-forest visual/relief transition despite improved edge color",
-    "Photographed forest perspective and tree scale differ from approved 3D artwork",
-    "Modern-looking structures/footpaths have no period verification",
-    "No registered cartway or V123 extension; scenic only",
-    "iPhone preview shows large blank upper area at this camera position and road-free decorative gaps"
+    "Distinct source photos form a visually abrupt band against protected Matrei terrain",
+    "Perspective and vegetation scale not matched to approved octagon",
+    "No registered historical cartway or V123 extension",
+    "Visible dark interstitial gaps and unused top camera area in whole-batch preview",
+    "Historical status of source structures and paths not established"
   ]
 }

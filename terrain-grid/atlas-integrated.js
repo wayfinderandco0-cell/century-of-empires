@@ -215,7 +215,9 @@ async function togglePhotoSources(){
     });
    }
    const photoBlock=new URLSearchParams(root.location.search).get("photoBlock");
-   const photoURL=photoBlock==="carpathians"
+   const photoURL=photoBlock==="coverage"
+     ?"terrain-grid/factory-photo/coverage/manifest.json"
+     :photoBlock==="carpathians"
      ?"terrain-grid/factory-photo/carpathian-8/manifest.json"
      :photoBlock!==null
        ?"terrain-grid/factory-photo/block-8/manifest.json"
@@ -251,7 +253,7 @@ const API={
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
- get photoLoaded(){return photoStream?.stats.loaded||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
+ get photoLoaded(){return photoStream?.stats.loaded||0},get photoInlays(){return photoStream?.inlays.length||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
  open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
  routeTo:p=>routeBetween(unit,p),tapWorld:tapRoad,screenFor:worldToScreen,setZoom:z=>centerAt(...center,z)
 };

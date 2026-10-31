@@ -48,6 +48,10 @@ def build(root:Path, out:Path, scale:float=1):
     dem=json.loads((root/'terrain-v94/heights.json').read_text())
     woods=json.loads((root/'terrain-v94/woods.json').read_text())
     assert dem['width']==woods['width']==512 and dem['height']==woods['height']==384
+    geo=json.loads((root/'terrain-v94/manifest.json').read_text())
+    assert geo['projection']=='equirectangular' and len(geo['extent'])==4
+    west,south,east,north=map(float,geo['extent'])
+    assert west<east and south<north
     demarr=np.asarray(dem['heights'],dtype=np.float32).reshape(384,512)
     woodarr=np.asarray(woods['forest'],dtype=np.float32).reshape(384,512)
     yy,xx=np.mgrid[0:h,0:w].astype(np.float32)
@@ -142,7 +146,11 @@ def build(root:Path, out:Path, scale:float=1):
       'true3DMesh':False,'visuallyApprovedV267':False,'cells':[],'seams':[],'inlays':[],
       'meshSourceHeightfield':heightfield_name,
       'meshSourceHeightfieldSha256':hashlib.sha256((out/heightfield_name).read_bytes()).hexdigest() if heightfield_name else None,
-      'meshGroundArtAligned':bool(heightfield_name)}
+      'meshGroundArtAligned':bool(heightfield_name),
+      'geographicReference':{'projection':'WGS84 equirectangular','extent':[west,south,east,north],
+        'sourceManifest':'terrain-v94/manifest.json',
+        'sourceElevation':geo['elevationSource'],'sourceVegetation':geo['vegetationSource']},
+      'scaleLimitation':'Regional tiles span degrees; 3D tree instances are illustrative forest markers, NOT physically scaled individual trees.'}
     tw,th=round(TW*scale),round(TH*scale)
     mask=Image.new('L',(tw,th),0);md=ImageDraw.Draw(mask)
     bevel=round(256*scale)
@@ -165,7 +173,14 @@ def build(root:Path, out:Path, scale:float=1):
                 'meshGroundImage':ground_file.name,
                 'meshGroundSha256':hashlib.sha256(ground_file.read_bytes()).hexdigest(),
                 'nativeArt':True,'photographicCrop':False,
-                'visualApproved':False,'nativeGamePlayable':False,'historicallyVerified':False})
+                'visualApproved':False,'nativeGamePlayable':False,'historicallyVerified':False,
+                'geographicBoundsWGS84':[
+                    round(west+(C0+col)/18*(east-west),6),
+                    round(north-(R0+row+1)/24*(north-south),6),
+                    round(west+(C0+col+1)/18*(east-west),6),
+                    round(north-(R0+row)/24*(north-south),6)],
+                'historicalEvidence':{'period':'1780-1880','roadSources':[],
+                                      'settlementSources':[],'status':'unverified'}})
             thumb=tile.resize((384,256),Image.Resampling.LANCZOS)
             contact.paste(thumb,(col*384,row*256),thumb)
     # Fill the three interstitial diamonds from the SAME continuous original

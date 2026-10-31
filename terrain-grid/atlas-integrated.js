@@ -264,7 +264,14 @@ pilotButton.onclick=async()=>{
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
   halt();
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
-  if(focusedV267NewPilot)centerAt(3840,512,1.8);
+  if(focusedV267NewPilot){
+   // Fit the actual source art to the visible canvas on narrow iPhone screens.
+   // The old fixed camera could leave the new tile entirely offscreen.
+   const tile=neighborPilotCells[0];
+   const visibleHeight=Math.max(180,h-180),visibleWidth=Math.max(180,w-24);
+   const targetScale=Math.min(visibleWidth/1536,visibleHeight/1024);
+   centerAt(tile.origin[0]+768,tile.origin[1]+512,Math.max(.15,targetScale/base));
+  }
   else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
   status(focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");

@@ -63,7 +63,8 @@ function polyline(points,color,lineWidth){ctx.beginPath();points.forEach((p,i)=>
 function syncRidgeDOM(){
  const tile=neighborPilotShown&&neighborPilotCells.find(c=>c.id==="matrei-east-ridge");
  if(!tile||!neighborPilotImages[tile.id]){ridgeDOM.style.display="none";return;}
- if(ridgeDOM.getAttribute("src")!==tile.art)ridgeDOM.src=tile.art;
+ if(ridgeDOM.getAttribute("src")!==neighborPilotImages[tile.id].src)
+   ridgeDOM.src=neighborPilotImages[tile.id].src;
  const pos=worldToScreen(tile.origin);
  ridgeDOM.style.left=pos[0]+"px";ridgeDOM.style.top=pos[1]+"px";
  ridgeDOM.style.width=(1536*scale)+"px";ridgeDOM.style.height=(1024*scale)+"px";
@@ -118,7 +119,15 @@ function draw(){
  const [x,y]=worldToScreen(unit);
  ctx.save();ctx.translate(x,y);ctx.fillStyle="#193a2a";ctx.strokeStyle="#f4d78e";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,0,13,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#fff1c3";ctx.font="bold 16px Georgia";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("⚔",0,0);ctx.restore();
 }
-function imageLoad(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error("Missing atlas art: "+src));img.src=src;});}
+function imageLoad(src,timeoutMs=25000){return new Promise((resolve,reject)=>{
+ const img=new Image();let done=false;
+ const timer=setTimeout(()=>finish(Error("Atlas art timed out: "+src)),timeoutMs);
+ function finish(error){if(done)return;done=true;clearTimeout(timer);img.onload=null;img.onerror=null;if(error)reject(error);else resolve(img);}
+ img.crossOrigin="anonymous";
+ img.onload=()=>finish(null);
+ img.onerror=()=>finish(Error("Missing atlas art: "+src));
+ img.src=src;
+});}
 /* Exact approved V267 Matrei display registration (source:
  * scripts/v267_unified_native_landscapes.py:matrei_display).
  * The immutable V121 WebP remains byte-for-byte unchanged on disk. A
@@ -272,7 +281,15 @@ pilotButton.onclick=async()=>{
    // Sequential image decode avoids a 16-image simultaneous allocation spike on iPhone.
    const pairs=[];
    for(const cell of all){
-    const img=await imageLoad(cell.art);
+    let img;
+    try{img=await imageLoad(cell.art,12000);}
+    catch(primaryError){
+      // GitHack branch CDN can cache a 404 for a newly committed binary.
+      // Use the immutable asset commit as a second, CORS-safe source.
+      if(cell.id!=="matrei-east-ridge")throw primaryError;
+      img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/"+cell.art,20000);
+      status("New ridge loaded from immutable source after preview CDN cache miss");
+    }
     // Wait for decode before first canvas draw on iOS Safari/WebKit.
     if(img.decode)await img.decode().catch(()=>{});
     if(img.naturalWidth!==1536||img.naturalHeight!==1024)

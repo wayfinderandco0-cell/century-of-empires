@@ -202,7 +202,8 @@ const studyParams=new URLSearchParams(root.location.search);
 // Original scene expansion is a review-only opt-in; no invented road nodes.
 const pilotButton=document.createElement("button");
 pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
-pilotButton.textContent="Original neighbors";
+const secondEuropeanBatch=studyParams.get("originalArtPilot")==="2";
+pilotButton.textContent=secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 pilotButton.onclick=async()=>{
@@ -212,19 +213,35 @@ pilotButton.onclick=async()=>{
  }
  try{
   if(!neighborPilotCells.length){
-   status("Loading eight original scenic candidates (no new roads)…");
-   const response=await fetch("terrain-grid/v267-neighbor-original-art/batch.json");
-   if(!response.ok)throw Error("Neighbor manifest HTTP "+response.status);
-   const batch=await response.json();
+   status(secondEuropeanBatch?"Loading sixteen distinct European scenic studies (no new roads)…":"Loading eight original scenic candidates (no new roads)…");
+   const manifests=["terrain-grid/v267-neighbor-original-art/batch.json"];
+   if(secondEuropeanBatch)manifests.push("terrain-grid/v267-europe-neighbor-b/batch.json");
    if(!root.COEV267ArtContract)throw Error("Original-art validator missing");
-   root.COEV267ArtContract.validateBatch(batch,manifest);
-   const pairs=await Promise.all(batch.cells.map(async c=>[c.id,await imageLoad(c.art)]));
-   if(pairs.some(([,img])=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Neighbor art dimensions mismatch");
-   neighborPilotCells=batch.cells;neighborPilotImages=Object.fromEntries(pairs);
+   const batches=[];
+   for(const url of manifests){
+    const response=await fetch(url);
+    if(!response.ok)throw Error("Neighbor manifest HTTP "+response.status+" for "+url);
+    const batch=await response.json();
+    root.COEV267ArtContract.validateBatch(batch,manifest);
+    batches.push(batch);
+   }
+   const all=batches.flatMap(batch=>batch.cells);
+   if(new Set(all.map(c=>c.id)).size!==all.length||
+      new Set(all.map(c=>c.origin.join(","))).size!==all.length)
+      throw Error("Overlapping or duplicated scenic candidates across batches");
+   // Sequential image decode avoids a 16-image simultaneous allocation spike on iPhone.
+   const pairs=[];
+   for(const cell of all){
+    const img=await imageLoad(cell.art);
+    if(img.naturalWidth!==1536||img.naturalHeight!==1024)
+      throw Error("Neighbor art dimensions mismatch: "+cell.id);
+    pairs.push([cell.id,img]);
+   }
+   neighborPilotCells=all;neighborPilotImages=Object.fromEntries(pairs);
   }
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
   $("atlasWhole").click();
-  status("Eight NEW original layered scenic candidates · roads unverified · V123 movement remains only on approved 3");
+  status(neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message);}
 };
 const photoButton=document.createElement("button");

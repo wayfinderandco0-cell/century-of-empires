@@ -5,6 +5,9 @@ on:
       - terrain-v267-three-original-art-prototype-20261028
     paths:
       - scripts/v267_native_relief_pilot.py
+      - scripts/v267_relief_materials.py
+      - terrain-grid/atlas-integrated.js
+      - terrain-grid/atlas-photo-stream.js
       - .github/workflows/v267-native-relief-pilot.yml
   workflow_dispatch:
 permissions:
@@ -35,7 +38,11 @@ jobs:
           from PIL import Image
           p=Path('generated/v267-relief-pilot')
           m=json.loads((p/'manifest.json').read_text())
-          assert len(m['cells'])==8 and len(m['seams'])==8
+          assert len(m['cells'])==8 and len(m['seams'])==8 and len(m['inlays'])==3
+          assert m['true3DMesh'] is False and m['visuallyApprovedV267'] is False
+          for g in m['inlays']:
+              assert not g['playable'] and not g['roadNodes']
+              assert Image.open(p/g['image']).size==(512,512)
           assert m['status']=='original-3d-relief-candidates-NOT-V267-approved'
           assert not m['historicalRoadsVerified']
           assert len({c['sha256'] for c in m['cells']})==8
@@ -67,6 +74,43 @@ jobs:
               page.screenshot(path=str(p/'actual-webkit-iphone.png'),full_page=True)
               browser.close()
           print('PASS: original relief contact sheet visible in 390x844 WebKit; native game NOT integrated')
+          PY
+      - name: Verify actual native game canvas loads 8 relief studies and retains V123 march
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                                  stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  errors=[]
+                  page.on('pageerror',lambda e:errors.append(str(e)))
+                  page.goto('http://127.0.0.1:8765/index.html?terrainStudy=1',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=90000)
+                  assert page.evaluate('COEAtlas.nodes')==100
+                  page.locator('#atlasIntegratedOpen').click()
+                  page.locator('#atlasPhotoSources').click()
+                  page.wait_for_function('COEAtlas.photoMode && COEAtlas.photoCells===8 && COEAtlas.photoLoaded>=2',timeout=60000)
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_function('COEAtlas.photoInlays===3',timeout=10000)
+                  page.wait_for_timeout(1000)
+                  page.screenshot(path='generated/v267-relief-pilot/actual-native-game-webkit-iphone.png')
+                  assert page.evaluate('COEAtlas.startMarch()') is False
+                  page.locator('#atlasPhotoSources').click()
+                  assert page.evaluate('COEAtlas.nodes')==100
+                  assert page.evaluate('COEAtlas.startMarch()') is True
+                  assert page.evaluate('COEAtlas.finishMarch()')==[2806,1629]
+                  assert not errors,errors
+                  browser.close()
+          finally:
+              server.terminate();server.wait(timeout=5)
+          print('PASS: native WebKit terrain study, 3 decorative infills, V123 march, zero fake playable relief')
           PY
       - name: Commit generated candidate assets and mobile evidence to development branch only
         run: |

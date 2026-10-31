@@ -51,11 +51,11 @@ function polyline(points,color,lineWidth){ctx.beginPath();points.forEach((p,i)=>
 function draw(){
  if(!w||!h)return;
  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#15271f";ctx.fillRect(0,0,w,h);
- if(!loaded)return;
  if(photoMode){
   if(photoStream)photoStream.draw(ctx,worldToScreen,scale,w,h);
   return;
  }
+ if(!loaded)return;
  const diamond=manifest.decorativeInlays[0],src=images[diamond.sourceCell];
  ctx.save();polygon(ctx,diamond.polygon.map(worldToScreen));ctx.clip();
  const dest=worldToScreen([1280,768]);ctx.drawImage(src,...diamond.sourceRect,dest[0],dest[1],512*scale,512*scale);ctx.restore();
@@ -185,7 +185,7 @@ $("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
  */
 const photoButton=document.createElement("button");
 photoButton.id="atlasPhotoSources";photoButton.type="button";
-photoButton.textContent="Photo sources";
+photoButton.textContent=new URLSearchParams(root.location.search).has("terrainStudy")?"3D terrain study":"Photo sources";
 $("atlasBar").querySelector("div").appendChild(photoButton);
 const photoNext=document.createElement("button");
 photoNext.id="atlasPhotoNext";photoNext.type="button";
@@ -198,7 +198,7 @@ function focusPhoto(index){
  const cell=photoStream.cells[photoIndex];
  center=[cell.origin[0]+768,cell.origin[1]+512];
  zoom=1.5;scale=base*zoom;
- status(cell.id+" · "+cell.sourceRegion+" · PHOTO REFERENCE ONLY, no route or conquest");
+ status(cell.id+" · "+cell.sourceRegion+(photoStream.mode==='relief'?" · ORIGINAL DEPTH STUDY, not playable":" · PHOTO REFERENCE ONLY, no route or conquest"));
  draw();
  return cell.id;
 }
@@ -214,8 +214,9 @@ async function togglePhotoSources(){
      document.head.appendChild(script);
     });
    }
+   const study=new URLSearchParams(root.location.search).has("terrainStudy");
    const photoBlock=new URLSearchParams(root.location.search).get("photoBlock");
-   const photoURL=photoBlock==="dulmenRoad"
+   const photoURL=study?"generated/v267-relief-pilot/manifest.json":photoBlock==="dulmenRoad"
      ?"terrain-grid/factory-photo/dulmen-road-8/manifest.json"
      :photoBlock==="coverage"
      ?"terrain-grid/factory-photo/coverage/manifest.json"
@@ -236,7 +237,7 @@ async function togglePhotoSources(){
    focusPhoto(0);
   } else {
    photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
-   photoNext.hidden=true;photoButton.textContent="Photo sources";
+   photoNext.hidden=true;photoButton.textContent=new URLSearchParams(root.location.search).has("terrainStudy")?"3D terrain study":"Photo sources";
    for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
    status("WEST · MATREI · SOUTH connected · tap a cartway");
   }

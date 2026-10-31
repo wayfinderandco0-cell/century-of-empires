@@ -16,12 +16,31 @@ class PhotoAtlasStream {
   this.manifest=null;this.cache=new Map();this.thumbCache=new Map();this.pending=new Map();
   // Ten nearby native textures fit the 8-cell study without cache-eviction
   // thrashing. Distant European cells remain lazily streamed, never all 432.
-  this.maxCached=10;this.maxThumbCached=32;this.inlays=[];this.stats={requests:0,loaded:0,thumbLoaded:0,fullLoaded:0,failed:0};
+  this.maxCached=10;this.maxThumbCached=32;this.inlays=[];this.inlayCache=new Map();this.inlayPending=new Set();this.mode='photo';this.stats={requests:0,loaded:0,thumbLoaded:0,fullLoaded:0,failed:0};
  }
  async init() {
   const response=await fetch(this.url,{cache:"no-cache"});
   if(!response.ok)throw Error("Photo atlas manifest HTTP "+response.status);
   const manifest=await response.json();
+  if(manifest.schema==="coe-v267-native-relief-pilot/v1"){
+   if(!Array.isArray(manifest.cells)||manifest.cells.length!==8||
+      manifest.nativeSize?.[0]!==W||manifest.nativeSize?.[1]!==H||
+      manifest.visuallyApprovedV267!==false||manifest.true3DMesh!==false)
+    throw Error("Invalid original relief pilot manifest");
+   this.mode="relief";
+   this.inlays=(manifest.inlays||[]).map(g=>({
+    center:g.worldCenter,image:"generated/v267-relief-pilot/"+g.image,
+    imageSize:g.imageSize,playable:false
+   }));
+   manifest.cells=manifest.cells.map(c=>({
+    id:c.id,grid:c.grid,origin:c.worldOrigin,
+    image:"generated/v267-relief-pilot/"+c.image,imageSize:[W,H],
+    sourceRegion:"original V94 DEM relief study",
+    nativePhotoUnderlay:false,gameplayEnabled:false,
+    historicallyVerified:false,physicallyRoadSeamChecked:false
+   }));
+   manifest.schema="coe-photo-art/v1";
+  }
   if(manifest.schema!=="coe-photo-art/v1"||!Array.isArray(manifest.cells))
    throw Error("Unexpected photo atlas schema");
   const ids=new Set();
@@ -56,7 +75,7 @@ class PhotoAtlasStream {
     throw Error("Invalid native source diamond "+c.id);
    gaps.push({center:[(x+1)*W,(y+1)*H],cells:group});
   }
-  this.inlays=gaps;
+  if(this.mode!=='relief')this.inlays=gaps;
   this.manifest=manifest;
   return this;
  }
@@ -118,6 +137,27 @@ class PhotoAtlasStream {
    ctx.save();ctx.beginPath();ctx.moveTo(p[0]-r,p[1]);
    ctx.lineTo(p[0],p[1]-r);ctx.lineTo(p[0]+r,p[1]);
    ctx.lineTo(p[0],p[1]+r);ctx.closePath();ctx.clip();
+   if(gap.image){
+    let img=this.inlayCache.get(gap.image);
+    if(!img&&!this.inlayPending.has(gap.image)){
+     this.inlayPending.add(gap.image);
+     const asset=new Image();
+     asset.onload=()=>{
+      if(asset.naturalWidth===gap.imageSize[0]&&
+         asset.naturalHeight===gap.imageSize[1]){
+       this.inlayCache.set(gap.image,asset);
+      }else this.stats.failed++;
+      this.inlayPending.delete(gap.image);this.onChange();
+     };
+     asset.onerror=()=>{
+      this.stats.failed++;this.inlayPending.delete(gap.image);this.onChange();
+     };
+     asset.src=gap.image;
+    }
+    if(img)ctx.drawImage(img,p[0]-r,p[1]-r,2*r,2*r);
+    ctx.restore();
+    continue;
+   }
    for(const cell of gap.cells) {
     const img=this.touch(cell.id,preview);
     if(img) {const q=toScreen(cell.origin);
@@ -135,7 +175,7 @@ class PhotoAtlasStream {
    else {
     ctx.fillStyle="#35483c";ctx.fillRect(p[0],p[1],W*scale,H*scale);
     ctx.fillStyle="#e2d3a9";ctx.font="12px system-ui";
-    ctx.fillText("Loading native source photograph",p[0]+20,p[1]+80);
+    ctx.fillText(this.mode==='relief'?"Loading original relief terrain":"Loading native source photograph",p[0]+20,p[1]+80);
    }
    ctx.restore();
    ctx.save();ctx.beginPath();
@@ -146,7 +186,7 @@ class PhotoAtlasStream {
    // Do not cover the photographic terrain with repeated giant labels
    // when the player zooms out to inspect a regional block.
    if(scale>.22){ctx.fillStyle="#f8e8c7";ctx.font="bold 10px system-ui";
-    ctx.fillText(cell.id+" · SOURCE ONLY",p[0]+Math.max(8,280*scale),p[1]+Math.max(20,45*scale));}
+    ctx.fillText(cell.id+(this.mode==='relief'?" · RELIEF STUDY":" · SOURCE ONLY"),p[0]+Math.max(8,280*scale),p[1]+Math.max(20,45*scale));}
    ctx.restore();
   }
  }

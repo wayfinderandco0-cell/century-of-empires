@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 from scipy.ndimage import map_coordinates, gaussian_filter, distance_transform_edt
 from PIL import Image, ImageDraw
+from v267_relief_materials import enrich_surface, paint_tree
 
 TW, TH, COLS, ROWS = 1536, 1024, 4, 2
 C0, R0 = 7, 12
@@ -89,6 +90,7 @@ def build(root:Path, out:Path, scale:float=1):
     rgb=rgb*(1-snow)+snowy*snow
     grain=3*n3+1.5*n4
     rgb=(rgb*shade[...,None]+grain[...,None]).clip(0,255).astype(np.uint8)
+    rgb=enrich_surface(rgb,z,elev,forest,distance,n3,n4,scale)
     edge=np.clip((distance-4.3*scale)/(2.2*scale),0,1)
     roadgrain=(n3*6+n4*3)
     roadcolor=np.stack((153+roadgrain,132+roadgrain,99+roadgrain),axis=-1)
@@ -109,22 +111,15 @@ def build(root:Path, out:Path, scale:float=1):
             trees.append((ty,tx,4.2+5.7*rng.random(),rng.random(),rng.random()))
     trees.sort()
     for ty,tx,r,kind,light in trees:
-        r=max(1.6,r*scale)
-        if kind<.73:
-            dr.ellipse((tx-r*.85+4*scale,ty-r*.38+5*scale,tx+r*.85+4*scale,ty+r*.9+5*scale),fill=(17,33,22,92))
-            dr.polygon([(tx,ty-2.5*r),(tx-r*.92,ty+r*.6),(tx+r*.92,ty+r*.6)],fill=(27,64+int(light*26),39,255))
-            dr.polygon([(tx-r*.25,ty-1.9*r),(tx-r*.75,ty+r*.3),(tx,ty+r*.15)],fill=(71,112+int(light*23),66,210))
-            dr.line((tx,ty-2.4*r,tx,ty+r*.5),fill=(118,143,93,100),width=1)
-        else:
-            dr.ellipse((tx-r+4*scale,ty-r*.6+5*scale,tx+r+4*scale,ty+r+5*scale),fill=(17,37,22,100))
-            dr.ellipse((tx-r,ty-r*1.35,tx+r,ty+r*.65),fill=(37,84+int(light*30),39,255))
-            dr.ellipse((tx-r*.75,ty-r*1.2,tx+r*.15,ty-r*.15),fill=(92,137+int(light*22),73,175))
+        paint_tree(dr,ty,tx,r,kind,light,scale)
     out.mkdir(parents=True,exist_ok=True)
     manifest={'schema':'coe-v267-native-relief-pilot/v1','referenceCommit':'456107f28c8db1f87522bbc7511809b2a215f6fb',
       'status':'original-3d-relief-candidates-NOT-V267-approved','sourceElevation':'V94 Mapzen/AWS Terrarium DEM',
       'sourceForest':'V94 Natural Earth II approximate modern cover','historicalRoadsVerified':False,
       'artRoads':'fictional provisional corridors; not gameplay routes','grid':[COLS,ROWS],
-      'nativeSize':[TW,TH],'scale':scale,'treesRendered':len(trees),'cells':[],'seams':[]}
+      'nativeSize':[TW,TH],'scale':scale,'treesRendered':len(trees),
+      'depthRendering':'directional terrain self-shadow, slope-aware limestone and tiered tree crowns',
+      'true3DMesh':False,'visuallyApprovedV267':False,'cells':[],'seams':[],'inlays':[]}
     tw,th=round(TW*scale),round(TH*scale)
     mask=Image.new('L',(tw,th),0);md=ImageDraw.Draw(mask)
     bevel=round(256*scale)
@@ -143,6 +138,27 @@ def build(root:Path, out:Path, scale:float=1):
                 'visualApproved':False,'nativeGamePlayable':False,'historicallyVerified':False})
             thumb=tile.resize((384,256),Image.Resampling.LANCZOS)
             contact.paste(thumb,(col*384,row*256),thumb)
+    # Fill the three interstitial diamonds from the SAME continuous original
+    # raster, not stretched corner textures or fake roads. Inlays are scenery,
+    # never routable graph nodes.
+    for col in range(COLS-1):
+        ix=(col+1)*tw
+        iy=th
+        gap=round(256*scale)
+        patch=im.crop((ix-gap,iy-gap,ix+gap,iy+gap)).convert('RGBA')
+        alpha=Image.new('L',(2*gap,2*gap),0)
+        ImageDraw.Draw(alpha).polygon([(gap,0),(2*gap,gap),
+                                       (gap,2*gap),(0,gap)],fill=255)
+        patch.putalpha(alpha)
+        name=f'infill-{col}-0.png'
+        patch.save(out/name,optimize=True)
+        manifest['inlays'].append({
+            'id':f'infill-{col}-0',
+            'worldCenter':[(col+1)*TW,TH],
+            'image':name,'imageSize':[2*gap,2*gap],
+            'playable':False,'roadNodes':[],
+            'sha256':hashlib.sha256((out/name).read_bytes()).hexdigest()
+        })
     contact.save(out/'contact-sheet.webp',quality=88)
     for row in range(ROWS):
         for col in range(COLS-1):
@@ -160,6 +176,7 @@ def build(root:Path, out:Path, scale:float=1):
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
     (out/'index.html').write_text('''<!doctype html><html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Original 3D relief pilot</title><style>body{margin:0;background:#172720;color:#f1e4c6;font:15px system-ui}header{padding:12px}img{display:block;max-width:100%;height:auto;margin:auto}small{color:#ffce9a}</style><header><b>Eight contiguous original relief octagons — 4 × 2</b><br><small>UNAPPROVED CANDIDATES · Original DEM-shaded terrain, not aerial-photo crops · Fictional provisional roads, not playable</small></header><img src="contact-sheet.webp" alt="Eight 3D relief octagons"></html>''')
     print(json.dumps({'cells':len(manifest['cells']),'trees':len(trees),'seams':len(manifest['seams']),
+      'decorativeInlays':len(manifest['inlays']),
       'visualApproved':0,'nativePlayable':0,'historicalRoadsVerified':0,'finishedToday':0}))
 
 if __name__=='__main__':

@@ -253,6 +253,8 @@ pilotButton.onclick=async()=>{
    const pairs=[];
    for(const cell of all){
     const img=await imageLoad(cell.art);
+    // Wait for decode before first canvas draw on iOS Safari/WebKit.
+    if(img.decode)await img.decode().catch(()=>{});
     if(img.naturalWidth!==1536||img.naturalHeight!==1024)
       throw Error("Neighbor art dimensions mismatch: "+cell.id);
     pairs.push([cell.id,img]);

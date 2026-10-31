@@ -16,7 +16,7 @@ class PhotoAtlasStream {
   this.manifest=null;this.cache=new Map();this.pending=new Map();
   // Ten nearby native textures fit the 8-cell study without cache-eviction
   // thrashing. Distant European cells remain lazily streamed, never all 432.
-  this.maxCached=10;this.stats={requests:0,loaded:0,failed:0};
+  this.maxCached=10;this.inlays=[];this.stats={requests:0,loaded:0,failed:0};
  }
  async init() {
   const response=await fetch(this.url,{cache:"no-cache"});
@@ -32,6 +32,31 @@ class PhotoAtlasStream {
    if(c.gameplayEnabled||c.historicallyVerified||c.physicallyRoadSeamChecked)
     throw Error("Unreviewed photo art incorrectly declared routable");
   }
+  // Fill ONLY four-way diamonds from truly adjacent pixels in the SAME
+  // original photograph. Previous full-rectangle underlays leaked photo
+  // outside octagon borders and falsely bridged unrelated sources.
+  const grid=new Map(manifest.cells.map(c=>[c.grid.join(","),c]));
+  const gaps=[];
+  for(const c of manifest.cells) {
+   const [x,y]=c.grid;
+   const group=[c,grid.get((x+1)+","+y),grid.get(x+","+(y+1)),
+                grid.get((x+1)+","+(y+1))];
+   if(group.some(q=>!q||!q.nativePhotoUnderlay))continue;
+   if(new Set(group.map(q=>q.nativePhotoSourceGroup)).size!==1)continue;
+   const [a,b,d,e]=group;
+   const h=(u,v)=>u.sourceSha256===v.sourceSha256 &&
+     u.sourceCrop?.[2]===v.sourceCrop?.[0] &&
+     u.sourceCrop?.[1]===v.sourceCrop?.[1] &&
+     u.sourceCrop?.[3]===v.sourceCrop?.[3];
+   const v=(u,z)=>u.sourceSha256===z.sourceSha256 &&
+     u.sourceCrop?.[3]===z.sourceCrop?.[1] &&
+     u.sourceCrop?.[0]===z.sourceCrop?.[0] &&
+     u.sourceCrop?.[2]===z.sourceCrop?.[2];
+   if(!h(a,b)||!h(d,e)||!v(a,d)||!v(b,e))
+    throw Error("Invalid native source diamond "+c.id);
+   gaps.push({center:[(x+1)*W,(y+1)*H],cells:group});
+  }
+  this.inlays=gaps;
   this.manifest=manifest;
   return this;
  }
@@ -70,12 +95,23 @@ class PhotoAtlasStream {
     this.request(cell);
    if(intersects(box,[0,0,screenWidth,screenHeight]))visible.push({cell,p});
   }
-  // Native-pixel 2x2 source mosaics supply road-free decorative diamond infill.
-  // Never do this for unrelated photos: their boundaries are NOT certified.
-  for(const {cell,p} of visible) {
-   if(cell.nativePhotoUnderlay){const img=this.touch(cell.id);
-    if(img)ctx.drawImage(img,p[0],p[1],W*scale,H*scale);
+  // The ONLY unmasked photographic fill is a clipped, non-playable
+  // four-corner diamond, and ONLY when all four source crops are native
+  // adjacent. Never draw a rectangular source photo across a missing tile
+  // or a cross-source seam; that created fake contiguous terrain.
+  for(const gap of this.inlays) {
+   const p=toScreen(gap.center),r=C*scale;
+   if(!intersects([p[0]-r,p[1]-r,p[0]+r,p[1]+r],
+                  [0,0,screenWidth,screenHeight]))continue;
+   ctx.save();ctx.beginPath();ctx.moveTo(p[0]-r,p[1]);
+   ctx.lineTo(p[0],p[1]-r);ctx.lineTo(p[0]+r,p[1]);
+   ctx.lineTo(p[0],p[1]+r);ctx.closePath();ctx.clip();
+   for(const cell of gap.cells) {
+    const img=this.touch(cell.id);
+    if(img) {const q=toScreen(cell.origin);
+     ctx.drawImage(img,q[0],q[1],W*scale,H*scale);}
    }
+   ctx.restore();
   }
   for(const {cell,p} of visible) {
    ctx.save();ctx.beginPath();

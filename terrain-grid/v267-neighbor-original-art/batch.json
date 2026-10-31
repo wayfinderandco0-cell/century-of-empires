@@ -1,7 +1,7 @@
 {
   "schema": "coe-v267-original-art-batch/v1",
   "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
-  "status": "unapproved-native-forest-edge-registration-study",
+  "status": "unapproved-fresh-cc0-alpine-ground-composition",
   "scenario": "fictional Alpine scenic composition, not historical topography",
   "cells": [
     {
@@ -12,46 +12,46 @@
       ],
       "biome": "wooded-alpine-valley",
       "art": "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
-      "assetSha256": "e60e19235467dc1db023b9f0bae414be503ec675a08a5b0f910ad0d12595eae1",
+      "assetSha256": "3cfde1251de0e71017ed7a4ffd066dc23400c6c77777cf2ad0cd4a69ea748fb6",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
-        "title": "Forested mountain valley (Unsplash).jpg",
-        "page": "https://commons.wikimedia.org/wiki/File:Forested_mountain_valley_%28Unsplash%29.jpg",
-        "sourceSha256": "ab155ff5b1d3f1097b3ce572fa75a5ab445529783b1ad94d7f980dd6be96a5d9",
+        "title": "Peaceful Austrian valley (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Peaceful_Austrian_valley_%28Unsplash%29.jpg",
+        "sourceSha256": "07035ff4a58074f0a3d28e655866dd48d8fc5b211291aa60f592e9530f4c668a",
         "license": "CC0 1.0",
         "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Forested_mountain_valley_%28Unsplash%29.jpg/3840px-Forested_mountain_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "sourceDimensions": [
-          3840,
-          2550
-        ],
-        "crop": [
-          1198,
-          870,
-          2734,
-          1894
-        ]
-      },
-      "sourceForeground": {
-        "title": "Gray clouds over green valley (Unsplash).jpg",
-        "page": "https://commons.wikimedia.org/wiki/File:Gray_clouds_over_green_valley_%28Unsplash%29.jpg",
-        "sourceSha256": "f4c12d4880fe264506cdc915f8f66a3a1f22cbd7ba1eb7e4a81829352f1130db",
-        "license": "CC0 1.0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Gray_clouds_over_green_valley_%28Unsplash%29.jpg/3840px-Gray_clouds_over_green_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Peaceful_Austrian_valley_%28Unsplash%29.jpg/3840px-Peaceful_Austrian_valley_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
         "sourceDimensions": [
           3840,
           2560
         ],
         "crop": [
-          852,
-          922,
-          2388,
-          1946
+          1175,
+          1443,
+          2711,
+          2467
         ]
       },
-      "sourceMethod": "existing independent CC0-derived native forest + V121 edge-only LAB light registration; NO Matrei pixels copied",
+      "sourceForeground": {
+        "title": "Idyllic Seiser Alm meadow (Unsplash).jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Idyllic_Seiser_Alm_meadow_%28Unsplash%29.jpg",
+        "sourceSha256": "f6a0fd5a5a36a4f87c6eb69a74487be20039005a705c98831385cc7028305943",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Idyllic_Seiser_Alm_meadow_%28Unsplash%29.jpg/3840px-Idyllic_Seiser_Alm_meadow_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "sourceDimensions": [
+          3840,
+          2560
+        ],
+        "crop": [
+          1128,
+          1443,
+          2664,
+          2467
+        ]
+      },
+      "sourceMethod": "two fresh CC0 oblique Alpine landscapes; minimum-error native ground join; V121 LAB edge-only light registration; no Matrei pixels copied",
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -65,10 +65,10 @@
       "mobileWebkitRendered": true,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "New original source-preserving native forest art ITERATION; unapproved. Road-free scenic cell east of Matrei; color edge improved but physical landscape, routes, history and playability unverified.",
+      "notes": "New source-backed layered Austrian Alpine scene; unapproved. No historical cartway is established; physical terrain seam, source buildings, tree scale and playability require independent visual QA.",
       "lightingEdgeGraded": true,
       "physicalTerrainSeamVerified": false,
-      "recomposedFromPreviousDerivative": true,
+      "recomposedFromPreviousDerivative": false,
       "nativeRegistrationEvidence": "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json"
     },
     {

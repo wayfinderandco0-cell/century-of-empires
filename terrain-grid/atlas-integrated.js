@@ -203,7 +203,8 @@ const studyParams=new URLSearchParams(root.location.search);
 const pilotButton=document.createElement("button");
 pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
 const secondEuropeanBatch=studyParams.get("originalArtPilot")==="2";
-pilotButton.textContent=secondEuropeanBatch?"16 scenic studies":"Original neighbors";
+const focusedEastPilot=studyParams.get("originalArtPilot")==="east";
+pilotButton.textContent=focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 pilotButton.onclick=async()=>{
@@ -214,7 +215,7 @@ pilotButton.onclick=async()=>{
  }
  try{
   if(!neighborPilotCells.length){
-   status(secondEuropeanBatch?"Loading sixteen distinct European scenic studies (no new roads)…":"Loading eight original scenic candidates (no new roads)…");
+   status(focusedEastPilot?"Loading ONE new Matrei east source-backed scene…":secondEuropeanBatch?"Loading sixteen distinct European scenic studies (no new roads)…":"Loading eight original scenic candidates (no new roads)…");
    const manifests=["terrain-grid/v267-neighbor-original-art/batch.json"];
    if(secondEuropeanBatch)manifests.push("terrain-grid/v267-europe-neighbor-b/batch.json");
    if(!root.COEV267ArtContract)throw Error("Original-art validator missing");
@@ -226,7 +227,10 @@ pilotButton.onclick=async()=>{
     root.COEV267ArtContract.validateBatch(batch,manifest);
     batches.push(batch);
    }
-   const all=batches.flatMap(batch=>batch.cells);
+   // The focused review loads only the new source-grounded cell, not 16
+   // rejected neighbors. Validate the full manifest first, then filter.
+   const all=batches.flatMap(batch=>batch.cells).filter(c=>!focusedEastPilot||c.id==="east-matrei");
+   if(focusedEastPilot&&(all.length!==1||!all[0].art))throw Error("Missing Matrei east scene");
    if(new Set(all.map(c=>c.id)).size!==all.length||
       new Set(all.map(c=>c.origin.join(","))).size!==all.length)
       throw Error("Overlapping or duplicated scenic candidates across batches");
@@ -243,8 +247,9 @@ pilotButton.onclick=async()=>{
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
   halt();
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
-  $("atlasWhole").click();
-  status(neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
+  if(focusedEastPilot)centerAt(3072,512,2.9);
+  else $("atlasWhole").click();
+  status(focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message);}
 };
 const photoButton=document.createElement("button");

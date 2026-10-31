@@ -10,7 +10,7 @@ permissions:
   contents: write
 concurrency:
   group: coe-v267-europe-b
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   eight-original-european-studies:
     runs-on: ubuntu-latest

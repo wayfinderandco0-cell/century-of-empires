@@ -1,7 +1,7 @@
 {
   "schema": "coe-v267-original-art-batch/v1",
   "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
-  "status": "original-photo-layered-unapproved-neighbor-study",
+  "status": "unapproved-native-forest-edge-registration-study",
   "scenario": "fictional Alpine scenic composition, not historical topography",
   "cells": [
     {
@@ -11,8 +11,8 @@
         0
       ],
       "biome": "wooded-alpine-valley",
-      "art": "terrain-grid/v267-neighbor-original-art/east-matrei.webp",
-      "assetSha256": "5ac5b9445a9d3ef7e8b9751b3a8b4bc05562c11eeae660971b89b0d6c976c4a4",
+      "art": "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
+      "assetSha256": "e60e19235467dc1db023b9f0bae414be503ec675a08a5b0f910ad0d12595eae1",
       "visualGrammar": "v267-original-layered-landscape",
       "originalArtComposed": true,
       "sourcePrimary": {
@@ -51,7 +51,7 @@
           1946
         ]
       },
-      "sourceMethod": "Two independently licensed, distinct oblique natural landscape sources; broad irregular nonrepeating foreground blend, source lighting grade, no drawn roads or synthetic trees",
+      "sourceMethod": "existing independent CC0-derived native forest + V121 edge-only LAB light registration; NO Matrei pixels copied",
       "scenicSettlements": [],
       "strategicNodes": [],
       "provinceIds": [],
@@ -62,12 +62,14 @@
       "historicalVerified": false,
       "historicallyVerified": false,
       "visuallyReviewed": false,
-      "mobileWebkitRendered": false,
+      "mobileWebkitRendered": true,
       "nativePlayable": false,
       "userApproved": false,
-      "notes": "Regional art candidate only; not surveyed 1780-1880 geography; source photograph may contain modern features; road-free",
+      "notes": "New original source-preserving native forest art ITERATION; unapproved. Road-free scenic cell east of Matrei; color edge improved but physical landscape, routes, history and playability unverified.",
       "lightingEdgeGraded": true,
-      "physicalTerrainSeamVerified": false
+      "physicalTerrainSeamVerified": false,
+      "recomposedFromPreviousDerivative": true,
+      "nativeRegistrationEvidence": "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json"
     },
     {
       "id": "east-south",

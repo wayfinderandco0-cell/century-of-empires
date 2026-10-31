@@ -1,0 +1,26 @@
+{
+  "schema": "coe-v267-visual-qa/v1",
+  "date": "2026-10-31",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "candidate": "east-matrei",
+  "origin": [
+    3072,
+    0
+  ],
+  "evidence": [
+    "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
+    "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp",
+    "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json"
+  ],
+  "inspected": 1,
+  "passedApprovedV267VisualStandard": 0,
+  "originalArtIterationCommitted": 1,
+  "finding": "New source-preserving forest image has no sky and no visibly warped trees, but it remains a natural photo composition with mismatched Matrei perspective/lighting and no continuous photographed road. A visible modern-looking farm building and footpaths must not be presented as 1780–1880 features. The color-edge LAB delta improved from 25.486 to 19.149, which is NOT physical terrain continuity.",
+  "roadSeamsVerified": 0,
+  "riverCrossingsVerified": 0,
+  "historicallyVerified": 0,
+  "nativePlayable": 0,
+  "userApproved": 0,
+  "netFinishedToday": 0,
+  "status": "VISUALLY REVIEWED AND NOT APPROVED AS FINISHED V267 ART; isolated scenic study only"
+}

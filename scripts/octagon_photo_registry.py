@@ -56,6 +56,18 @@ def main():
                                    "chosen": path})
             by_id[c["id"]] = c
     cells = sorted(by_id.values(), key=lambda c: (c["grid"][1], c["grid"][0]))
+    # Real photographic derivatives for low-zoom iPhone streaming. Full
+    # 1536x1024 native source art remains untouched and loads at close zoom.
+    thumbs = OUT / "thumbs"
+    thumbs.mkdir(parents=True, exist_ok=True)
+    for c in cells:
+        with Image.open(ROOT / c["image"]) as original:
+            thumb = original.convert("RGB").resize((384, 256), Image.Resampling.LANCZOS)
+        dest = thumbs / (c["id"] + ".webp")
+        thumb.save(dest, "WEBP", quality=87, method=6)
+        c["previewImage"] = "terrain-grid/factory-photo/coverage/thumbs/" + dest.name
+        c["previewSize"] = [384, 256]
+        c["previewSha256"] = hashlib.sha256(dest.read_bytes()).hexdigest()
     if len(cells) != 19 or len(superseded) != 2:
         raise RuntimeError(f"Expected 19 unique cells and 2 superseded originals, got {len(cells)}, {len(superseded)}")
     grid = {tuple(c["grid"]): c for c in cells}
@@ -101,7 +113,7 @@ def main():
         "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
         "description": "19 distinct preexisting photographic candidates in one native game canvas, NOT new final octagons",
         "sourceArtworkRecords": 21, "photographicArtComposed": 19,
-        "newArtworkComposedThisRun": 0, "uniquePhotoCells": len(cells),
+        "newArtworkComposedThisRun": 0, "newLowZoomPhotographicDerivatives": len(cells), "uniquePhotoCells": len(cells),
         "supersededOverlaps": superseded, "nativePhotoPixelJoins": native,
         "unapprovedCrossSourceJoins": blocked, "roadFreeNativeDiamondInlays": diamonds,
         "exactPhotoGeoreferenced": False, "visuallyChecked": 0,
@@ -112,7 +124,7 @@ def main():
     (OUT / "manifest.json").write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
     (OUT / "README.md").write_text(
         "# Native Europe photo coverage — review only\n\n"
-        "Nineteen distinct **previously committed** 1536×1024 licensed photographic candidates are now streamed "
+        "Nineteen distinct **previously committed** 1536×1024 licensed photographic candidates plus nineteen newly derived 384×256 photographic overview assets are now streamed "
         "in one atlas. Two overlapping Sharr source records are superseded by the coherent 4×2 block. "
         "Eighteen original-source adjacent photo joins and five four-cell road-free corner diamonds are "
         "eligible for native-pixel decorative infill. Two cross-source joins remain blocked. "
@@ -123,7 +135,7 @@ def main():
     )
     print(json.dumps({"uniquePhotoCells": len(cells), "sourceNativeJoins": len(native),
                       "blockedSourceJoins": len(blocked), "roadFreeDiamondInlays": len(diamonds),
-                      "newArt": 0, "roadConnected": 0, "playable": 0, "finishedToday": 0}))
+                      "newFullResolutionArt": 0, "newOverviewPhotoDerivatives": len(cells), "roadConnected": 0, "playable": 0, "finishedToday": 0}))
 
 if __name__ == "__main__":
     main()

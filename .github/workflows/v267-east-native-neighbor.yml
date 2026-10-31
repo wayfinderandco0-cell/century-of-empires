@@ -1,0 +1,148 @@
+name: V267 east neighbor native forest edge - real asset and WebKit
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_east_neighbor_registration.py
+      - .github/workflows/v267-east-native-neighbor.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-east-native-neighbor
+  cancel-in-progress: false
+jobs:
+  compose-native-forest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install offline native-photographic dependencies
+        run: python -m pip install --disable-pip-version-check pillow numpy opencv-python-headless
+      - name: Preserve immutable original art fingerprints
+        run: |
+          sha256sum terrain-grid/art/matrei-v121-original.webp art-reviews/v267-original-source/west-unified-native-border-unapproved.webp art-reviews/v267-original-source/south-unified-native-border-unapproved.webp > /tmp/v267-protected.sha256
+      - name: Compose ONE native forest art candidate from independently licensed material
+        run: python scripts/v267_east_neighbor_registration.py
+      - name: Validate V267 manifest, original forest and untouched baseline
+        run: |
+          sha256sum -c /tmp/v267-protected.sha256
+          node scripts/test_atlas_manifest.js
+          node scripts/test_v267_art_factory_contract.js
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const gate=require('./terrain-grid/v267-art-factory-contract.js');
+          const base=JSON.parse(fs.readFileSync('terrain-grid/atlas-cells.json'));
+          const batch=JSON.parse(fs.readFileSync('terrain-grid/v267-neighbor-original-art/batch.json'));
+          const counts=gate.validateBatch(batch,base);
+          const c=batch.cells.find(c=>c.id==='east-matrei');
+          assert(c&&c.art.endsWith('east-matrei-native-seam-study.webp'));
+          assert.deepStrictEqual(c.origin,[3072,0]);
+          assert.strictEqual(c.roadPorts.length,0);
+          for(const k of ['visuallyReviewed','roadConnected','historicallyVerified','nativePlayable','userApproved','netFinishedToday'])assert.strictEqual(counts[k],0,k);
+          console.log('PASS: protected V267 + 8 candidate manifest + no invented route/history/finish');
+          NODE
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          from PIL import Image
+          root=Path('terrain-grid/v267-neighbor-original-art')
+          j=json.loads((root/'batch.json').read_text())
+          c=next(x for x in j['cells'] if x['id']=='east-matrei')
+          p=Path(c['art'])
+          assert Image.open(p).size==(1536,1024)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==c['assetSha256']
+          report=json.loads((root/'east-matrei-native-seam-evidence.json').read_text())
+          assert report['metrics']['labMeanAbsoluteDeltaAfter']<report['metrics']['labMeanAbsoluteDeltaBefore']
+          assert report['metrics']['independentPixelsIdenticalBeyondX']==480
+          assert report['finished']==0
+          print('PASS: actual new WebP pixels + edge improvement + honest evidence')
+          PY
+      - name: Install iPhone WebKit renderer
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Render actual new native neighbor and verify V123 gameplay regression
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-neighbor-original-art')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+            time.sleep(1.5)
+            with sync_playwright() as pw:
+              browser=pw.webkit.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=1',wait_until='domcontentloaded')
+              page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=90000)
+              page.locator('#atlasIntegratedOpen').click()
+              assert page.evaluate('COEAtlas.startMarch()') is True
+              page.evaluate('COEAtlas.finishMarch()')
+              page.locator('#atlasOriginalNeighbors').click()
+              page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===8',timeout=120000)
+              assert page.evaluate('COEAtlas.startMarch()') is False
+              page.evaluate('COEAtlas.centerAt(3100,560,1.2)')
+              page.wait_for_timeout(900)
+              page.screenshot(path=str(out/'actual-webkit-iphone-east-matrei-registered.png'))
+              page.locator('#atlasPlus').click()
+              page.locator('#atlasMinus').click()
+              page.locator('#atlasOriginalNeighbors').click()
+              assert page.evaluate('COEAtlas.approvedBaselineLocked') is True
+              assert page.evaluate('COEAtlas.nodes')==100
+              assert page.evaluate('COEAtlas.startMarch()') is True
+              assert not errors,errors
+              print('PASS iPhone WebKit: new forest art displayed, pan/zoom, V123 march and protected art')
+              browser.close()
+          finally:
+            server.terminate()
+            server.wait(timeout=5)
+          PY
+      - name: Mark only this candidate as WebKit-rendered, not approved or playable
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('terrain-grid/v267-neighbor-original-art/batch.json')
+          j=json.loads(p.read_text())
+          c=next(x for x in j['cells'] if x['id']=='east-matrei')
+          c['mobileWebkitRendered']=True
+          assert not c['nativePlayable'] and not c['visuallyReviewed'] and not c['userApproved']
+          p.write_text(json.dumps(j,indent=2,ensure_ascii=False)+'\n')
+          PY
+      - name: Commit actual art, manifest and screenshot to development branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png terrain-grid/v267-neighbor-original-art/batch.json
+          git diff --cached --quiet && exit 0
+          git commit -m "art(v267): one source-preserving Matrei east neighbor and real WebKit evidence [skip ci]"
+          for n in 1 2 3; do
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
+            sleep 5
+          done
+          exit 1
+      - name: Retain actual art and screenshot on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-east-neighbor-native-webkit
+          path: |
+            terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp
+            terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp
+            terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json
+            terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png
+          retention-days: 14
+          if-no-files-found: warn

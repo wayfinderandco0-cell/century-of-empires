@@ -10,17 +10,28 @@
   "evidence": [
     "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp",
     "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp",
-    "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json"
+    "terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json",
+    "terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png",
+    "terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg"
   ],
   "inspected": 1,
   "passedApprovedV267VisualStandard": 0,
   "originalArtIterationCommitted": 1,
-  "finding": "New source-preserving forest image has no sky and no visibly warped trees, but it remains a natural photo composition with mismatched Matrei perspective/lighting and no continuous photographed road. A visible modern-looking farm building and footpaths must not be presented as 1780–1880 features. The color-edge LAB delta improved from 25.486 to 19.149, which is NOT physical terrain continuity.",
+  "finding": "Inspected the new 1536x1024 asset, 2x2 before/after contact sheet, and actual 390x844 WebKit screenshot. Forest is native photographed and unwarped, with no sky, but is blue/cool relative to the approved warm Matrei scene; the east border is visually abrupt, the forest perspective/tree scale does not match Matrei, and the camera screenshot shows a large empty upper area and decorative diamond gaps. Modern-looking farm building/paths are visible. The measured LAB edge improvement 25.486 -> 19.149 is color-only, not a physically continuous landscape or a verified route. REJECTED as finished art.",
   "roadSeamsVerified": 0,
   "riverCrossingsVerified": 0,
   "historicallyVerified": 0,
   "nativePlayable": 0,
   "userApproved": 0,
   "netFinishedToday": 0,
-  "status": "VISUALLY REVIEWED AND NOT APPROVED AS FINISHED V267 ART; isolated scenic study only"
+  "status": "VISUALLY REVIEWED AND NOT APPROVED AS FINISHED V267 ART; isolated scenic study only",
+  "actualIPhoneSizedWebkitScreenshotInspected": true,
+  "mobileWebkitRendered": 1,
+  "defects": [
+    "Abrupt Matrei-to-forest visual/relief transition despite improved edge color",
+    "Photographed forest perspective and tree scale differ from approved 3D artwork",
+    "Modern-looking structures/footpaths have no period verification",
+    "No registered cartway or V123 extension; scenic only",
+    "iPhone preview shows large blank upper area at this camera position and road-free decorative gaps"
+  ]
 }

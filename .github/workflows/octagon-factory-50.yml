@@ -15,6 +15,7 @@ on:
       - scripts/octagon_commons_photo_batch.py
       - scripts/octagon_contiguous_photo_block.py
       - scripts/octagon_carpathian_photo_block.py
+      - scripts/octagon_dulmen_native_road_block.py
       - scripts/octagon_photo_registry.py
       - .github/workflows/octagon-factory-50.yml
 permissions:
@@ -293,6 +294,68 @@ jobs:
                   page.locator('#atlasPhotoSources').click()
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   print('PASS: real mobile WebKit native canvas, 8 Carpathian photos, V123 unchanged, roads disabled')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Compose eight source-native German lowland road-photo candidates
+        run: python scripts/octagon_dulmen_native_road_block.py
+      - name: Verify actual photographed road source and conservative route gates
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          from PIL import Image
+          root=Path('terrain-grid/factory-photo/dulmen-road-8')
+          m=json.loads((root/'manifest.json').read_text())
+          assert len(m['cells'])==8 and m['photographicArtComposed']==8
+          assert len(m['nativePhotoPixelJoins'])==10
+          assert len({c['outputSha256'] for c in m['cells']})==8
+          assert m['photographedModernRoadCandidateCells']==4
+          assert m['physicallyRoadConnected']==m['nativeGamePlayable']==m['historicallyVerified']==m['finishedToday']==0
+          for c in m['cells']:
+              p=Path(c['image'])
+              assert Image.open(p).size==(1536,1024)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==c['outputSha256']
+              assert c['license']=='CC BY-SA 4.0' and c['modernRoadQuarantined']
+              assert not c['gameplayEnabled'] and not c['historicallyVerified'] and not c['physicallyRoadSeamChecked']
+          assert Image.open(root/'photo-block-review.webp').size==(3072,1110)
+          print('PASS: 8 native photographed German lowland cells; 10 source joins; real modern road quarantined; 0 playable')
+          PY
+      - name: Inspect German road source in actual iPhone-sized WebKit native game
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import subprocess,time
+          out=Path('terrain-grid/factory-photo/dulmen-road-8')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
+                                  stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as w:
+                  browser=w.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto('http://127.0.0.1:8765/index.html?photoBlock=dulmenRoad',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=60000)
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  page.locator('#atlasIntegratedOpen').click()
+                  page.locator('#atlasPhotoSources').click()
+                  page.wait_for_function('window.COEAtlas.photoCells===8 && window.COEAtlas.photoLoaded>=2',timeout=60000)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-dulmen-road-close.png'))
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_function('window.COEAtlas.photoLoaded>=4',timeout=40000)
+                  page.wait_for_timeout(600)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-dulmen-road-whole.png'))
+                  assert page.evaluate('window.COEAtlas.startMarch()') is False
+                  page.locator('#atlasPlus').click()
+                  page.locator('#atlasMinus').click()
+                  page.locator('#atlasPhotoSources').click()
+                  assert page.evaluate('window.COEAtlas.nodes')==100
+                  assert page.evaluate('window.COEAtlas.photoMode') is False
+                  print('PASS real WebKit 390x844: 8 German source-road cells, pan/zoom, V123 graph intact, routes disabled')
                   browser.close()
           finally:
               server.terminate()

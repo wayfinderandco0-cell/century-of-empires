@@ -1,0 +1,54 @@
+{
+  "schema": "coe-v267-visual-qa/v1",
+  "date": "2026-10-31",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "evidence": [
+    "terrain-grid/v267-europe-neighbor-b/eight-europe-scenes-contact.webp",
+    "terrain-grid/v267-europe-neighbor-b/actual-webkit-iphone-sixteen-scenes.png",
+    "terrain-grid/v267-europe-neighbor-b/actual-webkit-iphone-new-southern-close.png"
+  ],
+  "method": "Human inspection of committed 8-scene contact sheet and actual 390x844 WebKit atlas screenshot, compared to approved WEST/MATREI/SOUTH sources.",
+  "candidateStudiesInspected": 8,
+  "approvedStyleMatchCount": 0,
+  "physicallyConnectedRoadSeams": 0,
+  "nativePlayableNewCells": 0,
+  "historicallyVerifiedNewCells": 0,
+  "userApprovedNewCells": 0,
+  "netFinishedToday": 0,
+  "overall": "REJECTED AS FINISHED ART — photographic studies only; retain as references, never promote into default game.",
+  "defects": [
+    {
+      "id": "southern-terraces",
+      "finding": "Foggy snowy forest photograph; no embedded cartway, no matched physical terrain seam."
+    },
+    {
+      "id": "southern-high-meadow",
+      "finding": "Dominant nighttime star field and sky; completely incompatible with daylit approved atlas."
+    },
+    {
+      "id": "dolomite-south-ridge",
+      "finding": "Snowy mountain photograph; no playable ground route or registered terrain seam."
+    },
+    {
+      "id": "dolomite-south-pass",
+      "finding": "Snowy cliffs and abrupt foreground blend; no physical road or river registration."
+    },
+    {
+      "id": "alpine-southwest-slope",
+      "finding": "Sky and prominent birds; camera angle inconsistent with approved near-overhead native terrain."
+    },
+    {
+      "id": "alpine-east-summit",
+      "finding": "Bright sky and snowfields; no embedded dirt cartway, seasonal mismatch."
+    },
+    {
+      "id": "alpine-east-lakeside",
+      "finding": "Lake reflection and shoreline structures; not terrain registered to neighboring cell."
+    },
+    {
+      "id": "alpine-east-snowfield",
+      "finding": "Modern-looking snowbound settlement and blue sky; not a source-backed 1780–1880 strategic town."
+    }
+  ],
+  "nextRequiredChange": "Replace generic oblique photo-crop blending with approved V267 native no-horizon ground/landform multiband composition and per-edge source registration; visually inspect a single contiguous road-bearing tile before expanding again."
+}

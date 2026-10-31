@@ -29,6 +29,16 @@ document.head.append(style);
 const openButton=document.createElement("button");openButton.type="button";openButton.id="atlasIntegratedOpen";openButton.textContent="Integrated Alpine atlas";openButton.setAttribute("aria-controls",layer.id);
 document.body.append(openButton,layer);
 const canvas=$("atlasCanvas"),ctx=canvas.getContext("2d",{alpha:false});
+// iOS Safari recovery: keep the new review-only ridge visible as an ordinary
+// decoded DOM image even if WebKit loses the canvas backing store. The image
+// never receives touches, road orders, ownership, or campaign state.
+const ridgeDOM=document.createElement("img");
+ridgeDOM.id="atlasRidgeDomFallback";
+ridgeDOM.alt="Unapproved original Alpine east ridge landscape";
+ridgeDOM.setAttribute("aria-hidden","true");
+ridgeDOM.decoding="async";
+ridgeDOM.style.cssText="position:absolute;z-index:1;pointer-events:none;display:none;max-width:none;object-fit:fill;clip-path:polygon(16.6667% 0%,83.3333% 0%,100% 25%,100% 75%,83.3333% 100%,16.6667% 100%,0% 75%,0% 25%)";
+layer.appendChild(ridgeDOM);
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
@@ -50,8 +60,18 @@ function worldPolygon(tile){
  return [[c,0],[W-c,0],[W,c],[W,H-c],[W-c,H],[c,H],[0,H-c],[0,c]].map(p=>[p[0]+tile.origin[0],p[1]+tile.origin[1]]);
 }
 function polyline(points,color,lineWidth){ctx.beginPath();points.forEach((p,i)=>{const q=worldToScreen(p);if(i)ctx.lineTo(q[0],q[1]);else ctx.moveTo(q[0],q[1]);});ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();}
+function syncRidgeDOM(){
+ const tile=neighborPilotShown&&neighborPilotCells.find(c=>c.id==="matrei-east-ridge");
+ if(!tile||!neighborPilotImages[tile.id]){ridgeDOM.style.display="none";return;}
+ if(ridgeDOM.getAttribute("src")!==tile.art)ridgeDOM.src=tile.art;
+ const pos=worldToScreen(tile.origin);
+ ridgeDOM.style.left=pos[0]+"px";ridgeDOM.style.top=pos[1]+"px";
+ ridgeDOM.style.width=(1536*scale)+"px";ridgeDOM.style.height=(1024*scale)+"px";
+ ridgeDOM.style.display="block";
+}
 function draw(){
  if(!w||!h)return;
+ syncRidgeDOM();
  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#15271f";ctx.fillRect(0,0,w,h);
  if(photoMode){
   if(photoStream)photoStream.draw(ctx,worldToScreen,scale,w,h);
@@ -167,7 +187,7 @@ function sample(points,amount){let left=amount;for(let i=1;i<points.length;i++){
 function startOrder(to){if(photoMode||neighborPilotShown){status("Unapproved scenic candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
-function tapRoad(point){if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
+function tapRoad(point){if(!loaded){status("Atlas artwork has not loaded; the canvas cannot issue orders");return false;}if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,(photoMode||neighborPilotShown)?.15:.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
 function close(){shown=false;layer.hidden=true;openButton.hidden=false;openButton.focus();}
@@ -264,6 +284,8 @@ pilotButton.onclick=async()=>{
      i=>all.some(c=>c.id===i.sourceCell));
   }
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
+  // A normal HTML image fallback is intentionally limited to the single
+  // unapproved ridge study. Protected WEST/MATREI/SOUTH still use the V123 canvas.
   halt();
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
   if(focusedV267NewPilot){

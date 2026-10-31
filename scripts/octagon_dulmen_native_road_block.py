@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Eight native photographic German lowland cells with a REAL photographed farm road.
 
-Modern 2025 road is visual source material, not evidence of an 1780-1880
+Native crop lowered 160 source pixels so its real road clears all three\nstraight octagon side crossings without warp or synthetic painting.\nModern 2025 road is visual source material, not evidence of an 1780-1880
 road, game graph, or province. No synthetic road painting, mirroring or warps.
 """
 from __future__ import annotations
@@ -14,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'terrain-grid/factory-photo/dulmen-road-8'
 TITLE='Dülmen, Kirchspiel, Dernekamp, Feldweg -- 2025 -- 0161.jpg'
 W,H,X0,Y0=1536,1024,7,8
-CROP_X,CROP_Y=960,2800
+CROP_X,CROP_Y=960,2960
 AGENT='CenturyOfEmpiresArtFactory/1.0 (educational game; Wikimedia attribution)'
 def get(url):
     req=urllib.request.Request(url,headers={'User-Agent':AGENT})

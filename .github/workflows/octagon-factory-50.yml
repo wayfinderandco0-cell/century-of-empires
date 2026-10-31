@@ -394,6 +394,7 @@ jobs:
           data=json.loads((root/'road-source-survey.json').read_text())
           assert len(data['candidateSeams'])==3
           assert len(data['routes'])==4
+          assert sum(s['insideOctagonStraightSide'] for s in data['candidateSeams'])==3, 'Source road must contact all 3 straight octagon seams after native crop registration'
           assert not data['historicallyVerified'] and not data['nativeGamePlayable']
           assert not data['humanRoadContactApproved'] and data['finishedToday']==0
           with sync_playwright() as w:

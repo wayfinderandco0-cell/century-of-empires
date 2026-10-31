@@ -16,39 +16,64 @@ W,H=1536,1024
 STEP=8
 YMIN,YMAX=256//STEP,768//STEP
 
-def score_pixel(rgb):
-    r,g,b=rgb
-    hi=max(rgb);lo=min(rgb)
-    saturation=(hi-lo)/max(hi,1)
-    brightness=(r+g+b)/765
-    vegetation=max(0,g-r)/max(g,1)
-    # An imperfect gravel-color hypothesis, NOT proof that a pixel is road.
-    return 1.4*(1-min(1,saturation*2.5)) + .32*brightness - 1.2*vegetation
-
 def candidate_path(image):
-    """Smooth path through neutral-colored terrain, as a survey hypothesis."""
+    """Locate neutral-colored native gravel bands; bridge tree occlusions.
+
+    This is an observed-image segmentation HYPOTHESIS, not an approved road.
+    The road is never repainted, only highlighted on a separate review sheet.
+    """
     small=image.resize((image.width//STEP,H//STEP),Image.Resampling.BILINEAR)
     pix=small.load()
     sw=small.width
-    previous={y:score_pixel(pix[0,y])-.0005*abs(y-64) for y in range(YMIN,YMAX+1)}
-    back=[]
-    for x in range(1,sw):
-        current={}
-        back_col={}
-        for y in range(YMIN,YMAX+1):
-            choices=[(previous[py]-.18*abs(y-py),py) for py in range(max(YMIN,y-2),min(YMAX,y+2)+1)]
-            value,py=max(choices)
-            current[y]=value+score_pixel(pix[x,y])
-            back_col[y]=py
-        back.append(back_col)
-        previous=current
-    y=max(previous,key=previous.get)
-    route=[None]*sw
-    route[-1]=y
-    for x in range(sw-1,0,-1):
-        y=back[x-1][y]
-        route[x-1]=y
-    return [(min(image.width-1,x*STEP+STEP//2),int(y*STEP+STEP//2)) for x,y in enumerate(route)]
+    anchors=[]
+    for x in range(sw):
+        good=[False]*(H//STEP)
+        for y in range(32,124):
+            r,g,b=pix[x,y]
+            good[y]=r>105 and abs(r-g)<32 and abs(g-b)<45 and b>95
+        # Gravel shadows and scattered vegetation interrupt the band; close
+        # gaps shorter than 5 downsampled pixels without moving source art.
+        y=33
+        while y<124:
+            if good[y] or not good[y-1]:
+                y+=1
+                continue
+            stop=y
+            while stop<124 and not good[stop] and stop-y<5:
+                stop+=1
+            if stop<124 and good[stop]:
+                for j in range(y,stop):good[j]=True
+            y=stop+1
+        runs=[]
+        begin=None
+        for y in range(32,125):
+            active=good[y] if y<124 else False
+            if active and begin is None:begin=y
+            if not active and begin is not None:
+                if y-begin>=11:runs.append((begin,y,y-begin))
+                begin=None
+        best=max(runs,key=lambda r:r[2]) if runs else None
+        anchors.append((best[0]+best[1])/2 if best and 14<=best[2]<54 else None)
+    valid=[(x,y) for x,y in enumerate(anchors) if y is not None]
+    if len(valid)<sw*.55:
+        raise RuntimeError("Photographed neutral road band not sufficiently detected")
+    # Fill temporary occlusions (especially trees) by interpolation, not by
+    # hallucinating road pixels or adding a fake visual cartway.
+    values=[0.0]*sw
+    for x in range(sw):
+        if anchors[x] is not None:
+            values[x]=anchors[x]
+            continue
+        left=x-1
+        while left>=0 and anchors[left] is None:left-=1
+        right=x+1
+        while right<sw and anchors[right] is None:right+=1
+        if left<0:values[x]=anchors[right]
+        elif right>=sw:values[x]=anchors[left]
+        else:values[x]=anchors[left]+(anchors[right]-anchors[left])*(x-left)/(right-left)
+    median=[sorted(values[max(0,x-6):min(sw,x+7)])[len(values[max(0,x-6):min(sw,x+7)])//2] for x in range(sw)]
+    smooth=[sum(median[max(0,x-8):min(sw,x+9)])/len(median[max(0,x-8):min(sw,x+9)]) for x in range(sw)]
+    return [(min(image.width-1,x*STEP+STEP//2),int(y*STEP+STEP//2)) for x,y in enumerate(smooth)]
 
 def draw_route(d,points,color="#55e6e2",scale=1,ox=0,oy=0):
     coords=[(ox+x*scale,oy+y*scale) for x,y in points]
@@ -94,7 +119,7 @@ def main():
     result={
         "schema":"coe-road-source-survey/v1",
         "sourceGroup":"dulmen-germany-drone-original-2025",
-        "method":"PIL neutral-ground dynamic-programming hypothesis; NOT an authenticated road segmentation",
+        "method":"PIL neutral-gravel band, occlusion interpolation and median smoothing; NOT an authenticated road segmentation",
         "imageSource":"2025 Dietmar Rabich Wikimedia Commons CC BY-SA 4.0",
         "sourceAttribution":"Dietmar Rabich / Wikimedia Commons / CC BY-SA 4.0; processed photographic crop and diagnostic overlays",
         "sourceManifest":"terrain-grid/factory-photo/dulmen-road-8/manifest.json",

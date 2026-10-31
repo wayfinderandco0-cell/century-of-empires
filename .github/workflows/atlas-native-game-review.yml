@@ -6,8 +6,10 @@ on:
       - index.html
       - terrain-grid/atlas-integrated.js
       - terrain-grid/atlas-cells.json
+      - terrain-grid/v267-art-factory-contract.js
       - terrain-grid/art/matrei-v121-original.webp
       - scripts/test_atlas_manifest.js
+      - scripts/test_v267_art_factory_contract.js
       - scripts/atlas_integrated_browser_review.py
       - .github/workflows/atlas-native-game-review.yml
   workflow_dispatch:
@@ -41,7 +43,9 @@ jobs:
             exit 1
           fi
       - name: Test 100-node graph and sparse atlas semantics
-        run: node scripts/test_atlas_manifest.js
+        run: |
+          node scripts/test_atlas_manifest.js
+          node scripts/test_v267_art_factory_contract.js
       - name: Install mobile browser engines
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0 pillow

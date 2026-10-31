@@ -1,0 +1,94 @@
+{
+  "schema": "coe-v267-provisional-3d-cartways/v1",
+  "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "paintedHeightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
+  "sourceRoads": "Existing v267_native_relief_pilot.road_centerlines ONLY",
+  "gltf": "provisional-cartways.gltf",
+  "binary": "provisional-cartways.bin",
+  "sha256": "c238eea85b49b76224fb4b4fa86502e5c2ea3ffd29e163605b17620d94fced28",
+  "routeCount": 4,
+  "routes": [
+    {
+      "route": 0,
+      "samples": 509,
+      "status": "FICTIONAL_PROVISIONAL_ONLY"
+    },
+    {
+      "route": 1,
+      "samples": 509,
+      "status": "FICTIONAL_PROVISIONAL_ONLY"
+    },
+    {
+      "route": 2,
+      "samples": 90,
+      "status": "FICTIONAL_PROVISIONAL_ONLY"
+    },
+    {
+      "route": 3,
+      "samples": 91,
+      "status": "FICTIONAL_PROVISIONAL_ONLY"
+    }
+  ],
+  "vertexCount": 9592,
+  "triangleCount": 9560,
+  "crossings": [
+    {
+      "route": 0,
+      "axis": "x",
+      "world": 1536,
+      "type": "provisional"
+    },
+    {
+      "route": 0,
+      "axis": "x",
+      "world": 3072,
+      "type": "provisional"
+    },
+    {
+      "route": 0,
+      "axis": "x",
+      "world": 4608,
+      "type": "provisional"
+    },
+    {
+      "route": 1,
+      "axis": "x",
+      "world": 1536,
+      "type": "provisional"
+    },
+    {
+      "route": 1,
+      "axis": "x",
+      "world": 3072,
+      "type": "provisional"
+    },
+    {
+      "route": 1,
+      "axis": "x",
+      "world": 4608,
+      "type": "provisional"
+    },
+    {
+      "route": 2,
+      "axis": "y",
+      "world": 1024,
+      "type": "provisional"
+    },
+    {
+      "route": 3,
+      "axis": "y",
+      "world": 1024,
+      "type": "provisional"
+    }
+  ],
+  "inlayIntrusions": 0,
+  "groundLiftRange": [
+    0.3599967956542969,
+    0.5550003051757812
+  ],
+  "historicallyVerified": 0,
+  "nativeGamePlayable": 0,
+  "visuallyApprovedV267": 0,
+  "finishedToday": 0,
+  "status": "PROVISIONAL_3D_ART_STUDY_NOT_GAMEPLAY"
+}

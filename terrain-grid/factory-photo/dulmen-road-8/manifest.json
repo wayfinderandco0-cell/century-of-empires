@@ -1,0 +1,499 @@
+{
+  "schema": "coe-photo-art/v1",
+  "status": "German-lowland-source-road-8-NOT-historical-NOT-playable",
+  "fixedArtReference": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "studyGrid": [
+    7,
+    8,
+    4,
+    2
+  ],
+  "photographicArtComposed": 8,
+  "nativePhotoPixelJoins": [
+    {
+      "a": "eu-07-08",
+      "b": "eu-08-08",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-07-08",
+      "b": "eu-07-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-08-08",
+      "b": "eu-09-08",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-08-08",
+      "b": "eu-08-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-08",
+      "b": "eu-10-08",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": true,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-08",
+      "b": "eu-09-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-10-08",
+      "b": "eu-10-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-07-09",
+      "b": "eu-08-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-08-09",
+      "b": "eu-09-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    },
+    {
+      "a": "eu-09-09",
+      "b": "eu-10-09",
+      "sourceNativePixelAdjacent": true,
+      "modernRoadMayCross": false,
+      "roadPainted": false,
+      "routeEnabled": false,
+      "visuallyApproved": false
+    }
+  ],
+  "unapprovedCrossSourceJoins": [],
+  "visuallyChecked": 0,
+  "photographedModernRoadCandidateCells": 4,
+  "physicallyRoadConnected": 0,
+  "mobileRendered": 0,
+  "nativeGamePlayable": 0,
+  "historicallyVerified": 0,
+  "finishedToday": 0,
+  "geographyWarning": "Modern German lowland photo, NOT V94 cell placement; modern farm road cannot establish historical route.",
+  "cells": [
+    {
+      "id": "eu-07-08",
+      "grid": [
+        7,
+        8
+      ],
+      "origin": [
+        10752,
+        8192
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-07-08.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        960,
+        2800,
+        2496,
+        3824
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "4b0c23e60da394c363a5fbecb7abc1623157bbcd7f8b71ab5b182ee993f2549e",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": true,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-08-08",
+      "grid": [
+        8,
+        8
+      ],
+      "origin": [
+        12288,
+        8192
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-08-08.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2496,
+        2800,
+        4032,
+        3824
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "889775e2c37d956cb198d8f12e676c34be2bc5202306be0e3cb0fbe2a5e62e44",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": true,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-09-08",
+      "grid": [
+        9,
+        8
+      ],
+      "origin": [
+        13824,
+        8192
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-09-08.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        4032,
+        2800,
+        5568,
+        3824
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "db639839fd65e1d6e0fd706cfa2d3c6d4a7a57dce92b504cfa31655f04c78f36",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": true,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-10-08",
+      "grid": [
+        10,
+        8
+      ],
+      "origin": [
+        15360,
+        8192
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-10-08.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5568,
+        2800,
+        7104,
+        3824
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "3a17e3d4e7f840a40cb80fd7a6e0a4b897f730caf50da608961ec75a3e3a1d8c",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": true,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-07-09",
+      "grid": [
+        7,
+        9
+      ],
+      "origin": [
+        10752,
+        9216
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-07-09.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        960,
+        3824,
+        2496,
+        4848
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "97f58477e7310400f1351ef558d3d01965a42659e0473c04946fed903edf5707",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": false,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-08-09",
+      "grid": [
+        8,
+        9
+      ],
+      "origin": [
+        12288,
+        9216
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-08-09.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        2496,
+        3824,
+        4032,
+        4848
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "f36408385598f88eb6cc77eae8a863c4056527c5a7d05527ebf836f48b86c48a",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": false,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-09-09",
+      "grid": [
+        9,
+        9
+      ],
+      "origin": [
+        13824,
+        9216
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-09-09.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        4032,
+        3824,
+        5568,
+        4848
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "e5ec98f0094724b44c8ec4dce38d11f2ec1d7210f6fa375a6a58a06e7311bd3e",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": false,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    },
+    {
+      "id": "eu-10-09",
+      "grid": [
+        10,
+        9
+      ],
+      "origin": [
+        15360,
+        9216
+      ],
+      "image": "terrain-grid/factory-photo/dulmen-road-8/eu-10-09.webp",
+      "imageSize": [
+        1536,
+        1024
+      ],
+      "originalSource": "https://upload.wikimedia.org/wikipedia/commons/f/ff/D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen%2C_Kirchspiel%2C_Dernekamp%2C_Feldweg_--_2025_--_0161.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sourceCrop": [
+        5568,
+        3824,
+        7104,
+        4848
+      ],
+      "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
+      "outputSha256": "eff9bc2195666eda352de7b83e0bc151901dd4177dc360810aad650cf3ca91f0",
+      "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
+      "nativePhotoUnderlay": true,
+      "unscaledOriginalPixelCrop": true,
+      "sourceBackedPhotographicArtComposed": true,
+      "sourceRegion": "Dülmen, Germany: modern 2025 image, NOT V94 cell georegistration",
+      "motif": "European lowland fields, sparse trees and an actual photographed gravel farm road",
+      "modernPhotographedRoadPresent": false,
+      "modernRoadQuarantined": true,
+      "periodSafe": false,
+      "exactPhotoGeoreferenced": false,
+      "historicallyVerified": false,
+      "artMethodApproved": false,
+      "physicallyRoadSeamChecked": false,
+      "gameplayEnabled": false,
+      "visuallyReviewedOnPhone": false,
+      "paintedRoads": [],
+      "provinceIds": [],
+      "strategicTowns": [],
+      "scenicSettlements": []
+    }
+  ]
+}

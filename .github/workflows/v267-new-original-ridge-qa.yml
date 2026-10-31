@@ -51,6 +51,7 @@ jobs:
           python - <<'PY'
           import subprocess,time
           from pathlib import Path
+          from PIL import Image, ImageStat
           from playwright.sync_api import sync_playwright
           out=Path('terrain-grid/v267-original-art-batch-01')
           server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],
@@ -67,6 +68,16 @@ jobs:
                         wait_until='domcontentloaded')
               page.wait_for_function('window.COEAtlas && COEAtlas.loaded',timeout=90000)
               page.locator('#atlasIntegratedOpen').click()
+              page.wait_for_timeout(500)
+              baseline=out/'actual-webkit-iphone-baseline-check.png'
+              page.screenshot(path=str(baseline))
+              def assert_real_pixels(path,region):
+                with Image.open(path) as im:
+                  crop=im.convert('RGB').crop(region)
+                  stats=ImageStat.Stat(crop)
+                  assert max(stats.stddev)>15, f'Blank terrain detected in {path}: stddev={stats.stddev}'
+                  assert len(crop.getcolors(crop.width*crop.height) or [])>1000, f'Low color diversity: {path}'
+              assert_real_pixels(baseline,(100,600,680,1160))
               assert page.evaluate('COEAtlas.startMarch()') is True
               page.evaluate('COEAtlas.finishMarch()')
               page.locator('#atlasOriginalNeighbors').click()
@@ -79,6 +90,14 @@ jobs:
               page.evaluate('COEAtlas.centerAt(3840,512,1.8)')
               page.wait_for_timeout(350)
               page.screenshot(path=str(out/'actual-webkit-iphone-new-ridge-whole.png'))
+              assert page.evaluate("""() => {
+                const el=document.getElementById('atlasRidgeDomFallback');
+                const r=el.getBoundingClientRect();
+                return el.complete && el.naturalWidth===1536 && el.naturalHeight===1024 &&
+                  getComputedStyle(el).display!=='none' && r.width>150 && r.height>100 &&
+                  r.left<innerWidth && r.right>0 && r.top<innerHeight && r.bottom>0;
+              }"""), 'DOM image fallback did not decode or intersect iPhone viewport'
+              assert_real_pixels(out/'actual-webkit-iphone-new-ridge-whole.png',(100,600,680,1160))
               page.locator('#atlasPlus').click()
               page.locator('#atlasMinus').click()
               page.locator('#atlasOriginalNeighbors').click()
@@ -96,6 +115,9 @@ jobs:
                 timeout=90000)
               assert direct.evaluate('COEAtlas.approvedBaselineLocked') is True
               assert direct.evaluate('COEAtlas.startMarch()') is False
+              direct.wait_for_function("document.getElementById('atlasRidgeDomFallback').naturalWidth===1536",timeout=30000)
+              direct.screenshot(path=str(out/'actual-webkit-iphone-direct-link.png'))
+              assert_real_pixels(out/'actual-webkit-iphone-direct-link.png',(100,600,680,1160))
               direct.close()
               print('PASS: direct one-link iPhone review auto-opens the NEW art without altering V123')
               browser.close()
@@ -117,6 +139,8 @@ jobs:
               folder/'actual-webkit-iphone-new-ridge-whole-thumbnail.jpg',quality=83,optimize=True)
           assert (folder/'actual-webkit-iphone-new-ridge-thumbnail.jpg').stat().st_size>12000
           assert (folder/'actual-webkit-iphone-new-ridge-whole-thumbnail.jpg').stat().st_size>12000
+          for path in ('actual-webkit-iphone-direct-link.png','actual-webkit-iphone-baseline-check.png'):
+            assert (folder/path).stat().st_size>30000
           PY
       - name: Mark mobile-rendered only after actual screenshot
         run: |
@@ -139,7 +163,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole-thumbnail.jpg
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-direct-link.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-baseline-check.png terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole-thumbnail.jpg
           git diff --cached --quiet && exit 0
           git commit -m "qa(v267): real iPhone WebKit evidence for new original ridge [skip ci]"
           for n in 1 2 3; do

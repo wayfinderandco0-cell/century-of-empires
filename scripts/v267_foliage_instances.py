@@ -65,15 +65,34 @@ def build(root: Path, out: Path):
     # Two vec4 attributes per instance: [x,ground,-y,radius] and
     # [height,hue,kind,seed]. The viewer uses one GPU instanced draw per kind.
     data = np.column_stack((x, ground, -y, radius, height, hue, kind, seed)).astype("<f4")
-    groups = []
-    packed = []
+    # Partition instances by species AND world cell. At close zoom the iPhone
+    # can draw only the visible cells, rather than all 7,819 trees every frame.
+    # Global x/z positions are never changed: neighboring cell roots stay exact.
+    groups, cell_batches, packed = [], [], []
+    offset = 0
+    cell_col = np.minimum((x // TW).astype(np.int32), COLS - 1)
+    cell_row = np.minimum((y // TH).astype(np.int32), ROWS - 1)
     for k, name in ((1, "conifer"), (0, "broadleaf")):
-        group = data[kind == k]
-        rng.shuffle(group, axis=0)  # uniform spatial LOD when drawing a prefix
-        groups.append({"kind": name, "kindCode": k, "offsetFloats": sum(a.size for a in packed),
-                       "count": int(len(group))})
-        packed.append(group)
+        group_offset, group_count = offset, 0
+        for row in range(ROWS):
+            for col in range(COLS):
+                subset = data[(kind == k) & (cell_col == col) & (cell_row == row)].copy()
+                rng.shuffle(subset, axis=0)  # spatially uniform per-cell LOD
+                count = int(len(subset))
+                cell_batches.append({
+                    "kind": name, "kindCode": k, "col": col, "row": row,
+                    "offsetFloats": offset, "count": count,
+                    "worldBounds": [col * TW, row * TH, (col + 1) * TW, (row + 1) * TH]
+                })
+                packed.append(subset)
+                offset += subset.size
+                group_count += count
+        groups.append({"kind": name, "kindCode": k,
+                       "offsetFloats": group_offset, "count": group_count})
     result = np.concatenate(packed, axis=0)
+    assert len(cell_batches) == COLS * ROWS * 2
+    assert sum(b["count"] for b in cell_batches) == len(result)
+    assert offset == result.size
     assert np.isfinite(result).all() and len(result) > 0
     assert float(distance.min()) > 27
     binary = out / "foliage-instances.bin"
@@ -88,6 +107,8 @@ def build(root: Path, out: Path):
         "strideFloats": 8,
         "total": int(len(result)),
         "groups": groups,
+        "cellBatches": cell_batches,
+        "lodLayout": "species-and-world-cell; per-cell prefix for mobile visibility",
         "minRoadClearancePixels": float(distance.min()),
         "worldBounds": [0, 0, W, H],
         "treeType": "GPU-instanced original 3D crown and trunk geometry",

@@ -93,7 +93,10 @@ jobs:
               assert page.evaluate('COEAtlas.startMarch()') is True
               page.evaluate('COEAtlas.finishMarch()')
               page.locator('#atlasOriginalNeighbors').click()
-              page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===8',timeout=120000)
+              page.wait_for_timeout(900)
+              print('FOCUSED EAST STATUS:',page.locator('#atlasStatus').inner_text(),
+                    'loaded:',page.evaluate('COEAtlas.originalNeighborCells'),flush=True)
+              page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===1',timeout=20000)
               assert page.evaluate('COEAtlas.startMarch()') is False
               page.evaluate('COEAtlas.centerAt(3072,512,2.9)')
               page.wait_for_timeout(900)

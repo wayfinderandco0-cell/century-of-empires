@@ -11,6 +11,7 @@ on:
       - scripts/v267_cartway_mesh.py
       - scripts/v267_rock_outcrops.py
       - terrain-grid/v267-foliage-overlay.js
+      - terrain-grid/v267-historical-anchors.json
       - scripts/v267_validate_heightmesh_seams.py
       - terrain-grid/v267-heightmesh-review.html
       - terrain-grid/atlas-integrated.js
@@ -70,6 +71,31 @@ jobs:
               vals=s.get('roadCrossingLocalY',s.get('roadCrossingLocalX',[]))
               assert vals and all(256<=v<=768 if s['side']=='east-west' else 256<=v<=1280 for v in vals),s
           print('PASS: eight original relief octagons, eight world-space road seams, zero finished or playable claims')
+          PY
+      - name: Verify source-backed Prague and Vienna coordinates without fictional routes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('terrain-grid/v267-historical-anchors.json').read_text())
+          pilot=json.loads(Path('generated/v267-relief-pilot/manifest.json').read_text())
+          by_id={c['id']:c for c in pilot['cells']}
+          assert a['schema']=='coe-v267-sourced-historic-place-anchors/v1'
+          assert len(a['places'])==a['historicalPlaceExistenceVerified']==2
+          assert a['historicalRoadSegmentsVerified']==a['historicallyVerified3DCells']==0
+          assert a['playableNewStrategicNodes']==a['finishedToday']==0
+          assert {p['name'] for p in a['places']}=={'Prague','Vienna'}
+          for p in a['places']:
+              assert p['source'].startswith('https://whc.unesco.org/en/')
+              assert p['historySource'].startswith('https://whc.unesco.org/en/')
+              lon,lat=p['coordinateWGS84']
+              west,south,east,north=by_id[p['cellId']]['geographicBoundsWGS84']
+              assert west<lon<east and south<lat<north,(p['name'],p['cellId'])
+              assert p['existenceDuringPeriodVerified']
+              assert not p['exactHistoricalFootprintVerified']
+              assert not p['historicalRoadsVerified']
+              assert not p['renderedIn3D'] and not p['strategicNodeEnabled']
+          print('PASS: 2 historically sourced city existences; 0 historical roads, 0 playable cities, 0 finished')
           PY
       - name: Export actual indexed 3D heightmesh geometry from shared V94 world space
         run: python scripts/v267_heightmesh_export.py --root . --out generated/v267-relief-pilot

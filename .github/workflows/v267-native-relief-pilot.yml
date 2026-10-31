@@ -48,6 +48,8 @@ jobs:
           for g in m['inlays']:
               assert not g['playable'] and not g['roadNodes']
               assert Image.open(p/g['image']).size==(512,512)
+              assert Image.open(p/g['meshGroundImage']).size==(512,512)
+              assert hashlib.sha256((p/g['meshGroundImage']).read_bytes()).hexdigest()==g['meshGroundSha256']
           assert m['status']=='original-3d-relief-candidates-NOT-V267-approved'
           assert not m['historicalRoadsVerified']
           assert len({c['sha256'] for c in m['cells']})==8
@@ -56,6 +58,10 @@ jobs:
               assert im.size==(1536,1024) and im.mode=='RGBA'
               assert im.getpixel((0,0))[3]==0 and im.getpixel((768,512))[3]==255
               assert hashlib.sha256((p/c['image']).read_bytes()).hexdigest()==c['sha256']
+              ground=Image.open(p/c['meshGroundImage'])
+              assert ground.size==(1536,1024) and ground.mode=='RGBA'
+              assert hashlib.sha256((p/c['meshGroundImage']).read_bytes()).hexdigest()==c['meshGroundSha256']
+              assert ground.tobytes()!=im.tobytes(), '3D terrain material still has painted tree sprites'
               assert c['nativeArt'] and not c['photographicCrop']
               assert not c['visualApproved'] and not c['nativeGamePlayable'] and not c['historicallyVerified']
           for s in m['seams']:
@@ -116,6 +122,7 @@ jobs:
               assert g['asset']['version']=='2.0'
               assert g['accessors'][0]['count']==6305 and g['accessors'][3]['count']==36864
               assert g['meshes'][0]['primitives'][0]['mode']==4
+              assert g['images'][0]['uri']==c['id']+'-ground.png'
               assert hashlib.sha256((p/c['binary']).read_bytes()).hexdigest()==c['sha256']
               assert not c['nativeGamePlayable'] and not c['visuallyApproved']
           for g in m['inlays']:

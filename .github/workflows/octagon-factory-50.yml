@@ -384,28 +384,28 @@ jobs:
           PY
       - name: Compose 19-cell multi-region photographic native atlas coverage
         run: python scripts/octagon_photo_registry.py
-      - name: Validate 19 photo overview derivatives and blocked cross-source joins
+      - name: Validate unified 27 photo overview derivatives and blocked cross-source joins
         run: |
           python - <<'PY'
           import hashlib,json
           from pathlib import Path
           from PIL import Image
           m=json.loads(Path('terrain-grid/factory-photo/coverage/manifest.json').read_text())
-          assert len(m['cells'])==19 and m['sourceArtworkRecords']==21
-          assert len(m['nativePhotoPixelJoins'])==18
+          assert len(m['cells'])==27 and m['sourceArtworkRecords']==29
+          assert len(m['nativePhotoPixelJoins'])==28
           assert len(m['unapprovedCrossSourceJoins'])==2
-          assert len(m['roadFreeNativeDiamondInlays'])==5
+          assert len(m['roadFreeNativeDiamondInlays'])==8
           assert m['newArtworkComposedThisRun']==0
-          assert m['newLowZoomPhotographicDerivatives']==19
+          assert m['newLowZoomPhotographicDerivatives']==27
           assert m['nativeGamePlayable']==m['finishedToday']==0
           for c in m['cells']:
               p=Path(c['previewImage'])
               assert Image.open(p).size==(384,256)
               assert hashlib.sha256(p.read_bytes()).hexdigest()==c['previewSha256']
               assert not c['gameplayEnabled'] and not c['historicallyVerified']
-          print('PASS: 19 real photo derivatives, 18 native joins, 2 blocked joins, 5 road-free inlays, zero playable')
+          print('PASS: 27 real photo derivatives, 28 native joins, 2 blocked joins, 8 road-free inlays, zero playable')
           PY
-      - name: Review native game 19-cell coverage and close-up in actual mobile WebKit
+      - name: Review native game 27-cell coverage and close-up in actual mobile WebKit
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -425,19 +425,19 @@ jobs:
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   page.locator('#atlasIntegratedOpen').click()
                   page.locator('#atlasPhotoSources').click()
-                  page.wait_for_function('window.COEAtlas.photoCells===19 && window.COEAtlas.photoInlays===5',timeout=60000)
+                  page.wait_for_function('window.COEAtlas.photoCells===27 && window.COEAtlas.photoInlays===8',timeout=60000)
                   page.locator('#atlasWhole').click()
                   page.wait_for_function('window.COEAtlas.photoLoaded>=10',timeout=60000)
                   page.wait_for_timeout(700)
-                  page.screenshot(path=str(out/'actual-webkit-iphone-19-photo-coverage.png'))
+                  page.screenshot(path=str(out/'actual-webkit-iphone-27-photo-coverage.png'))
                   assert page.evaluate('window.COEAtlas.startMarch()') is False
                   page.locator('#atlasPhotoNext').click()
                   page.wait_for_timeout(1000)
-                  page.screenshot(path=str(out/'actual-webkit-iphone-19-photo-close.png'))
+                  page.screenshot(path=str(out/'actual-webkit-iphone-27-photo-close.png'))
                   page.locator('#atlasPhotoSources').click()
                   assert page.evaluate('window.COEAtlas.nodes')==100
                   assert page.evaluate('window.COEAtlas.photoMode') is False
-                  print('PASS: 19 real photos in native WebKit, five natural road-free diamonds, zoom and V123 unchanged')
+                  print('PASS: 27 real photos in native WebKit, eight natural road-free diamonds, zoom and V123 unchanged')
                   browser.close()
           finally:
               server.terminate()

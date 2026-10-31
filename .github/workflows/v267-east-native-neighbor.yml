@@ -30,7 +30,7 @@ jobs:
       - name: Preserve immutable original art fingerprints
         run: |
           sha256sum terrain-grid/art/matrei-v121-original.webp art-reviews/v267-original-source/west-unified-native-border-unapproved.webp art-reviews/v267-original-source/south-unified-native-border-unapproved.webp > /tmp/v267-protected.sha256
-      - name: Compose ONE native forest art candidate from independently licensed material
+      - name: Compose ONE new Alpine scene from fresh CC0 sources and protected-edge lighting
         run: python scripts/v267_east_neighbor_registration.py
       - name: Validate V267 manifest, original forest and untouched baseline
         run: |
@@ -61,6 +61,8 @@ jobs:
           assert Image.open(p).size==(1536,1024)
           assert hashlib.sha256(p.read_bytes()).hexdigest()==c['assetSha256']
           report=json.loads((root/'east-matrei-native-seam-evidence.json').read_text())
+          assert report['freshRawSourceDownloaded'] is True
+          assert report['sourcePrimary']['sourceSha256'] != report['sourceForeground']['sourceSha256']
           assert report['metrics']['labMeanAbsoluteDeltaAfter']<report['metrics']['labMeanAbsoluteDeltaBefore']
           assert report['metrics']['independentPixelsIdenticalBeyondX']==480
           assert report['finished']==0
@@ -96,6 +98,9 @@ jobs:
               page.evaluate('COEAtlas.centerAt(3100,560,1.2)')
               page.wait_for_timeout(900)
               page.screenshot(path=str(out/'actual-webkit-iphone-east-matrei-registered.png'))
+              page.evaluate('COEAtlas.centerAt(3750,520,2.5)')
+              page.wait_for_timeout(500)
+              page.screenshot(path=str(out/'actual-webkit-iphone-east-matrei-close.png'))
               page.locator('#atlasPlus').click()
               page.locator('#atlasMinus').click()
               page.locator('#atlasOriginalNeighbors').click()
@@ -137,9 +142,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg terrain-grid/v267-neighbor-original-art/batch.json
+          git add terrain-grid/v267-neighbor-original-art/east-matrei-fresh-native-ground.webp terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-close.png terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-registered.png terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-thumbnail.jpg terrain-grid/v267-neighbor-original-art/batch.json
           git diff --cached --quiet && exit 0
-          git commit -m "art(v267): one source-preserving Matrei east neighbor and real WebKit evidence [skip ci]"
+          git commit -m "art(v267): one fresh CC0 source-backed Matrei east scene and real WebKit evidence [skip ci]"
           for n in 1 2 3; do
             git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
             if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
@@ -152,6 +157,8 @@ jobs:
         with:
           name: v267-east-neighbor-native-webkit
           path: |
+            terrain-grid/v267-neighbor-original-art/east-matrei-fresh-native-ground.webp
+            terrain-grid/v267-neighbor-original-art/actual-webkit-iphone-east-matrei-close.png
             terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-study.webp
             terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-before-after.webp
             terrain-grid/v267-neighbor-original-art/east-matrei-native-seam-evidence.json

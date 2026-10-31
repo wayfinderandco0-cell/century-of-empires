@@ -114,12 +114,12 @@ def main(root, out):
     cells = []
     for row in range(ROWS):
         for col in range(COLS):
-            tile = "pilot-%d-%d.png"%(col,row)
+            tile = "pilot-%d-%d-ground.png"%(col,row)
             assert (out/tile).exists()
             cells.append(pack_gltf(tile,z,out,col,row))
     inlays = []
     for col in range(COLS-1):
-        tile = "infill-%d-0.png"%col
+        tile = "infill-%d-0-ground.png"%col
         assert (out/tile).exists(), "Original continuous-raster infill missing"
         inlays.append(pack_gltf(tile,z,out,col,0,inlay=True))
     # Shared border heights and normals MUST be identical in world space.

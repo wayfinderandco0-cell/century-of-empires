@@ -133,12 +133,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         960,
-        2800,
+        2960,
         2496,
-        3824
+        3984
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "4b0c23e60da394c363a5fbecb7abc1623157bbcd7f8b71ab5b182ee993f2549e",
+      "outputSha256": "0848f4049c97a72c46199b1ffcaa574a6c147bab3bbb33d7bc104720f3cbc3e0",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -181,12 +181,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         2496,
-        2800,
+        2960,
         4032,
-        3824
+        3984
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "889775e2c37d956cb198d8f12e676c34be2bc5202306be0e3cb0fbe2a5e62e44",
+      "outputSha256": "dff2f5848b47188a0dfdcb0a5e10d3751e9ffc83e94fe19754c164e624756c57",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -229,12 +229,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         4032,
-        2800,
+        2960,
         5568,
-        3824
+        3984
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "db639839fd65e1d6e0fd706cfa2d3c6d4a7a57dce92b504cfa31655f04c78f36",
+      "outputSha256": "3a25227b32b0d5ad8b7502627be591808b04b929c2489d95e099d68939db7b09",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -277,12 +277,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         5568,
-        2800,
+        2960,
         7104,
-        3824
+        3984
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "3a17e3d4e7f840a40cb80fd7a6e0a4b897f730caf50da608961ec75a3e3a1d8c",
+      "outputSha256": "38da65051f007b8850505396820e757e88c8ac94ed3dcc591c981e13ef4cced0",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -325,12 +325,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         960,
-        3824,
+        3984,
         2496,
-        4848
+        5008
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "97f58477e7310400f1351ef558d3d01965a42659e0473c04946fed903edf5707",
+      "outputSha256": "fee94b84997734143ca78c78594ff090daf89a7f50ed65e52411df5175382912",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -373,12 +373,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         2496,
-        3824,
+        3984,
         4032,
-        4848
+        5008
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "f36408385598f88eb6cc77eae8a863c4056527c5a7d05527ebf836f48b86c48a",
+      "outputSha256": "cca99ba6d5f643f83a754cf0b4395c4f158581f07f496524fb67fb053f67c861",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -421,12 +421,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         4032,
-        3824,
+        3984,
         5568,
-        4848
+        5008
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "e5ec98f0094724b44c8ec4dce38d11f2ec1d7210f6fa375a6a58a06e7311bd3e",
+      "outputSha256": "bc2eab2994ddd5d8c1ac62488c242761509fe9f298d6fd4155d8247fc582df78",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,
@@ -469,12 +469,12 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "sourceCrop": [
         5568,
-        3824,
+        3984,
         7104,
-        4848
+        5008
       ],
       "sourceSha256": "cb6f0c911c88ee15d21de151f6c71ed03e180ed7d4e6724b7729244e635cea25",
-      "outputSha256": "eff9bc2195666eda352de7b83e0bc151901dd4177dc360810aad650cf3ca91f0",
+      "outputSha256": "b6798be5de2f8de28443f057d54da7b2cd602003971504ffaf7938aca1374053",
       "nativePhotoSourceGroup": "dulmen-germany-drone-original-2025",
       "nativePhotoUnderlay": true,
       "unscaledOriginalPixelCrop": true,

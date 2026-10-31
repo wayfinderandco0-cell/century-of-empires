@@ -39,7 +39,7 @@ async function loadMesh(name,worldX,worldY){
  let ac=g.accessors[3],bv=g.bufferViews[ac.bufferView],indices=new Uint32Array(bytes,bv.byteOffset+ac.byteOffset,ac.count);
  let ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
  gl.bindVertexArray(null);
- const img=new Image();img.src=base+name+".png";await img.decode();
+ const img=new Image();img.src=base+name+"-ground.png";await img.decode();
  const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.generateMipmap(gl.TEXTURE_2D);
  return {vao,tex,count:ac.count,model:translation(worldX,0,-worldY),inlay:name.startsWith('infill-')}

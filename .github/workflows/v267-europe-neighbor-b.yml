@@ -1,0 +1,145 @@
+name: V267 Europe batch B - eight additional layered scenic art studies
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_europe_neighbor_batch_b.py
+      - terrain-grid/atlas-integrated.js
+      - .github/workflows/v267-europe-neighbor-b.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-europe-b
+  cancel-in-progress: false
+jobs:
+  eight-original-european-studies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install photographic composition dependencies
+        run: python -m pip install --disable-pip-version-check pillow numpy
+      - name: Compose eight additional geographically sourced European studies
+        run: python scripts/v267_europe_neighbor_batch_b.py
+      - name: Validate protected baseline and second batch without false roads or history
+        run: |
+          node scripts/test_atlas_manifest.js
+          node scripts/test_v267_art_factory_contract.js
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const gate=require('./terrain-grid/v267-art-factory-contract.js');
+          const base=JSON.parse(fs.readFileSync('terrain-grid/atlas-cells.json'));
+          const first=JSON.parse(fs.readFileSync('terrain-grid/v267-neighbor-original-art/batch.json'));
+          const second=JSON.parse(fs.readFileSync('terrain-grid/v267-europe-neighbor-b/batch.json'));
+          gate.assertBase(base);
+          for(const batch of [first,second]){
+            const counts=gate.validateBatch(batch,base);
+            assert.strictEqual(counts.candidateMetadata,8);
+            assert.strictEqual(counts.originalArtComposed,8);
+            for(const key of ['roadConnected','visuallyReviewed','historicallyVerified','nativePlayable','userApproved','netFinishedToday'])
+              assert.strictEqual(counts[key],0,key);
+          }
+          const all=[...base.cells,...first.cells,...second.cells];
+          assert.strictEqual(new Set(all.map(c=>c.origin.join(','))).size,19,'world-cell overlap');
+          assert.strictEqual(new Set(all.map(c=>c.id)).size,19,'reused tile id');
+          const coords=new Set(all.map(c=>c.origin.join(',')));
+          const neighbors=(c)=>[[1536,0],[-1536,0],[0,1024],[0,-1024]].some(([dx,dy])=>coords.has([c.origin[0]+dx,c.origin[1]+dy].join(',')));
+          assert(second.cells.every(neighbors),'disconnected scenic candidate');
+          console.log('PASS: 19 unique atlas positions, 16 unapproved scenic candidates, protected 3 unchanged');
+          NODE
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          from PIL import Image
+          out=Path('terrain-grid/v267-europe-neighbor-b')
+          batch=json.loads((out/'batch.json').read_text())
+          assert len(batch['cells'])==8
+          assert len({c['sourcePrimary']['sourceSha256'] for c in batch['cells']})==8
+          assert len({c['assetSha256'] for c in batch['cells']})==8
+          for cell in batch['cells']:
+              p=Path(cell['art'])
+              assert Image.open(p).size==(1536,1024)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==cell['assetSha256']
+              assert cell['roadPorts']==[] and not cell['nativePlayable']
+          print('PASS: eight distinct new source-backed scenic image files')
+          PY
+      - name: Install WebKit only after art provenance succeeds
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Render all sixteen studies in iPhone-sized WebKit with V123 march and zoom
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-europe-neighbor-b')
+          server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.5)
+              with sync_playwright() as pw:
+                  browser=pw.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+                  errors=[]
+                  page.on('pageerror',lambda e: errors.append(str(e)))
+                  page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=2',wait_until='domcontentloaded')
+                  page.wait_for_function('window.COEAtlas && window.COEAtlas.loaded',timeout=90000)
+                  assert page.evaluate('COEAtlas.nodes')==100
+                  assert len(page.evaluate('COEAtlas.seams'))==2
+                  page.locator('#atlasIntegratedOpen').click()
+                  assert page.evaluate('COEAtlas.startMarch()') is True
+                  page.evaluate('COEAtlas.finishMarch()')
+                  page.locator('#atlasOriginalNeighbors').click()
+                  page.wait_for_function('COEAtlas.originalNeighborVisible && COEAtlas.originalNeighborCells===16',timeout=120000)
+                  page.locator('#atlasWhole').click()
+                  page.wait_for_timeout(1200)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-sixteen-scenes.png'))
+                  page.evaluate('COEAtlas.centerAt(3840,3584,2.4)')
+                  page.wait_for_timeout(550)
+                  page.screenshot(path=str(out/'actual-webkit-iphone-new-southern-close.png'))
+                  page.locator('#atlasPlus').click()
+                  page.locator('#atlasMinus').click()
+                  page.locator('#atlasOriginalNeighbors').click()
+                  assert page.evaluate('COEAtlas.originalNeighborVisible') is False
+                  assert page.evaluate('COEAtlas.approvedBaselineLocked') is True
+                  assert page.evaluate('COEAtlas.nodes')==100
+                  assert not errors,errors
+                  print('PASS iPhone WebKit 390x844: 16 scenic studies, zoom, unchanged protected V123 army')
+                  browser.close()
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Commit original scenic assets and real WebKit evidence only to development branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-europe-neighbor-b/
+          if git diff --cached --quiet; then
+            echo "No changed scenic assets"
+            exit 0
+          fi
+          git commit -m "art(v267): eight more distinct European layered scenic studies and iPhone WebKit evidence [skip ci]"
+          for n in 1 2 3; do
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
+            sleep 5
+          done
+          exit 1
+      - name: Keep art and screenshots as review artifacts if push fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-europe-neighbor-b-webkit
+          path: terrain-grid/v267-europe-neighbor-b/
+          retention-days: 14
+          if-no-files-found: warn

@@ -38,7 +38,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        10.5,
+        48.458333,
+        14.0,
+        50.5
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-1-0",
@@ -58,7 +70,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        14.0,
+        48.458333,
+        17.5,
+        50.5
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-2-0",
@@ -78,7 +102,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        17.5,
+        48.458333,
+        21.0,
+        50.5
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-3-0",
@@ -98,7 +134,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        21.0,
+        48.458333,
+        24.5,
+        50.5
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-0-1",
@@ -118,7 +166,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        10.5,
+        46.416667,
+        14.0,
+        48.458333
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-1-1",
@@ -138,7 +198,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        14.0,
+        46.416667,
+        17.5,
+        48.458333
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-2-1",
@@ -158,7 +230,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        17.5,
+        46.416667,
+        21.0,
+        48.458333
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     },
     {
       "id": "pilot-3-1",
@@ -178,7 +262,19 @@
       "photographicCrop": false,
       "visualApproved": false,
       "nativeGamePlayable": false,
-      "historicallyVerified": false
+      "historicallyVerified": false,
+      "geographicBoundsWGS84": [
+        21.0,
+        46.416667,
+        24.5,
+        48.458333
+      ],
+      "historicalEvidence": {
+        "period": "1780-1880",
+        "roadSources": [],
+        "settlementSources": [],
+        "status": "unverified"
+      }
     }
   ],
   "seams": [
@@ -310,5 +406,18 @@
   ],
   "meshSourceHeightfield": "heightfield-step16.npy",
   "meshSourceHeightfieldSha256": "e553482c123c42ef3c221cc1ab22e0eabc14bd7d69cbe60ee4491c719dbc20b9",
-  "meshGroundArtAligned": true
+  "meshGroundArtAligned": true,
+  "geographicReference": {
+    "projection": "WGS84 equirectangular",
+    "extent": [
+      -14.0,
+      26.0,
+      49.0,
+      75.0
+    ],
+    "sourceManifest": "terrain-v94/manifest.json",
+    "sourceElevation": "Mapzen/AWS Terrarium z8",
+    "sourceVegetation": "Natural Earth II idealized pre-modern landcover; NOT verified 1780 forest survey"
+  },
+  "scaleLimitation": "Regional tiles span degrees; 3D tree instances are illustrative forest markers, NOT physically scaled individual trees."
 }

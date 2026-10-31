@@ -478,15 +478,31 @@ jobs:
           # Candidate metadata and V94 previews must be durable too. They
           # remain explicitly UNAPPROVED and do not count toward finished art.
           git add generated/octagon-factory/ terrain-grid/factory-photo/
+          # Browser PNGs and screenshot-derived thumbnails vary between runs
+          # even when the actual terrain pixels are identical. Preserve fresh
+          # mobile evidence in the Actions artifact, not as an hourly binary
+          # commit that causes conflict/rebase churn and version inflation.
+          while IFS= read -r -d '' file; do
+            case "$file" in
+              *actual-*.png|*actual-*.jpg|*actual-*.webp|*actual-*.b64)
+                git restore --staged -- "$file" ;;
+            esac
+          done < <(git diff --cached --name-only -z)
           if ! git diff --cached --quiet; then
-            git commit -m "Compose source-backed native photo atlas batches and WebKit review"
+            git commit -m "Commit changed source-backed photographic art and road evidence"
             if ! git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then
-              # Concurrent code commits may advance the same isolated branch.
-              # Never force-push: replay this art-only commit on the latest head.
               git fetch origin terrain-v267-three-original-art-prototype-20261028
-              git rebase origin/terrain-v267-three-original-art-prototype-20261028
-              git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+              # Do not replay stale art from an old code snapshot over a
+              # concurrent script/workflow change. The artifact still uploads.
+              if ! git diff --quiet HEAD^ origin/terrain-v267-three-original-art-prototype-20261028 -- scripts/ .github/workflows/ terrain-grid/atlas-integrated.js terrain-grid/atlas-photo-stream.js; then
+                echo "Source code changed during generation; skipping stale art commit (artifact preserved)."
+              else
+                git rebase origin/terrain-v267-three-original-art-prototype-20261028
+                git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+              fi
             fi
+          else
+            echo "No changed source art/metadata; skipping hourly no-op commit."
           fi
       - name: Upload staging manifests and real mobile screenshots
         uses: actions/upload-artifact@v4

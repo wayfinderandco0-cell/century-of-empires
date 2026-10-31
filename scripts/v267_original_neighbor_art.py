@@ -31,7 +31,7 @@ SPEC=[
 UA="CenturyOfEmpiresOriginalArt/1.0 (CC0 provenance audit; github.com/wayfinderandco0-cell/century-of-empires/issues/9)"
 def get(url):
     last=None
-    for pause in (0,5,15):
+    for pause in (0,15,35):
         if pause:time.sleep(pause)
         try:
             req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/json,image/*"})
@@ -49,13 +49,20 @@ def commons(title):
     license_text=re.sub("<[^>]*>","",md.get("LicenseShortName",{}).get("value","")).upper()
     if "CC0" not in license_text and "CC-ZERO" not in license_text:
         raise RuntimeError("Source not verified CC0: "+title+" / "+license_text)
-    raw=get(info.get("thumburl") or info["url"])
+    # Original file CDN often has a different throttle from Commons thumbnails.
+    # Never replace a failed source with a different image or unlicensed bytes.
+    try:
+        raw=get(info["url"])
+        source_url=info["url"]
+    except RuntimeError:
+        raw=get(info.get("thumburl") or info["url"])
+        source_url=info.get("thumburl") or info["url"]
     im=Image.open(io.BytesIO(raw)).convert("RGB")
     if im.width<1600 or im.height<1050:raise RuntimeError("Insufficient source resolution "+title)
     return im,{"title":title,"page":"https://commons.wikimedia.org/wiki/File:"+
       urllib.parse.quote(title.replace(" ","_")),"sourceSha256":hashlib.sha256(raw).hexdigest(),
       "license":"CC0 1.0","licenseUrl":"https://creativecommons.org/publicdomain/zero/1.0/",
-      "download":info.get("thumburl") or info["url"],"sourceDimensions":list(im.size)}
+      "download":source_url,"sourceDimensions":list(im.size)}
 def window(im,focus):
     """Single camera-perspective crop; never nonuniformly stretch trees."""
     w,h=im.size

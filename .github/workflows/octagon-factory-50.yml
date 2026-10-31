@@ -382,6 +382,31 @@ jobs:
               (out/(stem+'-thumbnail.jpg.b64')).write_text(base64.b64encode(buf.getvalue()).decode('ascii'))
               print(stem,'actual source',source.stat().st_size,'bytes; review JPEG',len(buf.getvalue()),'bytes')
           PY
+      - name: Extract source-native road surface survey candidate from eight German photos
+        run: python scripts/octagon_dulmen_road_evidence.py
+      - name: Render actual mobile WebKit road-contact review (NOT gameplay)
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          root=Path('terrain-grid/factory-photo/dulmen-road-8')
+          data=json.loads((root/'road-source-survey.json').read_text())
+          assert len(data['candidateSeams'])==3
+          assert len(data['routes'])==4
+          assert not data['historicallyVerified'] and not data['nativeGamePlayable']
+          assert not data['humanRoadContactApproved'] and data['finishedToday']==0
+          with sync_playwright() as w:
+              browser=w.webkit.launch(headless=True)
+              page=browser.new_page(viewport={'width':390,'height':844},
+                  device_scale_factor=2,is_mobile=True,has_touch=True)
+              page.goto((root.resolve()/'road-source-survey.html').as_uri())
+              page.wait_for_function('Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)',timeout=60000)
+              page.screenshot(path=str(root/'actual-webkit-iphone-road-survey.png'),full_page=True)
+              assert page.locator('img').count()==2
+              browser.close()
+          print('PASS: source-road evidence and real WebKit screenshot; zero historical/playable claims')
+          PY
       - name: Compose 19-cell multi-region photographic native atlas coverage
         run: python scripts/octagon_photo_registry.py
       - name: Validate unified 27 photo overview derivatives and blocked cross-source joins

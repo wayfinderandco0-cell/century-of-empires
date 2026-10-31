@@ -89,6 +89,17 @@ jobs:
             server.terminate()
             server.wait(timeout=5)
           PY
+      - name: Save small inspectable image of the actual WebKit screenshot
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          folder=Path('terrain-grid/v267-original-art-batch-01')
+          with Image.open(folder/'actual-webkit-iphone-new-ridge.png') as im:
+            im.convert('RGB').resize((390,844),Image.Resampling.LANCZOS).save(
+              folder/'actual-webkit-iphone-new-ridge-thumbnail.jpg',quality=83,optimize=True)
+          assert (folder/'actual-webkit-iphone-new-ridge-thumbnail.jpg').stat().st_size>12000
+          PY
       - name: Mark mobile-rendered only after actual screenshot
         run: |
           python - <<'PY'
@@ -110,7 +121,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png
+          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg
           git diff --cached --quiet && exit 0
           git commit -m "qa(v267): real iPhone WebKit evidence for new original ridge [skip ci]"
           for n in 1 2 3; do

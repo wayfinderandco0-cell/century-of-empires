@@ -33,7 +33,7 @@ let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Opt-in source-layered scenic art. Never changes the protected V123 road graph.
-let neighborPilotCells=[],neighborPilotImages={},neighborPilotShown=false,neighborPilotCamera=null;
+let neighborPilotCells=[],neighborPilotImages={},neighborPilotInlays=[],neighborPilotShown=false,neighborPilotCamera=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
 const pointers=new Map();let tap=null,prevPinch=null;
 function status(s){$("atlasStatus").textContent=s;}
@@ -58,6 +58,20 @@ function draw(){
   return;
  }
  if(!loaded)return;
+ // Non-playable scenic diamonds have no routes, ownership or army hit areas.
+ // Fill their real world-space polygons BEFORE drawing the adjacent octagons.
+ if(neighborPilotShown)for(const infill of neighborPilotInlays){
+  const img=neighborPilotImages[infill.sourceCell];if(!img)continue;
+  const pts=infill.polygon.map(worldToScreen);
+  const xs=infill.polygon.map(p=>p[0]),ys=infill.polygon.map(p=>p[1]);
+  const left=Math.min(...xs),top=Math.min(...ys);
+  const right=Math.max(...xs),bottom=Math.max(...ys);
+  const pos=worldToScreen([left,top]);
+  const [sx,sy,sw,sh]=infill.sourceRect;
+  ctx.save();polygon(ctx,pts);ctx.clip();
+  ctx.drawImage(img,sx,sy,sw,sh,pos[0],pos[1],(right-left)*scale,(bottom-top)*scale);
+  ctx.restore();
+ }
  // Draw only composed original neighbor candidates, under immutable approved art.
  if(neighborPilotShown)for(const tile of neighborPilotCells){
   const img=neighborPilotImages[tile.id];if(!img)continue;
@@ -244,11 +258,14 @@ pilotButton.onclick=async()=>{
     pairs.push([cell.id,img]);
    }
    neighborPilotCells=all;neighborPilotImages=Object.fromEntries(pairs);
+   neighborPilotInlays=batches.flatMap(b=>b.decorativeInlays||[]).filter(
+     i=>all.some(c=>c.id===i.sourceCell));
   }
   neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
   halt();
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
-  if(focusedEastPilot||focusedV267NewPilot)centerAt(3072,512,2.9);
+  if(focusedV267NewPilot)centerAt(3840,512,1.8);
+  else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
   status(focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message);}
@@ -348,6 +365,9 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
+ if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
+  open();pilotButton.click();
+ }
 })().catch(error=>{status("Atlas load blocked: "+error.message);root.COEAtlasLoadError=error.message;});
 requestAnimationFrame(frame);
 })(window);

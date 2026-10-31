@@ -76,6 +76,9 @@ jobs:
               page.evaluate('COEAtlas.centerAt(3072,512,2.9)')
               page.wait_for_timeout(850)
               page.screenshot(path=str(out/'actual-webkit-iphone-new-ridge.png'))
+              page.evaluate('COEAtlas.centerAt(3840,512,1.8)')
+              page.wait_for_timeout(350)
+              page.screenshot(path=str(out/'actual-webkit-iphone-new-ridge-whole.png'))
               page.locator('#atlasPlus').click()
               page.locator('#atlasMinus').click()
               page.locator('#atlasOriginalNeighbors').click()
@@ -98,7 +101,11 @@ jobs:
           with Image.open(folder/'actual-webkit-iphone-new-ridge.png') as im:
             im.convert('RGB').resize((390,844),Image.Resampling.LANCZOS).save(
               folder/'actual-webkit-iphone-new-ridge-thumbnail.jpg',quality=83,optimize=True)
+          with Image.open(folder/'actual-webkit-iphone-new-ridge-whole.png') as im:
+            im.convert('RGB').resize((390,844),Image.Resampling.LANCZOS).save(
+              folder/'actual-webkit-iphone-new-ridge-whole-thumbnail.jpg',quality=83,optimize=True)
           assert (folder/'actual-webkit-iphone-new-ridge-thumbnail.jpg').stat().st_size>12000
+          assert (folder/'actual-webkit-iphone-new-ridge-whole-thumbnail.jpg').stat().st_size>12000
           PY
       - name: Mark mobile-rendered only after actual screenshot
         run: |
@@ -121,7 +128,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg
+          git add terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole-thumbnail.jpg
           git diff --cached --quiet && exit 0
           git commit -m "qa(v267): real iPhone WebKit evidence for new original ridge [skip ci]"
           for n in 1 2 3; do

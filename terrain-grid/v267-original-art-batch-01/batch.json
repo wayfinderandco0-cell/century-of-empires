@@ -209,7 +209,40 @@
     }
   ],
   "links": [],
-  "decorativeInlays": [],
+  "decorativeInlays": [
+    {
+      "id": "matrei-east-ridge-road-free-diamond",
+      "polygon": [
+        [
+          3072,
+          768
+        ],
+        [
+          3328,
+          1024
+        ],
+        [
+          3072,
+          1280
+        ],
+        [
+          2816,
+          1024
+        ]
+      ],
+      "sourceCell": "matrei-east-ridge",
+      "sourceRect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "playable": false,
+      "roads": [],
+      "roadPorts": [],
+      "notes": "Decorative only; no traversable road, village, bridge or territory."
+    }
+  ],
   "generatedCandidates": 8,
   "originalArtComposed": 1,
   "visuallyReviewed": 1,

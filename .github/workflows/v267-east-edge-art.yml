@@ -1,0 +1,63 @@
+name: V267 original-art east seam candidate
+
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - scripts/v267_east_edge_composer.py
+      - .github/workflows/v267-east-edge-art.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v267-east-edge-art-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact development branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install open-source image tooling
+        run: python -m pip install --disable-pip-version-check "pillow>=10,<13" "numpy>=1.26,<3"
+      - name: Compose source-registered east-edge study
+        run: python scripts/v267_east_edge_composer.py
+      - name: Verify reproducibility and exact encoded border
+        run: python scripts/v267_east_edge_composer.py --check
+      - name: Upload visual evidence even if branch push is forbidden
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-east-edge-art-and-qa
+          path: |
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-comparison.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-qa.json
+          if-no-files-found: error
+      - name: Commit generated artwork only to the development branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "terrain-v267-three-original-art-prototype-20261028"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-comparison.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-qa.json
+          if git diff --cached --quiet; then
+            echo "Art assets already current"
+          else
+            git commit -m "Generate V267 east-ridge seam-conditioned art and comparison"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          fi

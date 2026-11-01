@@ -1,0 +1,52 @@
+{
+  "id": "countryside-03",
+  "title": "Road-free forest, meadow and limestone outcrop — original art candidate",
+  "provenance": {
+    "method": "new original AI-assisted raster landscape generated in prior ChatGPT session; no existing terrain image cloned",
+    "sourceMaster": "a_detailed_realistic_aerial_isometric_landscape.png (1536×1024 RGB, session artifact)",
+    "sourceMasterSHA256": "575206d77c60f748051320a282327c7de6028331d1cce551a3f817fd92d9e576",
+    "committedMaster": "terrain-grid/v267-countryside-original/forest-meadow-03-master.webp",
+    "committedMasterSHA256": "41ebb8aed0516dc0269555dd1228d0e23c0b414e50aa7b0a445405fffe667120",
+    "masterWebPQuality": 90,
+    "mobileDerivative": "terrain-grid/v267-countryside-original/forest-meadow-03-mobile.webp",
+    "mobileDerivativeSHA256": "42a07cc272f67047d4e7151152d19fcb8a4e411fd4f5d34377f2b2989d1e955c",
+    "mobileWebPQuality": 65,
+    "originalDimensions": [
+      1536,
+      1024
+    ],
+    "referenceApprovedCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+    "historicalTopographyClaim": false
+  },
+  "scene": {
+    "biome": [
+      "Alpine conifer forest",
+      "meadow",
+      "rocky limestone slope"
+    ],
+    "roads": [],
+    "rivers": [],
+    "bridges": [],
+    "towns": [],
+    "strategicNodes": [],
+    "historicClaims": []
+  },
+  "integration": {
+    "displayOnly": true,
+    "origin": [
+      3072,
+      1024
+    ],
+    "nativeGameReview": "index.html?originalArtPilot=countryside03&autoOpen=1",
+    "standaloneReview": "v267-countryside-03-review.html",
+    "v123GraphModified": false,
+    "armyTraversable": false,
+    "originalApprovedArtModified": false,
+    "visualReview": "new raster composition inspected; style plausibility promising; adjacent landform seam not verified",
+    "roadSeamsVerified": false,
+    "riverCrossingsVerified": false,
+    "webKitVerified": false,
+    "userApproved": false,
+    "netFinished": false
+  }
+}

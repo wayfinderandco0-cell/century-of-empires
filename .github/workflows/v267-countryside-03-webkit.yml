@@ -1,0 +1,72 @@
+name: V267 countryside-03 new original art native iPhone WebKit
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - '.github/workflows/v267-countryside-03-webkit.yml'
+      - 'v267-countryside-03-review.html'
+      - 'scripts/test-countryside-03-webkit.mjs'
+      - 'terrain-grid/atlas-integrated.js'
+      - 'terrain-grid/v267-countryside-original/forest-meadow-03-*.webp'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-countryside03-webkit-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  original-countryside-native-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and WebKit
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - name: Verify locked originals and source art dimensions
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('terrain-grid/atlas-cells.json').read_text())
+          assert m['referenceCommit']=='456107f28c8db1f87522bbc7511809b2a215f6fb'
+          assert [c['id'] for c in m['cells']]==['west','matrei','south']
+          c=next(x for x in m['artCandidates'] if x['id']=='countryside-03')
+          assert c['roadKeys']==[] and c['riverKeys']==[] and not c['userApproval']
+          assert Path(c['art']).stat().st_size>500000
+          print('Locked V267 original manifest unchanged; genuine new raster exists.')
+          PY
+      - name: Serve game and new review
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/coe-c03-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8765/v267-countryside-03-review.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/coe-c03-http.log
+          exit 1
+      - name: Render standalone and native 390x844 WebKit and test protected army movement
+        run: node scripts/test-countryside-03-webkit.mjs
+      - name: Upload real WebKit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: countryside03-original-native-iphone
+          if-no-files-found: warn
+          path: |
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03.png
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png
+            terrain-grid/v267-countryside-original/webkit-iphone-countryside-03-result.json
+      - name: Preserve passing screenshot on development branch
+        if: success()
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png terrain-grid/v267-countryside-original/webkit-iphone-countryside-03-result.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record actual iPhone WebKit review of original countryside-03 art"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

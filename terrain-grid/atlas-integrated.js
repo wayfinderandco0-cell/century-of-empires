@@ -55,6 +55,8 @@ ridgeDOM.addEventListener("error",()=>{
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
+// Independent road-free raster candidate; never enters V123 graph or V94 saves.
+const C03_ORIGIN=[3072,1024];let countryside03Image=null,countryside03Visible=false;
 // Opt-in source-layered scenic art. Never changes the protected V123 road graph.
 let neighborPilotCells=[],neighborPilotImages={},neighborPilotInlays=[],neighborPilotShown=false,neighborPilotCamera=null,neighborPilotStream=null,eastBorderOverlay=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
@@ -131,6 +133,13 @@ function draw(){
   const pos=worldToScreen(tile.origin),poly=worldPolygon(tile).map(worldToScreen);
   ctx.save();polygon(ctx,poly);ctx.clip();
   ctx.drawImage(img,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+ }
+ // Display-only full-resolution countryside art; protected V123 tiles render on top.
+ if(countryside03Visible&&countryside03Image){
+  const pos=worldToScreen(C03_ORIGIN),poly=worldPolygon({origin:C03_ORIGIN}).map(worldToScreen);
+  ctx.save();polygon(ctx,poly);ctx.clip();
+  ctx.drawImage(countryside03Image,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+  ctx.save();polygon(ctx,poly);ctx.strokeStyle="#efc978";ctx.lineWidth=2;ctx.stroke();ctx.restore();
  }
  const diamond=manifest.decorativeInlays[0],src=images[diamond.sourceCell];
  ctx.save();polygon(ctx,diamond.polygon.map(worldToScreen));ctx.clip();
@@ -247,6 +256,10 @@ function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.ge
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
 $("atlasWhole").onclick=()=>{
+ if(countryside03Visible){
+  const fitted=Math.min(Math.max(100,w-24)/4608,Math.max(100,h-155)/2048)/base;
+  centerAt(2304,1024,Math.max(.15,fitted));return;
+ }
  if(neighborPilotShown&&neighborPilotCells.length){
   const all=[...manifest.cells,...neighborPilotCells];
   const xs=all.map(c=>c.origin[0]),ys=all.map(c=>c.origin[1]);
@@ -276,6 +289,7 @@ $("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
  * The three approved Alpine octagons and their V123 army stay intact.
  */
 const studyParams=new URLSearchParams(root.location.search);
+const countryside03Pilot=studyParams.get("originalArtPilot")==="countryside03";
 // Original scene expansion is a review-only opt-in; no invented road nodes.
 const pilotButton=document.createElement("button");
 pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
@@ -303,7 +317,7 @@ const ridgeV11Path="terrain-grid/v267-original-art-batch-01/matrei-east-riparian
 const ridgeV11Overlay="terrain-grid/v267-original-art-batch-01/matrei-east-v11-matrei-display-overlay.png";
 const ridgeV2Overlay="terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp";
 const ridgeGradePath="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
-pilotButton.textContent=ridgeV11Pilot?"EAST-01 V11 roadbed terrain QA · route disabled":ridgeV10Pilot?"EAST-01 V10 ground-rut QA · route disabled":ridgeV9Pilot?"EAST-01 V9 local seam QA · route disabled":ridgeV8Pilot?"EAST-01 V8 narrow dirt · QA only":ridgeV7Pilot?"EAST-01 V7 cleared road · QA only":ridgeV6Pilot?"EAST-01 V6 road · QA only":ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
+pilotButton.textContent=countryside03Pilot?"New COUNTRYSIDE-03 · no roads":ridgeV11Pilot?"EAST-01 V11 roadbed terrain QA · route disabled":ridgeV10Pilot?"EAST-01 V10 ground-rut QA · route disabled":ridgeV9Pilot?"EAST-01 V9 local seam QA · route disabled":ridgeV8Pilot?"EAST-01 V8 narrow dirt · QA only":ridgeV7Pilot?"EAST-01 V7 cleared road · QA only":ridgeV6Pilot?"EAST-01 V6 road · QA only":ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 if(focusedV267NewPilot){
@@ -316,6 +330,27 @@ if(focusedV267NewPilot){
  $("atlasBar").querySelector("div").appendChild(direct);
 }
 pilotButton.onclick=async()=>{
+ if(countryside03Pilot){
+  try{
+   if(!countryside03Image){
+    status("Loading NEW original forest / meadow / rock artwork…");
+    countryside03Image=await imageLoad("terrain-grid/v267-countryside-original/forest-meadow-03-master.webp");
+    if(countryside03Image.decode)await countryside03Image.decode().catch(()=>{});
+    if(countryside03Image.naturalWidth!==1536||countryside03Image.naturalHeight!==1024)throw Error("Countryside artwork dimensions changed");
+   }
+   countryside03Visible=!countryside03Visible;
+   if(countryside03Visible){
+    const fitted=Math.min(Math.max(180,w-24)/1536,Math.max(180,h-170)/1024)/base;
+    centerAt(3840,1536,Math.max(.15,fitted));
+    status("NEW COUNTRYSIDE-03 original raster · NO roads/town · NOT user-approved or traversable · V123 WEST/MATREI/SOUTH movement intact");
+   }else{
+    centerAt(1536,1024,.96);
+    status("Approved WEST/MATREI/SOUTH only · V123 movement intact");
+   }
+   draw();
+  }catch(e){status("Countryside-03 art failed to load: "+e.message);}
+  return;
+ }
  if(neighborPilotShown){neighborPilotShown=false;ridgeEmergency=false;eastBorderOverlay=null;
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
   if(neighborPilotCamera){center=neighborPilotCamera.center;zoom=neighborPilotCamera.zoom;scale=base*zoom;}
@@ -509,6 +544,9 @@ const API={
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  get approvedBaselineLocked(){return !!manifest&&root.COEV267ArtContract?.assertBase(manifest)===true},
+ get countryside03Loaded(){return !!countryside03Image&&countryside03Image.naturalWidth===1536},
+ get countryside03Visible(){return countryside03Visible},
+ get countryside03Dimensions(){return countryside03Image?[countryside03Image.naturalWidth,countryside03Image.naturalHeight]:null},
  get originalNeighborCells(){return neighborPilotCells.length},get originalNeighborVisible(){return neighborPilotShown},
  get originalNeighborCache(){return neighborPilotStream?.stats()||null},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
@@ -530,6 +568,10 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
+ if(countryside03Pilot&&studyParams.get("autoOpen")==="1"){
+  if(!shown)open();
+  pilotButton.click();
+ }
  if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();
   pilotButton.click();

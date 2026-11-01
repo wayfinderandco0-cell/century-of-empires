@@ -497,6 +497,30 @@
       "playableIntegrated": false,
       "historicallyVerified": false,
       "preview": "v267-countryside-02-review.html"
+    },
+    {
+      "id": "countryside-03",
+      "biome": "alpine-forest-meadow-limestone",
+      "art": "terrain-grid/v267-countryside-original/forest-meadow-03-master.webp",
+      "mobileArt": "terrain-grid/v267-countryside-original/forest-meadow-03-mobile.webp",
+      "source": "terrain-grid/v267-countryside-original/forest-meadow-03-source.json",
+      "roadKeys": [],
+      "riverKeys": [],
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "nativeWorldOrigin": [
+        3072,
+        1024
+      ],
+      "visualApproval": "pending",
+      "userApproval": false,
+      "webKitVerified": false,
+      "playableIntegrated": false,
+      "nativeCanvasDisplayCandidate": true,
+      "historicallyVerified": false,
+      "preview": "v267-countryside-03-review.html",
+      "nativePreview": "index.html?originalArtPilot=countryside03&autoOpen=1"
     }
   ]
 }

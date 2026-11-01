@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Century of Empires · V267 new original countryside art review</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0d1713;color:#f5e3c3;font:12px system-ui}
+header,footer{position:fixed;z-index:4;left:0;right:0;background:#11251eea;border-color:#ac9266;border-style:solid;padding:7px 8px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+header{top:0;border-width:0 0 1px}footer{bottom:0;border-width:1px 0 0;line-height:1.35}
+strong{font:700 14px Georgia,serif;margin-right:auto}button,a{border:1px solid #b89b69;border-radius:6px;color:#f7e6c8;background:#234438;min-height:38px;padding:8px;text-decoration:none}
+#map{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
+#status{font-size:11px}#status b{color:#f6c477}
+</style></head><body>
+<canvas id="map" aria-label="Original approved three Alpine octagons and new unapproved road-free countryside candidate"></canvas>
+<header><strong>V267 · NEW COUNTRYSIDE-03</strong><button id="all">Whole</button><button id="new">New art</button><button id="plus">+</button><button id="minus">−</button><a href="index.html?originalArtPilot=countryside03&amp;autoOpen=1">Native game canvas</a><a href="v267-ios-safari-review.html?southArt=coherent">Playable originals</a></header>
+<footer><span id="status"><b>NEW FULL-RESOLUTION ALPINE ART · ROAD-FREE · NOT YET APPROVED OR TRAVERSABLE.</b> Drag or pinch to inspect. Three original tiles are unchanged.</span></footer>
+<script>
+"use strict";
+const c=document.getElementById("map"),ctx=c.getContext("2d"),status=document.getElementById("status");
+const W=1536,H=1024,C=256,tiles=[
+{id:"WEST",x:0,y:0,src:"art-reviews/v267-original-source/west-unified-native-border-unapproved.webp",approved:true},
+{id:"MATREI",x:1536,y:0,src:"terrain-grid/art/matrei-v121-original.webp",approved:true},
+{id:"SOUTH",x:1536,y:1024,src:"art-reviews/v267-original-source/south-unified-native-border-unapproved.webp",approved:true},
+{id:"COUNTRYSIDE-03",x:3072,y:1024,src:"terrain-grid/v267-countryside-original/forest-meadow-03-master.webp",approved:false}
+];
+let cw=390,ch=844,dpr=1,scale=.16,ox=0,oy=0;const pointers=new Map();let oldGap=0;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function fit(){cw=innerWidth;ch=innerHeight;dpr=Math.min(devicePixelRatio||1,2);c.width=Math.round(cw*dpr);c.height=Math.round(ch*dpr);scale=Math.min((cw-22)/4608,(ch-145)/2048);ox=(cw-4608*scale)/2;oy=(ch-2048*scale)/2+12;draw()}
+function focus(){scale=Math.min((cw-22)/1536,(ch-145)/1024);ox=cw/2-(3072+768)*scale;oy=ch/2-(1024+512)*scale;draw()}
+function zoom(f){let z=clamp(scale*f,.035,2.4);ox=cw/2+(ox-cw/2)*z/scale;oy=ch/2+(oy-ch/2)*z/scale;scale=z;draw()}
+function poly(x,y){ctx.beginPath();[[C,0],[W-C,0],[W,C],[W,H-C],[W-C,H],[C,H],[0,H-C],[0,C]].forEach(([a,b],i)=>i?ctx.lineTo(x+a,y+b):ctx.moveTo(x+a,y+b));ctx.closePath()}
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#0c1712";ctx.fillRect(0,0,cw,ch);ctx.translate(ox,oy);ctx.scale(scale,scale);
+for(const t of tiles){ctx.save();poly(t.x,t.y);ctx.clip();if(t.img?.complete&&t.img.naturalWidth){ctx.drawImage(t.img,t.x,t.y,W,H)}else{ctx.fillStyle="#2b3b2e";ctx.fillRect(t.x,t.y,W,H)}ctx.restore();poly(t.x,t.y);ctx.lineWidth=(t.approved?6:9)/scale*.20;ctx.strokeStyle=t.approved?"#a58c5d":"#f2c46d";ctx.stroke();
+ctx.fillStyle="#071b16c9";ctx.fillRect(t.x+W*.27,t.y+H*.43,W*.46,H*.10);ctx.textAlign="center";ctx.fillStyle="#f6e7c4";ctx.font="bold 49px Georgia";ctx.fillText(t.id,t.x+W/2,t.y+H*.50);}
+ctx.setTransform(1,0,0,1,0,0)}
+for(const t of tiles){t.img=new Image();t.img.onload=draw;t.img.onerror=()=>{status.innerHTML="<b>Missing image: "+t.id+"</b> · Review incomplete. Originals remain available via Playable originals.";draw()};t.img.src=t.src}
+c.addEventListener("pointerdown",e=>{c.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);oldGap=0});
+c.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const p=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1){ox+=e.clientX-p[0];oy+=e.clientY-p[1]}else if(pointers.size===2){const a=[...pointers.values()],gap=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(oldGap){const z=clamp(scale*gap/oldGap,.035,2.4);ox=cw/2+(ox-cw/2)*z/scale;oy=ch/2+(oy-ch/2)*z/scale;scale=z}oldGap=gap}draw()});
+for(const e of ["pointerup","pointercancel","lostpointercapture"])c.addEventListener(e,ev=>{pointers.delete(ev.pointerId);oldGap=0});
+c.addEventListener("wheel",e=>{e.preventDefault();zoom(e.deltaY>0?.87:1.15)},{passive:false});
+document.getElementById("all").onclick=fit;document.getElementById("new").onclick=focus;document.getElementById("plus").onclick=()=>zoom(1.25);document.getElementById("minus").onclick=()=>zoom(.8);
+addEventListener("resize",fit);fit();
+</script></body></html>

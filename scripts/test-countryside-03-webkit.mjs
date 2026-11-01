@@ -1,0 +1,37 @@
+import { webkit } from 'playwright';
+import fs from 'node:fs/promises';
+const base=process.env.COE_BASE||'http://127.0.0.1:8765/';
+const browser=await webkit.launch({headless:true});
+const results={browser:'webkit',viewport:[390,844],nativeCanvas:false,originalsPreserved:false,zoomPassed:false,armyRoutePreserved:false,roadSeamsVerified:false,userApproved:false};
+try{
+ const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(base+'v267-countryside-03-review.html',{waitUntil:'domcontentloaded',timeout:60000});
+ await page.waitForFunction(()=>typeof tiles!=='undefined'&&tiles.length===4&&tiles.every(t=>t.img.complete&&t.img.naturalWidth===1536),{timeout:45000});
+ const z0=await page.evaluate(()=>scale);
+ await page.locator('#plus').click();
+ if(!(await page.evaluate(()=>scale)>z0))throw Error('Standalone zoom failed');
+ await page.locator('#new').click();
+ await page.screenshot({path:'terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03.png',fullPage:true});
+ const native=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
+ const nativeErrors=[];native.on('pageerror',e=>nativeErrors.push(e.message));
+ await native.goto(base+'index.html?originalArtPilot=countryside03&autoOpen=1',{waitUntil:'domcontentloaded',timeout:60000});
+ await native.waitForFunction(()=>window.COEAtlas?.loaded&&window.COEAtlas?.countryside03Loaded&&window.COEAtlas?.countryside03Visible,{timeout:60000});
+ const before=await native.evaluate(()=>({zoom:window.COEAtlas.zoom,nodes:window.COEAtlas.nodes,seams:window.COEAtlas.seams.length,locked:window.COEAtlas.approvedBaselineLocked,dimensions:window.COEAtlas.countryside03Dimensions,shown:window.COEAtlas.shown}));
+ if(before.nodes!==100||before.seams!==2||!before.locked||before.dimensions.join(',')!=='1536,1024'||!before.shown)throw Error('Protected native atlas or new art failed '+JSON.stringify(before));
+ await native.locator('#atlasPlus').click();
+ const afterZoom=await native.evaluate(()=>window.COEAtlas.zoom);
+ if(!(afterZoom>before.zoom))throw Error('Native zoom failed');
+ const marching=await native.evaluate(()=>window.COEAtlas.startMarch());
+ if(!marching)throw Error('Protected V123 march was disabled by scenic preview');
+ const moved=await native.evaluate(()=>window.COEAtlas.finishMarch());
+ if(!Array.isArray(moved)||moved.length!==2)throw Error('Protected V123 army could not finish march');
+ await native.locator('#atlasWhole').click();
+ await native.screenshot({path:'terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png',fullPage:true});
+ const stats=await fs.stat('terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png');
+ if(stats.size<20000)throw Error('Native screenshot unexpectedly small');
+ if(errors.length||nativeErrors.length)throw Error('Browser errors: '+errors.concat(nativeErrors).join('; '));
+ Object.assign(results,{nativeCanvas:true,originalsPreserved:true,zoomPassed:true,armyRoutePreserved:true,standaloneLoaded:true,assetDimensions:before.dimensions,protectedRoadNodes:before.nodes,protectedSeams:before.seams,roadSeamsVerified:false,userApproved:false});
+ await fs.writeFile('terrain-grid/v267-countryside-original/webkit-iphone-countryside-03-result.json',JSON.stringify(results,null,2)+'\n');
+ console.log('PASS countryside-03 native V123 + WebKit: '+JSON.stringify(results));
+}finally{await browser.close();}

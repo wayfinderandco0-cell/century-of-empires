@@ -85,5 +85,8 @@
   "webkitScreenshots": [
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-seam.png",
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-whole.png"
-  ]
+  ],
+  "assistantVisualReviewCompleted": true,
+  "visualQualityApproved": false,
+  "assistantVisualReviewNotes": "Visual QA rejected: V5 cartway looks like a broad translucent ribbon crossing trees without cleared ground contact. Do not promote."
 }

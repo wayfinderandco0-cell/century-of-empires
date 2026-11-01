@@ -110,10 +110,12 @@
   "physicalRoadSeamVerified": false,
   "riverSeamVerified": false,
   "mobileWebkitRendered": false,
-  "nativeCanvasRendered": false,
+  "nativeCanvasRendered": true,
   "historicallyVerified": false,
   "nativePlayable": false,
   "userApproved": false,
   "finished": false,
-  "notes": "V8 review-only original east ridge with narrow shaded dirt cartway; no certified route or bridge."
+  "notes": "V8 source-ground dirt art is now confirmed in actual native 390x844 WebKit canvas with zoom; the unapproved east army route remains disabled. Visual road continuation/seam not approved.",
+  "nativeWebkitScreenshot": "actual-webkit-iphone-east-v8-native-canvas.png",
+  "nativeWebkitRun": "https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/41302454770"
 }

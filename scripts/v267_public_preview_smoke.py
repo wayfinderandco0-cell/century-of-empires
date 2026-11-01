@@ -49,6 +49,25 @@ try:
         browser.close()
 except Exception as exc:
     report["error"]=str(exc)[:450]
+    try:
+        report["pageUrl"]=page.url
+        report["readyState"]=page.evaluate("document.readyState")
+        report["atlasStatus"]=page.locator("#atlasStatus").inner_text(timeout=3000)
+        report["atlasState"]=page.evaluate("""() => {
+          const a=window.COEAtlas, im=document.getElementById('atlasRidgeDomFallback');
+          return {exists:!!a,loaded:a?.loaded,shown:a?.shown,
+            neighborVisible:a?.originalNeighborVisible,
+            neighborCells:a?.originalNeighborCells,
+            error:window.COEAtlasLoadError||null,
+            imageSrc:im?.src||null,imageComplete:im?.complete,
+            imageNaturalWidth:im?.naturalWidth};
+        }""")
+        report["pageErrors"]=errors[:8]
+        failshot=OUT/"actual-webkit-public-githack-failure.png"
+        page.screenshot(path=str(failshot))
+        report["failureScreenshot"]=str(failshot.relative_to(ROOT))
+    except Exception as diag:
+        report["diagnosticError"]=str(diag)[:200]
 finally:
     (OUT/"public-githack-smoke.json").write_text(json.dumps(report,indent=2)+"\n")
     print(json.dumps(report))

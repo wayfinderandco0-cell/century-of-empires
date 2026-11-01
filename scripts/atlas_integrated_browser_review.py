@@ -99,11 +99,38 @@ try:
   assert after["clock"]==before["clock"],"V94 clock UI changed"
   assert after["iframe"] is None,"Legacy preview should not be activated"
   assert not errors,errors
+  # Independently verify that a focused new-art preview decodes only its
+  # visible tile; never interpret this as a playable road-connected cell.
+  ridge=context.new_page()
+  ridge_errors=[]
+  ridge.on("pageerror",lambda e:ridge_errors.append(str(e)))
+  ridge.goto("http://127.0.0.1:8769/index.html?originalArtPilot=v267-new&autoOpen=1",
+             wait_until="domcontentloaded",timeout=60000)
+  ridge.wait_for_function("window.COEAtlas && COEAtlas.loaded && COEAtlas.originalNeighborVisible",timeout=90000)
+  ridge.wait_for_function("COEAtlas.originalNeighborCache && COEAtlas.originalNeighborCache.decoded===1",timeout=60000)
+  cache=ridge.evaluate("COEAtlas.originalNeighborCache")
+  assert cache["decoded"]==1 and cache["requests"]<=2 and cache["failed"]==0,cache
+  assert ridge.evaluate("COEAtlas.originalNeighborCells")==1
+  assert ridge.evaluate("COEAtlas.startMarch()") is False
+  assert ridge.evaluate("""() => {
+    const im=document.getElementById('atlasRidgeDomFallback'),r=im.getBoundingClientRect();
+    return im.naturalWidth===1536&&im.naturalHeight===1024&&
+      r.width>100&&r.height>70&&r.right>0&&r.bottom>0&&r.left<innerWidth&&r.top<innerHeight;
+  }"""),"Ridge art is not actually visible in phone viewport"
+  ridge_path=out/f"{args.browser}-{args.orientation}-ridge-viewport.png"
+  ridge.screenshot(path=str(ridge_path))
+  from PIL import Image,ImageStat
+  with Image.open(ridge_path) as im:
+    rgb=im.convert("RGB")
+    crop=rgb.crop((int(rgb.width*.15),int(rgb.height*.25),int(rgb.width*.85),int(rgb.height*.75)))
+    assert max(ImageStat.Stat(crop).stddev)>15,"Ridge preview screenshot is blank"
+  assert not ridge_errors,ridge_errors
+  ridge.close()
   report={"browser":args.browser,"orientation":args.orientation,"viewport":[w,h],
           "nativeCanvas":True,"images":before["images"],"nodes":before["nodes"],
           "uniqueWorldNodes":before["unique"],"seams":before["seams"],
           "routePoints":len(route),"touchToMarch":True,"halt":True,"arrival":arrived,
-          "zoom":True,"photoEightCellWholeVisible":True,"photoLoaded":8,"photoGameplayBlocked":True,"campaignStorageUnchanged":True,"pageErrors":errors}
+          "zoom":True,"photoEightCellWholeVisible":True,"photoLoaded":8,"photoGameplayBlocked":True,"candidateViewportCache":cache,"candidateRidgePixelsVisible":True,"campaignStorageUnchanged":True,"pageErrors":errors}
   (out/f"{args.browser}-{args.orientation}.json").write_text(json.dumps(report,indent=2))
   print(json.dumps(report,indent=2))
   context.close();browser.close()

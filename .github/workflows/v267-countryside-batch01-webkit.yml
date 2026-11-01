@@ -65,14 +65,25 @@ jobs:
             terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png
             terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png
             terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json
-      - name: Commit passing screenshot evidence to development branch
+      - name: Preserve screenshots in a run-unique directory (no binary rebase conflicts)
         if: success()
-        continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-04*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json
+          output="terrain-grid/v267-countryside-original/webkit-runs/${GITHUB_RUN_ID}"
+          mkdir -p "$output"
+          cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-04*.png "$output/"
+          cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png "$output/"
+          cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png "$output/"
+          cp terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json "$output/"
+          git add "$output"
           git diff --cached --quiet && exit 0
-          git commit -m "Record real iPhone WebKit countryside 04/05 review"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin HEAD:"${GITHUB_REF_NAME}"
+          git commit -m "Record unique WebKit countryside batch screenshots from run ${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            if git push origin HEAD:"${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Unable to push screenshot evidence after retries"
+          exit 1

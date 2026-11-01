@@ -5,6 +5,9 @@ on:
     paths:
       - index.html
       - terrain-grid/atlas-integrated.js
+      - terrain-grid/atlas-playability.js
+      - terrain-grid/v267-southeast-route-gate.js
+      - scripts/test_atlas_playability.js
       - terrain-grid/v267-viewport-cache.js
       - scripts/test_v267_viewport_cache.js
       - terrain-grid/atlas-cells.json
@@ -47,6 +50,7 @@ jobs:
       - name: Test 100-node graph and sparse atlas semantics
         run: |
           node scripts/test_atlas_manifest.js
+          node scripts/test_atlas_playability.js
           node scripts/test_v267_art_factory_contract.js
           node scripts/test_v267_viewport_cache.js
       - name: Install mobile browser engines

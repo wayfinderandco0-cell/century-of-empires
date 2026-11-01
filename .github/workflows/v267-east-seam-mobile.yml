@@ -29,5 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: v267-east-seam-iphone-qa
-          path: terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-inspector.png
+          path: |
+            terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-inspector.png
+            terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-v2.png
           if-no-files-found: ignore

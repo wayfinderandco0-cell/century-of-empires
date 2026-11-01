@@ -45,7 +45,7 @@ def main():
         assert not data["roadsVerified"] and not data["riverSeamVerified"] and not data["finished"]
         data["mobileWebkitRendered"]=True
         data["webkitEvidence"]=str(shot.relative_to(ROOT))
-        evidence.write_text(json.dumps(data,indent=2)+"\\n")
+        evidence.write_text(json.dumps(data,indent=2)+"\n")
         print(json.dumps({"status":"PASS","webkitViewport":"390x844@2",
                           "screenshot":str(shot.relative_to(ROOT)),
                           "panZoom":"PASS","newPlayable":0,"roadSeamsVerified":False}))

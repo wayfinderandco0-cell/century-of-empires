@@ -1,0 +1,20 @@
+{
+  "browser": "webkit",
+  "viewport": [
+    390,
+    844
+  ],
+  "nativeCanvas": true,
+  "originalsPreserved": true,
+  "zoomPassed": true,
+  "armyRoutePreserved": true,
+  "roadSeamsVerified": false,
+  "userApproved": false,
+  "standaloneLoaded": true,
+  "assetDimensions": [
+    1536,
+    1024
+  ],
+  "protectedRoadNodes": 100,
+  "protectedSeams": 2
+}

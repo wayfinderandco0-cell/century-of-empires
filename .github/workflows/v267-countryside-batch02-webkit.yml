@@ -1,0 +1,86 @@
+name: V267 original countryside 06 iPhone WebKit and protected army
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - '.github/workflows/v267-countryside-batch02-webkit.yml'
+      - 'v267-countryside-batch02-review.html'
+      - 'scripts/test-countryside-batch02-webkit.mjs'
+      - 'terrain-grid/atlas-integrated.js'
+      - 'terrain-grid/atlas-cells.json'
+      - 'terrain-grid/v267-countryside-original/forest-limestone-06-*.webp'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-countryside-batch02-webkit-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  countryside-06-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright WebKit
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - name: Validate new raster, provenance, road-free candidate and locked baseline
+        run: |
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          m=json.loads(Path('terrain-grid/atlas-cells.json').read_text())
+          assert m['referenceCommit']=='456107f28c8db1f87522bbc7511809b2a215f6fb'
+          assert [c['id'] for c in m['cells']]==['west','matrei','south']
+          c=next(x for x in m['artCandidates'] if x['id']=='countryside-06')
+          assert c['roadKeys']==[] and c['riverKeys']==[] and c['scenicSettlements']==[] and c['strategicNodes']==[]
+          assert not c['userApproval'] and not c['playableIntegrated']
+          src=json.loads(Path(c['source']).read_text())
+          for key,sha in [('art','committedMasterSHA256'),('mobileArt','committedMobileSHA256')]:
+            p=Path(c[key]);assert p.stat().st_size>50000
+            assert hashlib.sha256(p.read_bytes()).hexdigest()==src['provenance'][sha]
+          print('Original art SHA256, no false roads, immutable baseline verified')
+          PY
+      - name: Serve native game and art review
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/coe-c06-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8765/v267-countryside-batch02-review.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/coe-c06-http.log
+          exit 1
+      - name: Render real 390x844 WebKit screenshots and protected V123 march
+        run: node scripts/test-countryside-batch02-webkit.mjs
+      - name: Upload WebKit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: countryside-06-iphone-webkit
+          if-no-files-found: warn
+          path: |
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-06*.png
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch02-overview.png
+            terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch02-result.json
+      - name: Commit run-unique screenshot evidence
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          output="terrain-grid/v267-countryside-original/webkit-runs/${GITHUB_RUN_ID}"
+          mkdir -p "$output"
+          cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-06*.png "$output/"
+          cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch02-overview.png "$output/"
+          cp terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch02-result.json "$output/"
+          git add "$output"
+          git diff --cached --quiet && exit 0
+          git commit -m "Capture WebKit countryside-06 screenshot evidence run ${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            if git push origin HEAD:"${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1

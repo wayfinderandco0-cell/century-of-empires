@@ -579,6 +579,31 @@
       "webKitRunId": 41337527443,
       "webKitEvidence": "terrain-grid/v267-countryside-original/webkit-runs/41337527443/actual-webkit-iphone-countryside-05-native.png",
       "visualReview": "New original raster visually inspected; candidate art promising, physical landform seams and user sign-off pending"
+    },
+    {
+      "id": "countryside-06",
+      "biome": "alpine-limestone-woodland-meadow",
+      "art": "terrain-grid/v267-countryside-original/forest-limestone-06-master.webp",
+      "mobileArt": "terrain-grid/v267-countryside-original/forest-limestone-06-mobile.webp",
+      "source": "terrain-grid/v267-countryside-original/forest-limestone-06-source.json",
+      "roadKeys": [],
+      "riverKeys": [],
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "nativeWorldOrigin": [
+        6144,
+        1024
+      ],
+      "visualApproval": "pending",
+      "userApproval": false,
+      "webKitVerified": false,
+      "playableIntegrated": false,
+      "nativeCanvasDisplayCandidate": true,
+      "historicallyVerified": false,
+      "preview": "v267-countryside-batch02-review.html",
+      "nativePreview": "index.html?originalArtPilot=countrysideBatch02&autoOpen=1",
+      "visualReview": "New original raster generated and inspected; rendered depth plausible, but top skyline and adjacent landform seam need review. Not approved."
     }
   ]
 }

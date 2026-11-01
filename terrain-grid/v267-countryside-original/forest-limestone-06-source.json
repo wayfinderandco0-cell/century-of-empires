@@ -1,0 +1,37 @@
+{
+  "id": "countryside-06",
+  "title": "Original road-free limestone forest and meadow art candidate",
+  "provenance": {
+    "method": "AI-assisted original whole-scene raster artwork; no photo crops, terrain heightmesh, or copied V267 tiles",
+    "generationId": "5f6e8d2e-55b0-4cd0-88f5-e1b099cbe352",
+    "prompt": "Original isometric aerial Alpine landscape with dense mixed forest, rocky limestone cliffs, sunlit meadows, scale-consistent trees; no roads, rivers, buildings or towns.",
+    "originalImage": "a_detailed_realistic_game_map_style_landscape_sce.png",
+    "originalSHA256": "4e5a291439b588606669fccd455d813b2639a5d3c3d7916fb6c3f3d24e58abdd",
+    "originalDimensions": [
+      1536,
+      1024
+    ],
+    "committedMasterSHA256": "66becfc35e3eae8cbaca453866fccffa7f3ce1d106fb5430732dad1d616397c6",
+    "committedMobileSHA256": "bd50f052d605832db55557f864408abf345030cc9ff140b559ec77fcc4e568a1",
+    "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb"
+  },
+  "scene": {
+    "roads": [],
+    "rivers": [],
+    "bridges": [],
+    "towns": [],
+    "strategicNodes": [],
+    "historicClaims": []
+  },
+  "integration": {
+    "displayOnly": true,
+    "origin": [
+      6144,
+      1024
+    ],
+    "userApproved": false,
+    "roadSeamsVerified": false,
+    "webKitVerified": false,
+    "nativePlayable": false
+  }
+}

@@ -112,6 +112,30 @@ try:
   assert direct.evaluate("COEAtlas.routeTo([2806,1629])") is not None
   direct.screenshot(path=str(out/f"{args.browser}-{args.orientation}-three-actually-playable.png"))
   direct.close()
+  # A separate opt-in native-game experiment exercises true moving units on
+  # road-free countryside artwork, without claiming an approved road seam.
+  overland=context.new_page()
+  overland_errors=[]
+  overland.on("pageerror",lambda e:overland_errors.append(str(e)))
+  overland.goto("http://127.0.0.1:8769/index.html?overlandPilot=1&autoOpen=1",
+                wait_until="domcontentloaded",timeout=60000)
+  overland.wait_for_function("window.COEAtlas && COEAtlas.loaded && COEAtlas.overlandReady && COEAtlas.shown",
+                             timeout=90000)
+  assert overland.locator("#atlasScoutC03").is_visible()
+  assert overland.locator("#atlasReturnC03").is_visible()
+  assert overland.evaluate("COEAtlas.playability.playableIds")==["matrei","south","west"]
+  assert overland.evaluate("COEAtlas.startScout()")
+  scout_path=overland.evaluate("COEAtlas.route")
+  assert len(scout_path)>35 and [3072,1629] in scout_path and scout_path[-1]==[3840,1536],scout_path
+  assert overland.evaluate("COEAtlas.finishMarch()")==[3840,1536]
+  assert overland.evaluate("COEAtlas.returnScout()")
+  assert overland.evaluate("COEAtlas.finishMarch()")==[2806,1629]
+  overland.locator("#atlasScoutC03").click()
+  assert overland.evaluate("COEAtlas.moving")
+  overland.evaluate("COEAtlas.finishMarch()")
+  overland.screenshot(path=str(out/f"{args.browser}-{args.orientation}-overland-c03-experimental.png"))
+  assert not overland_errors,overland_errors
+  overland.close()
   # Independently verify that a focused new-art preview decodes only its
   # visible tile; never interpret this as a playable road-connected cell.
   ridge=context.new_page()

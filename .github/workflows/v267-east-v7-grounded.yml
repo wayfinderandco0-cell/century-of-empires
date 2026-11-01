@@ -1,0 +1,88 @@
+name: V267 EAST-01 V7 grounded original cartway candidate
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_east01_cartway_v7.py
+      - v267-east-cartway-v7-review.html
+      - .github/workflows/v267-east-v7-grounded.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-east-v7-grounded-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  east-v7-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: terrain-v267-three-original-art-prototype-20261028
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install open-source raster and browser QA
+        run: |
+          python -m pip install --disable-pip-version-check numpy pillow playwright
+          python -m playwright install --with-deps webkit
+      - name: Protect original approved source hashes
+        run: |
+          sha256sum terrain-grid/art/matrei-v121-original.webp terrain-grid/v123-atlas.js index.html > /tmp/v267-protected-before.sha
+      - name: Generate actual 1536x1024 EAST-01 V7 artwork, display-only Matrei overlay and contact sheet
+        run: python scripts/v267_east01_cartway_v7.py
+      - name: Verify output, conservative route gates and protected originals
+        run: |
+          sha256sum terrain-grid/art/matrei-v121-original.webp terrain-grid/v123-atlas.js index.html > /tmp/v267-protected-after.sha
+          diff -u /tmp/v267-protected-before.sha /tmp/v267-protected-after.sha
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/v267-original-art-batch-01')
+          e=json.loads((p/'matrei-east-v7-grounded-evidence.json').read_text())
+          assert e['roadPortContract']['endpointGapPx']==0
+          assert e['clearedCorridor'] and e['protectedOriginalsUnchanged']
+          assert not e['physicalRoadSeamVerified'] and not e['nativePlayable']
+          assert not e['visualQualityApproved'] and not e['finished']
+          for name,size in [(e['art'],(1536,1024)),(e['comparison'],(3072,1024)),(e['matreiOverlay'],(1536,1024))]:
+            with Image.open(p/name) as img: assert img.size==size,(name,img.size)
+          print('V7 candidate outputs and protected source gates PASS; route still disabled')
+          PY
+      - name: Actual 390x844 WebKit image, zoom and screenshot QA
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/v267-http.log 2>&1 &
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v7-grounded.png')
+          with sync_playwright() as p:
+            browser=p.webkit.launch()
+            page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+            page.goto('http://127.0.0.1:8765/v267-east-cartway-v7-review.html',wait_until='domcontentloaded',timeout=45000)
+            page.locator('#terrain').evaluate("(img) => img.decode()")
+            assert page.locator('#terrain').evaluate('(img)=>img.naturalWidth')==3072
+            page.locator('#seam').click()
+            page.screenshot(path=str(out),full_page=True)
+            assert out.stat().st_size>12000
+            page.locator('#plus').click()
+            assert page.locator('#terrain').evaluate('(img)=>getComputedStyle(img).transform')!='none'
+            browser.close()
+          print('Actual iPhone-sized WebKit artwork, seam view, zoom PASS:',out)
+          PY
+      - name: Commit actual art assets and screenshot on development branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v7-grounded-road.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v7-matrei-display-overlay.png
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v7-grounded-contact.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v7-grounded-evidence.json
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v7-grounded.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Build V267 EAST-01 V7 grounded original-art candidate and real WebKit screenshot"
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+          fi

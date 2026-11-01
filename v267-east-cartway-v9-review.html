@@ -24,5 +24,6 @@ for(const ev of ["pointerup","pointercancel","lostpointercapture"])view.addEvent
 img.onload=()=>{status.innerHTML="<b>V9 original-art contact loaded.</b> Inspect road ground contact and seam at close zoom; NOT approved or traversable.";fit()};
 img.onerror=()=>{status.innerHTML="<b>V9 asset not published.</b> Art generation/commit has not completed. The approved three remain unchanged."};
 img.src="terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-contact.webp";
-fetch("terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-evidence.json").then(r=>r.ok?r.json():Promise.reject(Error("missing QA"))).then(e=>{status.innerHTML="<b>V9 pixel QA:</b> Road-port mean RGB difference "+e.sourceSeamBefore.meanAbsRgb+" → "+e.decodedWebpSeamAfter.meanAbsRgb+". <b>Physical seam UNVERIFIED; route DISABLED.</b> Drag/pinch to inspect."}).catch(()=>{});\nwindow.addEventListener("resize",fit);fit();
+fetch("terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-evidence.json").then(r=>r.ok?r.json():Promise.reject(Error("missing QA"))).then(e=>{status.innerHTML="<b>V9 pixel QA:</b> Road-port mean RGB difference "+e.sourceSeamBefore.meanAbsRgb+" → "+e.decodedWebpSeamAfter.meanAbsRgb+". <b>Physical seam UNVERIFIED; route DISABLED.</b> Drag/pinch to inspect."}).catch(()=>{});
+window.addEventListener("resize",fit);fit();
 </script></body></html>

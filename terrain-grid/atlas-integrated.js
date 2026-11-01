@@ -7,6 +7,9 @@
 const M="terrain-grid/atlas-cells.json";
 // Isolated SOUTH-east roaded artwork inspection. The V123 graph stays unchanged.
 const southEastRoadPilot=new URLSearchParams(root.location.search).get("southEastRoadPilot");
+// Explicit opt-in gameplay experiment: wilderness movement is NOT a painted road,
+// verified historical route, finished tile, or production campaign order.
+const overlandPilot=new URLSearchParams(root.location.search).get("overlandPilot")==="1";
 const $=id=>document.getElementById(id);
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -59,6 +62,8 @@ let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Independent road-free raster candidate; never enters V123 graph or V94 saves.
 const C03_ORIGIN=[3072,1024];let countryside03Image=null,countryside03Visible=false;
+let overlandReady=false;
+const SOUTH_LAST=[2806,1629],OVERLAND_BORDER=[3072,1629],C03_SCOUT=[3840,1536];
 // Manifest-driven road-free countryside artwork: review-only, no V123 nodes or saves.
 let southeastRoadImage=null,southeastRoadVisible=false;
 const SOUTHEAST_ROAD_ORIGIN=[3072,1024];
@@ -262,10 +267,42 @@ function routeBetween(from,to){
  return result;
 }
 function sample(points,amount){let left=amount;for(let i=1;i<points.length;i++){const n=distance(points[i-1],points[i]);if(left<=n)return [points[i-1][0]+(points[i][0]-points[i-1][0])*left/n,points[i-1][1]+(points[i][1]-points[i-1][1])*left/n];left-=n;}return clone(points.at(-1));}
+// Separate demonstrator for cross-country travel on road-free candidate C03.
+ // The physical terrain, river crossing and historical location are NOT certified:
+ // do not add this to the V123 graph or count it as a fourth approved tile.
+function startScout(){
+ if(!overlandReady||photoMode||neighborPilotShown)return false;
+ if(distance(unit,C03_SCOUT)<3){status("Already in unverified C03 overland pilot");return true;}
+ const departingCandidate=unit[0]>=3072;
+ const roadLeg=departingCandidate?[clone(unit)]:routeBetween(unit,SOUTH_LAST);
+ if(!roadLeg){status("Return to an approved road before scouting");return false;}
+ path=clean([...roadLeg,OVERLAND_BORDER,C03_SCOUT]);
+ progress=0;travelLength=length(path);moving=travelLength>.01;
+ status("EXPERIMENTAL overland scouting · terrain/river not verified · not a finished fourth tile");draw();return true;
+}
+function returnScout(){
+ if(!overlandReady)return false;
+ if(unit[0]<3072){status("Already on approved SOUTH side");return false;}
+ path=clean([clone(unit),OVERLAND_BORDER,SOUTH_LAST]);
+ progress=0;travelLength=length(path);moving=travelLength>.01;
+ status("Returning from experimental C03 to the protected SOUTH road");draw();return true;
+}
+function inScoutTile(point){
+ const x=point[0]-C03_ORIGIN[0],y=point[1]-C03_ORIGIN[1],cut=256;
+ if(x<0||x>1536||y<0||y>1024)return false;
+ const inset=y<cut?cut-y:y>1024-cut?y-(1024-cut):0;
+ return x>=inset&&x<=1536-inset;
+}
+const scoutButton=document.createElement("button"),returnButton=document.createElement("button");
+scoutButton.id="atlasScoutC03";scoutButton.textContent="Scout C03";scoutButton.onclick=startScout;
+returnButton.id="atlasReturnC03";returnButton.textContent="Return SOUTH";returnButton.onclick=returnScout;
+if(overlandPilot){$("atlasFooter").querySelector("div").append(scoutButton,returnButton);}
 function startOrder(to){if(photoMode||neighborPilotShown){status("Unapproved scenic candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
-function tapRoad(point){if(!loaded){status("Atlas artwork has not loaded; the canvas cannot issue orders");return false;}if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
+function tapRoad(point){if(overlandPilot&&overlandReady&&inScoutTile(point))return startScout();
+ if(overlandPilot&&overlandReady&&unit[0]>=3072)return returnScout();
+ if(!loaded){status("Atlas artwork has not loaded; the canvas cannot issue orders");return false;}if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,(photoMode||neighborPilotShown||countrysideBatchVisible)?.15:.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
 function close(){shown=false;ridgeEmergency=false;ridgeDOM.style.display="none";layer.hidden=true;openButton.hidden=false;openButton.focus();}
@@ -521,147 +558,6 @@ pilotButton.onclick=async()=>{
   else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
   status(ridgeV11Pilot?"V11 EAST-01: repaired Matrei inset roadbed; physical seam UNVERIFIED · army route disabled":ridgeV10Pilot?"V10 EAST-01: source-textured worn cartway; physical seam UNVERIFIED · army route disabled":ridgeV9Pilot?"V9 EAST-01: measured road-port pixel improvement; physical seam UNVERIFIED · army route disabled":ridgeV8Pilot?"V8 EAST-01 narrow shaded dirt: original road material + Matrei display overlay · seam UNVERIFIED · army route disabled":ridgeV7Pilot?"V7 EAST-01 cleared cartway: source-ground corridor + Matrei display overlay · road/river seam UNVERIFIED · route disabled":ridgeV6Pilot?"V6 EAST-01 road material: original Matrei protected · road sits above trees, NOT ground-verified · route disabled":ridgeV2Pilot?"V2 east seam: reversible Matrei display edge · visual/river/roads UNVERIFIED · not playable":ridgeGradePilot?"Color-only graded ridge: edge RGB improved · terrain geometry and roads UNVERIFIED · not playable":focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
- }catch(e){status("Neighbor art not available: "+e.message+(ridgeEmergency?" · showing direct image recovery":""));}
-};
-// Open the image immediately, independent of the V121 canvas bootstrap.
-// On a failed base asset or a lost WebKit canvas this stays visible rather
-// than reproducing the user's completely blank iPhone screenshot.
-if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
- ridgeEmergency=true;
- ridgeDOM.src=ridgeV11Pilot?ridgeV11Path:ridgeV10Pilot?ridgeV10Path:ridgeV9Pilot?ridgeV9Path:ridgeV8Pilot?ridgeV8Path:ridgeV7Pilot?ridgeV7Path:ridgeV6Pilot?ridgeV6Path:ridgeV2Pilot?ridgeV2Path:ridgeGradePilot?ridgeGradePath:"terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
- open();
- for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
- status("Loading original ridge · direct-image recovery active until atlas is ready");
- draw();
-}
-const photoButton=document.createElement("button");
-photoButton.id="atlasPhotoSources";photoButton.type="button";
-// Keep experimental photo/heightmesh references out of the default approved-art UI.
-photoButton.hidden=!(studyParams.has("terrainStudy")||studyParams.has("photoBlock"));
-photoButton.textContent=studyParams.has("terrainStudy")?"Unapproved 3D study":"Photo references only";
-$("atlasBar").querySelector("div").appendChild(photoButton);
-const photoNext=document.createElement("button");
-photoNext.id="atlasPhotoNext";photoNext.type="button";
-photoNext.textContent="Next region";photoNext.hidden=true;
-$("atlasBar").querySelector("div").appendChild(photoNext);
-let photoIndex=0;
-function focusPhoto(index){
- if(!photoMode||!photoStream||!photoStream.cells.length)return false;
- photoIndex=(index+photoStream.cells.length)%photoStream.cells.length;
- const cell=photoStream.cells[photoIndex];
- center=[cell.origin[0]+768,cell.origin[1]+512];
- zoom=1.5;scale=base*zoom;
- status(cell.id+" · "+cell.sourceRegion+(photoStream.mode==='relief'?" · ORIGINAL DEPTH STUDY, not playable":" · PHOTO REFERENCE ONLY, no route or conquest"));
- draw();
- return cell.id;
-}
-photoNext.onclick=()=>focusPhoto(photoIndex+1);
-async function togglePhotoSources(){
- try {
-  if(!photoStream){
-   if(!root.COEPhotoAtlasStream){
-    await new Promise((resolve,reject)=>{
-     const script=document.createElement("script");
-     script.src="terrain-grid/atlas-photo-stream.js";
-     script.onload=resolve;script.onerror=()=>reject(Error("Photo stream module unavailable"));
-     document.head.appendChild(script);
-    });
-   }
-   const study=new URLSearchParams(root.location.search).has("terrainStudy");
-   const photoBlock=new URLSearchParams(root.location.search).get("photoBlock");
-   const photoURL=study?"generated/v267-relief-pilot/manifest.json":photoBlock==="dulmenRoad"
-     ?"terrain-grid/factory-photo/dulmen-road-8/manifest.json"
-     :photoBlock==="coverage"
-     ?"terrain-grid/factory-photo/coverage/manifest.json"
-     :photoBlock==="carpathians"
-     ?"terrain-grid/factory-photo/carpathian-8/manifest.json"
-     :photoBlock!==null
-       ?"terrain-grid/factory-photo/block-8/manifest.json"
-       :"terrain-grid/factory-photo/manifest.json";
-   photoStream=await new root.COEPhotoAtlasStream(photoURL,draw).init();
-  }
-  if(!photoMode){
-   photoCamera={center:clone(center),zoom};
-   photoMode=true;photoIndex=0;photoNext.hidden=false;
-   photoButton.textContent="Alpine roads";
-   // Source-only photography has no approved route graph: do not present
-   // march/halt/road controls as if these eight candidate cells are playable.
-   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
-   focusPhoto(0);
-  } else {
-   photoMode=false;center=clone(photoCamera.center);zoom=photoCamera.zoom;
-   photoNext.hidden=true;photoButton.textContent=studyParams.has("terrainStudy")?"Unapproved 3D study":"Photo references only";
-   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
-   status("WEST · MATREI · SOUTH connected · tap a cartway");
-  }
-  scale=base*zoom;draw();
- } catch(error){status("Photo sources unavailable: "+error.message);}
-}
-photoButton.onclick=togglePhotoSources;
-window.addEventListener("resize",()=>{if(shown)fit();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&shown)close();});
-const API={
- get loaded(){return loaded},get shown(){return shown},get playability(){return playability},get nodes(){return atlas?.network.graph.size||0},
- get uniqueWorldNodes(){return atlas?new Set([...atlas.network.graph.values()].map(n=>n.world.join(","))).size:0},
- get seams(){return atlas?.network.seams||[]},get imageSizes(){return Object.fromEntries(Object.entries(images).map(([id,img])=>[id,[img.naturalWidth,img.naturalHeight]]));},
- get moving(){return moving},get position(){return clone(unit)},get route(){return path.map(clone)},
- get zoom(){return zoom},get center(){return clone(center)},get manifest(){return manifest},
- get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
- get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
- get approvedBaselineLocked(){return !!manifest&&root.COEV267ArtContract?.assertBase(manifest)===true},
- get southeastRoadVisible(){return southeastRoadVisible},
- get southeastRoadDimensions(){return southeastRoadImage?[southeastRoadImage.naturalWidth,southeastRoadImage.naturalHeight]:null},
- get countryside03Loaded(){return !!countryside03Image&&countryside03Image.naturalWidth===1536},
- get countryside03Visible(){return countryside03Visible},
- get countryside03Dimensions(){return countryside03Image?[countryside03Image.naturalWidth,countryside03Image.naturalHeight]:null},
- get countrysideBatchVisible(){return countrysideBatchVisible},
- get countrysideBatchLoaded(){return activeCountrysideIDs.every(id=>countrysideBatchImages.get(id)?.naturalWidth===1536)},
- get countrysideBatchIDs(){return [...countrysideBatchImages.keys()]},
- get originalNeighborCells(){return neighborPilotCells.length},get originalNeighborVisible(){return neighborPilotShown},
- get originalNeighborCache(){return neighborPilotStream?.stats()||null},
- get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
- get photoLoaded(){return photoStream?.stats.loaded||0},get photoThumbLoaded(){return photoStream?.stats.thumbLoaded||0},get photoFullLoaded(){return photoStream?.stats.fullLoaded||0},get photoInlays(){return photoStream?.inlays.length||0},get photoFocusedCell(){return photoStream?.cells[photoIndex]?.id||null},togglePhotoSources,nextPhotoSource:()=>focusPhoto(photoIndex+1),
- open,close,halt,centerAt,startMarch:()=>startOrder([2806,1629]),finishMarch:()=>{if(!path.length)return clone(unit);progress=travelLength;unit=clone(path.at(-1));moving=false;draw();return clone(unit);},
- routeTo:p=>routeBetween(unit,p),tapWorld:tapRoad,screenFor:worldToScreen,setZoom:z=>centerAt(...center,z)
-};
-root.COEAtlas=Object.freeze(API);
-(async()=>{
- const response=await fetch(M);if(!response.ok)throw Error("Atlas manifest HTTP "+response.status);
- manifest=await response.json();
- if(!root.COEV267ArtContract)throw Error("V267 approved original-art contract script missing");
- root.COEV267ArtContract.assertBase(manifest);
- atlas=root.V123Atlas.create(manifest.centerRoads,{experimentalSeams:true});
- if(atlas.network.graph.size!==100||atlas.network.seams.length!==2||atlas.network.seams.some(s=>!s.pass||s.endpointGapPx!==0))throw Error("Protected V123 road seam drift");
- segments=collectSegments(atlas.network);
- if(!root.COEAtlasPlayability)throw Error("Playability audit missing");
- playability=root.COEAtlasPlayability.audit(atlas,manifest);
- $("atlasBar").querySelector("small").textContent=playability.label;
- const loadedImages=await Promise.all(manifest.cells.map(async cell=>[cell.id,await imageLoad(cell.art)]));
- images=Object.fromEntries(loadedImages);
- if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
- matreiRegistered=registerMatrei(images.matrei);
- loaded=true;status(playability.label+" · tap a painted V123 cartway to march");if(shown)fit();
- if(southEastRoadPilot==="1"||southEastRoadPilot==="2"){
-  const roadArt=southEastRoadPilot==="2"?"terrain-grid/v267-southeast-road-02/southeast-02-local-ruts.webp":"terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp";
-  southeastRoadImage=await imageLoad(roadArt);
-  if(southeastRoadImage.naturalWidth!==1536||southeastRoadImage.naturalHeight!==1024)throw Error("SOUTHEAST road art dimensions invalid");
-  southeastRoadVisible=true;
-  if(!shown)open();
-  $("atlasWhole").click();
-  status("3 PLAYABLE · SOUTH-east road study "+southEastRoadPilot+" · candidate NOT traversable or approved");
- }
- if(studyParams.get("playableAtlas")==="1"&&studyParams.get("autoOpen")==="1"){
-  if(!shown)open();
-  status(playability.label+" · WEST/MATREI/SOUTH only · tap a painted cartway to march");
- }
- if((countryside03Pilot||countrysideBatchPilot||countrysideBatch02Pilot)&&studyParams.get("autoOpen")==="1"){
-  if(!shown)open();
-  pilotButton.click();
- }
- if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
-  if(!shown)open();
-  pilotButton.click();
- }
-})().catch(error=>{status("Atlas load blocked: "+error.message);root.COEAtlasLoadError=error.message;});
-requestAnimationFrame(frame);
-})(window);
+ }catch(e){status("Neighbor art not available: "+e.message+(ridgeEmergency?" · showing direct image rec
+... (output truncated, full output saved to: /mnt/files/.composio/output/bash_date_stdout.txt)
+Run 'cat /mnt/files/.composio/output/bash_date_stdout.txt' to view the full output, or use 'head -n 100 /mnt/files/.composio/output/bash_date_stdout.txt' / 'tail -n 100 /mnt/files/.composio/output/bash_date_stdout.txt' to view parts of it.

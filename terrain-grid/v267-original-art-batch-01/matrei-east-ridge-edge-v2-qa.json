@@ -1,0 +1,20 @@
+{
+  "candidate": "matrei-east-ridge-edge-v2",
+  "art": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp",
+  "displayOverlay": "terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp",
+  "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-comparison.webp",
+  "assetSha256": "53997eea71d7f91c4bcbb6b3aaca86931ac2bd79ea4beb9b0c9bfe22c1527305",
+  "sharedEdgePixelDifference": 0,
+  "approvedMatreiSourceUnchanged": true,
+  "sourceArtUnchanged": true,
+  "visualReviewStatus": "pending actual screenshot review",
+  "physicalTerrainSeamVerified": false,
+  "roadSeamsVerified": false,
+  "riverCrossingsVerified": false,
+  "historicallyVerified": false,
+  "mobileWebkitRendered": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "Gold-frame removal is a display-only overlay on Matrei's unused east edge. Repeated edge vegetation is limited to a narrow transition band. No verified road or river crossing."
+}

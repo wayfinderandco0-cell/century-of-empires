@@ -1,0 +1,13 @@
+{
+  "beforeMeanRGBDiff": 35.41,
+  "afterMeanRGBDiff": 11.19,
+  "source": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
+  "output": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp",
+  "assetSha256": "afea2892f6bf39e75bdc7deba3c352da4cb7405a5912b698b3be15d0a8b13b90",
+  "treesWarped": false,
+  "roadsAdded": false,
+  "sourcePixelsCopied": false,
+  "geometricSeamVerified": false,
+  "roadSeamVerified": false,
+  "finished": false
+}

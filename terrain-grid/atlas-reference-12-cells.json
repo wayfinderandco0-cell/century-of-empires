@@ -17,7 +17,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        0,
+        0
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "NORTH-01",
@@ -28,7 +34,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        1,
+        0
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "NE-01",
@@ -39,7 +51,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        2,
+        0
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "NE-02",
@@ -50,7 +68,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        3,
+        0
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "EAST-01",
@@ -61,7 +85,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        2,
+        1
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "EAST-02",
@@ -72,7 +102,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        3,
+        1
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "SW-01",
@@ -83,7 +119,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        0,
+        2
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "SE-01",
@@ -94,7 +136,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        2,
+        2
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     },
     {
       "id": "SE-02",
@@ -105,7 +153,13 @@
       "mobileWebkitVerified": false,
       "historicallyVerified": false,
       "nativePlayable": false,
-      "userApproved": false
+      "userApproved": false,
+      "referenceGrid": [
+        3,
+        2
+      ],
+      "roadKeys": [],
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
     }
   ],
   "rules": {
@@ -113,5 +167,65 @@
     "roads": "V123 graph only; do not infer from screenshot",
     "towns": "No historic or conquerable status inferred from screenshot",
     "note": "Screenshot UI and labels are baked in. Reauthor original assets before promotion."
+  },
+  "layout": {
+    "kind": "screenshot-reference-grid",
+    "columns": 4,
+    "rows": 3,
+    "positions": {
+      "NW-01": [
+        0,
+        0
+      ],
+      "NORTH-01": [
+        1,
+        0
+      ],
+      "NE-01": [
+        2,
+        0
+      ],
+      "NE-02": [
+        3,
+        0
+      ],
+      "WEST": [
+        0,
+        1
+      ],
+      "MATREI": [
+        1,
+        1
+      ],
+      "EAST-01": [
+        2,
+        1
+      ],
+      "EAST-02": [
+        3,
+        1
+      ],
+      "SW-01": [
+        0,
+        2
+      ],
+      "SOUTH": [
+        1,
+        2
+      ],
+      "SE-01": [
+        2,
+        2
+      ],
+      "SE-02": [
+        3,
+        2
+      ]
+    },
+    "coordinateStatus": "visual screenshot coordinates only; NOT V123 world-space locations",
+    "sourceResolution": [
+      1536,
+      1024
+    ]
   }
 }

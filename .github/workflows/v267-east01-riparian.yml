@@ -7,6 +7,9 @@ on:
       - scripts/v267_east01_riparian.py
       - .github/workflows/v267-east01-riparian.yml
   workflow_dispatch:
+concurrency:
+  group: v267-east01-riparian-art
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
@@ -54,5 +57,7 @@ jobs:
             echo "Generated art already up to date"
           else
             git commit -m "Add actual V267 EAST-01 riparian original-ridge art candidate and comparison"
+            git fetch origin terrain-v267-three-original-art-prototype-20261028
+            git rebase origin/terrain-v267-three-original-art-prototype-20261028
             git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
           fi

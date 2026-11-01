@@ -94,8 +94,13 @@
   function counts(batch){
     const cells=batch.cells||[];
     const original=c=>c.originalArtComposed===true&&!!c.art&&sha(c.assetSha256)&&c.visualGrammar==="v267-original-layered-landscape";
-    const connected=c=>(c.roadPorts||[]).length>0&&c.roadSeamsVerified===true;
-    const finished=c=>original(c)&&c.visuallyReviewed===true&&connected(c)&&
+    // A metadata flag alone is never proof that a painted road meets its
+    // neighbor. Physical terrain and route-edge evidence are separate gates.
+    const connected=c=>(c.roadPorts||[]).length>0&&
+      c.roadSeamsVerified===true&&c.physicalTerrainSeamVerified===true;
+    const riverSafe=c=>!(c.riverCrossings||[]).length||c.riverCrossingsVerified===true;
+    const finished=c=>original(c)&&c.visuallyReviewed===true&&
+      c.visualQualityApproved===true&&connected(c)&&riverSafe(c)&&
       c.mobileWebkitRendered===true&&c.nativePlayable===true&&
       c.historicalVerified===true&&c.userApproved===true;
     return Object.freeze({

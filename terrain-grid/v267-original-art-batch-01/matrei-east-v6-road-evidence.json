@@ -106,7 +106,5 @@
   "webkitScreenshots": [
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-seam.png",
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-whole.png"
-  ],
-  "assistantVisualReviewCompleted": true,
-  "assistantVisualReviewNotes": "Visual QA: source-road texture is improved over V5, but it still sits visibly on top of trees/uneven relief; no cut/ground contact or physical seam verification. Do not promote."
+  ]
 }

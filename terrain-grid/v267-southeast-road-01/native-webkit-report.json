@@ -1,0 +1,22 @@
+{
+  "viewportCSS": [
+    390,
+    844
+  ],
+  "deviceScaleFactor": 2,
+  "browser": "webkit",
+  "nativeGameCanvas": true,
+  "newArtDecoded": true,
+  "candidateRoadPreview": true,
+  "baselinePlayable": 3,
+  "newlyConnectedPlayable": 0,
+  "candidateMovementBlocked": true,
+  "baselineWestSouthMarch": true,
+  "baselineSouthWestReturn": true,
+  "panZoomControls": true,
+  "userApproved": false,
+  "physicalRoadSeamVerified": false,
+  "newlyFinished": 0,
+  "screenshot": "terrain-grid/v267-southeast-road-01/native-webkit-390x844-southeast-road-candidate.png",
+  "pageErrors": []
+}

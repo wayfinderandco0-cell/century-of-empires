@@ -1,0 +1,79 @@
+{
+  "schema": "coe-v267-southeast-roaded-candidate/v1",
+  "image": "terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp",
+  "mobileImage": "terrain-grid/v267-southeast-road-01/southeast-01-roaded-mobile.webp",
+  "sourceArt": [
+    "art-reviews/v267-original-source/south-unified-native-border-unapproved.webp",
+    "terrain-grid/v267-countryside-original/forest-clearing-04-master.webp"
+  ],
+  "sourceSHA256": {
+    "art-reviews/v267-original-source/south-unified-native-border-unapproved.webp": "1d4e3aac2511466013b5048104c21b25687469a6671e1f3a38a7a61e0fa33d38",
+    "terrain-grid/v267-countryside-original/forest-clearing-04-master.webp": "46b5c77075530f05ee4d6ac327d1a7723ae46aee6c5fb096ffff7ba7385fd494"
+  },
+  "worldOrigin": [
+    3072,
+    1024
+  ],
+  "worldSize": [
+    1536,
+    1024
+  ],
+  "southExit": [
+    1536,
+    578
+  ],
+  "newWestEntry": [
+    0,
+    578
+  ],
+  "proposedRoadLocal": [
+    [
+      0,
+      578
+    ],
+    [
+      90,
+      580
+    ],
+    [
+      210,
+      589
+    ],
+    [
+      345,
+      602
+    ],
+    [
+      470,
+      613
+    ],
+    [
+      600,
+      619
+    ],
+    [
+      735,
+      609
+    ],
+    [
+      865,
+      586
+    ],
+    [
+      1010,
+      567
+    ],
+    [
+      1140,
+      553
+    ]
+  ],
+  "pixelSeamMeanRGBError": 0.0,
+  "physicalSeamReviewed": false,
+  "roadSurfaceApproved": false,
+  "gameplayEnabled": false,
+  "historicallyVerified": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "Original landscape is countryside-04. Separate source-textured derivative; not a fifth unique terrain. Edge RGB alone cannot certify road continuity or movement."
+}

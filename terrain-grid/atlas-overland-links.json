@@ -1,0 +1,51 @@
+{
+  "schema": "coe-overland-links/v1",
+  "purpose": "Provisional terrain adjacency separate from immutable V123 painted-road network",
+  "surfaceMasks": {},
+  "links": [
+    {
+      "id": "south-c03-overland",
+      "mode": "overland",
+      "from": "south",
+      "to": "countryside-03",
+      "waypoints": [
+        [
+          2806,
+          1629
+        ],
+        [
+          3072,
+          1629
+        ],
+        [
+          3840,
+          1536
+        ]
+      ],
+      "strategicRoad": false,
+      "historicallyVerified": false,
+      "seamVerified": false,
+      "seamEvidence": null,
+      "reviewState": "BLOCKED_UNTIL_PHYSICAL_TERRAIN_CERTIFICATION",
+      "sourceImages": [
+        {
+          "cell": "south",
+          "path": "art-reviews/v267-original-source/south-unified-native-border-unapproved.webp",
+          "gitBlobSha": "008ff7ca9a763e2f0ae301ba8283e86ea05ee7ca"
+        },
+        {
+          "cell": "countryside-03",
+          "path": "terrain-grid/v267-countryside-original/forest-meadow-03-master.webp",
+          "gitBlobSha": "18bb95b91962a698c21ad0866bc545a743df8d07"
+        }
+      ],
+      "visualFindings": [
+        "SOUTH local x=1270,y=605 is near the existing bridge/river/road approach; the original road continues toward the east edge.",
+        "C03 local x=0,y=605 is rocky, wooded terrain without a visible matching cartway; the proposed straight scout segment intersects vegetation/rock.",
+        "No surveyed passable land corridor, continuous road, or river-bank transition is established across the shared x=3072 boundary."
+      ],
+      "approvalRequired": "Two reviewed terrain-class masks, verified edge continuity and a visually supported route; otherwise planner must return no movement.",
+      "historicalClaims": false
+    }
+  ]
+}

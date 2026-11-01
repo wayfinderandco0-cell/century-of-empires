@@ -44,7 +44,27 @@
       },
       "visualQualityApproved": false,
       "physicalTerrainSeamVerified": false,
-      "notes": "New original road-free Alpine ridge. Visually inspected: 3D perspective/vegetation plausible; not approved as a finished tile. Matrei shared terrain edge is not yet matched; no route/river/history claims."
+      "notes": "New original road-free Alpine ridge. Visually inspected: 3D perspective/vegetation plausible; not approved as a finished tile. Matrei shared terrain edge is not yet matched; no route/river/history claims.",
+      "reviewVariants": [
+        {
+          "id": "matrei-east-ridge-graded",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp",
+          "assetSha256": "afea2892f6bf39e75bdc7deba3c352da4cb7405a5912b698b3be15d0a8b13b90",
+          "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
+          "method": "color-only bounded row-wise V121 edge illumination grade; original forest geometry and V123 routes untouched",
+          "beforeMeanBorderRGBDifference": 35.41,
+          "afterMeanBorderRGBDifference": 11.19,
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "mobileWebkitRendered": false,
+          "nativePlayable": false,
+          "userApproved": false,
+          "finished": false,
+          "notes": "Reduced pixel-level color mismatch only; abrupt river/landform and vegetation discontinuity remains. Not a road-connected playable octagon."
+        }
+      ]
     },
     {
       "id": "east-atlas-2",

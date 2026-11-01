@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Century of Empires · EAST-01 V10 grounded cartway QA</title><style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#13231c;color:#f6e5c5;font:13px system-ui}
+header{position:fixed;z-index:3;inset:0 0 auto;display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:calc(5px + env(safe-area-inset-top)) 8px 6px;background:#12251fe9;border-bottom:1px solid #ac956a}
+header strong{font:700 13px Georgia,serif;margin-right:auto}button,a{border:1px solid #b29a68;background:#244439;color:#f5e4c3;padding:8px;border-radius:6px;min-height:40px;text-decoration:none}
+#viewport{position:absolute;inset:0;touch-action:none;overflow:hidden;cursor:grab}
+#terrain{position:absolute;left:50%;top:50%;width:3072px;height:1024px;max-width:none;transform-origin:center;pointer-events:none;user-select:none;-webkit-user-drag:none}
+footer{position:fixed;z-index:3;inset:auto 0 0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#10241fe8;border-top:1px solid #ac956a;line-height:1.45}
+footer b{color:#f0c27a}
+</style></head><body><header><strong>V267 · EAST-01 V10 ground-ruts road corridor</strong><button id="fit">Fit</button><button id="seam">Seam</button><button id="plus">+</button><button id="minus">−</button><a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></header>
+<div id="viewport"><img id="terrain" alt="Original Matrei at left with reversible display-only road, unapproved EAST-01 V10 local road-port continuity cartway at right"></div>
+<footer id="status" role="status"><b>UNAPPROVED CANDIDATE.</b> Matrei source-textured worn ground cartway with paired local border correction. Physical terrain/river seam and army crossing NOT certified. Drag/pinch to inspect.</footer>
+<script>"use strict";
+const view=document.getElementById("viewport"),img=document.getElementById("terrain"),status=document.getElementById("status");
+let z=1,dx=0,dy=0,points=new Map(),oldGap=0;
+function draw(){img.style.transform="translate(calc(-50% + "+dx+"px),calc(-50% + "+dy+"px)) scale("+z+")"}
+function fit(){z=Math.min((innerWidth-14)/3072,(innerHeight-155)/1024);dx=dy=0;draw()}
+function seam(){z=Math.max(.4,Math.min(1.5,innerWidth/700));dx=0;dy=0;draw()}
+function zoom(v){z=Math.max(.12,Math.min(5,v));draw()}
+document.getElementById("fit").onclick=fit;document.getElementById("seam").onclick=seam;
+document.getElementById("plus").onclick=()=>zoom(z*1.3);document.getElementById("minus").onclick=()=>zoom(z/1.3);
+view.addEventListener("pointerdown",e=>{e.preventDefault();view.setPointerCapture(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);if(points.size===2){const a=[...points.values()];oldGap=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}});
+view.addEventListener("pointermove",e=>{if(!points.has(e.pointerId))return;const prev=points.get(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);if(points.size===1){dx+=e.clientX-prev[0];dy+=e.clientY-prev[1]}else if(points.size===2){const a=[...points.values()],gap=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(oldGap>2)z=Math.max(.12,Math.min(5,z*gap/oldGap));oldGap=gap}draw()});
+for(const ev of ["pointerup","pointercancel","lostpointercapture"])view.addEventListener(ev,e=>{points.delete(e.pointerId);if(points.size<2)oldGap=0});
+img.onload=()=>{status.innerHTML="<b>V10 source-ground contact loaded.</b> Inspect road ground contact and seam at close zoom; NOT approved or traversable.";fit()};
+img.onerror=()=>{status.innerHTML="<b>V10 asset not published.</b> Art generation/commit has not completed. The approved three remain unchanged."};
+img.src="terrain-grid/v267-original-art-batch-01/matrei-east-v10-ground-ruts-contact.webp";
+fetch("terrain-grid/v267-original-art-batch-01/matrei-east-v10-ground-ruts-evidence.json").then(r=>r.ok?r.json():Promise.reject(Error("missing QA"))).then(e=>{status.innerHTML="<b>V10 pixel QA:</b> Road-port mean RGB difference "+e.sourceSeamBefore.meanAbsRgb+" → "+e.decodedWebpSeamAfter.meanAbsRgb+". <b>Physical seam UNVERIFIED; route DISABLED.</b> Drag/pinch to inspect."}).catch(()=>{});
+window.addEventListener("resize",fit);fit();
+</script></body></html>

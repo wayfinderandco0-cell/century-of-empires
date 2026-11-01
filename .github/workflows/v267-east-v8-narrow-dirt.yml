@@ -83,7 +83,8 @@ jobs:
             page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
             page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=v267-new&ridgeGrade=v8&autoOpen=1',wait_until='domcontentloaded',timeout=60000)
             page.locator('#atlasOriginalNeighbors').wait_for(timeout=60000)
-            page.locator('#atlasOriginalNeighbors').click()
+            # autoOpen=1 invokes the pilot after base art finishes loading;
+            # clicking manually races it and can toggle the candidate OFF.
             page.wait_for_function("document.getElementById('atlasStatus')?.textContent?.includes('V8 EAST-01')",timeout=60000)
             page.wait_for_function("document.getElementById('atlasRidgeDomFallback')?.naturalWidth===1536",timeout=45000)
             assert not page.locator('#atlasMarch').is_visible()

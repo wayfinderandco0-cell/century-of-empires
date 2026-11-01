@@ -1,0 +1,89 @@
+{
+  "schema": "coe-v267-east-road-study/v1",
+  "baseLandscape": "matrei-east-riparian-v4.webp",
+  "sourceMatrei": "terrain-grid/art/matrei-v121-original.webp",
+  "candidate": "matrei-east-riparian-v5-road-study.webp",
+  "matreiDisplayOverlay": "matrei-east-v5-road-extension-overlay.png",
+  "contact": "matrei-east-v5-road-contact.webp",
+  "candidateSha256": "0a3b1e3d609ab3aac82e1362a026071d450fcce84dc2cf8eee207c90d5244466",
+  "matreiSourceSha256": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+  "eastRoadPoints": [
+    [
+      0,
+      749
+    ],
+    [
+      70,
+      749
+    ],
+    [
+      142,
+      744
+    ],
+    [
+      220,
+      730
+    ],
+    [
+      312,
+      712
+    ],
+    [
+      414,
+      693
+    ],
+    [
+      520,
+      680
+    ],
+    [
+      610,
+      665
+    ]
+  ],
+  "matreiOverlayPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1408,
+      749
+    ],
+    [
+      1462,
+      750
+    ],
+    [
+      1535,
+      749
+    ]
+  ],
+  "roadPortContract": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "endpointGapPx": 0,
+    "geometryPairedOnly": true
+  },
+  "fictionalExperimentalRoute": true,
+  "sourceOriginalsUnchanged": true,
+  "physicalRoadSeamVerified": false,
+  "riverSeamVerified": false,
+  "roadAppearanceVisuallyApproved": false,
+  "mobileWebkitRendered": true,
+  "historicallyVerified": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "Original east landscape with native-scale soil-colored track. Overlay is opt-in; source Matrei and V123 graph unchanged. Geometry alone does not verify visible cartway continuity.",
+  "webkitScreenshots": [
+    "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-seam.png",
+    "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-whole.png"
+  ]
+}

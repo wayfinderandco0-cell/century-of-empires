@@ -1,0 +1,102 @@
+{
+  "schema": "coe-v267-east-v9-local-road-seam/v1",
+  "art": "matrei-east-riparian-v9-seam-conditioned.webp",
+  "comparison": "matrei-east-v9-seam-conditioned-contact.webp",
+  "matreiOverlay": "matrei-east-v8-matrei-display-overlay.png",
+  "sourceOriginal": "matrei-east-riparian-v4.webp",
+  "sourceMatrei": "matrei-v121-original.webp",
+  "candidateSha256": "6fd4c6eae7712b8a9d153c2f11deaad5b2fca7e7524bb791e2d4cda5e1a36733",
+  "protectedSourceHashes": {
+    "matrei-v121-original.webp": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+    "matrei-east-riparian-v4.webp": "c94493e8a1c7824f0df64ae9893a6214ca3c2cb4a4597fadee50ac7825d09661"
+  },
+  "roadWorldPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1425,
+      750
+    ],
+    [
+      1536,
+      749
+    ],
+    [
+      1615,
+      747
+    ],
+    [
+      1705,
+      739
+    ],
+    [
+      1785,
+      723
+    ],
+    [
+      1865,
+      700
+    ],
+    [
+      1948,
+      667
+    ],
+    [
+      2024,
+      628
+    ],
+    [
+      2105,
+      592
+    ],
+    [
+      2180,
+      567
+    ],
+    [
+      2250,
+      559
+    ]
+  ],
+  "roadPort": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "geometryPaired": true
+  },
+  "sourceSeamBefore": {
+    "meanAbsRgb": 25.204,
+    "p95AbsRgb": 97.4,
+    "maxAbsRgb": 147
+  },
+  "sourceSeamAfter": {
+    "meanAbsRgb": 0.0,
+    "p95AbsRgb": 0.0,
+    "maxAbsRgb": 0
+  },
+  "decodedWebpSeamAfter": {
+    "meanAbsRgb": 1.503,
+    "p95AbsRgb": 4.0,
+    "maxAbsRgb": 6
+  },
+  "seamMeasuredBandPx": 24,
+  "seamBlendWidthPx": 192,
+  "roadPortPixelContinuityImproved": true,
+  "physicalRoadSeamVerified": false,
+  "physicalTerrainSeamVerified": false,
+  "riverSeamVerified": false,
+  "visualQualityApproved": false,
+  "historicallyVerified": false,
+  "mobileWebkitRendered": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "V9 is a local seam-corrected revision of one EAST-01 candidate, NOT a new cell or a certified route."
+}

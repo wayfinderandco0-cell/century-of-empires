@@ -1,0 +1,67 @@
+name: V267 SOUTH-east V2 original-ground cartway and native WebKit (UNAPPROVED)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_southeast_roaded_candidate_v2.py
+      - scripts/v267_southeast_v2_webkit.py
+      - terrain-grid/atlas-integrated.js
+      - .github/workflows/v267-southeast-v2-grounded-candidate.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-southeast-v2
+  cancel-in-progress: false
+jobs:
+  artwork-and-native-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install imaging and actual mobile WebKit
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Generate distinct V2 roaded derivative without remote-ground smearing
+        run: python scripts/v267_southeast_roaded_candidate_v2.py
+      - name: Guard baseline movement and candidate non-playability
+        run: |
+          node scripts/test_atlas_playability.js
+          node scripts/test_atlas_manifest.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/v267-southeast-road-02')
+          meta=json.loads((p/'southeast-02-source.json').read_text())
+          assert Image.open(p/'southeast-02-local-ruts.webp').size==(1536,1024)
+          assert not any(meta[k] for k in ('visualApproval','physicalSeamVerified','gameplayEnabled','nativePlayable','userApproved','finished'))
+          assert 0.002<meta['metrics']['modifiedPixelFraction']<0.065
+          print('PASS: protected graph remains 3 connected; V2 roaded art is a review candidate only')
+          PY
+      - name: Actual 390x844 WebKit native game, road block and two-way army march
+        run: python scripts/v267_southeast_v2_webkit.py
+      - name: Preserve source artwork and screenshots even on failed QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-southeast-v2-native-webkit-unapproved
+          path: terrain-grid/v267-southeast-road-02/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Commit generated artwork, source metrics and actual WebKit screenshot
+        if: success()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add terrain-grid/v267-southeast-road-02/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Render SOUTH-east V2 local-texture roaded candidate and real WebKit proof (not playable)'
+          git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+          git push origin HEAD:terrain-v267-three-original-art-prototype-20261028

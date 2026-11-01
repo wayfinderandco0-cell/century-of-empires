@@ -1,0 +1,54 @@
+name: V267 new original countryside-02 iPhone WebKit QA
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - '.github/workflows/v267-countryside-02-webkit.yml'
+      - 'v267-countryside-02-review.html'
+      - 'scripts/test-countryside-02-webkit.mjs'
+      - 'terrain-grid/v267-countryside-original/forest-meadow-02-original.webp'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  iphone-webkit-art-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test dependency
+        run: npm install --no-save --no-package-lock playwright@1.56.1
+      - name: Install WebKit and system dependencies
+        run: npx playwright install --with-deps webkit
+      - name: Serve review locally
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/coe-server.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8765/v267-countryside-02-review.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/coe-server.log
+          exit 1
+      - name: Render actual 390x844 WebKit screenshot and test zoom
+        run: node scripts/test-countryside-02-webkit.mjs
+      - name: Upload real browser screenshot and result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: countryside-02-webkit-iphone
+          if-no-files-found: warn
+          path: |
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-02.png
+            terrain-grid/v267-countryside-original/webkit-iphone-countryside-02-result.json
+      - name: Preserve passing screenshot in development branch
+        if: success()
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-02.png terrain-grid/v267-countryside-original/webkit-iphone-countryside-02-result.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record actual WebKit iPhone screenshot of new countryside-02 original art"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

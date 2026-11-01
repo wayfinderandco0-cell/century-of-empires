@@ -94,11 +94,13 @@
           "physicalTerrainSeamVerified": false,
           "roadSeamsVerified": false,
           "riverCrossingsVerified": false,
-          "mobileWebkitRendered": false,
+          "mobileWebkitRendered": true,
           "nativePlayable": false,
           "userApproved": false,
           "finished": false,
-          "notes": "REJECTED visual review: border frame removed and pixel edge matches, but Matrei river/meadow still changes abruptly to rocky forest. Not geographically or physically verified."
+          "notes": "Real 390x844 WebKit screenshot test PASSED, but human visual review REJECTED physical terrain continuity: Matrei river/meadow still changes abruptly to rocky forest. No new road or historic crossing. Not finished.",
+          "webkitRunId": 41277169088,
+          "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-v2.png"
         }
       ]
     },

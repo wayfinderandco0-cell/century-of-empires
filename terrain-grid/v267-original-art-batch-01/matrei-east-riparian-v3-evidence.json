@@ -11,11 +11,12 @@
   "roadPorts": [],
   "roadsVerified": false,
   "riverSeamVerified": false,
-  "mobileWebkitRendered": false,
+  "mobileWebkitRendered": true,
   "visuallyReviewed": false,
   "nativePlayable": false,
   "historicallyVerified": false,
   "userApproved": false,
   "finished": false,
-  "notes": "Unapproved physical terrain continuation study. Registered V121 pixels and original ridge used; provisional river path needs real visual QA. No invented cartway."
+  "notes": "Unapproved physical terrain continuation study. Registered V121 pixels and original ridge used; provisional river path needs real visual QA. No invented cartway.",
+  "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v3.png"
 }

@@ -58,11 +58,13 @@
           "visualQualityApproved": false,
           "physicalTerrainSeamVerified": false,
           "roadSeamsVerified": false,
-          "mobileWebkitRendered": false,
+          "mobileWebkitRendered": true,
           "nativePlayable": false,
           "userApproved": false,
           "finished": false,
-          "notes": "Reduced pixel-level color mismatch only; abrupt river/landform and vegetation discontinuity remains. Not a road-connected playable octagon."
+          "notes": "Reduced pixel-level color mismatch only; abrupt river/landform and vegetation discontinuity remains. Not a road-connected playable octagon.",
+          "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-ridge-graded.png",
+          "webkitRunId": 41265542661
         }
       ]
     },

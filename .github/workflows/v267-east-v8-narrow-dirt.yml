@@ -72,6 +72,28 @@ jobs:
             browser.close()
           print('Actual iPhone-sized WebKit artwork, seam view, zoom PASS:',out)
           PY
+      - name: Actual native-game iPhone WebKit V8 render and protected-route isolation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v8-native-canvas.png')
+          with sync_playwright() as p:
+            browser=p.webkit.launch()
+            page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+            page.goto('http://127.0.0.1:8765/index.html?originalArtPilot=v267-new&ridgeGrade=v8&autoOpen=1',wait_until='domcontentloaded',timeout=60000)
+            page.locator('#atlasOriginalNeighbors').wait_for(timeout=60000)
+            page.locator('#atlasOriginalNeighbors').click()
+            page.wait_for_function("document.getElementById('atlasStatus')?.textContent?.includes('V8 EAST-01')",timeout=60000)
+            page.wait_for_function("document.getElementById('atlasRidgeDomFallback')?.naturalWidth===1536",timeout=45000)
+            assert not page.locator('#atlasMarch').is_visible()
+            assert 'route disabled' in page.locator('#atlasStatus').text_content()
+            page.locator('#atlasPlus').click()
+            page.screenshot(path=str(out),full_page=True)
+            assert out.stat().st_size>12000
+            browser.close()
+          print('Native game-canvas V8 image and zoom PASS; protected army route remains disabled:',out)
+          PY
       - name: Commit actual art assets and screenshot on development branch
         run: |
           git config user.name "github-actions[bot]"
@@ -81,6 +103,7 @@ jobs:
           git add terrain-grid/v267-original-art-batch-01/matrei-east-v8-narrow-dirt-contact.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-v8-narrow-dirt-evidence.json
           git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v8-narrow-dirt.png
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v8-native-canvas.png
           if ! git diff --cached --quiet; then
             git commit -m "Build V267 EAST-01 V8 narrow-dirt original-art candidate and real WebKit screenshot"
             git pull --rebase origin terrain-v267-three-original-art-prototype-20261028

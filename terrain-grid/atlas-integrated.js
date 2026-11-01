@@ -5,6 +5,8 @@
 (function(root){
 "use strict";
 const M="terrain-grid/atlas-cells.json";
+// Isolated SOUTH-east roaded artwork inspection. The V123 graph stays unchanged.
+const southEastRoadPilot=new URLSearchParams(root.location.search).get("southEastRoadPilot")==="1";
 const $=id=>document.getElementById(id);
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -58,6 +60,8 @@ let photoMode=false,photoStream=null,photoCamera=null;
 // Independent road-free raster candidate; never enters V123 graph or V94 saves.
 const C03_ORIGIN=[3072,1024];let countryside03Image=null,countryside03Visible=false;
 // Manifest-driven road-free countryside artwork: review-only, no V123 nodes or saves.
+let southeastRoadImage=null,southeastRoadVisible=false;
+const SOUTHEAST_ROAD_ORIGIN=[3072,1024];
 let countrysideBatchVisible=false;
 const countrysideBatchImages=new Map();
 const COUNTRYSIDE_BATCH_IDS=["countryside-03","countryside-04","countryside-05"];
@@ -137,6 +141,13 @@ function draw(){
   const pos=worldToScreen(tile.origin),poly=worldPolygon(tile).map(worldToScreen);
   ctx.save();polygon(ctx,poly);ctx.clip();
   ctx.drawImage(img,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+ }
+ // Roaded SOUTH-east artwork study: still no new V123 link or army route.
+ if(southeastRoadVisible&&southeastRoadImage){
+  const pos=worldToScreen(SOUTHEAST_ROAD_ORIGIN),poly=worldPolygon({origin:SOUTHEAST_ROAD_ORIGIN}).map(worldToScreen);
+  ctx.save();polygon(ctx,poly);ctx.clip();
+  ctx.drawImage(southeastRoadImage,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+  ctx.save();polygon(ctx,poly);ctx.strokeStyle="#bca16b9c";ctx.lineWidth=1.2;ctx.stroke();ctx.restore();
  }
  // Display-only full-resolution countryside art; protected V123 tiles render on top.
  if(countryside03Visible&&countryside03Image){
@@ -271,6 +282,10 @@ function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.ge
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
 $("atlasWhole").onclick=()=>{
+ if(southeastRoadVisible){
+  const fitted=Math.min(Math.max(100,w-24)/4608,Math.max(100,h-155)/2048)/base;
+  centerAt(2304,1024,Math.max(.15,fitted));return;
+ }
  if(countrysideBatchVisible){
   const atlasWidth=countrysideBatch02Pilot?7680:6144;
   const fitted=Math.min(Math.max(100,w-24)/atlasWidth,Math.max(100,h-155)/2048)/base;
@@ -594,6 +609,8 @@ const API={
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
  get campaignOrdersUnchanged(){return true},get matreiRegistered(){return !!matreiRegistered},
  get approvedBaselineLocked(){return !!manifest&&root.COEV267ArtContract?.assertBase(manifest)===true},
+ get southeastRoadVisible(){return southeastRoadVisible},
+ get southeastRoadDimensions(){return southeastRoadImage?[southeastRoadImage.naturalWidth,southeastRoadImage.naturalHeight]:null},
  get countryside03Loaded(){return !!countryside03Image&&countryside03Image.naturalWidth===1536},
  get countryside03Visible(){return countryside03Visible},
  get countryside03Dimensions(){return countryside03Image?[countryside03Image.naturalWidth,countryside03Image.naturalHeight]:null},
@@ -624,6 +641,14 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status(playability.label+" · tap a painted V123 cartway to march");if(shown)fit();
+ if(southEastRoadPilot){
+  southeastRoadImage=await imageLoad("terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp");
+  if(southeastRoadImage.naturalWidth!==1536||southeastRoadImage.naturalHeight!==1024)throw Error("SOUTHEAST road art dimensions invalid");
+  southeastRoadVisible=true;
+  if(!shown)open();
+  $("atlasWhole").click();
+  status("3 PLAYABLE · SOUTH-east ROAD ART STUDY only · candidate NOT traversable or approved");
+ }
  if(studyParams.get("playableAtlas")==="1"&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();
   status(playability.label+" · WEST/MATREI/SOUTH only · tap a painted cartway to march");

@@ -53,7 +53,7 @@ let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Opt-in source-layered scenic art. Never changes the protected V123 road graph.
-let neighborPilotCells=[],neighborPilotImages={},neighborPilotInlays=[],neighborPilotShown=false,neighborPilotCamera=null;
+let neighborPilotCells=[],neighborPilotImages={},neighborPilotInlays=[],neighborPilotShown=false,neighborPilotCamera=null,neighborPilotStream=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
 const pointers=new Map();let tap=null,prevPinch=null;
 function status(s){$("atlasStatus").textContent=s;}
@@ -100,6 +100,14 @@ function draw(){
   return;
  }
  if(!loaded)return;
+ // Load only currently visible experimental artwork; the three protected
+ // V123 images are always retained independently of this bounded cache.
+ if(neighborPilotShown&&neighborPilotStream&&scale>0){
+  neighborPilotStream.update({
+   minX:center[0]-w/(2*scale),maxX:center[0]+w/(2*scale),
+   minY:center[1]-h/(2*scale),maxY:center[1]+h/(2*scale)
+  });
+ }
  // Non-playable scenic diamonds have no routes, ownership or army hit areas.
  // Fill their real world-space polygons BEFORE drawing the adjacent octagons.
  if(neighborPilotShown)for(const infill of neighborPilotInlays){
@@ -313,26 +321,31 @@ pilotButton.onclick=async()=>{
    if(new Set(all.map(c=>c.id)).size!==all.length||
       new Set(all.map(c=>c.origin.join(","))).size!==all.length)
       throw Error("Overlapping or duplicated scenic candidates across batches");
-   // Sequential image decode avoids a 16-image simultaneous allocation spike on iPhone.
-   const pairs=[];
-   for(const cell of all){
-    let img;
-    try{img=await imageLoad(cell.art,12000);}
-    catch(primaryError){
-      // GitHack branch CDN can cache a 404 for a newly committed binary.
-      // Use the immutable asset commit as a second, CORS-safe source.
+   // Decode only the nearest visible cells. A 16-cell 1536×1024
+   // eager decode can exhaust mobile Safari memory even when offscreen.
+   if(!root.COEV267ViewportCache)throw Error("V267 viewport loader missing");
+   neighborPilotCells=all;
+   neighborPilotImages={};
+   neighborPilotStream=root.COEV267ViewportCache.create({
+    cells:all,maxDecoded:6,maxConcurrent:2,padding:192,
+    load:async (art,cell)=>{
+     let img;
+     try{img=await imageLoad(art,12000);}
+     catch(primaryError){
       if(cell.id!=="matrei-east-ridge")throw primaryError;
       const fallbackCommit=ridgeGradePilot?"0e0ba14df7bc44d5492f460fa4d616c552644957":"9e0e11cb2897cce91461681bfe0acf1a420034a5";
-      img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/"+fallbackCommit+"/"+cell.art,20000);
-      status("New ridge loaded from immutable source after preview CDN cache miss");
-    }
-    // Wait for decode before first canvas draw on iOS Safari/WebKit.
-    if(img.decode)await img.decode().catch(()=>{});
-    if(img.naturalWidth!==1536||img.naturalHeight!==1024)
+      img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/"+fallbackCommit+"/"+art,20000);
+     }
+     if(img.decode)await img.decode().catch(()=>{});
+     if(img.naturalWidth!==1536||img.naturalHeight!==1024)
       throw Error("Neighbor art dimensions mismatch: "+cell.id);
-    pairs.push([cell.id,img]);
-   }
-   neighborPilotCells=all;neighborPilotImages=Object.fromEntries(pairs);
+     return img;
+    },
+    onChange:()=>{
+     neighborPilotImages=Object.fromEntries(neighborPilotStream.entries());
+     if(neighborPilotShown)draw();
+    }
+   });
    neighborPilotInlays=batches.flatMap(b=>b.decorativeInlays||[]).filter(
      i=>all.some(c=>c.id===i.sourceCell));
   }

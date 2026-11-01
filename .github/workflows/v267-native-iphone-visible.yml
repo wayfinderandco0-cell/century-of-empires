@@ -1,0 +1,40 @@
+name: V267 Native iPhone Visible Ridge Gate
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - 'terrain-grid/atlas-integrated.js'
+      - 'tests/v267_native_iphone_visible.py'
+      - '.github/workflows/v267-native-iphone-visible.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-iphone-visible:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate JavaScript syntax
+        run: node --check terrain-grid/atlas-integrated.js
+      - name: Install real WebKit and screenshot pixel checker
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow
+          python -m playwright install --with-deps webkit
+      - name: Start local atlas server
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/v267-native-server.log 2>&1 &
+          sleep 2
+      - name: Test native iPhone art, zoom, V123 and failure recovery
+        run: python tests/v267_native_iphone_visible.py
+      - name: Upload real iPhone WebKit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-native-iphone-visible-evidence
+          path: v267-native-iphone-qa/*.png
+          if-no-files-found: warn

@@ -1,0 +1,103 @@
+{
+  "schema": "coe-v267-east-v11-source-terrain-repaired/v1",
+  "art": "matrei-east-riparian-v11-terrain-repaired.webp",
+  "matreiOverlay": "matrei-east-v11-matrei-display-overlay.png",
+  "comparison": "matrei-east-v11-terrain-repaired-contact.webp",
+  "candidateSha256": "dba87770a2a3b0d2299dcf0f505106f962b979936b523bb5fd699229b676a438",
+  "protectedSourceHashes": {
+    "matrei-v121-original.webp": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+    "matrei-east-riparian-v4.webp": "c94493e8a1c7824f0df64ae9893a6214ca3c2cb4a4597fadee50ac7825d09661"
+  },
+  "sourceOriginal": "matrei-east-riparian-v4.webp",
+  "roadWorldPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1425,
+      750
+    ],
+    [
+      1536,
+      749
+    ],
+    [
+      1615,
+      747
+    ],
+    [
+      1705,
+      739
+    ],
+    [
+      1785,
+      723
+    ],
+    [
+      1865,
+      700
+    ],
+    [
+      1948,
+      667
+    ],
+    [
+      2024,
+      628
+    ],
+    [
+      2105,
+      592
+    ],
+    [
+      2180,
+      567
+    ],
+    [
+      2250,
+      559
+    ]
+  ],
+  "roadPort": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "geometryPaired": true
+  },
+  "sourceSeamBefore": {
+    "meanAbsRgb": 25.034,
+    "p95AbsRgb": 90.1,
+    "maxAbsRgb": 148
+  },
+  "decodedWebpSeamAfter": {
+    "meanAbsRgb": 1.646,
+    "p95AbsRgb": 4.0,
+    "maxAbsRgb": 12
+  },
+  "sourceMaterial": "registered V121 Matrei road + original V4 EAST-01",
+  "rutPigmentWeathering": true,
+  "groundWedgeRepaired": true,
+  "groundWedgeMetrics": {
+    "insetVoidDarkPixelsBefore": 1883,
+    "insetVoidDarkPixelsAfter": 1034,
+    "roadbedSourcePixelsReplaced": 20975,
+    "sourceRegion": "V121 registered Matrei meadow material only",
+    "paintedBeyondOctagon": false
+  },
+  "physicalRoadSeamVerified": false,
+  "physicalTerrainSeamVerified": false,
+  "riverSeamVerified": false,
+  "visualQualityApproved": false,
+  "historicallyVerified": false,
+  "mobileWebkitRendered": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "V11 fills the inset-art black/gold void under Matrei road with local V121 meadow material. This is a reversible display-only study; physical seam still unverified."
+}

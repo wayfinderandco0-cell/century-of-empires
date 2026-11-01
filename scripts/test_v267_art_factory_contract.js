@@ -70,4 +70,30 @@ const clone=x=>JSON.parse(JSON.stringify(x));
   // No source-backed historical verification or road connection => NOT finished.
   assert.equal(contract.validateBatch(bad,base).netFinishedToday,0);
 }
-console.log("PASS: locked WEST/MATREI/SOUTH, exact paired seam geometry, false-history/photo/inlay rejection, zero fabricated finished art");
+{
+  // Synthetic metadata gate only; no artwork or actual historic route is
+  // certified here. This prevents a flag-only "finished" counter.
+  const t=clone(batch),a=t.cells[0],b=t.cells[1];
+  b.origin=[a.origin[0]+1536,a.origin[1]];
+  a.roadPorts=[{id:"e",side:"east",local:[1536,478],routeId:"synthetic"}];
+  b.roadPorts=[{id:"w",side:"west",local:[0,478],routeId:"synthetic"}];
+  t.links=[{id:"synthetic-link",from:{cell:a.id,port:"e"},to:{cell:b.id,port:"w"}}];
+  Object.assign(a,{art:"art-reviews/v267-synthetic.webp",assetSha256:"c".repeat(64),
+    visualGrammar:"v267-original-layered-landscape",originalArtComposed:true,
+    visuallyReviewed:true,visualQualityApproved:false,
+    roadSeamsVerified:true,physicalTerrainSeamVerified:false,
+    mobileWebkitRendered:true,nativePlayable:true,
+    historicalVerified:true,scenarioDate:"1805-01-01",
+    historicalSources:["synthetic-fixture-not-a-historical-claim"],userApproved:true});
+  assert.equal(contract.validateBatch(t,base).roadConnected,0,"Color-only seam cannot count as connected");
+  a.physicalTerrainSeamVerified=true;
+  assert.equal(contract.validateBatch(t,base).netFinishedToday,0,"Unapproved visual quality blocks finish");
+  a.visualQualityApproved=true;
+  assert.equal(contract.validateBatch(t,base).netFinishedToday,1,"All synthetic gates required");
+  a.riverCrossings=[{id:"synthetic-river"}];
+  a.riverCrossingsVerified=false;
+  assert.equal(contract.validateBatch(t,base).netFinishedToday,0,"Unverified river crossing blocks finish");
+  a.riverCrossingsVerified=true;
+  assert.equal(contract.validateBatch(t,base).netFinishedToday,1);
+}
+console.log("PASS: locked V267 art, paired graph ports, physical terrain and river crossing gates, zero real finished art");

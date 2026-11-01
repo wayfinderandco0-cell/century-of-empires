@@ -141,6 +141,32 @@
           "userApproved": false,
           "finished": false,
           "notes": "Visually reviewed comparison: original rocky forest preserved and V3's artificial full-width blue stripe removed. River now fades beneath existing trees, but Matrei-to-EAST physical river/bank seam remains unverified and no embedded cartway exists. NOT finished or approved."
+        },
+        {
+          "id": "matrei-east-riparian-v9",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v9-seam-conditioned.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-contact.webp",
+          "sourceCode": "scripts/v267_east01_cartway_v9.py",
+          "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v4.webp",
+          "sourceMethod": "Local original-source ground-cartway seam conditioning, not new landscape generation",
+          "assetSha256": "6fd4c6eae7712b8a9d153c2f11deaad5b2fca7e7524bb791e2d4cda5e1a36733",
+          "sourceRoadSeamMeanAbsRGBBefore": 25.204,
+          "decodedRoadSeamMeanAbsRGBAfter": 1.503,
+          "roadPortPixelContinuityImproved": true,
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": true,
+          "nativeCanvasRendered": true,
+          "nativePlayable": false,
+          "historicallyVerified": false,
+          "userApproved": false,
+          "finished": false,
+          "webkitRunId": 41306593341,
+          "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-native-canvas.png",
+          "notes": "Pixel road-port continuity improved, but visual inspection still finds a straight elevated-looking Matrei-side road ribbon over forest. The full landform/river seam is NOT certified; do not enable crossing or promote."
         }
       ]
     },

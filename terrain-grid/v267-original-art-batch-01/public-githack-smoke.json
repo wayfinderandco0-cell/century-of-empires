@@ -1,0 +1,9 @@
+{
+  "schema": "coe-v267-public-safari-smoke/v1",
+  "url": "https://raw.githack.com/wayfinderandco0-cell/century-of-empires/terrain-v267-three-original-art-prototype-20261028/index.html?originalArtPilot=v267-new&autoOpen=1",
+  "publicPreviewRendered": false,
+  "source": "raw.githack.com (public branch URL, not local server)",
+  "browser": "Playwright WebKit 390x844 @2x",
+  "notes": "Public CDN is a separate check from successful local WebKit rendering",
+  "error": "Page.wait_for_function: Timeout 45000ms exceeded."
+}

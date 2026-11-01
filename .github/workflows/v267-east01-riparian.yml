@@ -5,6 +5,7 @@ on:
       - terrain-v267-three-original-art-prototype-20261028
     paths:
       - scripts/v267_east01_riparian.py
+      - scripts/v267_east01_v3_webkit.py
       - .github/workflows/v267-east01-riparian.yml
   workflow_dispatch:
 concurrency:
@@ -45,6 +46,12 @@ jobs:
           assert not evidence["riverSeamVerified"] and not evidence["finished"]
           print("PASS: unique image, native dimensions, road-free, unapproved")
           PY
+      - name: Install WebKit browser for real iPhone-sized screenshot QA
+        run: |
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps webkit
+      - name: Test new EAST-01 art on 390x844 WebKit
+        run: python scripts/v267_east01_v3_webkit.py
       - name: Commit actual candidate image and comparison to isolated branch
         run: |
           git config user.name "github-actions[bot]"
@@ -53,6 +60,7 @@ jobs:
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-comparison.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-thumb.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-evidence.json
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v3.png
           if git diff --cached --quiet; then
             echo "Generated art already up to date"
           else

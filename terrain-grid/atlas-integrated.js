@@ -62,7 +62,7 @@ let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Independent road-free raster candidate; never enters V123 graph or V94 saves.
 const C03_ORIGIN=[3072,1024];let countryside03Image=null,countryside03Visible=false;
-let overlandReady=false;
+let overlandReady=false,overlandAudit=null;
 const SOUTH_LAST=[2806,1629],OVERLAND_BORDER=[3072,1629],C03_SCOUT=[3840,1536];
 // Manifest-driven road-free countryside artwork: review-only, no V123 nodes or saves.
 let southeastRoadImage=null,southeastRoadVisible=false;
@@ -272,18 +272,19 @@ function sample(points,amount){let left=amount;for(let i=1;i<points.length;i++){
  // do not add this to the V123 graph or count it as a fourth approved tile.
 function startScout(){
  if(!overlandReady||photoMode||neighborPilotShown)return false;
+ if(!overlandAudit?.passable){status("C03 crossing BLOCKED · physical land/river seam and terrain masks not verified");return false;}
  if(distance(unit,C03_SCOUT)<3){status("Already in unverified C03 overland pilot");return true;}
  const departingCandidate=unit[0]>=3072;
  const roadLeg=departingCandidate?[clone(unit)]:routeBetween(unit,SOUTH_LAST);
  if(!roadLeg){status("Return to an approved road before scouting");return false;}
- path=clean([...roadLeg,OVERLAND_BORDER,C03_SCOUT]);
+ path=clean([...roadLeg,...overlandAudit.points.slice(1)]);
  progress=0;travelLength=length(path);moving=travelLength>.01;
  status("EXPERIMENTAL overland scouting · terrain/river not verified · not a finished fourth tile");draw();return true;
 }
 function returnScout(){
- if(!overlandReady)return false;
+ if(!overlandReady||!overlandAudit?.passable)return false;
  if(unit[0]<3072){status("Already on approved SOUTH side");return false;}
- path=clean([clone(unit),OVERLAND_BORDER,SOUTH_LAST]);
+ path=clean([clone(unit),...overlandAudit.points.slice(0,2).reverse()]);
  progress=0;travelLength=length(path);moving=travelLength>.01;
  status("Returning from experimental C03 to the protected SOUTH road");draw();return true;
 }
@@ -642,7 +643,7 @@ const API={
  get uniqueWorldNodes(){return atlas?new Set([...atlas.network.graph.values()].map(n=>n.world.join(","))).size:0},
  get seams(){return atlas?.network.seams||[]},get imageSizes(){return Object.fromEntries(Object.entries(images).map(([id,img])=>[id,[img.naturalWidth,img.naturalHeight]]));},
  get moving(){return moving},get position(){return clone(unit)},get route(){return path.map(clone)},
- get overlandReady(){return overlandReady},get overlandExperimental(){return overlandPilot},
+ get overlandReady(){return overlandReady},get overlandExperimental(){return overlandPilot},get overlandPassability(){return overlandAudit},
  startScout,returnScout,
  get zoom(){return zoom},get center(){return clone(center)},get manifest(){return manifest},
  get graph(){return atlas?.network},get sourceRoadSegments(){return segments.length},
@@ -689,11 +690,23 @@ root.COEAtlas=Object.freeze(API);
   countryside03Image=await imageLoad(candidate.art);
   if(countryside03Image.naturalWidth!==1536||countryside03Image.naturalHeight!==1024)
    throw Error("Overland experimental artwork dimensions changed");
+  // The former animation crossed an unreviewed SOUTH/C03 seam. The independent
+  // wilderness planner now rejects it until BOTH surfaces and the edge are certified.
+  if(!root.COEAtlasOverland)throw Error("Overland passability engine missing");
+  const contractResponse=await fetch("terrain-grid/atlas-overland-links.json");
+  if(!contractResponse.ok)throw Error("Overland contract HTTP "+contractResponse.status);
+  const contract=await contractResponse.json();
+  const link=contract.links.find(l=>l.id==="south-c03-overland");
+  if(!link)throw Error("SOUTH/C03 overland contract missing");
+  overlandAudit=root.COEAtlasOverland.inspect(link,manifest,contract.surfaceMasks||{});
   countryside03Visible=true;overlandReady=true;
+  scoutButton.disabled=!overlandAudit.passable;
+  returnButton.disabled=!overlandAudit.passable;
   if(studyParams.get("autoOpen")==="1"&&!shown)open();
-  $("atlasBar").querySelector("small").textContent=playability.label+" · 1 OVERLAND TEST";
+  $("atlasBar").querySelector("small").textContent=playability.label+" · OVERLAND BLOCKED";
   if(shown)$("atlasWhole").click();
-  status("3 VERIFIED PLAYABLE · 1 EXPERIMENTAL OVERLAND · no certified crossing/finished fourth tile");
+  status(overlandAudit.passable?"Reviewed overland route ready for test · NOT an approved fourth tile":
+    "C03 crossing BLOCKED · no certified surface masks/landform seam · original three playable");
  }
  if(southEastRoadPilot==="1"||southEastRoadPilot==="2"){
   const roadArt=southEastRoadPilot==="2"?"terrain-grid/v267-southeast-road-02/southeast-02-local-ruts.webp":"terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp";

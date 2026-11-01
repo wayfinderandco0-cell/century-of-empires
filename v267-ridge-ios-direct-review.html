@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12251e">
+<title>Century of Empires — V267 East Ridge iPhone Direct Art Review</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14251f;color:#f3e8cf;font:15px system-ui,-apple-system,sans-serif}
+body{display:flex;flex-direction:column}
+header{flex:none;background:#10231ddf;border-bottom:1px solid #8b8062;padding:calc(9px + env(safe-area-inset-top)) 10px 10px}
+h1{font:700 18px Georgia,serif;margin:0 0 8px}
+.controls{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button,a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid #ad9a72;border-radius:9px;background:#28483e;color:#f5e5c4;font:700 13px system-ui;text-decoration:none}
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:none;background:#16271f}
+#ridge{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;will-change:transform;transform-origin:50% 50%}
+footer{flex:none;min-height:62px;border-top:1px solid #8b8062;background:#10231d;padding:10px 12px calc(10px + env(safe-area-inset-bottom));font:13px/1.35 system-ui}
+#status{font-weight:600}small{display:block;opacity:.78;margin-top:4px}
+</style>
+</head>
+<body>
+<header>
+<h1>ALPINE ATLAS · EAST RIDGE</h1>
+<div class="controls">
+<button id="minus" type="button" aria-label="Zoom out">−</button>
+<button id="plus" type="button" aria-label="Zoom in">+</button>
+<button id="reset" type="button">Fit</button>
+<a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a>
+<a href="index.html?originalArtPilot=v267-new&amp;autoOpen=1">Native atlas</a>
+</div>
+</header>
+<main id="stage" aria-label="East ridge landscape, drag to pan and pinch to zoom">
+<img id="ridge" draggable="false" alt="New unapproved forested Alpine east-ridge octagon"
+ src="terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp">
+</main>
+<footer>
+<div id="status" role="status">Loading original ridge image…</div>
+<small>Direct Safari image review. No fabricated roads, armies or settlements. This candidate is not a finished playable octagon.</small>
+</footer>
+<script>
+"use strict";
+const image=document.getElementById("ridge"),stage=document.getElementById("stage"),status=document.getElementById("status");
+const immutable="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+let fallback=false,zoom=1,dx=0,dy=0,previousDistance=null;
+const pointers=new Map();
+function render(){image.style.transform="translate3d("+dx+"px,"+dy+"px,0) scale("+zoom+")";}
+function fit(){zoom=1;dx=dy=0;render();}
+function changeZoom(factor){zoom=Math.max(1,Math.min(8,zoom*factor));render();}
+image.addEventListener("load",()=>{
+ if(image.naturalWidth!==1536||image.naturalHeight!==1024){
+   status.textContent="Artwork dimensions unexpected: "+image.naturalWidth+"×"+image.naturalHeight;
+   return;
+ }
+ status.textContent="Original east ridge visible · 1536×1024 · drag or pinch to inspect"+(fallback?" · immutable image source":"");
+});
+image.addEventListener("error",()=>{
+ if(!fallback){fallback=true;status.textContent="Retrying immutable artwork source…";image.src=immutable;}
+ else status.textContent="Artwork failed to load from both sources. Open the approved three-octagon preview.";
+});
+stage.addEventListener("pointerdown",e=>{e.preventDefault();stage.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);previousDistance=null;});
+stage.addEventListener("pointermove",e=>{
+ if(!pointers.has(e.pointerId))return;
+ const old=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===1){dx+=e.clientX-old[0];dy+=e.clientY-old[1];}
+ else if(pointers.size===2){
+   const [a,b]=[...pointers.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+   if(previousDistance)zoom=Math.max(1,Math.min(8,zoom*d/previousDistance));
+   previousDistance=d;
+ }
+ render();
+});
+for(const name of ["pointerup","pointercancel","lostpointercapture"])
+ stage.addEventListener(name,e=>{pointers.delete(e.pointerId);previousDistance=null;});
+document.getElementById("minus").onclick=()=>changeZoom(1/1.35);
+document.getElementById("plus").onclick=()=>changeZoom(1.35);
+document.getElementById("reset").onclick=fit;
+window.COE_RIDGE_REVIEW={get loaded(){return image.complete&&image.naturalWidth===1536&&image.naturalHeight===1024},get fallback(){return fallback},get zoom(){return zoom},get status(){return status.textContent}};
+</script>
+</body></html>

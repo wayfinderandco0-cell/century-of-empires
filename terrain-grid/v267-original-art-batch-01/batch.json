@@ -110,6 +110,26 @@
           "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
           "sourceCode": "scripts/v267_east01_riparian.py",
           "method": "Original V267 ridge preserved; native-scale V121 source material and river palette used to re-author a provisional riparian channel. No cloned terrain or new synthetic forest.",
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": false,
+          "nativePlayable": false,
+          "historicallyVerified": false,
+          "userApproved": false,
+          "finished": false,
+          "notes": "REJECTED in thumbnail visual QA: an implausibly uniform blue water stripe crosses the existing mountain forest and valley. The source water exit was detected, but river shape and bank material are physically unacceptable. Do not promote."
+        },
+        {
+          "id": "matrei-east-riparian-v4",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v4.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v4-comparison.webp",
+          "thumbnail": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v4-thumb.webp",
+          "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
+          "sourceCode": "scripts/v267_east01_riparian_v4.py",
+          "method": "Original V267 ridge preserved; V121 riparian source material feathered into the west edge and visually occluded beneath existing forest within 370px; no synthetic trees or cartway.",
           "visuallyReviewed": false,
           "visualQualityApproved": false,
           "physicalTerrainSeamVerified": false,
@@ -120,7 +140,7 @@
           "historicallyVerified": false,
           "userApproved": false,
           "finished": false,
-          "notes": "Automated image generation completed via GitHub Actions. Pending human visual QA and physical seam/road verification; V123 graph and approved three art files unchanged."
+          "notes": "Candidate for actual visual QA. No river crossing, historical road, or native route is asserted."
         }
       ]
     },

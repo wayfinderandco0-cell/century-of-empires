@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>V267 EAST-01 V5 — original-art road contact review</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#11241d;color:#f6e6c4;font-family:system-ui;overflow:hidden}
+header{position:fixed;z-index:3;top:0;left:0;right:0;background:#10251fe9;border-bottom:1px solid #b89d63;padding:calc(env(safe-area-inset-top) + 7px) 8px 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+strong{font:700 13px Georgia,serif;margin-right:auto}button,a{background:#26453b;color:#f5e3bb;border:1px solid #ad9364;border-radius:6px;padding:7px 9px;min-height:40px;font:700 12px system-ui;text-decoration:none}
+#viewport{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+#terrain{position:absolute;left:50%;top:50%;width:3072px;height:1024px;max-width:none;transform-origin:50% 50%;pointer-events:none;user-select:none;-webkit-user-drag:none}
+footer{position:fixed;z-index:3;bottom:0;left:0;right:0;background:#10251fed;border-top:1px solid #b89d63;padding:9px 12px calc(9px + env(safe-area-inset-bottom));font:12px/1.4 system-ui}
+b{color:#eac279}
+</style></head><body><header><strong>V267 · EAST-01 · V5 road contact</strong><button id="fit">Fit</button><button id="seam">Seam</button><button id="plus">+</button><button id="minus">−</button><a href="v267-ios-safari-review.html?southArt=coherent">Approved 3</a></header>
+<div id="viewport"><img id="terrain" alt="Registered Matrei and original east Alpine candidate; provisional cartway crosses the central seam"></div>
+<footer id="status"><b>UNAPPROVED ROAD STUDY.</b> Reversible Matrei display overlay; V123 army roads unchanged. Drag/pinch to inspect.</footer>
+<script>
+"use strict";
+const view=document.getElementById("viewport"),im=document.getElementById("terrain"),status=document.getElementById("status");
+let z=1,x=0,y=0,last=0;const pointers=new Map();
+function draw(){im.style.transform="translate(calc(-50% + "+x+"px),calc(-50% + "+y+"px)) scale("+z+")"}
+function fit(){z=Math.min((innerWidth-12)/3072,(innerHeight-155)/1024);x=0;y=0;draw()}
+function seam(){z=Math.max(.35,Math.min(1.5,innerWidth/680));x=0;y=0;draw()}
+function zoom(k){z=Math.max(.12,Math.min(5,z*k));draw()}
+document.getElementById("fit").onclick=fit;document.getElementById("seam").onclick=seam;
+document.getElementById("plus").onclick=()=>zoom(1.3);document.getElementById("minus").onclick=()=>zoom(1/1.3);
+view.addEventListener("pointerdown",e=>{e.preventDefault();view.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()];last=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}});
+view.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const p=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1){x+=e.clientX-p[0];y+=e.clientY-p[1]}else if(pointers.size===2){const a=[...pointers.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(last>2)zoom(d/last);last=d}draw()});
+for(const ev of ["pointerup","pointercancel","lostpointercapture"])view.addEventListener(ev,e=>{pointers.delete(e.pointerId);if(pointers.size<2)last=0});
+im.onload=()=>{status.innerHTML="<b>V5 artwork loaded.</b> Original east relief + provisional embedded cartway. Physical seam and river remain UNVERIFIED; route disabled.";seam()};
+im.onerror=()=>{status.innerHTML="<b>V5 asset not published.</b> Check the GitHub Actions art build; the approved three-tile game is unchanged."};
+im.src="terrain-grid/v267-original-art-batch-01/matrei-east-v5-road-contact.webp";
+addEventListener("resize",fit);fit();
+</script></body></html>

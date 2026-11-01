@@ -1,0 +1,113 @@
+name: V267 EAST-01 V5 native cartway candidate and iPhone QA
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_east01_cartway_v5.py
+      - scripts/test_v267_east_v5.py
+      - v267-east-cartway-v5-review.html
+      - .github/workflows/v267-east01-cartway-v5.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-east-v5-art
+  cancel-in-progress: false
+jobs:
+  original-east-road-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free local image and mobile QA libraries
+        run: python -m pip install --disable-pip-version-check pillow numpy playwright
+      - name: Guard protected V121 and V123 source files
+        run: |
+          sha256sum terrain-grid/art/matrei-v121-original.webp terrain-grid/v123-atlas.js index.html > /tmp/coe-v267-v5-locked.sha256
+          node scripts/test_v267_east_extension.cjs
+      - name: Compose new native EAST-01 V5 artwork and reversible Matrei road overlay
+        run: python scripts/v267_east01_cartway_v5.py
+      - name: Verify actual image outputs and immutable originals
+        run: |
+          python scripts/test_v267_east_v5.py
+          sha256sum -c /tmp/coe-v267-v5-locked.sha256
+      - name: Install real WebKit for 390x844 mobile viewport
+        run: python -m playwright install --with-deps webkit
+      - name: Inspect V5 contact art on iPhone-size WebKit
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import json,subprocess,time
+          server=subprocess.Popen(["python","-m","http.server","8765","--bind","127.0.0.1"],
+              stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1.2)
+              with sync_playwright() as p:
+                  browser=p.webkit.launch(headless=True)
+                  page=browser.new_page(viewport={"width":390,"height":844},
+                      device_scale_factor=2,is_mobile=True,has_touch=True)
+                  page.goto("http://127.0.0.1:8765/v267-east-cartway-v5-review.html",
+                      wait_until="load")
+                  page.wait_for_function("document.getElementById('terrain').naturalWidth===3072",
+                      timeout=30000)
+                  page.locator("#seam").click()
+                  page.wait_for_timeout(450)
+                  out=Path("terrain-grid/v267-original-art-batch-01")
+                  page.screenshot(path=str(out/"actual-webkit-iphone-east-v5-seam.png"))
+                  page.locator("#plus").click()
+                  page.locator("#minus").click()
+                  page.locator("#fit").click()
+                  page.wait_for_timeout(300)
+                  page.screenshot(path=str(out/"actual-webkit-iphone-east-v5-whole.png"))
+                  assert page.locator("#status").inner_text().find("UNVERIFIED")>=0
+                  assert (out/"actual-webkit-iphone-east-v5-seam.png").stat().st_size>20000
+                  assert (out/"actual-webkit-iphone-east-v5-whole.png").stat().st_size>20000
+                  browser.close()
+              f=out/"matrei-east-v5-road-evidence.json"
+              j=json.loads(f.read_text())
+              j["mobileWebkitRendered"]=True
+              j["webkitScreenshots"]=[
+                "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-seam.png",
+                "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-whole.png"]
+              assert not j["nativePlayable"] and not j["physicalRoadSeamVerified"]
+              f.write_text(json.dumps(j,indent=2)+"\n")
+              print("PASS: real WebKit 390x844 artwork rendered; NOT road certified or playable")
+          finally:
+              server.terminate()
+              server.wait(timeout=5)
+          PY
+      - name: Commit original V5 art, contact, overlay, and actual WebKit screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v5-road-study.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v5-road-extension-overlay.png
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v5-road-contact.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v5-road-evidence.json
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-seam.png
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-whole.png
+          git diff --cached --quiet && exit 0
+          git commit -m "art(v267): commit native EAST-01 V5 cartway candidate and actual WebKit evidence [skip ci]"
+          for attempt in 1 2 3; do
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            if git push origin HEAD:terrain-v267-three-original-art-prototype-20261028; then exit 0; fi
+            sleep 5
+          done
+          exit 1
+      - name: Preserve QA screenshots on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-east-v5-art-and-iphone-qa
+          path: |
+            terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v5-road-study.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-v5-road-contact.webp
+            terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v5-*.png
+          retention-days: 14
+          if-no-files-found: warn

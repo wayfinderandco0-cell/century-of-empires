@@ -251,6 +251,15 @@ const focusedV267NewPilot=studyParams.get("originalArtPilot")==="v267-new";
 pilotButton.textContent=focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
+if(focusedV267NewPilot){
+ // An independent <img> review remains available even if iOS drops the canvas.
+ const direct=document.createElement("a");
+ direct.href="v267-ridge-ios-direct-review.html";
+ direct.textContent="Direct ridge image";
+ direct.setAttribute("aria-label","Open east ridge artwork without canvas");
+ direct.style.cssText="display:inline-flex;align-items:center;min-height:44px;padding:7px 10px;border:1px solid #ad9a72;border-radius:7px;background:#24473b;color:#f4e5c6;text-decoration:none;font:700 11px system-ui";
+ $("atlasBar").querySelector("div").appendChild(direct);
+}
 pilotButton.onclick=async()=>{
  if(neighborPilotShown){neighborPilotShown=false;
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}

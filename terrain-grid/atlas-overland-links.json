@@ -42,10 +42,21 @@
       "visualFindings": [
         "SOUTH local x=1270,y=605 is near the existing bridge/river/road approach; the original road continues toward the east edge.",
         "C03 local x=0,y=605 is rocky, wooded terrain without a visible matching cartway; the proposed straight scout segment intersects vegetation/rock.",
-        "No surveyed passable land corridor, continuous road, or river-bank transition is established across the shared x=3072 boundary."
+        "No surveyed passable land corridor, continuous road, or river-bank transition is established across the shared x=3072 boundary.",
+        "At the proposed y=605 seam, the SOUTH bridge/cartway ends against C03 rock/forest; a centerline-only test would miss off-axis cliffs and trees. A 16px army clearance corridor is now required."
       ],
       "approvalRequired": "Two reviewed terrain-class masks, verified edge continuity and a visually supported route; otherwise planner must return no movement.",
-      "historicalClaims": false
+      "historicalClaims": false,
+      "clearanceRadiusPx": 16,
+      "validationContract": {
+        "sourceBlobPinned": true,
+        "maskMaxCellSizePx": 32,
+        "sampleSpacingPx": 8,
+        "requiresBothReviewedSurfaceMasks": true,
+        "requiresPhysicalSeamEvidence": true,
+        "armyFootprintTested": false,
+        "sourceLandformPassable": false
+      }
     }
   ]
 }

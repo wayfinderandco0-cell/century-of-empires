@@ -1,0 +1,38 @@
+{
+  "id": "countryside-04",
+  "title": "Original road-free wooded clearing and rock countryside candidate",
+  "provenance": {
+    "method": "AI-assisted original full-scene raster artwork; no photo crops, heightmesh, or cloning of approved V267 tiles",
+    "generationId": "837e964b-9830-4240-ac18-e6e95a19e369",
+    "originalImage": "a_detailed_isometric_overhead_realistic_landscape.png",
+    "originalSHA256": "2143174a53672e3f81835976277eb939411ee8eaccc818dafe0c08f5aefb734e",
+    "originalDimensions": [
+      1672,
+      941
+    ],
+    "crop": "center 1412×941 to 3:2, resample to 1536×1024",
+    "committedMaster": "terrain-grid/v267-countryside-original/forest-clearing-04-master.webp",
+    "committedMasterSHA256": "46b5c77075530f05ee4d6ac327d1a7723ae46aee6c5fb096ffff7ba7385fd494",
+    "committedMobileSHA256": "7c0b5b4ff118b670750a9b95a606ea095ae68852593aa6efed7db9a77b3e4311",
+    "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb"
+  },
+  "scene": {
+    "roads": [],
+    "rivers": [],
+    "bridges": [],
+    "towns": [],
+    "strategicNodes": [],
+    "historicClaims": []
+  },
+  "integration": {
+    "displayOnly": true,
+    "origin": [
+      4608,
+      1024
+    ],
+    "userApproved": false,
+    "roadSeamsVerified": false,
+    "webKitVerified": false,
+    "nativePlayable": false
+  }
+}

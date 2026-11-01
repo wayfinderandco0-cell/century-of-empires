@@ -523,6 +523,54 @@
       "nativePreview": "index.html?originalArtPilot=countryside03&autoOpen=1",
       "webKitRunId": 41331306894,
       "webKitEvidence": "terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png"
+    },
+    {
+      "id": "countryside-04",
+      "biome": "alpine-wooded-clearing-rock",
+      "art": "terrain-grid/v267-countryside-original/forest-clearing-04-master.webp",
+      "mobileArt": "terrain-grid/v267-countryside-original/forest-clearing-04-mobile.webp",
+      "source": "terrain-grid/v267-countryside-original/forest-clearing-04-source.json",
+      "roadKeys": [],
+      "riverKeys": [],
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "nativeWorldOrigin": [
+        4608,
+        1024
+      ],
+      "visualApproval": "pending",
+      "userApproval": false,
+      "webKitVerified": false,
+      "playableIntegrated": false,
+      "nativeCanvasDisplayCandidate": true,
+      "historicallyVerified": false,
+      "preview": "v267-countryside-batch01-review.html",
+      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1"
+    },
+    {
+      "id": "countryside-05",
+      "biome": "alpine-conifer-upland-meadow",
+      "art": "terrain-grid/v267-countryside-original/forest-upland-05-master.webp",
+      "mobileArt": "terrain-grid/v267-countryside-original/forest-upland-05-mobile.webp",
+      "source": "terrain-grid/v267-countryside-original/forest-upland-05-source.json",
+      "roadKeys": [],
+      "riverKeys": [],
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "nativeWorldOrigin": [
+        4608,
+        0
+      ],
+      "visualApproval": "pending",
+      "userApproval": false,
+      "webKitVerified": false,
+      "playableIntegrated": false,
+      "nativeCanvasDisplayCandidate": true,
+      "historicallyVerified": false,
+      "preview": "v267-countryside-batch01-review.html",
+      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1"
     }
   ]
 }

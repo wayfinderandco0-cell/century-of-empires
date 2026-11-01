@@ -1,0 +1,78 @@
+name: V267 original countryside 04-05 iPhone WebKit and protected army
+on:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - '.github/workflows/v267-countryside-batch01-webkit.yml'
+      - 'v267-countryside-batch01-review.html'
+      - 'scripts/test-countryside-batch01-webkit.mjs'
+      - 'terrain-grid/atlas-integrated.js'
+      - 'terrain-grid/v267-countryside-original/forest-clearing-04-*.webp'
+      - 'terrain-grid/v267-countryside-original/forest-upland-05-*.webp'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-countryside-batch01-webkit-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  original-countryside-batch01-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright WebKit
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - name: Verify new genuine raster files and locked manifest
+        run: |
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          m=json.loads(Path('terrain-grid/atlas-cells.json').read_text())
+          assert m['referenceCommit']=='456107f28c8db1f87522bbc7511809b2a215f6fb'
+          assert [c['id'] for c in m['cells']]==['west','matrei','south']
+          for id in ('countryside-04','countryside-05'):
+            c=next(x for x in m['artCandidates'] if x['id']==id)
+            assert c['roadKeys']==[] and c['riverKeys']==[] and not c['userApproval']
+            art=Path(c['art'])
+            assert art.stat().st_size>200000
+            source=json.loads(Path(c['source']).read_text())
+            assert hashlib.sha256(art.read_bytes()).hexdigest()==source['provenance']['committedMasterSHA256']
+          print('New full-resolution original rasters and protected manifest verified.')
+          PY
+      - name: Serve native game and review
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/coe-cbatch-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8765/v267-countryside-batch01-review.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/coe-cbatch-http.log
+          exit 1
+      - name: Render actual 390x844 WebKit screenshots and test protected army
+        run: node scripts/test-countryside-batch01-webkit.mjs
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: countryside-batch01-iphone-webkit
+          if-no-files-found: warn
+          path: |
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-04*.png
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png
+            terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json
+      - name: Commit passing screenshot evidence to development branch
+        if: success()
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-04*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record real iPhone WebKit countryside 04/05 review"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

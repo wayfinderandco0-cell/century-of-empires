@@ -57,6 +57,10 @@ let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Independent road-free raster candidate; never enters V123 graph or V94 saves.
 const C03_ORIGIN=[3072,1024];let countryside03Image=null,countryside03Visible=false;
+// Manifest-driven road-free countryside artwork: review-only, no V123 nodes or saves.
+let countrysideBatchVisible=false;
+const countrysideBatchImages=new Map();
+const COUNTRYSIDE_BATCH_IDS=["countryside-03","countryside-04","countryside-05"];
 // Opt-in source-layered scenic art. Never changes the protected V123 road graph.
 let neighborPilotCells=[],neighborPilotImages={},neighborPilotInlays=[],neighborPilotShown=false,neighborPilotCamera=null,neighborPilotStream=null,eastBorderOverlay=null;
 let unit=[275,550],path=[],moving=false,progress=0,travelLength=0,lastTime=0;
@@ -139,6 +143,17 @@ function draw(){
   const pos=worldToScreen(C03_ORIGIN),poly=worldPolygon({origin:C03_ORIGIN}).map(worldToScreen);
   ctx.save();polygon(ctx,poly);ctx.clip();
   ctx.drawImage(countryside03Image,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
+  ctx.save();polygon(ctx,poly);ctx.strokeStyle="#efc978";ctx.lineWidth=2;ctx.stroke();ctx.restore();
+ }
+ // Render genuinely new road-free candidates as separate original landscape art.
+ // Protected V267 originals are still drawn afterwards; no invented roads or towns.
+ if(countrysideBatchVisible)for(const cell of manifest.artCandidates||[]){
+  if(!COUNTRYSIDE_BATCH_IDS.includes(cell.id))continue;
+  const img=countrysideBatchImages.get(cell.id),origin=cell.nativeWorldOrigin;
+  if(!img||!origin)continue;
+  const pos=worldToScreen(origin),poly=worldPolygon({origin}).map(worldToScreen);
+  ctx.save();polygon(ctx,poly);ctx.clip();
+  ctx.drawImage(img,pos[0],pos[1],1536*scale,1024*scale);ctx.restore();
   ctx.save();polygon(ctx,poly);ctx.strokeStyle="#efc978";ctx.lineWidth=2;ctx.stroke();ctx.restore();
  }
  const diamond=manifest.decorativeInlays[0],src=images[diamond.sourceCell];
@@ -256,6 +271,10 @@ function endPointer(e){if(!pointers.has(e.pointerId))return;const rect=canvas.ge
 for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,endPointer);
 $("atlasClose").onclick=close;openButton.onclick=open;
 $("atlasWhole").onclick=()=>{
+ if(countrysideBatchVisible){
+  const fitted=Math.min(Math.max(100,w-24)/6144,Math.max(100,h-155)/2048)/base;
+  centerAt(3072,1024,Math.max(.15,fitted));return;
+ }
  if(countryside03Visible){
   const fitted=Math.min(Math.max(100,w-24)/4608,Math.max(100,h-155)/2048)/base;
   centerAt(2304,1024,Math.max(.15,fitted));return;
@@ -290,6 +309,7 @@ $("atlasRoads").onclick=()=>{if(!photoMode){debug=!debug;draw();}};
  */
 const studyParams=new URLSearchParams(root.location.search);
 const countryside03Pilot=studyParams.get("originalArtPilot")==="countryside03";
+const countrysideBatchPilot=studyParams.get("originalArtPilot")==="countrysideBatch01";
 // Original scene expansion is a review-only opt-in; no invented road nodes.
 const pilotButton=document.createElement("button");
 pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
@@ -317,7 +337,7 @@ const ridgeV11Path="terrain-grid/v267-original-art-batch-01/matrei-east-riparian
 const ridgeV11Overlay="terrain-grid/v267-original-art-batch-01/matrei-east-v11-matrei-display-overlay.png";
 const ridgeV2Overlay="terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp";
 const ridgeGradePath="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
-pilotButton.textContent=countryside03Pilot?"New COUNTRYSIDE-03 · no roads":ridgeV11Pilot?"EAST-01 V11 roadbed terrain QA · route disabled":ridgeV10Pilot?"EAST-01 V10 ground-rut QA · route disabled":ridgeV9Pilot?"EAST-01 V9 local seam QA · route disabled":ridgeV8Pilot?"EAST-01 V8 narrow dirt · QA only":ridgeV7Pilot?"EAST-01 V7 cleared road · QA only":ridgeV6Pilot?"EAST-01 V6 road · QA only":ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
+pilotButton.textContent=countrysideBatchPilot?"NEW countryside 04/05 · no roads":countryside03Pilot?"New COUNTRYSIDE-03 · no roads":ridgeV11Pilot?"EAST-01 V11 roadbed terrain QA · route disabled":ridgeV10Pilot?"EAST-01 V10 ground-rut QA · route disabled":ridgeV9Pilot?"EAST-01 V9 local seam QA · route disabled":ridgeV8Pilot?"EAST-01 V8 narrow dirt · QA only":ridgeV7Pilot?"EAST-01 V7 cleared road · QA only":ridgeV6Pilot?"EAST-01 V6 road · QA only":ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 if(focusedV267NewPilot){
@@ -330,6 +350,33 @@ if(focusedV267NewPilot){
  $("atlasBar").querySelector("div").appendChild(direct);
 }
 pilotButton.onclick=async()=>{
+ if(countrysideBatchPilot){
+  try{
+   const cells=(manifest.artCandidates||[]).filter(c=>COUNTRYSIDE_BATCH_IDS.includes(c.id));
+   if(cells.length!==3)throw Error("Countryside batch manifest incomplete");
+   for(const c of cells){
+    if(!c.nativeWorldOrigin||c.roadKeys?.length||c.riverKeys?.length||c.scenicSettlements?.length||c.strategicNodes?.length)
+     throw Error("Candidate must have no roads, rivers or towns: "+c.id);
+    if(!countrysideBatchImages.has(c.id)){
+     const img=await imageLoad(c.art);
+     if(img.decode)await img.decode().catch(()=>{});
+     if(img.naturalWidth!==1536||img.naturalHeight!==1024)throw Error("Art dimensions changed: "+c.id);
+     countrysideBatchImages.set(c.id,img);
+    }
+   }
+   countrysideBatchVisible=!countrysideBatchVisible;
+   if(countrysideBatchVisible){
+    const fitted=Math.min(Math.max(180,w-24)/1536,Math.max(180,h-170)/1024)/base;
+    centerAt(5376,1536,Math.max(.15,fitted));
+    status("THREE road-free countryside candidates 03/04/05 · 04 and 05 NEW · display-only · no historic or user approval · V123 army unchanged");
+   }else{
+    centerAt(1536,1024,.96);
+    status("Approved WEST/MATREI/SOUTH only · V123 movement intact");
+   }
+   draw();
+  }catch(e){status("Countryside batch failed to load: "+e.message);}
+  return;
+ }
  if(countryside03Pilot){
   try{
    if(!countryside03Image){
@@ -547,6 +594,9 @@ const API={
  get countryside03Loaded(){return !!countryside03Image&&countryside03Image.naturalWidth===1536},
  get countryside03Visible(){return countryside03Visible},
  get countryside03Dimensions(){return countryside03Image?[countryside03Image.naturalWidth,countryside03Image.naturalHeight]:null},
+ get countrysideBatchVisible(){return countrysideBatchVisible},
+ get countrysideBatchLoaded(){return COUNTRYSIDE_BATCH_IDS.every(id=>countrysideBatchImages.get(id)?.naturalWidth===1536)},
+ get countrysideBatchIDs(){return [...countrysideBatchImages.keys()]},
  get originalNeighborCells(){return neighborPilotCells.length},get originalNeighborVisible(){return neighborPilotShown},
  get originalNeighborCache(){return neighborPilotStream?.stats()||null},
  get photoMode(){return photoMode},get photoCells(){return photoStream?.cells.length||0},
@@ -568,7 +618,7 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
- if(countryside03Pilot&&studyParams.get("autoOpen")==="1"){
+ if((countryside03Pilot||countrysideBatchPilot)&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();
   pilotButton.click();
  }

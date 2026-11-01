@@ -1,0 +1,38 @@
+{
+  "id": "countryside-05",
+  "title": "Original road-free conifer upland and meadow countryside candidate",
+  "provenance": {
+    "method": "AI-assisted original full-scene raster artwork; no photo crops, heightmesh, or cloning of approved V267 tiles",
+    "generationId": "0b3f76a6-a1a5-4fa1-ba25-5fabea7560fc",
+    "originalImage": "a_highly_detailed_isometric_angled_aerial_landscap.png",
+    "originalSHA256": "be8453bb7696ea6be4ea3a69532eb44ef03aebdb8b3146ba4a7323f4c20aeab2",
+    "originalDimensions": [
+      1672,
+      940
+    ],
+    "crop": "center 1410×940 to 3:2, resample to 1536×1024",
+    "committedMaster": "terrain-grid/v267-countryside-original/forest-upland-05-master.webp",
+    "committedMasterSHA256": "688e0e408cd4095b36c925f10cbeab67aae1c51d03a757009bbaf3744a408663",
+    "committedMobileSHA256": "342b0984e96ea9550581f5a8885d73690f48b127f6bf2f422155b748fab9b34c",
+    "referenceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb"
+  },
+  "scene": {
+    "roads": [],
+    "rivers": [],
+    "bridges": [],
+    "towns": [],
+    "strategicNodes": [],
+    "historicClaims": []
+  },
+  "integration": {
+    "displayOnly": true,
+    "origin": [
+      4608,
+      0
+    ],
+    "userApproved": false,
+    "roadSeamsVerified": false,
+    "webKitVerified": false,
+    "nativePlayable": false
+  }
+}

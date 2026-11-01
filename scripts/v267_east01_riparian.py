@@ -115,9 +115,11 @@ def generate():
     draw.line([(1536,256),(1536,768)],fill=(225,182,104),width=3)
     comparison=DIR/"matrei-east-riparian-v3-comparison.webp"
     contact.save(comparison,"WEBP",quality=84,method=6)
+    thumb=DIR/"matrei-east-riparian-v3-thumb.webp"
+    contact.resize((1024,341),Image.Resampling.LANCZOS).save(thumb,"WEBP",quality=70,method=6)
     data={"schema":"coe-v267-east-riparian-candidate/v1","sourceOriginal":"matrei-east-ridge.webp",
           "referenceMatrei":"terrain-grid/art/matrei-v121-original.webp",
-          "output":target.name,"comparison":comparison.name,
+          "output":target.name,"comparison":comparison.name,"thumbnail":thumb.name,
           "sha256":hashlib.sha256(target.read_bytes()).hexdigest(),
           "riverExitY":y_exit,"riverExitDetectedFromSource":observed,
           "roadPorts":[],"roadsVerified":False,"riverSeamVerified":False,

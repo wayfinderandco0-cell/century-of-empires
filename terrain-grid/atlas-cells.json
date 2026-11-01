@@ -478,5 +478,25 @@
     "v121Source": "v121-octagon-1-painted-road.html",
     "v123Graph": "terrain-grid/v123-atlas.js",
     "v94Campaign": "index.html"
-  }
+  },
+  "artCandidates": [
+    {
+      "id": "countryside-02",
+      "biome": "alpine-forest-meadow-rock",
+      "art": "terrain-grid/v267-countryside-original/forest-meadow-02-original.webp",
+      "source": "terrain-grid/v267-countryside-original/forest-meadow-02-source.json",
+      "roadKeys": [],
+      "riverKeys": [],
+      "scenicSettlements": [],
+      "strategicNodes": [],
+      "provinceIds": [],
+      "nativeWorldOrigin": null,
+      "visualApproval": "pending",
+      "userApproval": false,
+      "webKitVerified": false,
+      "playableIntegrated": false,
+      "historicallyVerified": false,
+      "preview": "v267-countryside-02-review.html"
+    }
+  ]
 }

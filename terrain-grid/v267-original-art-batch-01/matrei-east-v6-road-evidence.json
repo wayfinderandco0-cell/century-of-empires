@@ -106,9 +106,5 @@
   "webkitScreenshots": [
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-seam.png",
     "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-whole.png"
-  ],
-  "nativeCanvasWebkitRendered": true,
-  "nativeCanvasWebkitScreenshot": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-native-canvas.png",
-  "nativeCanvasWebkitRunId": 41298613812,
-  "nativeCanvasCandidateOnly": true
+  ]
 }

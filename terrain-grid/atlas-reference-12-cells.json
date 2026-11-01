@@ -1,0 +1,117 @@
+{
+  "schema": "coe-atlas-reference-registration/v1",
+  "source": "User-provided 1536x1024 twelve-cell screenshot, November 1 2026",
+  "status": "REFERENCE_ONLY_NOT_NATIVE_ART",
+  "approvedOriginals": [
+    "WEST",
+    "MATREI",
+    "SOUTH"
+  ],
+  "newCells": [
+    {
+      "id": "NW-01",
+      "biome": "alpine-highland",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "NORTH-01",
+      "biome": "alpine-pass",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "NE-01",
+      "biome": "alpine-forest",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "NE-02",
+      "biome": "alpine-rock-fort",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "EAST-01",
+      "biome": "alpine-meadow",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "EAST-02",
+      "biome": "alpine-farmland",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "SW-01",
+      "biome": "alpine-valley",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "SE-01",
+      "biome": "alpine-woodland",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    },
+    {
+      "id": "SE-02",
+      "biome": "alpine-lake",
+      "artStatus": "screenshot-crop-only",
+      "originalArtVisuallyApproved": false,
+      "roadSeamVerified": false,
+      "mobileWebkitVerified": false,
+      "historicallyVerified": false,
+      "nativePlayable": false,
+      "userApproved": false
+    }
+  ],
+  "rules": {
+    "preserveCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+    "roads": "V123 graph only; do not infer from screenshot",
+    "towns": "No historic or conquerable status inferred from screenshot",
+    "note": "Screenshot UI and labels are baked in. Reauthor original assets before promotion."
+  }
+}

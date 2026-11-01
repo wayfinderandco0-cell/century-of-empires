@@ -77,6 +77,9 @@ jobs:
           cp terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png "$output/"
           cp terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json "$output/"
           git add "$output"
+          # The old shared screenshot paths are tracked and overwritten by tests.
+          # Restore them before rebasing; the run-unique copies above are staged.
+          git restore -- terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-04*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-05*.png terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-batch01-overview.png terrain-grid/v267-countryside-original/webkit-iphone-countryside-batch01-result.json
           git diff --cached --quiet && exit 0
           git commit -m "Record unique WebKit countryside batch screenshots from run ${GITHUB_RUN_ID}"
           for attempt in 1 2 3; do

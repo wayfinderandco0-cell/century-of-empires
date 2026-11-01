@@ -1,0 +1,110 @@
+{
+  "schema": "coe-v267-east-source-cartway/v1",
+  "sourceOriginal": "matrei-east-riparian-v4.webp",
+  "sourceRoadMaterial": "actual registered V121 Matrei southeast route",
+  "candidate": "matrei-east-riparian-v6-source-road.webp",
+  "contact": "matrei-east-v6-source-road-contact.webp",
+  "candidateSha256": "bf45bb68f8d1ae675d6fe093c515b9e1ec1a88be2b7691720d3a436a9f35684d",
+  "matreiSourceSha256": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+  "eastRoadPoints": [
+    [
+      0,
+      749
+    ],
+    [
+      72,
+      748
+    ],
+    [
+      148,
+      741
+    ],
+    [
+      227,
+      725
+    ],
+    [
+      306,
+      706
+    ],
+    [
+      386,
+      672
+    ],
+    [
+      458,
+      634
+    ],
+    [
+      526,
+      598
+    ],
+    [
+      601,
+      567
+    ]
+  ],
+  "sourceRoadPoints": [
+    [
+      1150,
+      568
+    ],
+    [
+      1185,
+      594
+    ],
+    [
+      1226,
+      621
+    ],
+    [
+      1266,
+      650
+    ],
+    [
+      1304,
+      673
+    ],
+    [
+      1340,
+      695
+    ],
+    [
+      1352,
+      727
+    ],
+    [
+      1351,
+      749
+    ]
+  ],
+  "paintedRoadPixels": 17729,
+  "matreiDisplayOverlay": null,
+  "protectedOriginalsUnchanged": true,
+  "roadPortContract": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "endpointGapPx": 0,
+    "geometryPairedOnly": true
+  },
+  "fictionalExperimentalRoute": true,
+  "physicalRoadSeamVerified": false,
+  "riverSeamVerified": false,
+  "visualQualityApproved": false,
+  "mobileWebkitRendered": true,
+  "historicallyVerified": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "Source-textured original east artwork; no alteration to approved Matrei, no fabricated historical roads. Road/river seam and visual ground contact remain unverified.",
+  "webkitScreenshots": [
+    "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-seam.png",
+    "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-whole.png"
+  ]
+}

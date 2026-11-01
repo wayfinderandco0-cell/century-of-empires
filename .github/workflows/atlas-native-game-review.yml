@@ -6,6 +6,9 @@ on:
       - index.html
       - terrain-grid/atlas-integrated.js
       - terrain-grid/atlas-playability.js
+      - terrain-grid/atlas-overland.js
+      - terrain-grid/atlas-overland-links.json
+      - scripts/test_atlas_overland.js
       - terrain-grid/v267-southeast-route-gate.js
       - scripts/test_atlas_playability.js
       - terrain-grid/v267-viewport-cache.js
@@ -51,6 +54,7 @@ jobs:
         run: |
           node scripts/test_atlas_manifest.js
           node scripts/test_atlas_playability.js
+          node scripts/test_atlas_overland.js
           node scripts/test_v267_art_factory_contract.js
           node scripts/test_v267_viewport_cache.js
       - name: Install mobile browser engines

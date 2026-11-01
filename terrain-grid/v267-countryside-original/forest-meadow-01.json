@@ -1,0 +1,22 @@
+{
+  "schema": "coe-original-art-candidate/v1",
+  "id": "countryside-forest-meadow-01",
+  "art": "terrain-grid/v267-countryside-original/forest-meadow-01.svg",
+  "source": "terrain-grid/tools/build-v267-forest-meadow-01.js",
+  "width": 1536,
+  "height": 1024,
+  "biome": "fictional alpine forest meadow and rocky slopes",
+  "roads": [],
+  "rivers": [],
+  "settlements": [],
+  "strategicNodes": [],
+  "historicClaims": [],
+  "candidateOnly": true,
+  "visualQualityApproved": false,
+  "userApproved": false,
+  "roadSeamsVerified": false,
+  "mobileWebkitRendered": false,
+  "nativePlayable": false,
+  "sourceCommit": "456107f28c8db1f87522bbc7511809b2a215f6fb",
+  "notes": "Unique new layered vector terrain master. Not a photographic/V267-quality certified match; no road/river seam needed for this isolated art review."
+}

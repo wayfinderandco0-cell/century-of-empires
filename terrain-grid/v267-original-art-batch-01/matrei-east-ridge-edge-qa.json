@@ -1,0 +1,22 @@
+{
+  "candidate": "matrei-east-ridge-edge-study",
+  "art": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp",
+  "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-comparison.webp",
+  "sha256": "0f06bc544040b2b436e82041b5c86fc44fa9d87a3e35707b777f00da82be2bea",
+  "geometry": [
+    1536,
+    1024
+  ],
+  "exactSharedEdge": "x=3072, y=256..768",
+  "encodedSharedEdgeMaxRGBDifference": 0,
+  "sourceImagesUnmodified": true,
+  "roadSeamsVerified": false,
+  "physicalTerrainSeamVerified": false,
+  "visualQualityApproved": false,
+  "mobileWebkitRendered": false,
+  "historicallyVerified": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "caveat": "Source-edge continuity is a pixel condition, not verified natural terrain or a new V123 route."
+}

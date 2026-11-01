@@ -1,0 +1,35 @@
+{
+  "id": "countryside-02",
+  "name": "Road-free Alpine forest/meadow/rock candidate",
+  "provenance": {
+    "method": "new original image generation",
+    "generationId": "41a9f24d-da45-400f-a323-54a34ee27693",
+    "generatedOn": "2026-11-01",
+    "sourcePixelMaster": "1536x1024 PNG generated in ChatGPT session, not yet committed to repository",
+    "sourceArtReference": "approved WEST/MATREI/SOUTH V267 commit 456107f28c8db1f87522bbc7511809b2a215f6fb",
+    "derivedWebP": "terrain-grid/v267-countryside-original/forest-meadow-02-original.webp",
+    "derivedWebPQuality": 10
+  },
+  "content": {
+    "biome": [
+      "alpine-forest",
+      "meadow",
+      "rock"
+    ],
+    "roads": [],
+    "rivers": [],
+    "scenicTowns": [],
+    "strategicTowns": [],
+    "historicClaims": []
+  },
+  "integration": {
+    "nativeWorldOrigin": null,
+    "roadGraphModification": false,
+    "armyTraversable": false,
+    "productionReady": false,
+    "approval": "not user-approved",
+    "visualReview": "candidate; independent style and perspective review pending",
+    "mobileWebKit": "not yet tested"
+  },
+  "note": "Actual raster art candidate, not heightmesh or SVG. Compression at quality 10 is an interim upload; higher-quality 1536x1024 original exists only as a session artifact. Never count this as a finished playable octagon."
+}

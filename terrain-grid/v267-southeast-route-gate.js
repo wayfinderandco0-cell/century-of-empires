@@ -1,5 +1,5 @@
 /* V267 SOUTH→SOUTHEAST candidate: route geometry PRE-FLIGHT ONLY.
- * The approved SOUTH source art appears to show a cartway exiting its
+ * The approved SOUTH source art visibly shows a cartway exiting its
  * eastern border. The exact exit is NOT surveyed/visually certified.
  * This module never enables movement or paints a road; do not promote it
  * until source-art road contact, edge registration and a NEW roaded
@@ -27,7 +27,7 @@
   south.roads.eastCandidate=[[1270,605],[1355,597],[1440,586],EXIT.slice()];
   tiles.push({id:ID,name:"Southeast Alpine road candidate — NOT PLAYABLE",
    origin:[3072,1024],width:1536,height:1024,corner:256,
-   artReviewed:false,roads:{westCandidate:[ENTRY.slice(),[140,602],[260,636],[390,668],[530,672],[690,647],[835,610]]},
+   artReviewed:false,roads:{westCandidate:[ENTRY.slice(),[90,580],[210,589],[345,602],[470,613],[600,619],[735,609],[865,586],[1010,567],[1140,553]]},
    scenicSettlements:[],strategicNodes:[],provinceIds:[]});
   links.push({id:"south-southeast-provisional",
    from:{tile:"south",road:"eastCandidate",end:"end"},

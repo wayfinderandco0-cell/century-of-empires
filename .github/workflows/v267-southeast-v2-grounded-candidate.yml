@@ -5,6 +5,7 @@ on:
     paths:
       - scripts/v267_southeast_roaded_candidate_v2.py
       - scripts/v267_southeast_v2_webkit.py
+      - scripts/v267_export_visual_review.py
       - terrain-grid/atlas-integrated.js
       - .github/workflows/v267-southeast-v2-grounded-candidate.yml
   workflow_dispatch:
@@ -47,6 +48,8 @@ jobs:
           PY
       - name: Actual 390x844 WebKit native game, road block and two-way army march
         run: python scripts/v267_southeast_v2_webkit.py
+      - name: Export compact visual QA frames for real image inspection
+        run: python scripts/v267_export_visual_review.py
       - name: Preserve source artwork and screenshots even on failed QA
         if: always()
         uses: actions/upload-artifact@v4

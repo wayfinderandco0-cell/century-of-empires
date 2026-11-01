@@ -43,6 +43,10 @@ jobs:
             terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp
             terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-comparison.webp
             terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-qa.json
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-comparison.webp
+            terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-qa.json
           if-no-files-found: error
       - name: Commit generated artwork only to the development branch
         shell: bash
@@ -54,6 +58,10 @@ jobs:
           git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-comparison.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-qa.json
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-comparison.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-qa.json
           if git diff --cached --quiet; then
             echo "Art assets already current"
           else

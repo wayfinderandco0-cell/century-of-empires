@@ -8,7 +8,7 @@ try{
  const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'v267-countryside-batch02-review.html',{waitUntil:'domcontentloaded',timeout:60000});
- await page.waitForFunction(()=>typeof tiles!=='undefined'&&tiles.length===7&&tiles.every(t=>t.img.complete&&t.img.naturalWidth===1536&&t.img.naturalHeight===1024),{timeout:60000});
+ await page.waitForFunction(()=>typeof tiles!=='undefined'&&tiles.length===7&&tiles.every(t=>t.img.complete&&t.img.naturalWidth===1536&&t.img.naturalHeight===1024),null,{timeout:60000});
  const z0=await page.evaluate(()=>scale);await page.locator('#plus').click();
  if(!(await page.evaluate(()=>scale)>z0))throw Error('Standalone zoom failed');
  await page.locator('#new3').click();
@@ -16,7 +16,7 @@ try{
  const native=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
  const nativeErrors=[];native.on('pageerror',e=>nativeErrors.push(e.message));
  await native.goto(base+'index.html?originalArtPilot=countrysideBatch02&autoOpen=1',{waitUntil:'domcontentloaded',timeout:60000});
- await native.waitForFunction(()=>window.COEAtlas?.loaded&&window.COEAtlas?.countrysideBatchLoaded&&window.COEAtlas?.countrysideBatchVisible,{timeout:60000});
+ await native.waitForFunction(()=>window.COEAtlas?.loaded&&window.COEAtlas?.countrysideBatchLoaded&&window.COEAtlas?.countrysideBatchVisible,null,{timeout:60000});
  const before=await native.evaluate(()=>({zoom:COEAtlas.zoom,nodes:COEAtlas.nodes,seams:COEAtlas.seams.length,locked:COEAtlas.approvedBaselineLocked,images:COEAtlas.countrysideBatchIDs,originals:COEAtlas.imageSizes,shown:COEAtlas.shown}));
  if(before.nodes!==100||before.seams!==2||!before.locked||!before.shown||before.images.length!==4||!before.images.includes('countryside-06'))throw Error('Protected V123 atlas or new art failed '+JSON.stringify(before));
  if(Object.values(before.originals).some(x=>x.join(',')!=='1536,1024'))throw Error('Approved artwork dimension drift');

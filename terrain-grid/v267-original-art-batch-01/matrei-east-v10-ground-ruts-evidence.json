@@ -1,0 +1,95 @@
+{
+  "schema": "coe-v267-east-v10-source-ground-ruts/v1",
+  "art": "matrei-east-riparian-v10-ground-ruts.webp",
+  "matreiOverlay": "matrei-east-v10-matrei-display-overlay.png",
+  "comparison": "matrei-east-v10-ground-ruts-contact.webp",
+  "candidateSha256": "684220e808b8a05f0db935bb14f733ec391df3d162bf85943ecc21b935ae3f87",
+  "protectedSourceHashes": {
+    "matrei-v121-original.webp": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+    "matrei-east-riparian-v4.webp": "c94493e8a1c7824f0df64ae9893a6214ca3c2cb4a4597fadee50ac7825d09661"
+  },
+  "sourceOriginal": "matrei-east-riparian-v4.webp",
+  "roadWorldPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1425,
+      750
+    ],
+    [
+      1536,
+      749
+    ],
+    [
+      1615,
+      747
+    ],
+    [
+      1705,
+      739
+    ],
+    [
+      1785,
+      723
+    ],
+    [
+      1865,
+      700
+    ],
+    [
+      1948,
+      667
+    ],
+    [
+      2024,
+      628
+    ],
+    [
+      2105,
+      592
+    ],
+    [
+      2180,
+      567
+    ],
+    [
+      2250,
+      559
+    ]
+  ],
+  "roadPort": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "geometryPaired": true
+  },
+  "sourceSeamBefore": {
+    "meanAbsRgb": 28.177,
+    "p95AbsRgb": 100.4,
+    "maxAbsRgb": 148
+  },
+  "decodedWebpSeamAfter": {
+    "meanAbsRgb": 1.429,
+    "p95AbsRgb": 3.0,
+    "maxAbsRgb": 6
+  },
+  "sourceMaterial": "registered V121 Matrei road + original V4 EAST-01",
+  "rutPigmentWeathering": true,
+  "physicalRoadSeamVerified": false,
+  "physicalTerrainSeamVerified": false,
+  "riverSeamVerified": false,
+  "visualQualityApproved": false,
+  "historicallyVerified": false,
+  "mobileWebkitRendered": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "V10 improves ground contact pigment, not road geometry. Preview only."
+}

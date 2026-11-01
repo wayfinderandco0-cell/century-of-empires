@@ -112,8 +112,8 @@ try:
   assert direct.evaluate("COEAtlas.routeTo([2806,1629])") is not None
   direct.screenshot(path=str(out/f"{args.browser}-{args.orientation}-three-actually-playable.png"))
   direct.close()
-  # A separate opt-in native-game experiment exercises true moving units on
-  # road-free countryside artwork, without claiming an approved road seam.
+  # The formerly animated SOUTH/C03 scout crosses an unverified landform seam.
+  # It must be blocked in the REAL native canvas, including user-facing controls.
   overland=context.new_page()
   overland_errors=[]
   overland.on("pageerror",lambda e:overland_errors.append(str(e)))
@@ -121,19 +121,24 @@ try:
                 wait_until="domcontentloaded",timeout=60000)
   overland.wait_for_function("window.COEAtlas && COEAtlas.loaded && COEAtlas.overlandReady && COEAtlas.shown",
                              timeout=90000)
-  assert overland.locator("#atlasScoutC03").is_visible()
-  assert overland.locator("#atlasReturnC03").is_visible()
+  assert overland.locator("#atlasCanvas").is_visible()
+  assert overland.locator("#atlasScoutC03").is_disabled()
+  assert overland.locator("#atlasReturnC03").is_disabled()
   assert overland.evaluate("COEAtlas.playability.playableIds")==["matrei","south","west"]
-  assert overland.evaluate("COEAtlas.startScout()")
-  scout_path=overland.evaluate("COEAtlas.route")
-  assert len(scout_path)>35 and [3072,1629] in scout_path and scout_path[-1]==[3840,1536],scout_path
-  assert overland.evaluate("COEAtlas.finishMarch()")==[3840,1536]
-  assert overland.evaluate("COEAtlas.returnScout()")
+  blocked_reasons=overland.evaluate("COEAtlas.overlandPassability.reasons")
+  assert "uncertified_cross_tile_seam" in blocked_reasons,blocked_reasons
+  assert "missing_surface_mask:south" in blocked_reasons,blocked_reasons
+  assert "missing_surface_mask:countryside-03" in blocked_reasons,blocked_reasons
+  assert overland.evaluate("COEAtlas.startScout()") is False
+  assert overland.evaluate("COEAtlas.returnScout()") is False
+  assert overland.evaluate("COEAtlas.route")==[]
+  assert not overland.evaluate("COEAtlas.moving")
+  # Protected strategic road still works even though wilderness is blocked.
+  assert overland.evaluate("COEAtlas.startMarch()")
   assert overland.evaluate("COEAtlas.finishMarch()")==[2806,1629]
-  overland.locator("#atlasScoutC03").click()
-  assert overland.evaluate("COEAtlas.moving")
-  overland.evaluate("COEAtlas.finishMarch()")
-  overland.screenshot(path=str(out/f"{args.browser}-{args.orientation}-overland-c03-experimental.png"))
+  assert overland.evaluate("COEAtlas.startScout()") is False
+  assert not overland.evaluate("COEAtlas.moving")
+  overland.screenshot(path=str(out/f"{args.browser}-{args.orientation}-overland-c03-BLOCKED.png"))
   assert not overland_errors,overland_errors
   overland.close()
   # Independently verify that a focused new-art preview decodes only its
@@ -167,7 +172,7 @@ try:
           "nativeCanvas":True,"images":before["images"],"nodes":before["nodes"],
           "uniqueWorldNodes":before["unique"],"seams":before["seams"],
           "routePoints":len(route),"touchToMarch":True,"halt":True,"arrival":arrived,
-          "zoom":True,"photoEightCellWholeVisible":True,"photoLoaded":8,"photoGameplayBlocked":True,"candidateViewportCache":cache,"candidateRidgePixelsVisible":True,"campaignStorageUnchanged":True,"pageErrors":errors}
+          "zoom":True,"photoEightCellWholeVisible":True,"photoLoaded":8,"photoGameplayBlocked":True,"candidateViewportCache":cache,"candidateRidgePixelsVisible":True,"campaignStorageUnchanged":True,"overlandBlocked":True,"overlandReasons":blocked_reasons,"pageErrors":errors}
   (out/f"{args.browser}-{args.orientation}.json").write_text(json.dumps(report,indent=2))
   print(json.dumps(report,indent=2))
   context.close();browser.close()

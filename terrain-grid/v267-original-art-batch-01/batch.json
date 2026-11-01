@@ -65,6 +65,40 @@
           "notes": "Reduced pixel-level color mismatch only; abrupt river/landform and vegetation discontinuity remains. Not a road-connected playable octagon.",
           "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-ridge-graded.png",
           "webkitRunId": 41265542661
+        },
+        {
+          "id": "matrei-east-ridge-edge-study",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp",
+          "assetSha256": "0f06bc544040b2b436e82041b5c86fc44fa9d87a3e35707b777f00da82be2bea",
+          "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp",
+          "method": "Matrei source-registered edge pixel reflection into original ridge; first version copied black/gold frame",
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "mobileWebkitRendered": false,
+          "nativePlayable": false,
+          "userApproved": false,
+          "finished": false,
+          "notes": "REJECTED visual review: pixel edge match copied an artificial black/gold source frame, not natural terrain continuity."
+        },
+        {
+          "id": "matrei-east-ridge-edge-v2",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp",
+          "assetSha256": "53997eea71d7f91c4bcbb6b3aaca86931ac2bd79ea4beb9b0c9bfe22c1527305",
+          "displayOverlay": "terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2-comparison.webp",
+          "method": "Display-only reversible removal of Matrei unused east border, native-scale vegetation continuation into existing original ridge",
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": false,
+          "nativePlayable": false,
+          "userApproved": false,
+          "finished": false,
+          "notes": "REJECTED visual review: border frame removed and pixel edge matches, but Matrei river/meadow still changes abruptly to rocky forest. Not geographically or physically verified."
         }
       ]
     },

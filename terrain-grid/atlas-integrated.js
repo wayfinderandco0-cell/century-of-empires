@@ -284,10 +284,12 @@ const focusedEastPilot=studyParams.get("originalArtPilot")==="east";
 const focusedV267NewPilot=studyParams.get("originalArtPilot")==="v267-new";
 const ridgeGradePilot=focusedV267NewPilot&&studyParams.get("ridgeGrade")==="1";
 const ridgeV2Pilot=focusedV267NewPilot&&studyParams.get("ridgeGrade")==="v2";
+const ridgeV6Pilot=focusedV267NewPilot&&studyParams.get("ridgeGrade")==="v6";
 const ridgeV2Path="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp";
+const ridgeV6Path="terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v6-source-road.webp";
 const ridgeV2Overlay="terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp";
 const ridgeGradePath="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
-pilotButton.textContent=ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
+pilotButton.textContent=ridgeV6Pilot?"EAST-01 V6 road · QA only":ridgeV2Pilot?"Edge-conditioned V2":ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 if(focusedV267NewPilot){
@@ -325,6 +327,7 @@ pilotButton.onclick=async()=>{
    // Grade is opt-in and cannot change the immutable approved 3-cell manifest.
    // The original east ridge remains the default until independently reviewed.
    if(ridgeGradePilot&&all.length===1)all[0]={...all[0],art:ridgeGradePath};
+   if(ridgeV6Pilot&&all.length===1)all[0]={...all[0],art:ridgeV6Path};
    if(ridgeV2Pilot&&all.length===1){
     all[0]={...all[0],art:ridgeV2Path};
     eastBorderOverlay=await imageLoad(ridgeV2Overlay,20000);
@@ -346,7 +349,7 @@ pilotButton.onclick=async()=>{
      try{img=await imageLoad(art,12000);}
      catch(primaryError){
       if(cell.id!=="matrei-east-ridge")throw primaryError;
-      if(ridgeV2Pilot)throw primaryError; // No silent replacement with older unapproved art.
+      if(ridgeV2Pilot||ridgeV6Pilot)throw primaryError; // No silent replacement with older unapproved art.
       const fallbackCommit=ridgeGradePilot?"0e0ba14df7bc44d5492f460fa4d616c552644957":"9e0e11cb2897cce91461681bfe0acf1a420034a5";
       img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/"+fallbackCommit+"/"+art,20000);
      }
@@ -378,7 +381,7 @@ pilotButton.onclick=async()=>{
   }
   else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
-  status(ridgeV2Pilot?"V2 east seam: reversible Matrei display edge · visual/river/roads UNVERIFIED · not playable":ridgeGradePilot?"Color-only graded ridge: edge RGB improved · terrain geometry and roads UNVERIFIED · not playable":focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
+  status(ridgeV6Pilot?"V6 EAST-01 road material: original Matrei protected · road sits above trees, NOT ground-verified · route disabled":ridgeV2Pilot?"V2 east seam: reversible Matrei display edge · visual/river/roads UNVERIFIED · not playable":ridgeGradePilot?"Color-only graded ridge: edge RGB improved · terrain geometry and roads UNVERIFIED · not playable":focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message+(ridgeEmergency?" · showing direct image recovery":""));}
 };
 // Open the image immediately, independent of the V121 canvas bootstrap.
@@ -386,7 +389,7 @@ pilotButton.onclick=async()=>{
 // than reproducing the user's completely blank iPhone screenshot.
 if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
  ridgeEmergency=true;
- ridgeDOM.src=ridgeV2Pilot?ridgeV2Path:ridgeGradePilot?ridgeGradePath:"terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+ ridgeDOM.src=ridgeV6Pilot?ridgeV6Path:ridgeV2Pilot?ridgeV2Path:ridgeGradePilot?ridgeGradePath:"terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
  open();
  for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
  status("Loading original ridge · direct-image recovery active until atlas is ready");

@@ -124,7 +124,15 @@ jobs:
                 timeout=90000)
               assert direct.evaluate('COEAtlas.approvedBaselineLocked') is True
               assert direct.evaluate('COEAtlas.startMarch()') is False
-              direct.wait_for_function("document.getElementById('atlasRidgeDomFallback').naturalWidth===1536",timeout=30000)
+              direct.wait_for_function("""() => {
+                const im=document.getElementById('atlasRidgeDomFallback'),r=im.getBoundingClientRect();
+                return im.complete && im.naturalWidth===1536 && r.width>100 && r.height>70 &&
+                  r.left<innerWidth && r.right>0 && r.top<innerHeight && r.bottom>0;
+              }""",timeout=30000)
+              # WebKit's GPU image layer may not be committed in the same frame
+              # that naturalWidth becomes available. Wait for a painted frame.
+              direct.evaluate("() => new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))")
+              direct.wait_for_timeout(650)
               direct.screenshot(path=str(out/'actual-webkit-iphone-direct-link.png'))
               assert_real_pixels(out/'actual-webkit-iphone-direct-link.png',(100,600,680,1160))
               direct.close()
@@ -199,6 +207,7 @@ jobs:
           name: v267-new-original-ridge-webkit
           path: |
             terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png
+            terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-direct-link.png
             terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-ridge-graded.png
           retention-days: 14
           if-no-files-found: warn

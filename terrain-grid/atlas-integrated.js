@@ -43,7 +43,10 @@ let ridgeEmergency=false,ridgeFallbackTried=false;
 ridgeDOM.addEventListener("error",()=>{
  if(!ridgeFallbackTried){
   ridgeFallbackTried=true;
-  ridgeDOM.src="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+  const grade=new URLSearchParams(root.location.search).get("ridgeGrade")==="1";
+  ridgeDOM.src=grade
+    ?"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/0e0ba14df7bc44d5492f460fa4d616c552644957/terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp"
+    :"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
  }else if(ridgeEmergency)status("Ridge artwork unavailable from both image sources · use Approved three");
 });
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
@@ -266,7 +269,9 @@ pilotButton.id="atlasOriginalNeighbors";pilotButton.type="button";
 const secondEuropeanBatch=studyParams.get("originalArtPilot")==="2";
 const focusedEastPilot=studyParams.get("originalArtPilot")==="east";
 const focusedV267NewPilot=studyParams.get("originalArtPilot")==="v267-new";
-pilotButton.textContent=focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
+const ridgeGradePilot=focusedV267NewPilot&&studyParams.get("ridgeGrade")==="1";
+const ridgeGradePath="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
+pilotButton.textContent=ridgeGradePilot?"Graded ridge QA":focusedV267NewPilot?"New V267 ridge":focusedEastPilot?"Matrei east · new art":secondEuropeanBatch?"16 scenic studies":"Original neighbors";
 pilotButton.hidden=!studyParams.has("originalArtPilot");
 $("atlasBar").querySelector("div").appendChild(pilotButton);
 if(focusedV267NewPilot){
@@ -301,6 +306,9 @@ pilotButton.onclick=async()=>{
    // The focused review loads only the new source-grounded cell, not 16
    // rejected neighbors. Validate the full manifest first, then filter.
    const all=batches.flatMap(batch=>batch.cells).filter(c=>c.art&&(!focusedEastPilot||c.id==="east-matrei")&&(!focusedV267NewPilot||c.id==="matrei-east-ridge"));
+   // Grade is opt-in and cannot change the immutable approved 3-cell manifest.
+   // The original east ridge remains the default until independently reviewed.
+   if(ridgeGradePilot&&all.length===1)all[0]={...all[0],art:ridgeGradePath};
    if((focusedEastPilot||focusedV267NewPilot)&&(all.length!==1||!all[0].art))throw Error("Missing focused Matrei east scene");
    if(new Set(all.map(c=>c.id)).size!==all.length||
       new Set(all.map(c=>c.origin.join(","))).size!==all.length)
@@ -314,7 +322,8 @@ pilotButton.onclick=async()=>{
       // GitHack branch CDN can cache a 404 for a newly committed binary.
       // Use the immutable asset commit as a second, CORS-safe source.
       if(cell.id!=="matrei-east-ridge")throw primaryError;
-      img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/"+cell.art,20000);
+      const fallbackCommit=ridgeGradePilot?"0e0ba14df7bc44d5492f460fa4d616c552644957":"9e0e11cb2897cce91461681bfe0acf1a420034a5";
+      img=await imageLoad("https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/"+fallbackCommit+"/"+cell.art,20000);
       status("New ridge loaded from immutable source after preview CDN cache miss");
     }
     // Wait for decode before first canvas draw on iOS Safari/WebKit.
@@ -342,7 +351,7 @@ pilotButton.onclick=async()=>{
   }
   else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
-  status(focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
+  status(ridgeGradePilot?"Color-only graded ridge: edge RGB improved · terrain geometry and roads UNVERIFIED · not playable":focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
  }catch(e){status("Neighbor art not available: "+e.message+(ridgeEmergency?" · showing direct image recovery":""));}
 };
 // Open the image immediately, independent of the V121 canvas bootstrap.
@@ -350,7 +359,7 @@ pilotButton.onclick=async()=>{
 // than reproducing the user's completely blank iPhone screenshot.
 if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
  ridgeEmergency=true;
- ridgeDOM.src="terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+ ridgeDOM.src=ridgeGradePilot?ridgeGradePath:"terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
  open();
  for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
  status("Loading original ridge · direct-image recovery active until atlas is ready");

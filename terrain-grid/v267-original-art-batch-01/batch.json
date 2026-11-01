@@ -101,6 +101,26 @@
           "notes": "Real 390x844 WebKit screenshot test PASSED, but human visual review REJECTED physical terrain continuity: Matrei river/meadow still changes abruptly to rocky forest. No new road or historic crossing. Not finished.",
           "webkitRunId": 41277169088,
           "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-v2.png"
+        },
+        {
+          "id": "matrei-east-riparian-v3",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-comparison.webp",
+          "thumbnail": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-thumb.webp",
+          "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
+          "sourceCode": "scripts/v267_east01_riparian.py",
+          "method": "Original V267 ridge preserved; native-scale V121 source material and river palette used to re-author a provisional riparian channel. No cloned terrain or new synthetic forest.",
+          "visuallyReviewed": false,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": false,
+          "nativePlayable": false,
+          "historicallyVerified": false,
+          "userApproved": false,
+          "finished": false,
+          "notes": "Automated image generation completed via GitHub Actions. Pending human visual QA and physical seam/road verification; V123 graph and approved three art files unchanged."
         }
       ]
     },

@@ -115,7 +115,7 @@
           "physicalTerrainSeamVerified": false,
           "roadSeamsVerified": false,
           "riverCrossingsVerified": false,
-          "mobileWebkitRendered": false,
+          "mobileWebkitRendered": true,
           "nativePlayable": false,
           "historicallyVerified": false,
           "userApproved": false,
@@ -130,17 +130,17 @@
           "sourceArt": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
           "sourceCode": "scripts/v267_east01_riparian_v4.py",
           "method": "Original V267 ridge preserved; V121 riparian source material feathered into the west edge and visually occluded beneath existing forest within 370px; no synthetic trees or cartway.",
-          "visuallyReviewed": false,
+          "visuallyReviewed": true,
           "visualQualityApproved": false,
           "physicalTerrainSeamVerified": false,
           "roadSeamsVerified": false,
           "riverCrossingsVerified": false,
-          "mobileWebkitRendered": false,
+          "mobileWebkitRendered": true,
           "nativePlayable": false,
           "historicallyVerified": false,
           "userApproved": false,
           "finished": false,
-          "notes": "Candidate for actual visual QA. No river crossing, historical road, or native route is asserted."
+          "notes": "Visually reviewed comparison: original rocky forest preserved and V3's artificial full-width blue stripe removed. River now fades beneath existing trees, but Matrei-to-EAST physical river/bank seam remains unverified and no embedded cartway exists. NOT finished or approved."
         }
       ]
     },

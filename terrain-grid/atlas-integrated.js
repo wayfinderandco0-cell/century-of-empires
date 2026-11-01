@@ -6,7 +6,7 @@
 "use strict";
 const M="terrain-grid/atlas-cells.json";
 // Isolated SOUTH-east roaded artwork inspection. The V123 graph stays unchanged.
-const southEastRoadPilot=new URLSearchParams(root.location.search).get("southEastRoadPilot")==="1";
+const southEastRoadPilot=new URLSearchParams(root.location.search).get("southEastRoadPilot");
 const $=id=>document.getElementById(id);
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -641,13 +641,14 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status(playability.label+" · tap a painted V123 cartway to march");if(shown)fit();
- if(southEastRoadPilot){
-  southeastRoadImage=await imageLoad("terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp");
+ if(southEastRoadPilot==="1"||southEastRoadPilot==="2"){
+  const roadArt=southEastRoadPilot==="2"?"terrain-grid/v267-southeast-road-02/southeast-02-local-ruts.webp":"terrain-grid/v267-southeast-road-01/southeast-01-roaded-candidate.webp";
+  southeastRoadImage=await imageLoad(roadArt);
   if(southeastRoadImage.naturalWidth!==1536||southeastRoadImage.naturalHeight!==1024)throw Error("SOUTHEAST road art dimensions invalid");
   southeastRoadVisible=true;
   if(!shown)open();
   $("atlasWhole").click();
-  status("3 PLAYABLE · SOUTH-east ROAD ART STUDY only · candidate NOT traversable or approved");
+  status("3 PLAYABLE · SOUTH-east road study "+southEastRoadPilot+" · candidate NOT traversable or approved");
  }
  if(studyParams.get("playableAtlas")==="1"&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();

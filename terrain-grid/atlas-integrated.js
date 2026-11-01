@@ -624,6 +624,10 @@ root.COEAtlas=Object.freeze(API);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status(playability.label+" · tap a painted V123 cartway to march");if(shown)fit();
+ if(studyParams.get("playableAtlas")==="1"&&studyParams.get("autoOpen")==="1"){
+  if(!shown)open();
+  status(playability.label+" · WEST/MATREI/SOUTH only · tap a painted cartway to march");
+ }
  if((countryside03Pilot||countrysideBatchPilot||countrysideBatch02Pilot)&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();
   pilotButton.click();

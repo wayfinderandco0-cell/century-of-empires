@@ -45,8 +45,11 @@
     "visualReview": "new raster composition inspected; style plausibility promising; adjacent landform seam not verified",
     "roadSeamsVerified": false,
     "riverCrossingsVerified": false,
-    "webKitVerified": false,
+    "webKitVerified": true,
     "userApproved": false,
-    "netFinished": false
+    "netFinished": false,
+    "webKitRunId": 41331306894,
+    "nativeCanvasRendered": true,
+    "armyOnProtectedRoadsTested": true
   }
 }

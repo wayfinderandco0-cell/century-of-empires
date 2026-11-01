@@ -515,12 +515,14 @@
       ],
       "visualApproval": "pending",
       "userApproval": false,
-      "webKitVerified": false,
+      "webKitVerified": true,
       "playableIntegrated": false,
       "nativeCanvasDisplayCandidate": true,
       "historicallyVerified": false,
       "preview": "v267-countryside-03-review.html",
-      "nativePreview": "index.html?originalArtPilot=countryside03&autoOpen=1"
+      "nativePreview": "index.html?originalArtPilot=countryside03&autoOpen=1",
+      "webKitRunId": 41331306894,
+      "webKitEvidence": "terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png"
     }
   ]
 }

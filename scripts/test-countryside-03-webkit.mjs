@@ -26,8 +26,11 @@ try{
  if(!marching)throw Error('Protected V123 march was disabled by scenic preview');
  const moved=await native.evaluate(()=>window.COEAtlas.finishMarch());
  if(!Array.isArray(moved)||moved.length!==2)throw Error('Protected V123 army could not finish march');
- await native.locator('#atlasWhole').click();
+ // Capture the NEW cell at close inspection scale, not just a tiny whole-atlas overview.
+ await native.evaluate(()=>window.COEAtlas.centerAt(3840,1536,2.25));
  await native.screenshot({path:'terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png',fullPage:true});
+ await native.locator('#atlasWhole').click();
+ await native.screenshot({path:'terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native-overview.png',fullPage:true});
  const stats=await fs.stat('terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png');
  if(stats.size<20000)throw Error('Native screenshot unexpectedly small');
  if(errors.length||nativeErrors.length)throw Error('Browser errors: '+errors.concat(nativeErrors).join('; '));

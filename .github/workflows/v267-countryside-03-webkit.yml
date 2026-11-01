@@ -58,6 +58,7 @@ jobs:
           path: |
             terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03.png
             terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native.png
+            terrain-grid/v267-countryside-original/actual-webkit-iphone-countryside-03-native-overview.png
             terrain-grid/v267-countryside-original/webkit-iphone-countryside-03-result.json
       - name: Preserve passing screenshot on development branch
         if: success()

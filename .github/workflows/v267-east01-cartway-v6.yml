@@ -114,13 +114,9 @@ jobs:
                       wait_until="domcontentloaded")
                   page.wait_for_function("window.COEAtlas && window.COEAtlas.loaded",timeout=60000)
                   assert page.evaluate("window.COEAtlas.nodes")==100
-                  page.locator("#atlasOriginalNeighbors").click()
-                  page.wait_for_timeout(2500)
-                  print("PILOT STATUS",page.evaluate("JSON.stringify({status:document.getElementById(\'atlasStatus\').textContent,visible:window.COEAtlas.originalNeighborVisible,cells:window.COEAtlas.originalNeighborCells,cache:window.COEAtlas.originalNeighborCache})"),flush=True)
-                  page.wait_for_function("window.COEAtlas.originalNeighborVisible && window.COEAtlas.originalNeighborCells===1",timeout=12000)
-                  page.wait_for_timeout(3200)
-                  print("NATIVE V6 DEBUG",page.evaluate("JSON.stringify({cache:window.COEAtlas.originalNeighborCache,status:document.getElementById(\'atlasStatus\').textContent,center:window.COEAtlas.center||null})"),flush=True)
-                  page.wait_for_function("window.COEAtlas.originalNeighborCache && window.COEAtlas.originalNeighborCache.decoded===1",timeout=22000)
+                  # autoOpen=1 already activates the candidate; clicking toggles it OFF.
+                  page.wait_for_function("window.COEAtlas.originalNeighborVisible && window.COEAtlas.originalNeighborCells===1",timeout=30000)
+                  page.wait_for_function("window.COEAtlas.originalNeighborCache && window.COEAtlas.originalNeighborCache.decoded===1",timeout=30000)
                   assert page.evaluate("window.COEAtlas.startMarch()") is False
                   page.locator("#atlasPlus").click()
                   page.locator("#atlasMinus").click()

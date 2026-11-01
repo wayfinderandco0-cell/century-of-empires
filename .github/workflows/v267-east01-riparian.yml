@@ -36,6 +36,7 @@ jobs:
           evidence=json.loads((p/"matrei-east-riparian-v3-evidence.json").read_text())
           assert Image.open(out).size==(1536,1024)
           assert Image.open(p/"matrei-east-riparian-v3-comparison.webp").size==(3072,1024)
+          assert Image.open(p/"matrei-east-riparian-v3-thumb.webp").size==(1024,341)
           assert hashlib.sha256(out.read_bytes()).hexdigest()!=hashlib.sha256(ref.read_bytes()).hexdigest()
           assert evidence["roadPorts"]==[] and not evidence["roadsVerified"]
           assert not evidence["riverSeamVerified"] and not evidence["finished"]
@@ -47,6 +48,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-comparison.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-thumb.webp
           git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v3-evidence.json
           if git diff --cached --quiet; then
             echo "Generated art already up to date"

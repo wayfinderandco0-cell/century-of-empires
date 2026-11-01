@@ -39,6 +39,8 @@ try{
  await native.evaluate(()=>COEAtlas.centerAt(5376,512,2.25));
  await native.screenshot({path:dir+'actual-webkit-iphone-countryside-05-native.png',fullPage:true});
  await native.locator('#atlasWhole').click();
+ const wholeZoom=await native.evaluate(()=>COEAtlas.zoom);
+ if(!(wholeZoom<.6&&wholeZoom>.15))throw Error('Whole 6-cell atlas did not fit iPhone: '+wholeZoom);
  await native.screenshot({path:dir+'actual-webkit-iphone-countryside-batch01-overview.png',fullPage:true});
  for(const file of ['actual-webkit-iphone-countryside-04-native.png','actual-webkit-iphone-countryside-05-native.png']){
   if((await fs.stat(dir+file)).size<25000)throw Error('Blank/small screenshot '+file);

@@ -1,0 +1,24 @@
+{
+  "schema": "coe-v267-seam-audit/v1",
+  "cells": [
+    "matrei",
+    "matrei-east-ridge"
+  ],
+  "border": "matrei.east <-> matrei-east-ridge.west",
+  "worldX": 3072,
+  "worldYRange": [
+    256,
+    768
+  ],
+  "registeredMatreiSource": "terrain-grid/art/matrei-v121-original.webp",
+  "ridgeSource": "terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp",
+  "meanBorderRgbAbsDifference": 35.41,
+  "maxBorderRgbAbsDifference": 76.33,
+  "borderSamples": 512,
+  "geometricContinuityVerified": false,
+  "roadConnectionVerified": false,
+  "historicalVerification": false,
+  "userApproved": false,
+  "finished": false,
+  "note": "A pixel difference is a visual diagnostic, not a terrain-seam pass; original images unchanged."
+}

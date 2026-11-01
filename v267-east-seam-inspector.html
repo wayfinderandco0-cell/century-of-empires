@@ -15,7 +15,7 @@ button,a{min-height:42px;border:1px solid #b8a176;border-radius:8px;padding:8px 
 <header><h1>MATREI ↔ EAST RIDGE · V267 seam inspection</h1><div class="controls">
 <button id="whole" type="button">Whole</button><button id="seam" type="button">Seam</button>
 <button id="minus" type="button" aria-label="Zoom out">−</button><button id="plus" type="button" aria-label="Zoom in">+</button>
-<a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></div></header>
+<a href="v267-east-seam-inspector.html?variant=edge-study">Edge study</a><a href="v267-east-seam-inspector.html">Previous ridge</a><a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></div></header>
 <main id="stage"><canvas id="view" aria-label="Approved Matrei and experimental east ridge at their true world positions; pinch or drag to inspect"></canvas>
 <div id="fallback"><strong>Image loading failed</strong><a href="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp">Open east ridge directly</a><a href="v267-ios-safari-review.html?southArt=coherent">Open approved three</a></div></main>
 <footer><div id="status" role="status">Loading the protected Matrei artwork and unapproved ridge…</div>
@@ -53,6 +53,8 @@ function registerMatrei(original){
  return dst;
 }
 const canvas=document.getElementById("view"),stage=document.getElementById("stage"),ctx=canvas.getContext("2d",{alpha:false}),status=document.getElementById("status");
+const edgeStudy=new URLSearchParams(location.search).get("variant")==="edge-study";
+const ridgePath=edgeStudy?"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp":"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
 let images=null,w=0,h=0,dpr=1,scale=1,center=[3072,512],zoom=1,loaded=false;
 const pointers=new Map();let pinch=null;
 function load(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{if(img.naturalWidth!==1536||img.naturalHeight!==1024)return reject(Error("wrong dimensions "+path));resolve(img);};img.onerror=()=>reject(Error("missing "+path));img.src=path;});}
@@ -80,7 +82,7 @@ for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.add
 addEventListener("resize",()=>{fitCanvas();seam();});
 window.COESeamQA=Object.freeze({get loaded(){return loaded},get zoom(){return zoom},get worldCenter(){return center.slice()},get hasRoadAtEdge(){return false},get visiblePixels(){if(!loaded)return 0;const d=ctx.getImageData(Math.floor(canvas.width*.5),Math.floor(canvas.height*.5),1,1).data;return d[0]+d[1]+d[2];}});
 fitCanvas();
-Promise.all([load("terrain-grid/art/matrei-v121-original.webp"),load("terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp")])
-.then(([matrei,ridge])=>{images={matrei:registerMatrei(matrei),ridge};loaded=true;seam();status.textContent="Both artworks loaded at native V123 world positions · physical seam NOT verified";})
-.catch(e=>{status.textContent="Seam inspector failed: "+e.message;document.getElementById("fallback").style.display="flex";});
+Promise.all([load("terrain-grid/art/matrei-v121-original.webp"),load(ridgePath)])
+.then(([matrei,ridge])=>{images={matrei:registerMatrei(matrei),ridge};loaded=true;seam();status.textContent=(edgeStudy?"New derivative ridge edge loaded · pixel continuity study":"Previous graded ridge loaded")+" · physical seam and roads NOT verified";})
+.catch(e=>{status.textContent="Seam inspector failed: "+e.message+" · try Previous ridge";document.getElementById("fallback").style.display="flex";});
 </script></body></html>

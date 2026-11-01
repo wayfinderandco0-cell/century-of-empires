@@ -1,0 +1,25 @@
+{
+  "browser": "webkit",
+  "viewport": [
+    390,
+    844
+  ],
+  "zoomPassed": true,
+  "assetsLoaded": 4,
+  "approved": [
+    "WEST",
+    "MATREI",
+    "SOUTH"
+  ],
+  "newCell": {
+    "width": 1536,
+    "height": 1024,
+    "loaded": true
+  },
+  "centerPixel": [
+    12,
+    23,
+    18,
+    255
+  ]
+}

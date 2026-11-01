@@ -541,12 +541,16 @@
       ],
       "visualApproval": "pending",
       "userApproval": false,
-      "webKitVerified": false,
+      "webKitVerified": true,
       "playableIntegrated": false,
       "nativeCanvasDisplayCandidate": true,
       "historicallyVerified": false,
       "preview": "v267-countryside-batch01-review.html",
-      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1"
+      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1",
+      "nativeCanvasRendered": true,
+      "webKitRunId": 41337527443,
+      "webKitEvidence": "terrain-grid/v267-countryside-original/webkit-runs/41337527443/actual-webkit-iphone-countryside-04-native.png",
+      "visualReview": "New original raster visually inspected; candidate art promising, physical landform seams and user sign-off pending"
     },
     {
       "id": "countryside-05",
@@ -565,12 +569,16 @@
       ],
       "visualApproval": "pending",
       "userApproval": false,
-      "webKitVerified": false,
+      "webKitVerified": true,
       "playableIntegrated": false,
       "nativeCanvasDisplayCandidate": true,
       "historicallyVerified": false,
       "preview": "v267-countryside-batch01-review.html",
-      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1"
+      "nativePreview": "index.html?originalArtPilot=countrysideBatch01&autoOpen=1",
+      "nativeCanvasRendered": true,
+      "webKitRunId": 41337527443,
+      "webKitEvidence": "terrain-grid/v267-countryside-original/webkit-runs/41337527443/actual-webkit-iphone-countryside-05-native.png",
+      "visualReview": "New original raster visually inspected; candidate art promising, physical landform seams and user sign-off pending"
     }
   ]
 }

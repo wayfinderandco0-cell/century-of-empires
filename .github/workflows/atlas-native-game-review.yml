@@ -5,6 +5,8 @@ on:
     paths:
       - index.html
       - terrain-grid/atlas-integrated.js
+      - terrain-grid/v267-viewport-cache.js
+      - scripts/test_v267_viewport_cache.js
       - terrain-grid/atlas-cells.json
       - terrain-grid/v267-art-factory-contract.js
       - terrain-grid/art/matrei-v121-original.webp
@@ -46,6 +48,7 @@ jobs:
         run: |
           node scripts/test_atlas_manifest.js
           node scripts/test_v267_art_factory_contract.js
+          node scripts/test_v267_viewport_cache.js
       - name: Install mobile browser engines
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0 pillow

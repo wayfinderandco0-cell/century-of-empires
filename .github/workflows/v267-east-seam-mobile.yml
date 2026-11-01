@@ -8,7 +8,7 @@ on:
       - '.github/workflows/v267-east-seam-mobile.yml'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   inspect:
     runs-on: ubuntu-24.04
@@ -33,3 +33,18 @@ jobs:
             terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-inspector.png
             terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-v2.png
           if-no-files-found: ignore
+      - name: Commit actual WebKit screenshots on development branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "terrain-v267-three-original-art-prototype-20261028"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-inspector.png
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-seam-v2.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Save actual 390x844 WebKit screenshots of V267 east seam V2"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          fi

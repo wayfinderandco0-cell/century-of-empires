@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#14251f">
+<title>Century of Empires — Matrei / East Ridge Seam Inspection</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#14251f;color:#f5e8ca;font:14px system-ui,-apple-system,sans-serif}
+body{display:flex;flex-direction:column}header,footer{flex:none;background:#10231d;border-color:#928264;border-style:solid;padding:9px 10px}
+header{border-width:0 0 1px;padding-top:calc(9px + env(safe-area-inset-top))}footer{border-width:1px 0 0;padding-bottom:calc(9px + env(safe-area-inset-bottom))}
+h1{font:700 18px Georgia,serif;margin:0 0 8px}.controls{display:flex;flex-wrap:wrap;gap:6px}
+button,a{min-height:42px;border:1px solid #b8a176;border-radius:8px;padding:8px 11px;background:#28483e;color:#f7e8c5;font:700 13px system-ui;text-decoration:none}
+#stage{position:relative;flex:1;min-height:0;touch-action:none;overflow:hidden}
+#view{width:100%;height:100%;display:block;touch-action:none}
+#fallback{position:absolute;inset:12px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;background:#15271f}
+#fallback a{display:block}#status{font-weight:650}small{display:block;opacity:.82;margin-top:5px;line-height:1.35}
+</style></head><body>
+<header><h1>MATREI ↔ EAST RIDGE · V267 seam inspection</h1><div class="controls">
+<button id="whole" type="button">Whole</button><button id="seam" type="button">Seam</button>
+<button id="minus" type="button" aria-label="Zoom out">−</button><button id="plus" type="button" aria-label="Zoom in">+</button>
+<a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></div></header>
+<main id="stage"><canvas id="view" aria-label="Approved Matrei and experimental east ridge at their true world positions; pinch or drag to inspect"></canvas>
+<div id="fallback"><strong>Image loading failed</strong><a href="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp">Open east ridge directly</a><a href="v267-ios-safari-review.html?southArt=coherent">Open approved three</a></div></main>
+<footer><div id="status" role="status">Loading the protected Matrei artwork and unapproved ridge…</div>
+<small>Orange line: exact shared world edge x=3072, y=256–768. No road exists on this edge in protected V123. This is a visual seam diagnostic, not a new playable or approved cell.</small></footer>
+<script>
+"use strict";
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function registerMatrei(original){
+ const W=1536,H=1024;
+ const src=document.createElement("canvas");src.width=W;src.height=H;
+ const sc=src.getContext("2d",{willReadFrequently:true});sc.drawImage(original,0,0);
+ const pixels=sc.getImageData(0,0,W,H).data;
+ const dst=document.createElement("canvas");dst.width=W;dst.height=H;
+ const dc=dst.getContext("2d"),frame=dc.createImageData(W,H),out=frame.data;
+ const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+ const xWest=Float32Array.from({length:W},(_,x)=>Math.exp(-.5*((x-240)/400)**2));
+ const xSouth=Float32Array.from({length:W},(_,x)=>Math.exp(-.5*((x-466)/105)**2));
+ for(let y=0;y<H;y++){
+  const t=smooth((y-845)/179),sy0=10+y*(953/H)-26*t;
+  const sl=sy0<286?385-(sy0-10)*(295/276):sy0>674?90+(sy0-674)*(295/289):90;
+  const tl=y<256?256-y:y>768?y-768:0,tr=W-tl;
+  const b=smooth((y-700)/324),wy=26*Math.exp(-.5*((y-505)/110)**2);
+  for(let x=tl;x<tr;x++){
+   const sx=clamp(sl+(x-tl)*(W-2*sl)/(tr-tl)-55*b*xSouth[x],0,W-1.001);
+   const sy=clamp(sy0+wy*xWest[x],0,H-1.001);
+   const x0=Math.floor(sx),y0=Math.floor(sy),fx=sx-x0,fy=sy-y0;
+   const a=(y0*W+x0)*4,c=a+4,d=a+W*4,e=d+4,idx=(y*W+x)*4;
+   for(let k=0;k<3;k++)out[idx+k]=Math.round(
+    (1-fy)*((1-fx)*pixels[a+k]+fx*pixels[c+k])+
+    fy*((1-fx)*pixels[d+k]+fx*pixels[e+k]));
+   out[idx+3]=255;
+  }
+ }
+ dc.putImageData(frame,0,0);
+ return dst;
+}
+const canvas=document.getElementById("view"),stage=document.getElementById("stage"),ctx=canvas.getContext("2d",{alpha:false}),status=document.getElementById("status");
+let images=null,w=0,h=0,dpr=1,scale=1,center=[3072,512],zoom=1,loaded=false;
+const pointers=new Map();let pinch=null;
+function load(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{if(img.naturalWidth!==1536||img.naturalHeight!==1024)return reject(Error("wrong dimensions "+path));resolve(img);};img.onerror=()=>reject(Error("missing "+path));img.src=path;});}
+function poly(origin){const [x,y]=origin;return [[256,0],[1280,0],[1536,256],[1536,768],[1280,1024],[256,1024],[0,768],[0,256]].map(p=>[p[0]+x,p[1]+y]);}
+function screen(p){return [w/2+(p[0]-center[0])*scale,h/2+(p[1]-center[1])*scale];}
+function drawTile(img,origin){const polygon=poly(origin);ctx.save();ctx.beginPath();polygon.forEach((p,i)=>{const q=screen(p);i?ctx.lineTo(...q):ctx.moveTo(...q);});ctx.closePath();ctx.clip();const p=screen(origin);ctx.drawImage(img,p[0],p[1],1536*scale,1024*scale);ctx.restore();}
+function draw(){
+ if(!w||!h)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#14251f";ctx.fillRect(0,0,w,h);
+ if(!images)return;
+ drawTile(images.ridge,[3072,0]);drawTile(images.matrei,[1536,0]);
+ const a=screen([3072,256]),b=screen([3072,768]);ctx.save();ctx.setLineDash([7,5]);ctx.strokeStyle="#ffb547";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();ctx.restore();
+}
+function fitCanvas(){const r=stage.getBoundingClientRect();w=r.width||innerWidth;h=r.height||innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);draw();}
+function camera(p,s){center=p;scale=clamp(s,.12,4);zoom=scale;draw();}
+function seam(){camera([3072,512],Math.min(w/560,h/700));}
+function whole(){camera([3072,512],Math.min(w/3072,h/1300));}
+function changeZoom(f){scale=clamp(scale*f,.12,4);zoom=scale;draw();}
+document.getElementById("seam").onclick=seam;document.getElementById("whole").onclick=whole;
+document.getElementById("plus").onclick=()=>changeZoom(1.4);document.getElementById("minus").onclick=()=>changeZoom(1/1.4);
+canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);pinch=null;});
+canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const old=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
+ if(pointers.size===1){center=[center[0]-(e.clientX-old[0])/scale,center[1]-(e.clientY-old[1])/scale];}
+ else if(pointers.size===2){const [a,b]=[...pointers.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch)scale=clamp(scale*d/pinch,.12,4);pinch=d;}draw();});
+for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,e=>{pointers.delete(e.pointerId);pinch=null;});
+addEventListener("resize",()=>{fitCanvas();seam();});
+window.COESeamQA=Object.freeze({get loaded(){return loaded},get zoom(){return zoom},get worldCenter(){return center.slice()},get hasRoadAtEdge(){return false},get visiblePixels(){if(!loaded)return 0;const d=ctx.getImageData(Math.floor(canvas.width*.5),Math.floor(canvas.height*.5),1,1).data;return d[0]+d[1]+d[2];}});
+fitCanvas();
+Promise.all([load("terrain-grid/art/matrei-v121-original.webp"),load("terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp")])
+.then(([matrei,ridge])=>{images={matrei:registerMatrei(matrei),ridge};loaded=true;seam();status.textContent="Both artworks loaded at native V123 world positions · physical seam NOT verified";})
+.catch(e=>{status.textContent="Seam inspector failed: "+e.message;document.getElementById("fallback").style.display="flex";});
+</script></body></html>

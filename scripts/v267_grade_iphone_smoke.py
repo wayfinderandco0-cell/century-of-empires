@@ -34,22 +34,37 @@ def main():
    assert page.evaluate('COEAtlas.nodes')==100
    assert page.evaluate('COEAtlas.startMarch()') is False
    assert page.evaluate("document.getElementById('atlasRidgeDomFallback').src.includes('matrei-east-ridge-graded.webp')")
+   # The direct-link camera may leave only a sliver of the ridge visible.
+   # The old smoke test cropped its *offscreen* center; Pillow pads such
+   # out-of-bounds crops with black, producing a false "blank ridge" failure.
+   # Center the actual source tile before checking rendered viewport pixels.
+   page.evaluate('COEAtlas.centerAt(3840,512,2.2)')
+   page.wait_for_function("""() => {
+     const el=document.getElementById('atlasRidgeDomFallback');
+     const r=el.getBoundingClientRect();
+     return el.complete && el.naturalWidth===1536 && r.width>180 && r.height>100 &&
+       r.left<innerWidth*.3 && r.right>innerWidth*.7 &&
+       r.top<innerHeight*.35 && r.bottom>innerHeight*.65;
+   }""",timeout=30000)
+   page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
+   page.wait_for_timeout(400)
    shot=OUT/'actual-webkit-iphone-ridge-graded.png'
    page.screenshot(path=str(shot))
    rect=page.evaluate("""() => {
-    const r=document.getElementById('atlasRidgeDomFallback').getBoundingClientRect();
-    return {left:r.left,top:r.top,width:r.width,height:r.height};
+     const r=document.getElementById('atlasRidgeDomFallback').getBoundingClientRect();
+     return {left:r.left,top:r.top,width:r.width,height:r.height};
    }""")
-   assert rect['width']>180 and rect['height']>100 and rect['left']<390 and rect['top']<844,rect
    with Image.open(shot) as im:
-    # Center of visible image, avoiding dark clipped octagon corners and controls.
-    x0=max(0,int((rect['left']+rect['width']*.28)*2))
-    x1=min(im.width,int((rect['left']+rect['width']*.72)*2))
-    y0=max(0,int((rect['top']+rect['height']*.25)*2))
-    y1=min(im.height,int((rect['top']+rect['height']*.75)*2))
+    # Clamp BOTH endpoints to the real screenshot bounds. Never allow Pillow
+    # to fabricate black pixels for a crop outside the mobile viewport.
+    x0=max(0,min(im.width,int((rect['left']+rect['width']*.30)*2)))
+    x1=max(0,min(im.width,int((rect['left']+rect['width']*.70)*2)))
+    y0=max(0,min(im.height,int((rect['top']+rect['height']*.30)*2)))
+    y1=max(0,min(im.height,int((rect['top']+rect['height']*.70)*2)))
+    assert x1-x0>80 and y1-y0>80,('ridge center not on screen',rect,(x0,y0,x1,y1))
     crop=im.convert('RGB').crop((x0,y0,x1,y1))
     st=ImageStat.Stat(crop)
-    assert min(crop.size)>40 and max(st.stddev)>20,('blank ridge',crop.size,st.stddev)
+    assert max(st.stddev)>20,('blank ridge',crop.size,st.stddev)
     assert len(crop.getcolors(crop.width*crop.height) or [])>1200,'insufficient image detail'
    width0=rect['width']
    page.locator('#atlasPlus').click()

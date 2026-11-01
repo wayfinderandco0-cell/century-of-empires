@@ -11,7 +11,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const clone=p=>p.slice();
 const layer=document.createElement("section");
 layer.id="atlasIntegratedLayer";layer.hidden=true;layer.setAttribute("aria-label","Integrated Alpine atlas canvas");
-layer.innerHTML='<header id="atlasBar"><strong>ALPINE ATLAS <small>approved art method · experimental gameplay layer</small></strong><div><button id="atlasWhole">Whole</button><button id="atlasWest">WEST</button><button id="atlasSouth">SOUTH</button><button id="atlasMinus">−</button><button id="atlasPlus">+</button><button id="atlasClose">Back</button></div></header><canvas id="atlasCanvas" aria-label="Three connected Alpine terrain octagons, touch roads to march"></canvas><footer id="atlasFooter"><span id="atlasStatus" role="status">Loading original artwork and fixed roads…</span><div><button id="atlasMarch">WEST → SOUTH</button><button id="atlasHalt">Halt</button><button id="atlasRoads">Road trace</button></div></footer>';
+layer.innerHTML='<header id="atlasBar"><strong>ALPINE ATLAS <small>3 PLAYABLE · 4 ART-ONLY · 0 NEW FINISHED</small></strong><div><button id="atlasWhole">Whole</button><button id="atlasWest">WEST</button><button id="atlasSouth">SOUTH</button><button id="atlasMinus">−</button><button id="atlasPlus">+</button><button id="atlasClose">Back</button></div></header><canvas id="atlasCanvas" aria-label="Three connected Alpine terrain octagons, touch roads to march"></canvas><footer id="atlasFooter"><span id="atlasStatus" role="status">Loading original artwork and fixed roads…</span><div><button id="atlasMarch">WEST → SOUTH</button><button id="atlasHalt">Halt</button><button id="atlasRoads">Road trace</button></div></footer>';
 const style=document.createElement("style");style.textContent=`
 #atlasIntegratedOpen{position:fixed;z-index:135;right:9px;bottom:max(11px,env(safe-area-inset-bottom));border:1px solid #d9ba78;border-radius:9px;background:#183a32ed;color:#f9e7bc;font:700 12px system-ui;padding:11px;min-height:44px}
 #atlasIntegratedLayer{position:fixed;z-index:900;inset:0;background:#13251f;color:#f6e9cf;overflow:hidden}
@@ -52,7 +52,7 @@ ridgeDOM.addEventListener("error",()=>{
     :"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
  }else if(ridgeEmergency)status("Ridge artwork unavailable from both image sources · use Approved three");
 });
-let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
+let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false,playability=null;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
 // Independent road-free raster candidate; never enters V123 graph or V94 saves.
@@ -586,7 +586,7 @@ photoButton.onclick=togglePhotoSources;
 window.addEventListener("resize",()=>{if(shown)fit();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&shown)close();});
 const API={
- get loaded(){return loaded},get shown(){return shown},get nodes(){return atlas?.network.graph.size||0},
+ get loaded(){return loaded},get shown(){return shown},get playability(){return playability},get nodes(){return atlas?.network.graph.size||0},
  get uniqueWorldNodes(){return atlas?new Set([...atlas.network.graph.values()].map(n=>n.world.join(","))).size:0},
  get seams(){return atlas?.network.seams||[]},get imageSizes(){return Object.fromEntries(Object.entries(images).map(([id,img])=>[id,[img.naturalWidth,img.naturalHeight]]));},
  get moving(){return moving},get position(){return clone(unit)},get route(){return path.map(clone)},
@@ -616,11 +616,14 @@ root.COEAtlas=Object.freeze(API);
  atlas=root.V123Atlas.create(manifest.centerRoads,{experimentalSeams:true});
  if(atlas.network.graph.size!==100||atlas.network.seams.length!==2||atlas.network.seams.some(s=>!s.pass||s.endpointGapPx!==0))throw Error("Protected V123 road seam drift");
  segments=collectSegments(atlas.network);
+ if(!root.COEAtlasPlayability)throw Error("Playability audit missing");
+ playability=root.COEAtlasPlayability.audit(atlas,manifest);
+ $("atlasBar").querySelector("small").textContent=playability.label;
  const loadedImages=await Promise.all(manifest.cells.map(async cell=>[cell.id,await imageLoad(cell.art)]));
  images=Object.fromEntries(loadedImages);
  if(Object.values(images).some(img=>img.naturalWidth!==1536||img.naturalHeight!==1024))throw Error("Original art dimension mismatch");
  matreiRegistered=registerMatrei(images.matrei);
- loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
+ loaded=true;status(playability.label+" · tap a painted V123 cartway to march");if(shown)fit();
  if((countryside03Pilot||countrysideBatchPilot||countrysideBatch02Pilot)&&studyParams.get("autoOpen")==="1"){
   if(!shown)open();
   pilotButton.click();

@@ -1,0 +1,66 @@
+name: V267 SOUTH-east roaded art and native iPhone QA (candidate only)
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_southeast_roaded_candidate.py
+      - scripts/v267_southeast_road_browser.py
+      - .github/workflows/v267-southeast-road-playability-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v267-southeast-road-candidate
+  cancel-in-progress: false
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image and WebKit test tools
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Produce original-source photographic roaded derivative
+        run: python scripts/v267_southeast_roaded_candidate.py
+      - name: Check protected V123 and disabled new seam
+        run: |
+          node scripts/test_atlas_playability.js
+          node scripts/test_atlas_manifest.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/v267-southeast-road-01')
+          m=json.loads((p/'southeast-01-source.json').read_text())
+          assert Image.open(p/'southeast-01-roaded-candidate.webp').size==(1536,1024)
+          assert not m['gameplayEnabled'] and not m['physicalSeamReviewed'] and not m['userApproved']
+          assert m['pixelSeamMeanRGBError']<20
+          print('PASS source geometry and pixel QA, movement still gated')
+          PY
+      - name: Capture real native WebKit canvas and baseline two-way march
+        run: python scripts/v267_southeast_road_browser.py
+      - name: Preserve full-resolution candidate, source, QA and actual screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-southeast-road-candidate-native-webkit
+          path: terrain-grid/v267-southeast-road-01/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Commit actual new art assets and screenshot to isolated development branch
+        if: success()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add terrain-grid/v267-southeast-road-01/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Generate SOUTH-east roaded candidate and native WebKit QA (movement disabled)'
+          git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+          git push origin HEAD:terrain-v267-three-original-art-prototype-20261028

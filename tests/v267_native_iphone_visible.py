@@ -50,6 +50,10 @@ async def inspect(page, label, expect_loaded):
     assert bbox and bbox["width"] > 150 and bbox["height"] > 100, (label,bbox)
     assert bbox["x"] < 390 and bbox["x"]+bbox["width"] > 0, (label,bbox)
     assert bbox["y"] < 844 and bbox["y"]+bbox["height"] > 100, (label,bbox)
+    # The previous CI screenshot showed art stranded near the lower/right edge.
+    # The focused ridge must be centered, not merely intersect the viewport.
+    assert abs(bbox["x"]+bbox["width"]/2-195) < 28, (label,"off-center X",bbox)
+    assert abs(bbox["y"]+bbox["height"]/2-422) < 35, (label,"off-center Y",bbox)
     shot = await page.screenshot(full_page=True)
     (OUT/f"{label}.png").write_bytes(shot)
     verify_screen(shot,label)

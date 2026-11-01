@@ -109,11 +109,21 @@
   "visualQualityApproved": false,
   "physicalRoadSeamVerified": false,
   "riverSeamVerified": false,
-  "mobileWebkitRendered": false,
+  "mobileWebkitRendered": true,
   "nativeCanvasRendered": false,
   "historicallyVerified": false,
   "nativePlayable": false,
   "userApproved": false,
   "finished": false,
-  "notes": "V8 review-only original east ridge with narrow shaded dirt cartway; no certified route or bridge."
+  "notes": "V8 review-only original east ridge with narrow shaded dirt cartway; no certified route or bridge.",
+  "visuallyReviewed": true,
+  "visualQualityRejected": false,
+  "visualQualityStatus": "improved but not certified",
+  "webkitScreenshot": "actual-webkit-iphone-east-v8-narrow-dirt.png",
+  "visualReviewFindings": [
+    "V8 removes V7's oversized bright grassy berm and replaces bridge-plank texture with a narrower dirt road.",
+    "Road is visibly narrower and more integrated into dark forest, but some straight/bright sections remain.",
+    "The far-end road currently terminates in open meadow without a verified continuation or destination.",
+    "Matrei/EAST border crossing and river geometry remain unverified; no army route may be enabled."
+  ]
 }

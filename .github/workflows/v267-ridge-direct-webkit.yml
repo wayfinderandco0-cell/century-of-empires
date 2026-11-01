@@ -1,0 +1,75 @@
+name: V267 ridge direct iPhone WebKit visual gate
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - 'v267-ridge-ios-direct-review.html'
+      - 'terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp'
+      - '.github/workflows/v267-ridge-direct-webkit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ios-ridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install WebKit and browser driver
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps webkit
+      - name: Start local preview server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/coe-http.log 2>&1 &
+          sleep 2
+      - name: Render real source pixels at iPhone viewport
+        run: |
+          node <<'NODE'
+          const {webkit}=require('playwright');
+          (async()=>{
+            const browser=await webkit.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
+            const errors=[];
+            page.on('pageerror',e=>errors.push(e.message));
+            await page.goto('http://127.0.0.1:8765/v267-ridge-ios-direct-review.html',{waitUntil:'load'});
+            await page.waitForFunction(()=>window.COE_RIDGE_REVIEW?.loaded===true,{timeout:15000});
+            const result=await page.evaluate(()=>{
+              const image=document.querySelector('#ridge'),r=image.getBoundingClientRect();
+              const c=document.createElement('canvas');c.width=160;c.height=106;
+              const ctx=c.getContext('2d',{willReadFrequently:true});
+              ctx.drawImage(image,0,0,160,106);
+              const pixels=ctx.getImageData(0,0,160,106).data;
+              const distinct=new Set();
+              let nonDark=0;
+              for(let i=0;i<pixels.length;i+=16){
+                const red=pixels[i],green=pixels[i+1],blue=pixels[i+2];
+                distinct.add((red>>4)+','+(green>>4)+','+(blue>>4));
+                if(red+green+blue>90)nonDark++;
+              }
+              return {naturalWidth:image.naturalWidth,naturalHeight:image.naturalHeight,
+                renderedWidth:r.width,renderedHeight:r.height,distinctColors:distinct.size,nonDark,
+                fallback:window.COE_RIDGE_REVIEW.fallback};
+            });
+            if(errors.length)throw Error('Page errors: '+errors.join(' | '));
+            if(result.naturalWidth!==1536||result.naturalHeight!==1024)throw Error('Incorrect image size: '+JSON.stringify(result));
+            if(result.distinctColors<20||result.nonDark<300)throw Error('Blank/flat source image: '+JSON.stringify(result));
+            await page.screenshot({path:'v267-ridge-iphone-webkit.png',fullPage:true});
+            await page.locator('#plus').click();
+            const zoom=await page.evaluate(()=>window.COE_RIDGE_REVIEW.zoom);
+            if(zoom<=1)throw Error('Zoom control failed');
+            await page.screenshot({path:'v267-ridge-iphone-webkit-zoom.png',fullPage:true});
+            console.log('PASS WebKit image and controls:',JSON.stringify({...result,zoom}));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload actual WebKit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v267-ridge-direct-iphone-webkit
+          path: v267-ridge-iphone-webkit*.png
+          if-no-files-found: warn

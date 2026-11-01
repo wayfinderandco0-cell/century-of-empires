@@ -22,7 +22,15 @@ assert.equal(eastCheck.endpointGapPx,0);
 assert(eastCheck.errors.includes("source_art_not_approved"));
 assert(eastCheck.errors.includes("join_not_enabled"));
 const origin=proposal.network.key("matrei",[518,519]);
-const target=proposal.network.key("east-01",[322,716]);
+// The additive graph must follow exactly the road centerline painted by V8.
+const evidence=JSON.parse(fs.readFileSync(path.join(baseDir,"terrain-grid/v267-original-art-batch-01/matrei-east-v8-narrow-dirt-evidence.json"),"utf8"));
+const painted=evidence.roadWorldPoints;
+const matreiRoad=proposal.tiles.find(t=>t.id==="matrei").roads.southeast;
+const eastRoad=proposal.tiles.find(t=>t.id==="east-01").roads.west;
+assert.deepEqual(matreiRoad.slice(-3),painted.slice(0,3));
+assert.deepEqual(eastRoad.map(p=>[p[0]+1536,p[1]]),painted.slice(2));
+assert.deepEqual(painted[2],[1536,749]);
+const target=proposal.network.key("east-01",[714,559]);
 assert.equal(proposal.network.planRoute(origin,target),null,"unapproved east route traversable");
 // Synthetic validator fixture only: tests that the proposed endpoints can join
 // IF future original art, physical seam, and both cartways are approved.
@@ -34,10 +42,10 @@ const link=links.find(l=>l.id==="matrei-east-01-candidate");
 link.bothRoadsVisuallyVerified=true;link.enabled=true;
 const simulated=seam.buildNetwork({tiles,links});
 assert.equal(simulated.seams.filter(s=>s.pass).length,3);
-const route=simulated.planRoute(simulated.key("matrei",[518,519]),simulated.key("east-01",[322,716]));
+const route=simulated.planRoute(simulated.key("matrei",[518,519]),simulated.key("east-01",[714,559]));
 assert(route&&route.seams===1&&route.distance>0);
 assert.equal(proposal.nativePlayable,false);
 console.log(JSON.stringify({result:"PASS",baseNodes:100,baseSeams:2,
   candidateEndpointGap:0,candidateEnabled:false,
-  candidateTraversable:false,syntheticValidatorRoute:"PASS",
+  candidateTraversable:false,artRouteCenterlineExact:true,syntheticValidatorRoute:"PASS",
   physicalSeamVerified:false,newPlayable:0}));

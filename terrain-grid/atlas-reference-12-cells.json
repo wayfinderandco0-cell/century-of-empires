@@ -23,7 +23,20 @@
         0
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "NW-01.webp",
+        "screenshotBBox": [
+          100,
+          62,
+          353,
+          278
+        ],
+        "sha256Prefix": "eb60778ad7a5",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "NORTH-01",
@@ -40,7 +53,20 @@
         0
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "NORTH-01.webp",
+        "screenshotBBox": [
+          451,
+          62,
+          335,
+          278
+        ],
+        "sha256Prefix": "cc4bf4f0a1fe",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "NE-01",
@@ -57,7 +83,20 @@
         0
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "NE-01.webp",
+        "screenshotBBox": [
+          785,
+          62,
+          333,
+          278
+        ],
+        "sha256Prefix": "4725344a0a5a",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "NE-02",
@@ -74,7 +113,20 @@
         0
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "NE-02.webp",
+        "screenshotBBox": [
+          1117,
+          62,
+          338,
+          278
+        ],
+        "sha256Prefix": "3cf8a1abbbe1",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "EAST-01",
@@ -91,7 +143,20 @@
         1
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "EAST-01.webp",
+        "screenshotBBox": [
+          790,
+          341,
+          342,
+          303
+        ],
+        "sha256Prefix": "feded5ffdb98",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "EAST-02",
@@ -108,7 +173,20 @@
         1
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "EAST-02.webp",
+        "screenshotBBox": [
+          1132,
+          344,
+          383,
+          300
+        ],
+        "sha256Prefix": "655bba6c0811",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "SW-01",
@@ -125,7 +203,20 @@
         2
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "SW-01.webp",
+        "screenshotBBox": [
+          23,
+          649,
+          375,
+          288
+        ],
+        "sha256Prefix": "2c68761ce0c9",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "SE-01",
@@ -142,7 +233,20 @@
         2
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "SE-01.webp",
+        "screenshotBBox": [
+          788,
+          644,
+          345,
+          293
+        ],
+        "sha256Prefix": "c9dfcf9bb15b",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     },
     {
       "id": "SE-02",
@@ -159,7 +263,20 @@
         2
       ],
       "roadKeys": [],
-      "roadKeysStatus": "unknown; do not derive road traversability from screenshot"
+      "roadKeysStatus": "unknown; do not derive road traversability from screenshot",
+      "referenceCrop": {
+        "filename": "SE-02.webp",
+        "screenshotBBox": [
+          1132,
+          644,
+          389,
+          293
+        ],
+        "sha256Prefix": "28bfa30d4f1a",
+        "localAssetGenerated": true,
+        "gitAssetCommitted": false,
+        "labelInpainted": true
+      }
     }
   ],
   "rules": {
@@ -227,5 +344,13 @@
       1536,
       1024
     ]
+  },
+  "referenceAssetBatch": {
+    "source": "user-provided 1536x1024 screenshot",
+    "method": "transparent polygon crop and text inpainting; nine distinct WebP files",
+    "reproducibleScript": "terrain-grid/tools/extract-12-cell-references.py",
+    "outputLocation": "conversation sandbox only; binaries not yet checked into GitHub",
+    "renderingStatus": "HTML local review created; Chromium screenshot QA timed out; mobile WebKit not verified",
+    "prohibitedPromotion": "Do not use these reference crops as approved V267 original art, native roads, or historical facts."
   }
 }

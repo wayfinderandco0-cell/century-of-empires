@@ -167,6 +167,48 @@
           "webkitRunId": 41306593341,
           "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-native-canvas.png",
           "notes": "Pixel road-port continuity improved, but visual inspection still finds a straight elevated-looking Matrei-side road ribbon over forest. The full landform/river seam is NOT certified; do not enable crossing or promote."
+        },
+        {
+          "id": "matrei-east-riparian-v10",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v10-ground-ruts.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-v10-ground-ruts-contact.webp",
+          "evidence": "terrain-grid/v267-original-art-batch-01/matrei-east-v10-ground-ruts-evidence.json",
+          "webkitRunId": 41311526967,
+          "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v10-native-canvas.png",
+          "sourceCode": "scripts/v267_east01_cartway_v10.py",
+          "notes": "V10 source-pigment cartway pixel-matched; visual inspection rejected elevated straight Matrei approach over inset art void.",
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": true,
+          "nativeCanvasRendered": true,
+          "nativePlayable": false,
+          "historicallyVerified": false,
+          "userApproved": false,
+          "finished": false
+        },
+        {
+          "id": "matrei-east-riparian-v11",
+          "art": "terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v11-terrain-repaired.webp",
+          "comparison": "terrain-grid/v267-original-art-batch-01/matrei-east-v11-terrain-repaired-contact.webp",
+          "evidence": "terrain-grid/v267-original-art-batch-01/matrei-east-v11-terrain-repaired-evidence.json",
+          "webkitRunId": 41316314618,
+          "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v11-native-canvas.png",
+          "sourceCode": "scripts/v267_east01_cartway_v11.py",
+          "notes": "V11 repaired 20,975 Matrei display-only roadbed pixels and reduced dark void count 1883→1034; visual inspection rejected remaining smeared bright seam patch and straight artificial road. Native route disabled.",
+          "visuallyReviewed": true,
+          "visualQualityApproved": false,
+          "physicalTerrainSeamVerified": false,
+          "roadSeamsVerified": false,
+          "riverCrossingsVerified": false,
+          "mobileWebkitRendered": true,
+          "nativeCanvasRendered": true,
+          "nativePlayable": false,
+          "historicallyVerified": false,
+          "userApproved": false,
+          "finished": false
         }
       ]
     },
@@ -375,5 +417,6 @@
   "historicallyVerified": 0,
   "nativePlayable": 0,
   "userApproved": 0,
-  "netFinishedToday": 0
+  "netFinishedToday": 0,
+  "productionStatusNote": "V11 rejected visually after actual full-resolution contact QA; V123 east route remains disabled. No newly finished playable cells."
 }

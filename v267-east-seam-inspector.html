@@ -15,7 +15,7 @@ button,a{min-height:42px;border:1px solid #b8a176;border-radius:8px;padding:8px 
 <header><h1>MATREI ↔ EAST RIDGE · V267 seam inspection</h1><div class="controls">
 <button id="whole" type="button">Whole</button><button id="seam" type="button">Seam</button>
 <button id="minus" type="button" aria-label="Zoom out">−</button><button id="plus" type="button" aria-label="Zoom in">+</button>
-<a href="v267-east-seam-inspector.html?variant=edge-study">Edge study</a><a href="v267-east-seam-inspector.html">Previous ridge</a><a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></div></header>
+<a href="v267-east-seam-inspector.html?variant=v2">V2 display seam</a><a href="v267-east-seam-inspector.html?variant=edge-study">Edge study</a><a href="v267-east-seam-inspector.html">Previous ridge</a><a href="v267-ios-safari-review.html?southArt=coherent">Approved three</a></div></header>
 <main id="stage"><canvas id="view" aria-label="Approved Matrei and experimental east ridge at their true world positions; pinch or drag to inspect"></canvas>
 <div id="fallback"><strong>Image loading failed</strong><a href="terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp">Open east ridge directly</a><a href="v267-ios-safari-review.html?southArt=coherent">Open approved three</a></div></main>
 <footer><div id="status" role="status">Loading the protected Matrei artwork and unapproved ridge…</div>
@@ -53,8 +53,10 @@ function registerMatrei(original){
  return dst;
 }
 const canvas=document.getElementById("view"),stage=document.getElementById("stage"),ctx=canvas.getContext("2d",{alpha:false}),status=document.getElementById("status");
-const edgeStudy=new URLSearchParams(location.search).get("variant")==="edge-study";
-const ridgePath=edgeStudy?"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp":"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
+const variant=new URLSearchParams(location.search).get("variant");
+const edgeStudy=variant==="edge-study";
+const v2=variant==="v2";
+const ridgePath=v2?"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-v2.webp":edgeStudy?"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-edge-study.webp":"terrain-grid/v267-original-art-batch-01/matrei-east-ridge-graded.webp";
 let images=null,w=0,h=0,dpr=1,scale=1,center=[3072,512],zoom=1,loaded=false;
 const pointers=new Map();let pinch=null;
 function load(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{if(img.naturalWidth!==1536||img.naturalHeight!==1024)return reject(Error("wrong dimensions "+path));resolve(img);};img.onerror=()=>reject(Error("missing "+path));img.src=path;});}
@@ -65,6 +67,7 @@ function draw(){
  if(!w||!h)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#14251f";ctx.fillRect(0,0,w,h);
  if(!images)return;
  drawTile(images.ridge,[3072,0]);drawTile(images.matrei,[1536,0]);
+ if(images.overlay)drawTile(images.overlay,[1536,0]);
  const a=screen([3072,256]),b=screen([3072,768]);ctx.save();ctx.setLineDash([7,5]);ctx.strokeStyle="#ffb547";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();ctx.restore();
 }
 function fitCanvas(){const r=stage.getBoundingClientRect();w=r.width||innerWidth;h=r.height||innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);draw();}
@@ -82,7 +85,7 @@ for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.add
 addEventListener("resize",()=>{fitCanvas();seam();});
 window.COESeamQA=Object.freeze({get loaded(){return loaded},get zoom(){return zoom},get worldCenter(){return center.slice()},get hasRoadAtEdge(){return false},get visiblePixels(){if(!loaded)return 0;const d=ctx.getImageData(Math.floor(canvas.width*.5),Math.floor(canvas.height*.5),1,1).data;return d[0]+d[1]+d[2];}});
 fitCanvas();
-Promise.all([load("terrain-grid/art/matrei-v121-original.webp"),load(ridgePath)])
-.then(([matrei,ridge])=>{images={matrei:registerMatrei(matrei),ridge};loaded=true;seam();status.textContent=(edgeStudy?"New derivative ridge edge loaded · pixel continuity study":"Previous graded ridge loaded")+" · physical seam and roads NOT verified";})
+Promise.all([load("terrain-grid/art/matrei-v121-original.webp"),load(ridgePath),v2?load("terrain-grid/v267-original-art-batch-01/matrei-east-border-display-overlay.webp"):Promise.resolve(null)])
+.then(([matrei,ridge,overlay])=>{images={matrei:registerMatrei(matrei),ridge,overlay};loaded=true;seam();status.textContent=(v2?"V2 reversible display seam loaded · physical continuity NOT verified":edgeStudy?"New derivative ridge edge loaded · pixel continuity study":"Previous graded ridge loaded")+" · physical seam and roads NOT verified";})
 .catch(e=>{status.textContent="Seam inspector failed: "+e.message+" · try Previous ridge";document.getElementById("fallback").style.display="flex";});
 </script></body></html>

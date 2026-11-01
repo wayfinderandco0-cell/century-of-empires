@@ -1,0 +1,21 @@
+{
+  "browser": "webkit",
+  "viewport": [
+    390,
+    844
+  ],
+  "newArtIDs": [
+    "countryside-06"
+  ],
+  "newRasterCandidates": 1,
+  "roadSeamsVerified": 0,
+  "riverCrossingsVerified": 0,
+  "userApproved": 0,
+  "netFinished": 0,
+  "standaloneLoaded": true,
+  "nativeCanvas": true,
+  "zoomPassed": true,
+  "armyRoutePreserved": true,
+  "originalsPreserved": true,
+  "webKitRenderedNewCandidates": 1
+}

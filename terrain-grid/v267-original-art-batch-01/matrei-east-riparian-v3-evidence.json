@@ -12,11 +12,15 @@
   "roadsVerified": false,
   "riverSeamVerified": false,
   "mobileWebkitRendered": true,
-  "visuallyReviewed": false,
+  "visuallyReviewed": true,
   "nativePlayable": false,
   "historicallyVerified": false,
   "userApproved": false,
   "finished": false,
   "notes": "Unapproved physical terrain continuation study. Registered V121 pixels and original ridge used; provisional river path needs real visual QA. No invented cartway.",
-  "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v3.png"
+  "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v3.png",
+  "visualQualityApproved": false,
+  "physicalTerrainSeamVerified": false,
+  "roadSeamsVerified": false,
+  "visualReviewNotes": "Rejected: flat, horizontal water stripe over original forest and rocky relief."
 }

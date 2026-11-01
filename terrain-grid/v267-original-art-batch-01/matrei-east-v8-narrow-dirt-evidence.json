@@ -1,0 +1,119 @@
+{
+  "schema": "coe-v267-east-v8-narrow-dirt/v1",
+  "sourceOriginal": "matrei-east-riparian-v4.webp",
+  "art": "matrei-east-riparian-v8-narrow-dirt.webp",
+  "matreiOverlay": "matrei-east-v8-matrei-display-overlay.png",
+  "comparison": "matrei-east-v8-narrow-dirt-contact.webp",
+  "candidateSha256": "dd76391ebfe1c9280412509b4d5463722c097eeaf254d2687aca37623159549b",
+  "matreiSourceSha256": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+  "roadWorldPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1425,
+      750
+    ],
+    [
+      1536,
+      749
+    ],
+    [
+      1615,
+      747
+    ],
+    [
+      1705,
+      739
+    ],
+    [
+      1785,
+      723
+    ],
+    [
+      1865,
+      700
+    ],
+    [
+      1948,
+      667
+    ],
+    [
+      2024,
+      628
+    ],
+    [
+      2105,
+      592
+    ],
+    [
+      2180,
+      567
+    ],
+    [
+      2250,
+      559
+    ]
+  ],
+  "sourceRoadPoints": [
+    [
+      99,
+      478
+    ],
+    [
+      160,
+      477
+    ],
+    [
+      216,
+      489
+    ],
+    [
+      268,
+      511
+    ],
+    [
+      328,
+      529
+    ],
+    [
+      396,
+      536
+    ],
+    [
+      448,
+      529
+    ],
+    [
+      484,
+      518
+    ]
+  ],
+  "roadPortContract": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "endpointGapPx": 0,
+    "geometryPairedOnly": true
+  },
+  "v7BrightBermNarrowed": true,
+  "v7BridgePlankMaterialReplaced": true,
+  "protectedOriginalsUnchanged": true,
+  "fictionalExperimentalRoute": true,
+  "visualQualityApproved": false,
+  "physicalRoadSeamVerified": false,
+  "riverSeamVerified": false,
+  "mobileWebkitRendered": false,
+  "nativeCanvasRendered": false,
+  "historicallyVerified": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "V8 review-only original east ridge with narrow shaded dirt cartway; no certified route or bridge."
+}

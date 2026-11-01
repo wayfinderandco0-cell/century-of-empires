@@ -39,6 +39,9 @@ ridgeDOM.setAttribute("aria-hidden","true");
 ridgeDOM.decoding="async";
 ridgeDOM.style.cssText="position:absolute;z-index:1;pointer-events:none;display:none;max-width:none;object-fit:fill;clip-path:polygon(16.6667% 0%,83.3333% 0%,100% 25%,100% 75%,83.3333% 100%,16.6667% 100%,0% 75%,0% 25%)";
 layer.appendChild(ridgeDOM);
+// Safari may decode the <img> after the first canvas frame; schedule a fresh
+// visible frame when the real pixels become available, without changing art.
+ridgeDOM.addEventListener("load",()=>{if(shown)requestAnimationFrame(draw);});
 let ridgeEmergency=false,ridgeFallbackTried=false;
 ridgeDOM.addEventListener("error",()=>{
  if(!ridgeFallbackTried){

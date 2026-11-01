@@ -1,0 +1,110 @@
+name: V267 EAST-01 V9 source-art road-port seam QA
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/v267_east01_cartway_v9.py
+      - v267-east-cartway-v9-review.html
+      - .github/workflows/v267-east-v9-road-seam.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v267-east-v9-road-seam-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  east-v9-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: terrain-v267-three-original-art-prototype-20261028
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install open-source raster and actual iPhone WebKit QA
+        run: |
+          python -m pip install --disable-pip-version-check numpy pillow playwright
+          python -m playwright install --with-deps webkit
+      - name: Guard locked approved sources and native campaign
+        run: |
+          sha256sum terrain-grid/art/matrei-v121-original.webp terrain-grid/v123-atlas.js index.html art-reviews/v267-original-source/west-unified-native-border-unapproved.webp art-reviews/v267-original-source/south-unified-native-border-unapproved.webp > /tmp/v267-protected-before.sha
+      - name: Generate V9 1536x1024 EAST-01 art and actual Matrei/EAST seam comparison
+        run: python scripts/v267_east01_cartway_v9.py
+      - name: Verify road graph vertices match painted centerline and preserve originals
+        run: |
+          node scripts/test_v267_east_extension.cjs
+          sha256sum terrain-grid/art/matrei-v121-original.webp terrain-grid/v123-atlas.js index.html art-reviews/v267-original-source/west-unified-native-border-unapproved.webp art-reviews/v267-original-source/south-unified-native-border-unapproved.webp > /tmp/v267-protected-after.sha
+          diff -u /tmp/v267-protected-before.sha /tmp/v267-protected-after.sha
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          d=Path("terrain-grid/v267-original-art-batch-01")
+          e=json.loads((d/"matrei-east-v9-seam-conditioned-evidence.json").read_text())
+          assert e["roadPortPixelContinuityImproved"]
+          assert e["decodedWebpSeamAfter"]["meanAbsRgb"] < e["sourceSeamBefore"]["meanAbsRgb"]
+          assert not e["physicalRoadSeamVerified"] and not e["nativePlayable"]
+          assert not e["visualQualityApproved"] and not e["finished"]
+          for name,size in ((e["art"],(1536,1024)),(e["comparison"],(3072,1024))):
+            with Image.open(d/name) as img: assert img.size==size,(name,img.size)
+          print("V9 source-pixel road-port correction PASS; physical seam and route still UNVERIFIED")
+          PY
+      - name: Actual 390x844 WebKit standalone art zoom and screenshot
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/v267-http.log 2>&1 &
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path("terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-seam.png")
+          with sync_playwright() as p:
+            browser=p.webkit.launch()
+            page=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=2,is_mobile=True,has_touch=True)
+            page.goto("http://127.0.0.1:8765/v267-east-cartway-v9-review.html",wait_until="domcontentloaded",timeout=60000)
+            page.locator("#terrain").evaluate("(img)=>img.decode()")
+            assert page.locator("#terrain").evaluate("(img)=>img.naturalWidth")==3072
+            page.locator("#seam").click()
+            page.screenshot(path=str(out),full_page=True)
+            assert out.stat().st_size>12000
+            page.locator("#plus").click()
+            assert page.locator("#terrain").evaluate("(img)=>getComputedStyle(img).transform")!="none"
+            browser.close()
+          print("Real WebKit V9 source-art seam + zoom PASS")
+          PY
+      - name: Actual native game canvas iPhone WebKit V9, protected army route disabled
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path("terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-native-canvas.png")
+          with sync_playwright() as p:
+            browser=p.webkit.launch()
+            page=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=2,is_mobile=True,has_touch=True)
+            page.goto("http://127.0.0.1:8765/index.html?originalArtPilot=v267-new&ridgeGrade=v9&autoOpen=1",wait_until="domcontentloaded",timeout=60000)
+            page.locator("#atlasOriginalNeighbors").wait_for(timeout=60000)
+            page.wait_for_function("document.getElementById('atlasStatus')?.textContent?.includes('V9 EAST-01')",timeout=60000)
+            page.wait_for_function("document.getElementById('atlasRidgeDomFallback')?.naturalWidth===1536",timeout=45000)
+            assert not page.locator("#atlasMarch").is_visible()
+            assert "route disabled" in page.locator("#atlasStatus").text_content()
+            page.locator("#atlasPlus").click()
+            page.screenshot(path=str(out),full_page=True)
+            assert out.stat().st_size>12000
+            browser.close()
+          print("Real native iPhone WebKit V9 candidate renders, zooms, route stays disabled")
+          PY
+      - name: Commit generated actual WebP artwork, contact and WebKit evidence to development branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-riparian-v9-seam-conditioned.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-contact.webp
+          git add terrain-grid/v267-original-art-batch-01/matrei-east-v9-seam-conditioned-evidence.json
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-seam.png
+          git add terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v9-native-canvas.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Build EAST-01 V9 real art and iPhone WebKit road-port evidence"
+            git pull --rebase origin terrain-v267-three-original-art-prototype-20261028
+            git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+          fi

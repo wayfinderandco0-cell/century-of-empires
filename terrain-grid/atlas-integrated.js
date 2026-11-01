@@ -39,6 +39,13 @@ ridgeDOM.setAttribute("aria-hidden","true");
 ridgeDOM.decoding="async";
 ridgeDOM.style.cssText="position:absolute;z-index:1;pointer-events:none;display:none;max-width:none;object-fit:fill;clip-path:polygon(16.6667% 0%,83.3333% 0%,100% 25%,100% 75%,83.3333% 100%,16.6667% 100%,0% 75%,0% 25%)";
 layer.appendChild(ridgeDOM);
+let ridgeEmergency=false,ridgeFallbackTried=false;
+ridgeDOM.addEventListener("error",()=>{
+ if(!ridgeFallbackTried){
+  ridgeFallbackTried=true;
+  ridgeDOM.src="https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/9e0e11cb2897cce91461681bfe0acf1a420034a5/terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+ }else if(ridgeEmergency)status("Ridge artwork unavailable from both image sources · use Approved three");
+});
 let manifest=null,atlas=null,images={},matreiRegistered=null,segments=[],loaded=false,shown=false,debug=false;
 let w=0,h=0,dpr=1,base=1,zoom=1.05,scale=1,center=[1810,950];
 let photoMode=false,photoStream=null,photoCamera=null;
@@ -62,7 +69,18 @@ function worldPolygon(tile){
 function polyline(points,color,lineWidth){ctx.beginPath();points.forEach((p,i)=>{const q=worldToScreen(p);if(i)ctx.lineTo(q[0],q[1]);else ctx.moveTo(q[0],q[1]);});ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();}
 function syncRidgeDOM(){
  const tile=neighborPilotShown&&neighborPilotCells.find(c=>c.id==="matrei-east-ridge");
- if(!tile||!neighborPilotImages[tile.id]){ridgeDOM.style.display="none";return;}
+ if(!tile||!neighborPilotImages[tile.id]){
+  if(!ridgeEmergency){ridgeDOM.style.display="none";return;}
+  // The direct image must remain visible even if baseline V121 decoding,
+  // canvas getImageData, or the neighbor manifest fails on physical Safari.
+  const maxWidth=Math.max(180,w-24),maxHeight=Math.max(180,h-185);
+  const width=Math.min(maxWidth,maxHeight*1.5),height=width/1.5;
+  ridgeDOM.style.left=(w-width)/2+"px";
+  ridgeDOM.style.top=(h-height)/2+"px";
+  ridgeDOM.style.width=width+"px";ridgeDOM.style.height=height+"px";
+  ridgeDOM.style.display="block";
+  return;
+ }
  if(ridgeDOM.getAttribute("src")!==neighborPilotImages[tile.id].src)
    ridgeDOM.src=neighborPilotImages[tile.id].src;
  const pos=worldToScreen(tile.origin);
@@ -199,7 +217,7 @@ function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLe
 function tapRoad(point){if(!loaded){status("Atlas artwork has not loaded; the canvas cannot issue orders");return false;}if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,(photoMode||neighborPilotShown)?.15:.6,8);scale=base*zoom;draw();}
 function open(){layer.hidden=false;openButton.hidden=true;shown=true;fit();if(!loaded)status("Loading fixed V121/V123 atlas assets…");}
-function close(){shown=false;layer.hidden=true;openButton.hidden=false;openButton.focus();}
+function close(){shown=false;ridgeEmergency=false;ridgeDOM.style.display="none";layer.hidden=true;openButton.hidden=false;openButton.focus();}
 canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1)tap=[e.clientX,e.clientY];if(pointers.size===2){const pts=[...pointers.values()];prevPinch=distance(pts[0],pts[1]);tap=null;}});
 canvas.addEventListener("pointermove",e=>{
  if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
@@ -261,7 +279,7 @@ if(focusedV267NewPilot){
  $("atlasBar").querySelector("div").appendChild(direct);
 }
 pilotButton.onclick=async()=>{
- if(neighborPilotShown){neighborPilotShown=false;
+ if(neighborPilotShown){neighborPilotShown=false;ridgeEmergency=false;
   for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=false;$(id).disabled=false;}
   if(neighborPilotCamera){center=neighborPilotCamera.center;zoom=neighborPilotCamera.zoom;scale=base*zoom;}
   status("Protected WEST / MATREI / SOUTH roads restored");draw();return;
@@ -309,7 +327,7 @@ pilotButton.onclick=async()=>{
    neighborPilotInlays=batches.flatMap(b=>b.decorativeInlays||[]).filter(
      i=>all.some(c=>c.id===i.sourceCell));
   }
-  neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;
+  neighborPilotCamera={center:clone(center),zoom};neighborPilotShown=true;ridgeEmergency=false;
   // A normal HTML image fallback is intentionally limited to the single
   // unapproved ridge study. Protected WEST/MATREI/SOUTH still use the V123 canvas.
   halt();
@@ -325,8 +343,19 @@ pilotButton.onclick=async()=>{
   else if(focusedEastPilot)centerAt(3072,512,2.9);
   else $("atlasWhole").click();
   status(focusedV267NewPilot?"Original V267-like east ridge: NEW authored art · no road, seam unverified · not playable":focusedEastPilot?"Matrei east: new CC0 landscape candidate · seam and road unverified · not playable":neighborPilotCells.length+" distinct layered scenic studies · road seams unverified · V123 movement only on protected 3");
- }catch(e){status("Neighbor art not available: "+e.message);}
+ }catch(e){status("Neighbor art not available: "+e.message+(ridgeEmergency?" · showing direct image recovery":""));}
 };
+// Open the image immediately, independent of the V121 canvas bootstrap.
+// On a failed base asset or a lost WebKit canvas this stays visible rather
+// than reproducing the user's completely blank iPhone screenshot.
+if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
+ ridgeEmergency=true;
+ ridgeDOM.src="terrain-grid/v267-original-art-batch-01/matrei-east-ridge.webp";
+ open();
+ for(const id of ["atlasMarch","atlasHalt","atlasRoads"]){$(id).hidden=true;$(id).disabled=true;}
+ status("Loading original ridge · direct-image recovery active until atlas is ready");
+ draw();
+}
 const photoButton=document.createElement("button");
 photoButton.id="atlasPhotoSources";photoButton.type="button";
 // Keep experimental photo/heightmesh references out of the default approved-art UI.
@@ -423,7 +452,8 @@ root.COEAtlas=Object.freeze(API);
  matreiRegistered=registerMatrei(images.matrei);
  loaded=true;status("WEST · MATREI · SOUTH connected · tap a cartway");if(shown)fit();
  if(focusedV267NewPilot&&studyParams.get("autoOpen")==="1"){
-  open();pilotButton.click();
+  if(!shown)open();
+  pilotButton.click();
  }
 })().catch(error=>{status("Atlas load blocked: "+error.message);root.COEAtlasLoadError=error.message;});
 requestAnimationFrame(frame);

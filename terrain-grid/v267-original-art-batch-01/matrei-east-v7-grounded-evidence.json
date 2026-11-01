@@ -1,0 +1,84 @@
+{
+  "schema": "coe-v267-east-v7-grounded/v1",
+  "art": "matrei-east-riparian-v7-grounded-road.webp",
+  "matreiOverlay": "matrei-east-v7-matrei-display-overlay.png",
+  "comparison": "matrei-east-v7-grounded-contact.webp",
+  "candidateSha256": "c33ac163445a8424a748108de6691d8f807d0bb2646ac978706c2c897b0c40d0",
+  "matreiSourceSha256": "a415e1a1ca58966ad117b76acefc630cac9110f0762ca7ef53eea65f99310d99",
+  "source": "existing original authored V4 east ridge and registered V121 dirt-road material",
+  "roadWorldPoints": [
+    [
+      1351,
+      749
+    ],
+    [
+      1425,
+      750
+    ],
+    [
+      1536,
+      749
+    ],
+    [
+      1615,
+      747
+    ],
+    [
+      1705,
+      739
+    ],
+    [
+      1785,
+      723
+    ],
+    [
+      1865,
+      700
+    ],
+    [
+      1948,
+      667
+    ],
+    [
+      2024,
+      628
+    ],
+    [
+      2105,
+      592
+    ],
+    [
+      2180,
+      567
+    ],
+    [
+      2250,
+      559
+    ]
+  ],
+  "roadPortContract": {
+    "matrei": [
+      1536,
+      749
+    ],
+    "east": [
+      0,
+      749
+    ],
+    "endpointGapPx": 0,
+    "geometryPairedOnly": true
+  },
+  "clearedCorridor": true,
+  "roadMaterialFromOriginalMatrei": true,
+  "protectedOriginalsUnchanged": true,
+  "fictionalExperimentalRoute": true,
+  "visualQualityApproved": false,
+  "physicalRoadSeamVerified": false,
+  "riverSeamVerified": false,
+  "mobileWebkitRendered": false,
+  "historicallyVerified": false,
+  "nativePlayable": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "V7 clears tree canopy beneath the road before laying original Matrei cartway material. Review at full zoom; not a certified road or playable expansion."
+}

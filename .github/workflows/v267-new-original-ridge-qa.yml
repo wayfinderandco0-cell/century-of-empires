@@ -177,6 +177,7 @@ jobs:
           git add terrain-grid/v267-original-art-batch-01/matrei-east-seam-audit.webp terrain-grid/v267-original-art-batch-01/matrei-east-seam-audit.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-direct-link.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-baseline-check.png terrain-grid/v267-original-art-batch-01/batch.json terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-thumbnail.jpg terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole.png terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-new-ridge-whole-thumbnail.jpg
           git add terrain-grid/v267-original-art-batch-01/public-githack-smoke.json
           if test -f terrain-grid/v267-original-art-batch-01/actual-webkit-public-githack-ridge.png; then git add terrain-grid/v267-original-art-batch-01/actual-webkit-public-githack-ridge.png; fi
+          if test -f terrain-grid/v267-original-art-batch-01/actual-webkit-public-githack-failure.png; then git add terrain-grid/v267-original-art-batch-01/actual-webkit-public-githack-failure.png; fi
           git diff --cached --quiet && exit 0
           git commit -m "qa(v267): real iPhone WebKit evidence for new original ridge [skip ci]"
           for n in 1 2 3; do

@@ -32,10 +32,13 @@ try:
   assert not page.evaluate("window.COEAtlasLoadError"),page.evaluate("window.COEAtlasLoadError")
   before=page.evaluate("""() => ({
     storage:JSON.stringify(localStorage), clock:document.getElementById('clockTitle')?.textContent,
-    nodes:COEAtlas.nodes,unique:COEAtlas.uniqueWorldNodes,seams:COEAtlas.seams,
+    nodes:COEAtlas.nodes,unique:COEAtlas.uniqueWorldNodes,seams:COEAtlas.seams,playability:COEAtlas.playability,
     images:COEAtlas.imageSizes,route:COEAtlas.routeTo([2806,1629])
   })""")
   assert before["nodes"]==100 and before["unique"]==98,before
+  assert before["playability"]["playableIds"]==["matrei","south","west"],before["playability"]
+  assert before["playability"]["displayOnlyCandidateIds"]==["countryside-03","countryside-04","countryside-05","countryside-06"],before["playability"]
+  assert before["playability"]["connectedNew"]==[] and before["playability"]["finishedIds"]==[],before["playability"]
   assert len(before["seams"])==2 and all(s["pass"] and s["endpointGapPx"]==0 for s in before["seams"])
   assert all(size==[1536,1024] for size in before["images"].values()),before["images"]
   assert len(before["route"])>35 and [1536,478] in before["route"] and [2002,1024] in before["route"]
@@ -99,6 +102,16 @@ try:
   assert after["clock"]==before["clock"],"V94 clock UI changed"
   assert after["iframe"] is None,"Legacy preview should not be activated"
   assert not errors,errors
+  # The direct iPhone link must open a REAL native game canvas, not a gallery,
+  # and visibly say only THREE tiles are traversable.
+  direct=context.new_page()
+  direct.goto("http://127.0.0.1:8769/index.html?playableAtlas=1&autoOpen=1",wait_until="domcontentloaded",timeout=60000)
+  direct.wait_for_function("window.COEAtlas && COEAtlas.loaded && COEAtlas.shown",timeout=60000)
+  assert direct.locator("#atlasCanvas").is_visible()
+  assert direct.locator("#atlasBar small").inner_text()=="3 PLAYABLE · 4 ART-ONLY · 0 NEW FINISHED"
+  assert direct.evaluate("COEAtlas.routeTo([2806,1629])") is not None
+  direct.screenshot(path=str(out/f"{args.browser}-{args.orientation}-three-actually-playable.png"))
+  direct.close()
   # Independently verify that a focused new-art preview decodes only its
   # visible tile; never interpret this as a playable road-connected cell.
   ridge=context.new_page()

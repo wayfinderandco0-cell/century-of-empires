@@ -1,0 +1,20 @@
+{
+  "schema": "coe-v267-east-riparian-candidate/v1",
+  "sourceOriginal": "matrei-east-ridge.webp",
+  "referenceMatrei": "terrain-grid/art/matrei-v121-original.webp",
+  "output": "matrei-east-riparian-v3.webp",
+  "comparison": "matrei-east-riparian-v3-comparison.webp",
+  "sha256": "71d870fb17850f4aab459fe2d6fb7d55969e3ff180fd1fefa1250865f79a0f67",
+  "riverExitY": 541,
+  "riverExitDetectedFromSource": true,
+  "roadPorts": [],
+  "roadsVerified": false,
+  "riverSeamVerified": false,
+  "mobileWebkitRendered": false,
+  "visuallyReviewed": false,
+  "nativePlayable": false,
+  "historicallyVerified": false,
+  "userApproved": false,
+  "finished": false,
+  "notes": "Unapproved physical terrain continuation study. Registered V121 pixels and original ridge used; provisional river path needs real visual QA. No invented cartway."
+}

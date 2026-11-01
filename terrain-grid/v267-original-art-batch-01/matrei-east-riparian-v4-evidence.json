@@ -12,11 +12,15 @@
   "roadsVerified": false,
   "riverSeamVerified": false,
   "mobileWebkitRendered": true,
-  "visuallyReviewed": false,
+  "visuallyReviewed": true,
   "nativePlayable": false,
   "historicallyVerified": false,
   "userApproved": false,
   "finished": false,
   "notes": "Unapproved source-material edge continuity: stream disappears under existing original forest within 370px; no artificial full-width river stripe, no invented cartway. Visual/physical seam still unverified.",
-  "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v4.png"
+  "webkitEvidence": "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-riparian-v4.png",
+  "visualQualityApproved": false,
+  "physicalTerrainSeamVerified": false,
+  "roadSeamsVerified": false,
+  "visualReviewNotes": "V3 stripe removed and original ridge retained, but river/bank transition remains unverified; not accepted as finished."
 }

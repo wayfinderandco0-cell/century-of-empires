@@ -82,7 +82,7 @@ jobs:
                   assert (out/"actual-webkit-iphone-east-v6-seam.png").stat().st_size>20000
                   browser.close()
               f=out/"matrei-east-v6-road-evidence.json"
-              j=json.loads(f.read())
+              j=json.loads(f.read_text())
               j["mobileWebkitRendered"]=True
               j["webkitScreenshots"]=[
                 "terrain-grid/v267-original-art-batch-01/actual-webkit-iphone-east-v6-seam.png",

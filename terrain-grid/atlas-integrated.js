@@ -113,6 +113,9 @@ function draw(){
  if(!w||!h)return;
  syncRidgeDOM();
  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#15271f";ctx.fillRect(0,0,w,h);
+ // V268 is the SAME native canvas, but a separate georeferenced scene.
+ // No V267 art is replaced and no uncertified terrain can receive orders.
+ if(root.COEV268Geo?.active&&root.COEV268Geo.draw(ctx,worldToScreen,scale))return;
  if(photoMode){
   if(photoStream)photoStream.draw(ctx,worldToScreen,scale,w,h);
   return;
@@ -298,10 +301,10 @@ const scoutButton=document.createElement("button"),returnButton=document.createE
 scoutButton.id="atlasScoutC03";scoutButton.textContent="Scout C03";scoutButton.onclick=startScout;
 returnButton.id="atlasReturnC03";returnButton.textContent="Return SOUTH";returnButton.onclick=returnScout;
 if(overlandPilot){$("atlasFooter").querySelector("div").append(scoutButton,returnButton);}
-function startOrder(to){if(photoMode||neighborPilotShown){status("Unapproved scenic candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
+function startOrder(to){if(root.COEV268Geo?.active){status("V268 terrain is not passability-certified; no army order");return false;}if(photoMode||neighborPilotShown){status("Unapproved scenic candidates are NOT road-connected or playable");return false;}if(!loaded)return false;const next=routeBetween(unit,to);if(!next)return false;path=next;progress=0;travelLength=length(path);moving=travelLength>0.01;status(moving?"Marching on V123 road · tap another cartway to redirect":"Unit already at destination");draw();return true;}
 function halt(){moving=false;path=[];progress=0;status("Halted · tap a painted road");draw();}
 function frame(t){if(shown&&loaded&&moving&&lastTime){progress=Math.min(travelLength,progress+Math.min(.05,(t-lastTime)/1000)*155);unit=sample(path,progress);if(progress>=travelLength-.001){moving=false;status("Arrived · tap another cartway");}draw();}lastTime=t;requestAnimationFrame(frame);}
-function tapRoad(point){if(overlandPilot&&overlandReady&&inScoutTile(point))return startScout();
+function tapRoad(point){if(root.COEV268Geo?.active){status("V268 terrain movement BLOCKED pending source water/passability masks");return false;}if(overlandPilot&&overlandReady&&inScoutTile(point))return startScout();
  if(overlandPilot&&overlandReady&&unit[0]>=3072)return returnScout();
  if(!loaded){status("Atlas artwork has not loaded; the canvas cannot issue orders");return false;}if(photoMode||neighborPilotShown)return false;const hit=nearest(point);if(!hit||hit.distance>Math.max(19,16/scale)){status("No road here · select a visible cartway");return false;}return startOrder(hit.point);}
 function centerAt(x,y,z){center=[x,y];if(z!==undefined)zoom=clamp(z,(photoMode||neighborPilotShown||countrysideBatchVisible)?.15:.6,8);scale=base*zoom;draw();}

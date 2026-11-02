@@ -60,13 +60,13 @@ function tick(t){
 async function open(){
  root.hidden=false;button.hidden=true;size();
  if(!inflight)inflight=(async()=>{
-  const resp=await fetch('generated/v268-matrei/manifest.json',{cache:'no-store'});if(!resp.ok)throw Error('Missing geographic manifest '+resp.status);
+  const resp=await fetch('terrain-grid/v268-matrei/manifest.json',{cache:'no-store'});if(!resp.ok)throw Error('Missing geographic manifest '+resp.status);
   manifest=await resp.json();
   if(manifest.schema!=='coe-v268-matrei-continuous/v1'||manifest.cells.length!==4)throw Error('Incorrect geographic batch');
   images=await Promise.all(manifest.cells.map(a=>new Promise((resolve,reject)=>{
-   const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Missing art '+a.art));img.src='generated/v268-matrei/'+a.art;
+   const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Missing art '+a.art));img.src='terrain-grid/v268-matrei/'+a.art;
   })));
-  const mask=new Image();mask.src='generated/v268-matrei/slope-candidate-mask.png';await mask.decode();
+  const mask=new Image();mask.src='terrain-grid/v268-matrei/slope-candidate-mask.png';await mask.decode();
   const b=document.createElement('canvas');b.width=mask.naturalWidth;b.height=mask.naturalHeight;
   const cx=b.getContext('2d',{willReadFrequently:true});cx.drawImage(mask,0,0);surface={width:b.width,height:b.height,data:cx.getImageData(0,0,b.width,b.height).data};
   loaded=true;fit();say('Real Matrei DEM: 4 adjacent terrain images & 3D meshes. Tap ground for experimental scout; drag to pan.');

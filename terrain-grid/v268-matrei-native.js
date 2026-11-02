@@ -7,12 +7,19 @@
 if(new URLSearchParams(root.location.search).get("v268Geo")!=="1")return;
 const PREFIX="terrain-grid/v268-matrei-geographic/";
 let active=false,ready=false,manifest=null,images=new Map(),error=null;
+let slopeVisible=false,slopeImage=null;
 let previousCamera=null;
 const $=id=>document.getElementById(id);
 const button=document.createElement("button");
 button.id="v268GeoToggle";button.textContent="Matrei geography";
 button.title="Source-registered 2x2 terrain; movement unverified";
 $("atlasBar").querySelector("div").append(button);
+const slopeButton=document.createElement("button");
+slopeButton.id="v268SlopeToggle";
+slopeButton.textContent="Slope view";
+slopeButton.title="DEM-derived slope only: NOT verified rivers, roads or crossings";
+slopeButton.hidden=true;
+$("atlasBar").querySelector("div").append(slopeButton);
 function image(src){return new Promise((resolve,reject)=>{
  const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error("HTTP art unavailable: "+src));
  im.src=src;
@@ -45,6 +52,14 @@ function draw(ctx,worldToScreen,scale){
   const pos=worldToScreen([x,y]);
   ctx.drawImage(im,pos[0],pos[1],1536*scale,1024*scale);
  }
+ // Source-derived slope inspection, NOT an army route, river, or bridge mask.
+ // Render in this same world coordinate system; no clipping or tile gaps.
+ if(slopeVisible&&slopeImage){
+  const pos=worldToScreen([0,0]);
+  ctx.save();ctx.globalAlpha=.6;
+  ctx.drawImage(slopeImage,pos[0],pos[1],3072*scale,2048*scale);
+  ctx.restore();
+ }
  // Octagons are translucent logical selection/ownership outlines ONLY.
  // Ground beneath them remains continuous and never clipped into diamonds.
  ctx.save();ctx.strokeStyle="rgba(231,206,141,.34)";
@@ -66,6 +81,23 @@ function setRoadControls(hidden){
   const el=$(id);if(el)el.hidden=hidden;
  }
 }
+async function toggleSlope(){
+ if(!active||!ready)return false;
+ try{
+  if(!slopeImage)slopeImage=await image(PREFIX+"slope-degrees-4x.png");
+  slopeVisible=!slopeVisible;
+  slopeButton.textContent=slopeVisible?"Terrain art":"Slope view";
+  $("atlasStatus").textContent=slopeVisible
+   ?"V268 DEM slope inspection · 4 geographic cells · water and crossings UNKNOWN · 0 new playable"
+   :"V268 true source terrain art · 4 geographic cells · movement BLOCKED pending verification";
+  root.COEAtlas.centerAt(...root.COEAtlas.center,root.COEAtlas.zoom);
+  return true;
+ }catch(e){
+  $("atlasStatus").textContent="Slope inspection unavailable: "+(e.message||e)+" · movement remains BLOCKED";
+  return false;
+ }
+}
+slopeButton.onclick=toggleSlope;
 async function enable(){
  try{
   button.disabled=true;button.textContent="Loading source terrain…";
@@ -75,18 +107,19 @@ async function enable(){
   if(!root.COEAtlas?.loaded)throw Error("Protected V123 atlas not ready");
   if(!active)previousCamera={center:root.COEAtlas.center,zoom:root.COEAtlas.zoom};
   root.COEAtlas.halt();root.COEAtlas.open();active=true;
+  slopeButton.hidden=false;
   setRoadControls(true);
   root.COEAtlas.centerAt(1536,1024,1.05);
   $("atlasStatus").textContent="V268 Matrei DEM 2×2 · actual georeferenced art · 0 NEW PLAYABLE · movement blocked";
   button.textContent="Back to approved 3";
  }catch(e){
-  error=String(e.message||e);active=false;
+  error=String(e.message||e);active=false;slopeButton.hidden=true;
   $("atlasStatus").textContent="V268 unavailable: "+error+" · original 3 preserved";
   button.textContent="Retry Matrei terrain";
  }finally{button.disabled=false;}
 }
 function disable(){
- active=false;setRoadControls(false);
+ active=false;slopeVisible=false;slopeButton.hidden=true;slopeButton.textContent="Slope view";setRoadControls(false);
  if(previousCamera)root.COEAtlas.centerAt(...previousCamera.center,previousCamera.zoom);
  $("atlasStatus").textContent="3 approved WEST/MATREI/SOUTH · V268 geography unapproved";
  button.textContent="Matrei geography";
@@ -95,7 +128,7 @@ button.onclick=()=>active?disable():enable();
 root.COEV268Geo=Object.freeze({
  get active(){return active},get ready(){return ready},get error(){return error},
  get loadedTiles(){return images.size},get manifest(){return manifest},
- get newPlayable(){return 0},draw,enable,disable
+ get newPlayable(){return 0},get slopeVisible(){return slopeVisible},toggleSlope,draw,enable,disable
 });
 if(new URLSearchParams(root.location.search).get("autoOpen")==="1")enable();
 })(window);

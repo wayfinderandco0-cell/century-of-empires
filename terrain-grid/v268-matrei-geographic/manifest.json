@@ -1,0 +1,181 @@
+{
+  "schema": "coe-v268-matrei-one-source-geographic-pilot/v1",
+  "status": "UNAPPROVED_GEOGRAPHIC_3D_CANDIDATES",
+  "centerWGS84": [
+    11.4667,
+    47.1333
+  ],
+  "centerUTM32": [
+    687061.1337808274,
+    5222929.621005635
+  ],
+  "sourceURL": "https://copernicus-dem-30m.s3.eu-central-1.amazonaws.com/Copernicus_DSM_COG_10_N47_00_E011_00_DEM/Copernicus_DSM_COG_10_N47_00_E011_00_DEM.tif",
+  "sourceRetrievedUTC": "2026-11-02T01:23:14.409922+00:00",
+  "sourceSha256": "1420e245f9a5da7b2740d7ebf762c4d1d60f3c594262db51e9b2fcf7b7f69b99",
+  "sourceDataset": "Copernicus DEM GLO-30 Public 2021",
+  "sourceCitation": "Copernicus DEM GLO-30 Public 2021; Copernicus WorldDEM-30 \u00a9 DLR e.V. 2010\u20132014 and \u00a9 Airbus Defence and Space GmbH 2014\u20132018, provided under COPERNICUS by the European Union and ESA.",
+  "sourceLicense": "https://spacedata.copernicus.eu/web/cscda/data-offer/core-datasets",
+  "sourceType": "DSM includes vegetation and buildings, not bare-earth historical survey",
+  "landcoverSource": null,
+  "foliageProvenance": "unverified visual placement using DEM slope/elevation only",
+  "waterStatus": "UNKNOWN - not independently sourced or classified",
+  "historicalRoadsVerified": 0,
+  "historicalTownsVerified": 0,
+  "renderedScenePixels": [
+    3072,
+    2048
+  ],
+  "tilePixels": [
+    1536,
+    1024
+  ],
+  "metersPerPixel": 8,
+  "geoCRS": "EPSG:32632",
+  "heightfieldSha256": "50ff947117a04db2c43372334912e359bee8894575e842c97f333a9ea9ab3f1c",
+  "meshUsesSameSourceHeight": true,
+  "geometrySeamOrigin": "one common sampled array",
+  "decorativeDiamondGaps": 0,
+  "roadsPainted": 0,
+  "baselineApprovedPlayable": 3,
+  "newNativePlayable": 0,
+  "userApprovedNew": 0,
+  "finishedToday": 0,
+  "cells": [
+    {
+      "id": "matrei-geo-0-0",
+      "col": 0,
+      "row": 0,
+      "originMeters": [
+        674773.1337808274,
+        5231121.621005635
+      ],
+      "bboxWGS84": [
+        11.304802275995547,
+        47.136673735047324,
+        11.470114284447972,
+        47.20694717669136
+      ],
+      "geoCRS": "EPSG:32632",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "metersPerPixel": 8,
+      "artWebp": "matrei-geo-0-0.webp",
+      "artSha256": "7956b8424a0290d42ddf9dad2f4d0df61ff0a9eb7f19fb2f8067a08f5f6b7693",
+      "meshGltf": "pilot-0-0.gltf",
+      "meshBinary": "pilot-0-0.bin",
+      "meshSha256": "84db98bcc6d16c4de5b874aeecacae0014980cb319ec9fe82537fee6c055cfe7",
+      "heightfield": "heightfield-step16.npy",
+      "passabilityMask": "passability-UNVERIFIED.png",
+      "waterMask": null,
+      "verifiedRoadIds": [],
+      "townIds": [],
+      "sourceHash": "1420e245f9a5da7b2740d7ebf762c4d1d60f3c594262db51e9b2fcf7b7f69b99",
+      "visualApproval": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "matrei-geo-1-0",
+      "col": 1,
+      "row": 0,
+      "originMeters": [
+        687061.1337808274,
+        5231121.621005635
+      ],
+      "bboxWGS84": [
+        11.4667,
+        47.1333,
+        11.632205130027222,
+        47.203335630792616
+      ],
+      "geoCRS": "EPSG:32632",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "metersPerPixel": 8,
+      "artWebp": "matrei-geo-1-0.webp",
+      "artSha256": "1b3cd278208dba465a994c3ff557d92d9fba4db0bf058aeca24867f65b81d5af",
+      "meshGltf": "pilot-1-0.gltf",
+      "meshBinary": "pilot-1-0.bin",
+      "meshSha256": "9cff148060c5a3b2a639db6ad519fec00a49ff47ea8a7d2024e2c0ef287fa214",
+      "heightfield": "heightfield-step16.npy",
+      "passabilityMask": "passability-UNVERIFIED.png",
+      "waterMask": null,
+      "verifiedRoadIds": [],
+      "townIds": [],
+      "sourceHash": "1420e245f9a5da7b2740d7ebf762c4d1d60f3c594262db51e9b2fcf7b7f69b99",
+      "visualApproval": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "matrei-geo-0-1",
+      "col": 0,
+      "row": 1,
+      "originMeters": [
+        674773.1337808274,
+        5222929.621005635
+      ],
+      "bboxWGS84": [
+        11.301624174386626,
+        47.063016790664754,
+        11.4667,
+        47.1333
+      ],
+      "geoCRS": "EPSG:32632",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "metersPerPixel": 8,
+      "artWebp": "matrei-geo-0-1.webp",
+      "artSha256": "ecd929ed523b9aa41dec91155ea439987e10c6e1fe5a52e26fbd21cc3f319163",
+      "meshGltf": "pilot-0-1.gltf",
+      "meshBinary": "pilot-0-1.bin",
+      "meshSha256": "3076a9bebd5f7a4caa05ae74ee5e24c0e8f4549935c818146edfb4787a4fda2f",
+      "heightfield": "heightfield-step16.npy",
+      "passabilityMask": "passability-UNVERIFIED.png",
+      "waterMask": null,
+      "verifiedRoadIds": [],
+      "townIds": [],
+      "sourceHash": "1420e245f9a5da7b2740d7ebf762c4d1d60f3c594262db51e9b2fcf7b7f69b99",
+      "visualApproval": false,
+      "gameplayEnabled": false
+    },
+    {
+      "id": "matrei-geo-1-1",
+      "col": 1,
+      "row": 1,
+      "originMeters": [
+        687061.1337808274,
+        5222929.621005635
+      ],
+      "bboxWGS84": [
+        11.46329918962709,
+        47.059651683509266,
+        11.628567407618528,
+        47.12969769060962
+      ],
+      "geoCRS": "EPSG:32632",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "metersPerPixel": 8,
+      "artWebp": "matrei-geo-1-1.webp",
+      "artSha256": "914aebaaef3d9272d62b1adbc3f75c4f605d70302447aa01c2ec970180b113e9",
+      "meshGltf": "pilot-1-1.gltf",
+      "meshBinary": "pilot-1-1.bin",
+      "meshSha256": "a0bbc38a50c8b641d1e59c9d0a02e83f66e3f16cbe488b8fe3b4d14566037388",
+      "heightfield": "heightfield-step16.npy",
+      "passabilityMask": "passability-UNVERIFIED.png",
+      "waterMask": null,
+      "verifiedRoadIds": [],
+      "townIds": [],
+      "sourceHash": "1420e245f9a5da7b2740d7ebf762c4d1d60f3c594262db51e9b2fcf7b7f69b99",
+      "visualApproval": false,
+      "gameplayEnabled": false
+    }
+  ]
+}

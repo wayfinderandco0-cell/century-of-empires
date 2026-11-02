@@ -68,4 +68,33 @@ assert(inspect({...synthetic,strategicRoad:true}).reasons.includes("not_a_wilder
 assert(inspect({...synthetic,clearanceRadiusPx:0}).reasons.includes("invalid_clearance_radius"));
 assert.equal(manifest.artCandidates.filter(c=>c.userApproval===true).length,0);
 assert.equal(inspect().passable,true);
+// Every cardinal neighbor must share a genuine octagon edge, never a diamond gap.
+// These are synthetic meadow fixtures; they do NOT certify any real candidate.
+for(const [direction,neighborOrigin,points] of [
+ ["east",[3072,1024],[[2806,1629],[3072,1629],[3840,1536]]],
+ ["west",[0,1024],[[1700,1629],[1536,1629],[768,1536]]],
+ ["north",[1536,0],[[2200,1350],[2200,1024],[2200,500]]],
+ ["south",[1536,2048],[[2200,1700],[2200,2048],[2200,2600]]]
+]){
+ const fixture=JSON.parse(JSON.stringify(manifest));
+ fixture.cells=[{...from,id:"source",origin:[1536,1024],art:"fixture-source.webp"}];
+ fixture.artCandidates=[{...to,id:"neighbor",nativeWorldOrigin:neighborOrigin,art:"fixture-neighbor.webp"}];
+ const hashes={source:"a".repeat(40),neighbor:"b".repeat(40)};
+ const src=[{cell:"source",path:"fixture-source.webp",gitBlobSha:hashes.source},
+            {cell:"neighbor",path:"fixture-neighbor.webp",gitBlobSha:hashes.neighbor}];
+ const mk=(art,sha)=>({sourceArt:art,sourceBlobSha:sha,reviewed:true,evidence,
+   cellSize:32,columns:48,rows:32,classes:Array(48*32).fill("meadow")});
+ const terrain={source:mk("fixture-source.webp",hashes.source),
+                neighbor:mk("fixture-neighbor.webp",hashes.neighbor)};
+ const testLink={...synthetic,from:"source",to:"neighbor",waypoints:points,sourceImages:src,
+   seamEvidence:{...evidence,sourceBlobShas:hashes,edgeY:points[1][1],
+                 groundContinuity:true,noUnverifiedCrossing:true}};
+ const result=planner.inspect(testLink,fixture,terrain);
+ assert.equal(result.passable,true,direction+":"+JSON.stringify(result));
+ assert.equal(result.edgeDirection,direction);
+ assert(result.cost>0);
+ // An unpaired diagonal tile must never be traversable even with fake meadow masks.
+ fixture.artCandidates[0].nativeWorldOrigin=[3072,2048];
+ assert(planner.inspect(testLink,fixture,terrain).reasons.includes("invalid_shared_edge_geometry"));
+}
 console.log("PASS: real SOUTH/C03 blocked; source-bound masks, seam evidence, 16px army corridor, cliff/water, terrain cost and protected baseline tested");

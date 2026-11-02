@@ -37,6 +37,12 @@ function allowed(p){
  return x>=0&&y>=0&&x<surface.width&&y<surface.height&&surface.data[(y*surface.width+x)*4]>127;
 }
 function order(target){
+ // Slope-only masks do NOT certify water, fords, bridges or ground corridors.
+ // Fail closed until source-backed hydrography and route clearance are reviewed.
+ if(!manifest || manifest.verifiedRivers!==true){
+  say("Scout BLOCKED: source-backed rivers and crossings are not certified");
+  return;
+ }
  if(!allowed(target)){say("Steep terrain or outside geographic surface · scout order blocked");return}
  // No historical roads or hydrography certified: this is only an experimental scout.
  const dist=Math.hypot(target[0]-scout[0],target[1]-scout[1]),n=Math.max(1,Math.ceil(dist/8));

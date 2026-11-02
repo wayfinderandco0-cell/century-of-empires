@@ -7,7 +7,7 @@ from urllib.request import Request,urlopen
 import numpy as np
 from scipy.ndimage import map_coordinates,gaussian_filter
 from PIL import Image,ImageDraw
-P=Path('generated/v268-matrei');P.mkdir(parents=True,exist_ok=True)
+P=Path('terrain-grid/v268-matrei');P.mkdir(parents=True,exist_ok=True)
 W,H,TW,TH=3072,2048,1536,1024
 WEST,EAST,SOUTH,NORTH=11.385,11.555,47.088,47.177
 ZOOM=12

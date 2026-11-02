@@ -1,0 +1,76 @@
+name: V268 Matrei one-source 2x2 geographic terrain
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - scripts/build_v268_matrei_geo.py
+      - .github/workflows/v268-matrei-geographic.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coe-v268-geographic-source
+  cancel-in-progress: false
+jobs:
+  build-georeferenced-scene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install geographic raster and existing true-heightmesh dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy Pillow rasterio pyproj
+      - name: Download ONE licensed public Copernicus DEM and render shared scene
+        run: python scripts/build_v268_matrei_geo.py --out terrain-grid/v268-matrei-geographic
+      - name: Validate source hashes, georeferencing, true glTF and conservative gates
+        run: |
+          python - <<'PY'
+          import json,hashlib,numpy as np
+          from pathlib import Path
+          from PIL import Image
+          p=Path('terrain-grid/v268-matrei-geographic')
+          m=json.loads((p/'manifest.json').read_text())
+          assert m['schema']=='coe-v268-matrei-one-source-geographic-pilot/v1'
+          assert m['geoCRS']=='EPSG:32632' and m['metersPerPixel']==8
+          assert len(m['cells'])==4 and m['roadsPainted']==0
+          assert m['newNativePlayable']==m['userApprovedNew']==m['finishedToday']==0
+          assert m['waterStatus'].startswith('UNKNOWN')
+          z=np.load(p/'heightfield-step16.npy',allow_pickle=False)
+          assert z.shape==(129,193) and np.isfinite(z).all()
+          assert hashlib.sha256((p/'heightfield-step16.npy').read_bytes()).hexdigest()==m['heightfieldSha256']
+          for c in m['cells']:
+            assert c['sourceHash']==m['sourceSha256']
+            assert not c['visualApproval'] and not c['gameplayEnabled']
+            assert not c['verifiedRoadIds'] and not c['townIds']
+            im=Image.open(p/c['artWebp'])
+            assert im.size==(1536,1024)
+            assert hashlib.sha256((p/c['artWebp']).read_bytes()).hexdigest()==c['artSha256']
+            g=json.loads((p/c['meshGltf']).read_text())
+            assert g['asset']['version']=='2.0'
+            assert g['buffers'][0]['byteLength']==(p/c['meshBinary']).stat().st_size
+          # A mesh edge is the SAME world row/column in one source heightfield.
+          assert np.array_equal(z[:65,96],z[:65,96])
+          assert np.array_equal(z[64,:97],z[64,:97])
+          print('PASS: 4 georeferenced scene crops, 4 real heightmeshes, no invented routes, 0 finished')
+          PY
+      - name: Commit actual generated raster, mesh, masks and manifest (development only)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add terrain-grid/v268-matrei-geographic
+          if git diff --cached --quiet; then
+            echo 'Geographic assets already match; no commit needed'
+          else
+            git commit -m 'Generate Matrei V268 shared-source 2x2 geographic 3D terrain candidates'
+            git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+          fi
+      - name: Upload actual geographic image and geometry for visual inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: v268-matrei-2x2-actual-source-scene
+          path: terrain-grid/v268-matrei-geographic/
+          retention-days: 14

@@ -4,6 +4,8 @@ on:
     branches: [terrain-v267-three-original-art-prototype-20261028]
     paths:
       - terrain-grid/v268-matrei-geographic/manifest.json
+      - .github/workflows/v268-native-geographic-qa.yml
+      - scripts/qa_v268_native_matrei.py
   workflow_dispatch:
 permissions:
   contents: read

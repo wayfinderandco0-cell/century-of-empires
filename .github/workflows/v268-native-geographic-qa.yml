@@ -1,0 +1,78 @@
+name: V268 native iPhone geographic Canvas and staging QA
+on:
+  push:
+    branches: [terrain-v267-three-original-art-prototype-20261028]
+    paths:
+      - terrain-grid/v268-matrei-geographic/manifest.json
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  iphone-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install real WebKit browser
+        run: |
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps webkit
+      - name: Render V268 in original native Canvas, test touch, protected V123 march
+        run: python scripts/qa_v268_native_matrei.py
+      - name: Check independently hosted HTTPS staging and actual source bytes
+        run: |
+          python - <<'PY'
+          import json,time,urllib.request
+          base='https://century-of-empires-v268-terrain-staging.onrender.com'
+          expected='coe-v268-matrei-one-source-geographic-pilot/v1'
+          error=None
+          for attempt in range(20):
+            try:
+              with urllib.request.urlopen(base+'/terrain-grid/v268-matrei-geographic/manifest.json',timeout=15) as r:
+                if r.status!=200: raise RuntimeError('manifest HTTP '+str(r.status))
+                m=json.load(r)
+              if m['schema']!=expected or len(m['cells'])!=4:
+                raise RuntimeError('staging geographic assets outdated')
+              with urllib.request.urlopen(base+'/index.html?v268Geo=1',timeout=15) as r:
+                if r.status!=200 or b'v268-matrei-native.js' not in r.read():
+                  raise RuntimeError('staging index not native V268')
+              for c in m['cells']:
+                with urllib.request.urlopen(base+'/terrain-grid/v268-matrei-geographic/'+c['artWebp'],timeout=15) as r:
+                  if r.status!=200 or len(r.read())<5000:
+                    raise RuntimeError('missing staging art '+c['id'])
+              print('PASS: HTTPS staging serves native game and all four source-ground art files')
+              break
+            except Exception as e:
+              error=str(e)
+              print('Waiting for staging deploy',attempt+1,error)
+              time.sleep(10)
+          else: raise RuntimeError('Staging HTTP verification failed: '+str(error))
+          PY
+      - name: Capture actual external HTTPS iPhone WebKit game
+        run: |
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          from pathlib import Path
+          url='https://century-of-empires-v268-terrain-staging.onrender.com/index.html?v268Geo=1&autoOpen=1'
+          with sync_playwright() as pw:
+            browser=pw.webkit.launch(headless=True)
+            page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)
+            response=page.goto(url,wait_until='domcontentloaded',timeout=30000)
+            assert response and response.status==200
+            page.wait_for_function('() => COEAtlas?.loaded && COEV268Geo?.active && COEV268Geo?.loadedTiles===4',timeout=60000)
+            assert page.evaluate('COEAtlas.startMarch()===false')
+            Path('generated/v268-qa').mkdir(parents=True,exist_ok=True)
+            page.screenshot(path='generated/v268-qa/staging-webkit-390x844-geographic.png')
+            print('PASS: external HTTPS native game, 4 geographic source tiles, blocked unverified movement')
+            browser.close()
+          PY
+      - name: Upload real native and external mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v268-real-webkit-native-and-staging
+          path: generated/v268-qa/
+          retention-days: 14

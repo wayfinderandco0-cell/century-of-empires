@@ -39,6 +39,18 @@
   return e&&e.sourcePixelReview===true&&isString(e.evidencePath)&&isString(e.reviewer)&&
    /^\d{4}-\d{2}-\d{2}$/.test(e.reviewedOn||"");
  }
+ function sharedEdge(a,b,g,p){
+  const dx=b[0]-a[0],dy=b[1]-a[1],q=p[1];
+  if(dx===g.width&&dy===0)
+    return q[0]===b[0]&&q[1]>=a[1]+g.corner&&q[1]<=a[1]+g.height-g.corner?"east":null;
+  if(dx===-g.width&&dy===0)
+    return q[0]===a[0]&&q[1]>=a[1]+g.corner&&q[1]<=a[1]+g.height-g.corner?"west":null;
+  if(dx===0&&dy===g.height)
+    return q[1]===b[1]&&q[0]>=a[0]+g.corner&&q[0]<=a[0]+g.width-g.corner?"south":null;
+  if(dx===0&&dy===-g.height)
+    return q[1]===a[1]&&q[0]>=a[0]+g.corner&&q[0]<=a[0]+g.width-g.corner?"north":null;
+  return null;
+ }
  function inspect(link,manifest,masks){
   masks=masks||{};
   const reasons=[],g=manifest.geometry;
@@ -51,9 +63,8 @@
    return Object.freeze({passable:false,reasons:["invalid_waypoints"],points:[],cost:null});
   const clearance=link.clearanceRadiusPx===undefined?16:link.clearanceRadiusPx;
   if(!Number.isInteger(clearance)||clearance<12||clearance>48)reasons.push("invalid_clearance_radius");
-  if(b[0]!==a[0]+g.width||b[1]!==a[1]||
-     p[1][0]!==b[0]||p[1][1]<a[1]+g.corner||p[1][1]>a[1]+g.height-g.corner||
-     !inside(p[0],a,g)||!inside(p[2],b,g))
+  const direction=sharedEdge(a,b,g,p);
+  if(!direction||!inside(p[0],a,g)||!inside(p[2],b,g))
    reasons.push("invalid_shared_edge_geometry");
   if(link.mode!=="overland"||link.strategicRoad!==false||link.historicallyVerified!==false)
    reasons.push("not_a_wilderness_link");
@@ -78,22 +89,28 @@
   if(reasons.length)return Object.freeze({passable:false,reasons,points:[],cost:null});
   let cost=0;
   for(let segment=0;segment<2;segment++){
-   const c=segment===0?from:to,m=masks[c.id],o=origin(c);
+   const expected=segment===0?from:to,o=origin(expected);
    const first=p[segment],last=p[segment+1],len=dist(first,last),steps=Math.ceil(len/8);
    if(!steps){reasons.push("zero_length_segment");break;}
    const perpendicular=[-(last[1]-first[1])/len,(last[0]-first[0])/len];
    for(let k=0;k<=steps;k++){
     const t=k/steps,point=[first[0]+(last[0]-first[0])*t,first[1]+(last[1]-first[1])*t];
+    if(!inside(point,o,g)){reasons.push("route_leaves_expected_octagon:"+expected.id);break;}
     let worst=1;
-    for(const offset of [-clearance,0,clearance]){
-     // At the exact shared boundary, the other tile owns the outward half
-     // of the footprint. Its edge and seam are independently inspected.
-     if(segment===1&&k===0&&offset!==0)continue;
+    // Five lateral samples cover both sides of a 32px army footprint.
+    // Samples that straddle the shared edge MUST be certified on both tiles.
+    for(const offset of [-clearance,-clearance/2,0,clearance/2,clearance]){
      const sample=[point[0]+perpendicular[0]*offset,point[1]+perpendicular[1]*offset];
-     if(!inside(sample,o,g)){reasons.push("route_clearance_leaves_octagon:"+c.id);break;}
-     const terrain=maskClass(m,sample,o),multiplier=COST[terrain];
-     if(!Number.isFinite(multiplier)){reasons.push("impassable_or_unknown_terrain:"+c.id+":"+terrain);break;}
-     worst=Math.max(worst,multiplier);
+     const owners=[from,to].filter(c=>inside(sample,origin(c),g));
+     if(!owners.length){reasons.push("route_clearance_leaves_octagon:"+expected.id);break;}
+     for(const owner of owners){
+      const terrain=maskClass(masks[owner.id],sample,origin(owner)),multiplier=COST[terrain];
+      if(!Number.isFinite(multiplier)){
+       reasons.push("impassable_or_unknown_terrain:"+owner.id+":"+terrain);break;
+      }
+      worst=Math.max(worst,multiplier);
+     }
+     if(reasons.length)break;
     }
     if(reasons.length)break;
     if(k)cost+=len/steps*worst;
@@ -103,7 +120,7 @@
   return Object.freeze({passable:reasons.length===0,reasons,
    points:reasons.length?[]:p.map(x=>x.slice()),
    cost:reasons.length?null:Math.round(cost*100)/100,mode:"overland",strategicRoad:false,
-   clearanceRadiusPx:clearance});
+   edgeDirection:direction,clearanceRadiusPx:clearance});
  }
  return Object.freeze({inspect,terrainCosts:COST});
 });

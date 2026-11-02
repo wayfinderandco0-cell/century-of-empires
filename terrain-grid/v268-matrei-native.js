@@ -19,7 +19,9 @@ slopeButton.id="v268SlopeToggle";
 slopeButton.textContent="Slope view";
 slopeButton.title="DEM-derived slope only: NOT verified rivers, roads or crossings";
 slopeButton.hidden=true;
-$("atlasBar").querySelector("div").append(slopeButton);
+// Show inspection controls beside the status on narrow iPhone screens,
+// rather than crowding the long header and hiding the last button.
+$("atlasFooter").querySelector("div").append(slopeButton);
 function image(src){return new Promise((resolve,reject)=>{
  const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error("HTTP art unavailable: "+src));
  im.src=src;
@@ -109,7 +111,11 @@ async function enable(){
   root.COEAtlas.halt();root.COEAtlas.open();active=true;
   slopeButton.hidden=false;
   setRoadControls(true);
-  root.COEAtlas.centerAt(1536,1024,1.05);
+  // A full 3:2 panorama letterboxes badly on a narrow portrait iPhone.
+  // Start closer to the central source-ground terrain; Whole restores overview.
+  const rect=$("atlasCanvas").getBoundingClientRect();
+  const portrait=rect.height>rect.width*1.25;
+  root.COEAtlas.centerAt(1536,1024,portrait?2.25:1.05);
   $("atlasStatus").textContent="V268 Matrei DEM 2×2 · actual georeferenced art · 0 NEW PLAYABLE · movement blocked";
   button.textContent="Back to approved 3";
  }catch(e){

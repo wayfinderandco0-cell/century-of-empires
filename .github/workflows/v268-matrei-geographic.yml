@@ -52,9 +52,16 @@ jobs:
             g=json.loads((p/c['meshGltf']).read_text())
             assert g['asset']['version']=='2.0'
             assert g['buffers'][0]['byteLength']==(p/c['meshBinary']).stat().st_size
-          # A mesh edge is the SAME world row/column in one source heightfield.
-          assert np.array_equal(z[:65,96],z[:65,96])
-          assert np.array_equal(z[64,:97],z[64,:97])
+          # Independently compare actual adjacent glTF vertex height buffers.
+          def positions(col,row):
+            raw=np.fromfile(p/('pilot-%d-%d.bin'%(col,row)),dtype='<f4')
+            return raw[:65*97*3].reshape(65,97,3)
+          for row in range(2):
+            a,b=positions(0,row),positions(1,row)
+            assert np.array_equal(a[:,-1,1],b[:,0,1]), 'E/W mesh height seam'
+          for col in range(2):
+            a,b=positions(col,0),positions(col,1)
+            assert np.array_equal(a[-1,:,1],b[0,:,1]), 'N/S mesh height seam'
           print('PASS: 4 georeferenced scene crops, 4 real heightmeshes, no invented routes, 0 finished')
           PY
       - name: Commit actual generated raster, mesh, masks and manifest (development only)
@@ -66,9 +73,14 @@ jobs:
             echo 'Geographic assets already match; no commit needed'
           else
             git commit -m 'Generate Matrei V268 shared-source 2x2 geographic 3D terrain candidates'
+            # Rebase the generated-asset commit over unrelated native Canvas
+            # commits made while the source DEM was rendering; never force push.
+            git fetch origin terrain-v267-three-original-art-prototype-20261028
+            git rebase origin/terrain-v267-three-original-art-prototype-20261028
             git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
           fi
       - name: Upload actual geographic image and geometry for visual inspection
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: v268-matrei-2x2-actual-source-scene

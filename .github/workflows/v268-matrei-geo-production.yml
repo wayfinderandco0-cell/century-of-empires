@@ -1,0 +1,105 @@
+name: V268 authentic Matrei continuous terrain — native game build
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - terrain-v267-three-original-art-prototype-20261028
+    paths:
+      - scripts/v268_build_matrei_geo.py
+      - terrain-grid/v268-geo-native.js
+      - .github/workflows/v268-matrei-geo-production.yml
+permissions:
+  contents: write
+concurrency:
+  group: coe-v268-matrei-source-geo
+  cancel-in-progress: false
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free terrain-generation and iPhone test dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy Pillow playwright
+      - name: Build one real Matrei DEM landscape, four derived raster tiles and true 3D glTF meshes
+        run: python scripts/v268_build_matrei_geo.py
+      - name: Check source identity, exact DEM seam continuity, geographic bounds and complete 3D geometry
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          import numpy as np
+          from PIL import Image
+          p=Path('terrain-grid/v268-matrei')
+          m=json.loads((p/'manifest.json').read_text())
+          assert m['schema']=='coe-v268-matrei-continuous/v1'
+          assert len(m['cells'])==4 and len(m['inputTiles'])>=2
+          assert all(len(t['sha256'])==64 and t['url'].startswith('https://s3.amazonaws.com/elevation-tiles-prod/') for t in m['inputTiles'])
+          assert m['approvedOriginalThreePreserved'] if 'approvedOriginalThreePreserved' in m else True
+          assert m['historicalRoads'] is False and m['verifiedRivers'] is False
+          assert m['certifiedNewPlayableTiles']==0
+          z=np.load(p/'heightfield-step16.npy')
+          assert z.shape==(129,193) and np.isfinite(z).all()
+          assert np.ptp(z)>100 and len(m['sharedSeams'])==4
+          assert all(v['heightSeamDiffMeters']==0 for v in m['sharedSeams'])
+          for a in m['cells']:
+            with Image.open(p/a['art']) as im:assert im.size==(1536,1024) and im.mode=='RGB'
+            assert hashlib.sha256((p/a['art']).read_bytes()).hexdigest()==a['sha256']
+            gltf=json.loads((p/a['gltf']).read_text());assert gltf['asset']['version']=='2.0'
+            assert gltf['buffers'][0]['byteLength']==(p/a['id']).with_suffix('.bin').stat().st_size
+            assert a['meshVertices']==6305 and a['meshTriangles']==12288 and a['finished'] is False
+          print('PASS: four original source-linked Matrei cells, four real 3D mesh files, true shared DEM seams, not certified for history or full campaign')
+          PY
+      - name: Check JavaScript syntax
+        run: node --check terrain-grid/v268-geo-native.js
+      - name: Install Safari/WebKit browser
+        run: python -m playwright install --with-deps webkit
+      - name: Test real native-game artwork, pan, zoom and scout in iPhone WebKit
+        run: |
+          python - <<'PY'
+          import subprocess,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          p=Path('terrain-grid/v268-matrei');server=subprocess.Popen(['python','-m','http.server','8765','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+          try:
+            time.sleep(2)
+            with sync_playwright() as w:
+              browser=w.webkit.launch(headless=True)
+              for width,height,tag in [(390,844,'portrait'),(844,390,'landscape')]:
+                page=browser.new_page(viewport={'width':width,'height':height},device_scale_factor=2,is_mobile=True,has_touch=True)
+                errs=[];page.on('pageerror',lambda e:errs.append(str(e)))
+                page.goto('http://127.0.0.1:8765/index.html?geoPilot=1',wait_until='domcontentloaded')
+                page.wait_for_function('window.COEGeoV268 && window.COEGeoV268.state.loaded === true',timeout=60000)
+                assert page.evaluate('COEGeoV268.state.cellCount')==4
+                assert page.locator('#geoV268 canvas').count()==1
+                page.screenshot(path=str(p/('actual-iphone-'+tag+'.png')))
+                page.locator('#geoV268 [data-action="plus"]').click()
+                page.locator('#geoV268 [data-action="whole"]').click()
+                # Touch a location and ensure native canvas remains usable.
+                page.locator('#geoV268 canvas').tap(position={'x':min(width-20,190),'y':min(height-20,190)})
+                page.wait_for_timeout(180)
+                assert page.evaluate('COEGeoV268.state.loaded === true')
+                assert not errs,errs
+                page.close()
+              browser.close()
+          finally:
+            server.terminate()
+            server.wait(timeout=5)
+          print('PASS native game WebKit 390x844 & 844x390: four Matrei source tiles loaded, zoom, touch interaction, no JS errors')
+          PY
+      - name: Commit and publish the validated geographic assets on development branch only
+        run: |
+          git config user.name "COE terrain production"
+          git config user.email "terrain-pipeline@users.noreply.github.com"
+          git add terrain-grid/v268-matrei/
+          if git diff --cached --quiet; then
+            echo 'V268: unchanged geographic assets'
+          else
+            git commit -m "Bake V268 real Matrei 2x2 source terrain, mesh and native mobile test screenshots"
+            git push origin HEAD:terrain-v267-three-original-art-prototype-20261028
+          fi

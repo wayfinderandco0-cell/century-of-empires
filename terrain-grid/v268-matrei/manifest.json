@@ -1,0 +1,188 @@
+{
+  "schema": "coe-v268-matrei-continuous/v1",
+  "status": "REAL_GEOGRAPHIC_VISUAL_PILOT_NOT_APPROVED",
+  "place": "Matrei am Brenner, Austria",
+  "bboxWGS84": [
+    11.385,
+    47.088,
+    11.555,
+    47.177
+  ],
+  "dimensions": [
+    3072,
+    2048
+  ],
+  "cellSize": [
+    1536,
+    1024
+  ],
+  "source": "Mapzen Terrain Tiles (AWS Open Data Terrarium)",
+  "sourceURL": "https://registry.opendata.aws/terrain-tiles/",
+  "attributionURL": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md",
+  "downloadedUTC": "2026-11-02T01:32:17.739818+00:00",
+  "inputTiles": [
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2177/1437.png",
+      "sha256": "b9b511f780f48c104a41e83c9d097952440241c491ef5d26f337359e487e7222"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2178/1437.png",
+      "sha256": "9fe10b352f9725c5b8f8ff1d16853a564c068b7a99e8cfaed0bad6e18ee32297"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2179/1437.png",
+      "sha256": "55f39126b03e4b5a76e9bb6c3abcd4c50fa66ec56b598485915db29343d61859"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2177/1438.png",
+      "sha256": "fb7378173f09e775076c0672b4eac05ef15acf7e100d0c817b298d7f61a50012"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2178/1438.png",
+      "sha256": "d673a783f6410ff49eb2732e819950194acc62fd33f71d672996311ce02e402f"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2179/1438.png",
+      "sha256": "2f6f7a999b75df30187778f745ffcfd7c29f5f238f94398bd29aa4719d76979b"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2177/1439.png",
+      "sha256": "3c5be5459d1d406ca6cef9d1fe8728bcb516afa6e95e533749bfda291afba0b2"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2178/1439.png",
+      "sha256": "6dba811e342987e9130a433159b197e834c5b3c6938417c0e668785863e814bd"
+    },
+    {
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/2179/1439.png",
+      "sha256": "b9fecc6b3c753817ff8dca4393c1579117f2e3a980edd85935bd1799cf300a14"
+    }
+  ],
+  "heightSourceSHA256": "c550a6d916280ae30b037517e00f18c596f9ad7ba0738d9f52b41abb49e141c7",
+  "heightRangeMeters": [
+    811.0096435546875,
+    2777.688232421875
+  ],
+  "modernDataNotHistoricalSurvey": true,
+  "vegetationIsProceduralNotHistorical": true,
+  "verifiedRivers": false,
+  "historicalRoads": false,
+  "certifiedNewPlayableTiles": 0,
+  "approvedOriginalThreePreserved": true,
+  "cells": [
+    {
+      "id": "matrei-0-0",
+      "originPixels": [
+        0,
+        0
+      ],
+      "art": "matrei-0-0.webp",
+      "sha256": "80f035159131b5381330818dfe11dcd53e702a95a7793d80f3194b4401832fe9",
+      "bboxWGS84": [
+        11.385,
+        47.1325,
+        11.469999999999999,
+        47.177
+      ],
+      "gltf": "matrei-0-0.gltf",
+      "meshVertices": 6305,
+      "meshTriangles": 12288,
+      "meshSha256": "25ccbae84ffab01fa075c2d08adb97dd49554c8469e3a7f763d3f0881fd27698",
+      "finished": false,
+      "playableRouteCertified": false
+    },
+    {
+      "id": "matrei-1-0",
+      "originPixels": [
+        1536,
+        0
+      ],
+      "art": "matrei-1-0.webp",
+      "sha256": "4c0f03ee10fdc341c3aee4ea0e890f9d5a44d539f2b6cfef30d4ffcb651fb7a0",
+      "bboxWGS84": [
+        11.469999999999999,
+        47.1325,
+        11.555,
+        47.177
+      ],
+      "gltf": "matrei-1-0.gltf",
+      "meshVertices": 6305,
+      "meshTriangles": 12288,
+      "meshSha256": "2d3eae75ba3dd3f062907762d0adfc67f1ad7abe38a75ebd4d34159e05168788",
+      "finished": false,
+      "playableRouteCertified": false
+    },
+    {
+      "id": "matrei-0-1",
+      "originPixels": [
+        0,
+        1024
+      ],
+      "art": "matrei-0-1.webp",
+      "sha256": "f15d2b1e980da7de6fc8573fe30f6e7de7b39a88e901b49cbfef3d862645d644",
+      "bboxWGS84": [
+        11.385,
+        47.088,
+        11.469999999999999,
+        47.1325
+      ],
+      "gltf": "matrei-0-1.gltf",
+      "meshVertices": 6305,
+      "meshTriangles": 12288,
+      "meshSha256": "964a4b1cea2ea93a872feece2773757728779da83a4176d326eab17bcca783cf",
+      "finished": false,
+      "playableRouteCertified": false
+    },
+    {
+      "id": "matrei-1-1",
+      "originPixels": [
+        1536,
+        1024
+      ],
+      "art": "matrei-1-1.webp",
+      "sha256": "f716b1325e7fc55a55d9ca89f87192553238d5d9a057b09a7772fc183bf2a7df",
+      "bboxWGS84": [
+        11.469999999999999,
+        47.088,
+        11.555,
+        47.1325
+      ],
+      "gltf": "matrei-1-1.gltf",
+      "meshVertices": 6305,
+      "meshTriangles": 12288,
+      "meshSha256": "b3b8da6b8671a4896a024cc83a21f9bca35eb733750e4c51c324e37436906d6b",
+      "finished": false,
+      "playableRouteCertified": false
+    }
+  ],
+  "sharedSeams": [
+    {
+      "cells": [
+        "matrei-0-0",
+        "matrei-1-0"
+      ],
+      "heightSeamDiffMeters": 0.0
+    },
+    {
+      "cells": [
+        "matrei-0-1",
+        "matrei-1-1"
+      ],
+      "heightSeamDiffMeters": 0.0
+    },
+    {
+      "cells": [
+        "matrei-0-0",
+        "matrei-0-1"
+      ],
+      "heightSeamDiffMeters": 0.0
+    },
+    {
+      "cells": [
+        "matrei-1-0",
+        "matrei-1-1"
+      ],
+      "heightSeamDiffMeters": 0.0
+    }
+  ]
+}

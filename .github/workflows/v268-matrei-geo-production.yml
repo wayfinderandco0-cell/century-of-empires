@@ -1,13 +1,6 @@
 name: V268 authentic Matrei continuous terrain — native game build
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - terrain-v267-three-original-art-prototype-20261028
-    paths:
-      - scripts/v268_build_matrei_geo.py
-      - terrain-grid/v268-geo-native.js
-      - .github/workflows/v268-matrei-geo-production.yml
 permissions:
   contents: write
 concurrency:

@@ -17,7 +17,9 @@ const status=s=>{if($("atlasStatus"))$("atlasStatus").textContent=s;};
 const controls=$("atlasFooter").querySelector("div");
 const next=document.createElement("button");next.id="v269Next";next.textContent="Next terrain cell";next.hidden=true;
 const halt=document.createElement("button");halt.id="v269Halt";halt.textContent="Halt";halt.hidden=true;
-controls.append(next,halt);
+const overview=document.createElement("button");overview.id="v269Overview";overview.textContent="Show all 4";overview.hidden=true;
+const focus=document.createElement("button");focus.id="v269Focus";focus.textContent="Find army";focus.hidden=true;
+controls.append(overview,focus,next,halt);
 function repaint(){if(enabled&&root.COEAtlas?.shown)root.COEAtlas.centerAt(...root.COEAtlas.center,root.COEAtlas.zoom);}
 function cell(p){const x=Math.floor(p[0]/1536),y=Math.floor(p[1]/1024);return x>=0&&x<2&&y>=0&&y<2?"["+x+","+y+"]":null;}
 function slope(p){
@@ -146,6 +148,8 @@ function nextCell(){
  status("Next-cell route blocked by steep terrain; tap another location. No invented road.");
  return false;
 }
+overview.onclick=()=>root.COEAtlas?.centerAt(1536,1024,.95);
+focus.onclick=()=>root.COEAtlas?.centerAt(...unit,3.3);
 function stop(){moving=false;route=[];segment=1;lastTime=0;status("V269 sandbox halted · tap terrain to give a new movement order");repaint();}
 function tick(t){
  if(enabled&&moving){
@@ -191,11 +195,11 @@ async function enable(){
   if(anchor<0)throw Error("No measured slope-safe starting ground");
   unit=centerOf(anchor);visited=new Set([cell(unit)]);lastCell=cell(unit);ready=true;
  }
- enabled=true;next.hidden=false;halt.hidden=false;
- status("V269 FOUR-CELL MOVEMENT LAB · tap ground to march · water/historical routes not certified");
+ enabled=true;next.hidden=false;halt.hidden=false;overview.hidden=false;focus.hidden=false;
+ status("FOUR labeled GEO cells on screen · Find army to zoom · Next terrain cell to march · sandbox only");
  repaint();return true;
 }
-function disable(){enabled=false;next.hidden=true;halt.hidden=true;moving=false;route=[];segment=1;lastTime=0;}
+function disable(){enabled=false;next.hidden=true;halt.hidden=true;overview.hidden=true;focus.hidden=true;moving=false;route=[];segment=1;lastTime=0;}
 next.onclick=nextCell;halt.onclick=stop;
 root.COEV269Explore=Object.freeze({
  get enabled(){return enabled},get ready(){return ready},get position(){return unit.slice()},

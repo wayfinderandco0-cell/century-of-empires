@@ -31,6 +31,18 @@ def run_engine(browser_type, engine, url):
     assert page.locator("#land").inner_text() == "3 / 12"
     page.screenshot(path=str(ARTIFACTS / f"{engine}-initial.png"))
 
+    # Portrait mode should open on a readable province view, with a working overview.
+    def camera_scale():
+        return page.locator("#scene").evaluate("""e =>
+            Number(/scale\\(([^)]+)\\)/.exec(e.style.transform)[1])""")
+    focus_scale = camera_scale()
+    page.locator("#fit").click()
+    overview_scale = camera_scale()
+    assert focus_scale > overview_scale * 1.6, f"{engine}: portrait view was not focused"
+    page.screenshot(path=str(ARTIFACTS / f"{engine}-overview.png"))
+    page.locator("#focus").click()
+    assert camera_scale() > overview_scale * 1.6, f"{engine}: Focus button failed"
+
     # Exercise on-screen zoom controls.
     original_transform = page.locator("#scene").evaluate("(e) => e.style.transform")
     page.locator("#zoomIn").click()

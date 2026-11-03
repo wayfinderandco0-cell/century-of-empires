@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Century of Empires — Fourth Photographic Octagon Review</title>
+<style>
+:root{color-scheme:dark;--gold:#dcc18a;--ink:#f7eed6;--panel:#13201beD}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#14251f;color:var(--ink);font:13px system-ui,-apple-system,sans-serif}
+canvas{display:block;width:100%;height:100%;touch-action:none;background:#263c2c}
+header{position:absolute;top:max(8px,env(safe-area-inset-top));left:8px;right:8px;pointer-events:none;display:flex;align-items:start;justify-content:space-between;gap:8px}
+.panel{pointer-events:auto;background:var(--panel);border:1px solid #8d8a6d;border-radius:11px;padding:9px 11px;box-shadow:0 3px 12px #09140b8c}
+header strong{font:700 17px Georgia,serif;color:#f5e7c7}header small{display:block;line-height:1.3;color:#dfd4af;margin-top:3px}
+button{font:700 12px system-ui,-apple-system,sans-serif;background:#29453a;border:1px solid #8d997f;color:#fff0cc;border-radius:9px;min-height:39px;padding:8px 11px;touch-action:manipulation}
+button:active{background:#4e6957}button:focus-visible{outline:2px solid #f4cd75;outline-offset:2px}
+.controls{position:absolute;right:8px;top:max(90px,env(safe-area-inset-top) + 77px);display:grid;gap:6px}
+.controls button{min-width:47px}
+footer{position:absolute;left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));display:grid;gap:7px;pointer-events:none}
+footer .panel{pointer-events:auto}
+#status{font-weight:700;color:#d5f2d2;line-height:1.4}
+#detail{color:#e0dccb;font-size:12px;line-height:1.35;margin-top:3px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.flag{font-size:11px;border-color:#b49a61;background:#3e3926}
+.fail{color:#ffb3aa!important}
+@media(min-width:800px){header,footer{left:16px;right:16px}footer{max-width:670px}.controls{right:16px;top:100px}}
+</style></head>
+<body>
+<canvas id="map" aria-label="Four Alpine photographic octagons and a movement sandbox"></canvas>
+<header><div class="panel">
+<strong>Century of Empires</strong>
+<small>Original three landscapes + fourth countryside candidate</small>
+<small>One new picture source · not approved for game production</small>
+</div><div class="panel" style="font-size:11px;text-align:right">2 × 2<br><b id="count">Loading images…</b></div></header>
+<div class="controls">
+<button id="zoomIn" title="Zoom in">+</button>
+<button id="zoomOut" title="Zoom out">−</button>
+<button id="fit" title="Show the full map">All four</button>
+<button id="home" title="Zoom to Matrei">Matrei</button><button id="fourth" title="Inspect fourth landscape candidate">Fourth</button>
+</div>
+<footer><div class="panel">
+<div id="status">Loading the three originals and fourth landscape candidate…</div>
+<div id="detail">Drag to pan · pinch to zoom · tap an octagon to test movement. Road and artwork seams not verified.</div>
+<div class="actions">
+<button id="verify">Check graph joins</button>
+<button id="roads">Guide: OFF</button>
+<button id="outline">Grid: OFF</button>
+<button id="reset" class="flag">Return army to Matrei</button>
+</div>
+</div></footer>
+<script>
+/* Fourth source-art review. No replacement of existing 3 approved game assets or movement rules. The fourth photographic candidate is UNAPPROVED; graph path is not a visible road certification. */
+(()=>{
+"use strict";
+const COLS=2,ROWS=2,W=1536,H=1024,C=256,HP=478,VP=466;
+const RESOURCES={
+ west:"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/terrain-v269-four-cell-exploration-20261102/art-reviews/v267-original-source/west-unified-native-border-unapproved.webp",
+ matrei:"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/terrain-v269-four-cell-exploration-20261102/terrain-grid/art/matrei-v121-original.webp",
+ south:"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/terrain-v269-four-cell-exploration-20261102/art-reviews/v267-original-source/south-unified-native-border-unapproved.webp",
+ west_south:"https://raw.githubusercontent.com/wayfinderandco0-cell/century-of-empires/terrain-v269-four-cell-exploration-20261102/terrain-grid/v267-neighbor-original-art/west-south.webp"
+};
+const MATREI_ID=1; // same historical town, mapped to a four-cell source-art review.
+const VERTICAL=new Set([1]); // tentative test graph; NOT an actual painted-road certification.
+const $=id=>document.getElementById(id);
+const canvas=$("map"),ctx=canvas.getContext("2d",{alpha:false});
+const art={};let dpr=1,sw=0,sh=0;
+let zoom=.035,view={x:(COLS*W)/2,y:(ROWS*H)/2},roadVisible=false,gridVisible=false;
+let armyCell=MATREI_ID,armyAt=null,trail=[],movement=null,lastFrame=0,selected=MATREI_ID;
+let pointer=null,pinch=null,renderQueued=false;
+const cells=Array.from({length:COLS*ROWS},(_,id)=>{
+ const col=id%COLS,row=Math.floor(id/COLS);
+ const hash=((id+1)*1103515245+12345)>>>0;
+ return {id,col,row,type:["west","matrei","west_south","south"][id]};
+});
+const idAt=(col,row)=>row*COLS+col;
+const center=t=>({x:t.col*W+768,y:t.row*H+512});
+const directions={
+ E:{dx:1,dy:0,opposite:"W"},W:{dx:-1,dy:0,opposite:"E"},
+ N:{dx:0,dy:-1,opposite:"S"},S:{dx:0,dy:1,opposite:"N"}
+};
+function hasPort(t,side){
+ if(side==="E")return t.col<COLS-1;
+ if(side==="W")return t.col>0;
+ if(side==="N")return t.row>0&&VERTICAL.has(t.col);
+ return t.row<ROWS-1&&VERTICAL.has(t.col);
+}
+function port(t,side){
+ const ox=t.col*W,oy=t.row*H;
+ return side==="E"?{x:ox+W,y:oy+HP}:side==="W"?{x:ox,y:oy+HP}:
+ side==="N"?{x:ox+VP,y:oy}:{x:ox+VP,y:oy+H};
+}
+function next(t,side){
+ const dir=directions[side],c=t.col+dir.dx,r=t.row+dir.dy;
+ return c>=0&&r>=0&&c<COLS&&r<ROWS?cells[idAt(c,r)]:null;
+}
+function roadCurve(t,side){
+ const a=center(t),b=port(t,side),s=(t.id*37+side.charCodeAt(0)*13)%57-28;
+ let p1,p2;
+ if(side==="W"||side==="E"){
+  p1={x:a.x+(b.x-a.x)*.40,y:a.y+(b.y-a.y)*.35+s};
+  p2={x:b.x+(side==="E"?-225:225),y:b.y};
+ }else{
+  p1={x:a.x+(b.x-a.x)*.4+s,y:a.y+(b.y-a.y)*.42};
+  p2={x:b.x,y:b.y+(side==="S"?-225:225)};
+ }
+ return {a,p1,p2,b};
+}
+function cubic(g,t){const q=1-t;return{x:q*q*q*g.a.x+3*q*q*t*g.p1.x+3*q*t*t*g.p2.x+t*t*t*g.b.x,
+ y:q*q*q*g.a.y+3*q*q*t*g.p1.y+3*q*t*t*g.p2.y+t*t*t*g.b.y};}
+function trace(g){ctx.beginPath();ctx.moveTo(g.a.x,g.a.y);ctx.bezierCurveTo(g.p1.x,g.p1.y,g.p2.x,g.p2.y,g.b.x,g.b.y);}
+function connections(t){return Object.keys(directions).filter(s=>hasPort(t,s));}
+function validateRoads(){
+ let joins=0,ports=0,mismatch=0,offmap=0;
+ const errors=[];
+ for(const t of cells){
+  for(const s of connections(t)){
+   ports++;const n=next(t,s);
+   if(!n){offmap++;errors.push("off-map "+t.id+s);continue;}
+   const reverse=directions[s].opposite;
+   const a=port(t,s),b=port(n,reverse);
+   if(!hasPort(n,reverse)||a.x!==b.x||a.y!==b.y){
+    mismatch++;errors.push("mismatch "+t.id+s+" → "+n.id+reverse);
+   }else if(s==="E"||s==="S")joins++;
+  }
+ }
+ const seen=new Set([MATREI_ID]),queue=[MATREI_ID];
+ while(queue.length){
+  const t=cells[queue.shift()];
+  for(const s of connections(t)){const n=next(t,s);if(n&&!seen.has(n.id)){seen.add(n.id);queue.push(n.id)}}
+ }
+ const expected=COLS*ROWS,ok=mismatch===0&&offmap===0&&ports===joins*2&&seen.size===expected&&joins===3;
+ return {ok,joins,ports,connected:seen.size,total:expected,mismatch,offmap,errors};
+}
+function pathBetween(a,b){
+ if(a===b)return [a];
+ const queue=[a],from=new Map([[a,null]]);
+ while(queue.length){
+  const k=queue.shift();if(k===b)break;
+  for(const s of connections(cells[k])){
+   const n=next(cells[k],s);
+   if(n&&!from.has(n.id)){from.set(n.id,k);queue.push(n.id);}
+  }
+ }
+ if(!from.has(b))return [];
+ const path=[];let k=b;while(k!==null){path.unshift(k);k=from.get(k)}return path;
+}
+function sampleBranch(t,side,reverse=false){
+ const g=roadCurve(t,side),pts=[];
+ for(let i=0;i<=24;i++)pts.push(cubic(g,(reverse?24-i:i)/24));
+ return pts;
+}
+function routePoints(path){
+ const points=[];
+ for(let i=0;i<path.length-1;i++){
+  const a=cells[path[i]],b=cells[path[i+1]];
+  const s=b.col>a.col?"E":b.col<a.col?"W":b.row>a.row?"S":"N";
+  points.push(...sampleBranch(a,s).slice(i?1:0));
+  points.push(...sampleBranch(b,directions[s].opposite,true).slice(1));
+ }
+ return points.length?points:[center(cells[path[0]])];
+}
+function beginMarch(to){
+ if(movement){$("detail").textContent="The army is marching. Select another destination when it arrives.";return;}
+ const path=pathBetween(armyCell,to);
+ if(!path.length){$("detail").textContent="No connected road route found.";return;}
+ selected=to;trail=path;
+ if(to===armyCell){$("detail").textContent="Army already in this octagon.";draw();return;}
+ const points=routePoints(path),lengths=[0];
+ for(let i=1;i<points.length;i++)lengths.push(lengths[i-1]+Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y));
+ movement={from:armyCell,to,points,lengths,total:lengths[lengths.length-1],distance:0,path};
+ $("status").textContent="Movement sandbox: "+path.length+" cells; visual road alignment not yet verified";
+ $("detail").textContent="Gold route is an experimental graph path, not a certified painted cartway.";
+ requestDraw();
+}
+function moveFrame(dt){
+ if(!movement)return;
+ movement.distance=Math.min(movement.total,movement.distance+Math.min(dt,75)*3.8);
+ const m=movement,ds=m.distance;
+ let i=1;while(i<m.lengths.length-1&&m.lengths[i]<ds)i++;
+ const a=m.points[i-1],b=m.points[i];
+ const alpha=(ds-m.lengths[i-1])/Math.max(1,m.lengths[i]-m.lengths[i-1]);
+ armyAt={x:a.x+(b.x-a.x)*alpha,y:a.y+(b.y-a.y)*alpha};
+ if(ds>=m.total){
+  armyCell=m.to;armyAt=null;movement=null;
+  $("status").textContent="Arrived at cell "+(armyCell+1)+" · movement test only";
+  $("detail").textContent="Tap another terrain cell to continue marching.";
+ }
+}
+function size(){
+ sw=canvas.clientWidth;sh=canvas.clientHeight;dpr=Math.min(devicePixelRatio||1,2);
+ canvas.width=Math.round(sw*dpr);canvas.height=Math.round(sh*dpr);requestDraw();
+}
+function fit(){
+ const usableH=Math.max(sh-225,sh*.45),scale=Math.min((sw-24)/(COLS*W),(usableH-15)/(ROWS*H));
+ zoom=Math.max(.015,Math.min(.65,scale));view={x:COLS*W/2,y:ROWS*H/2};requestDraw();
+}
+function focusTown(){view=center(cells[MATREI_ID]);zoom=Math.max(.13,Math.min(.3,Math.min(sw/W,sh/H)*.70));requestDraw();}
+function clipOctagon(t){
+ const x=t.col*W,y=t.row*H;
+ ctx.beginPath();
+ ctx.moveTo(x+C,y);ctx.lineTo(x+W-C,y);ctx.lineTo(x+W,y+C);
+ ctx.lineTo(x+W,y+H-C);ctx.lineTo(x+W-C,y+H);ctx.lineTo(x+C,y+H);
+ ctx.lineTo(x,y+H-C);ctx.lineTo(x,y+C);ctx.closePath();
+}
+function drawGround(t){
+ const x=t.col*W,y=t.row*H,img=art[t.type];
+ ctx.save();clipOctagon(t);ctx.clip();
+ if(img?.complete&&img.naturalWidth){ctx.drawImage(img,x,y,W,H);}
+ else{ctx.fillStyle=t.type==="west"?"#526e50":t.type==="south"?"#758062":"#657457";ctx.fillRect(x,y,W,H);}
+ ctx.restore();
+}
+function paintRoad(t,s){
+ const g=roadCurve(t,s);
+ ctx.save();clipOctagon(t);ctx.clip();ctx.beginPath();trace(g);
+ ctx.strokeStyle="rgba(250,226,132,.9)";ctx.lineWidth=7;ctx.setLineDash([20,14]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+}
+function drawGrid(t){
+ clipOctagon(t);ctx.lineWidth=2.6;ctx.strokeStyle="rgba(232,214,166,.62)";ctx.stroke();
+}
+function screenToWorld(px,py){return{x:view.x+(px-sw/2)/zoom,y:view.y+(py-sh/2)/zoom};}
+function visible(t){
+ const x=t.col*W,y=t.row*H,m=150;
+ const p=screenToWorld(0,0),q=screenToWorld(sw,sh);
+ return x+W>=p.x-m&&x<=q.x+m&&y+H>=p.y-m&&y<=q.y+m;
+}
+function draw(){
+ renderQueued=false;
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ ctx.fillStyle="#2b402e";ctx.fillRect(0,0,sw,sh);
+ ctx.translate(sw/2,sh/2);ctx.scale(zoom,zoom);ctx.translate(-view.x,-view.y);
+ // Unclipped texture beneath neighboring octagons fills the decorative corner diamonds.
+ for(const t of cells){if(!visible(t))continue;const im=art[t.type];if(im?.naturalWidth){ctx.save();ctx.globalAlpha=.56;ctx.drawImage(im,t.col*W,t.row*H,W,H);ctx.restore();}}
+ for(const t of cells)if(visible(t))drawGround(t);
+ if(roadVisible){
+  for(const t of cells)if(visible(t))for(const s of connections(t))paintRoad(t,s);
+ }
+ if(gridVisible)for(const t of cells)if(visible(t))drawGrid(t);
+ if(trail.length>1){
+  const p=routePoints(trail);
+  ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));
+  ctx.strokeStyle="#f3d778";ctx.lineWidth=8;ctx.lineCap="round";ctx.globalAlpha=.95;ctx.stroke();ctx.globalAlpha=1;
+ }
+ const town=center(cells[MATREI_ID]);
+ ctx.font="700 "+Math.max(20,16/zoom)+"px Georgia,serif";
+ ctx.textAlign="center";ctx.strokeStyle="#14251f";ctx.lineWidth=8/zoom;
+ ctx.strokeText("MATREI",town.x,town.y-95);ctx.fillStyle="#ffeaac";ctx.fillText("MATREI",town.x,town.y-95);
+ const pos=armyAt||center(cells[armyCell]),r=11/zoom;
+ ctx.fillStyle="#f7cf63";ctx.strokeStyle="#22261b";ctx.lineWidth=3/zoom;
+ ctx.beginPath();ctx.arc(pos.x,pos.y,r,0,2*Math.PI);ctx.fill();ctx.stroke();
+ ctx.beginPath();ctx.moveTo(pos.x,pos.y);ctx.lineTo(pos.x,pos.y-34/zoom);ctx.lineTo(pos.x+27/zoom,pos.y-22/zoom);ctx.lineTo(pos.x,pos.y-15/zoom);ctx.closePath();
+ ctx.fillStyle="#e7c04f";ctx.fill();ctx.stroke();
+ ctx.setTransform(1,0,0,1,0,0);
+}
+function requestDraw(){if(!renderQueued){renderQueued=true;requestAnimationFrame(draw)}}
+function animate(now){const dt=lastFrame?now-lastFrame:16;lastFrame=now;if(movement){moveFrame(dt);requestDraw()}requestAnimationFrame(animate)}
+function hitCell(point){
+ const col=Math.floor(point.x/W),row=Math.floor(point.y/H);
+ if(col<0||row<0||col>=COLS||row>=ROWS)return null;
+ const x=point.x-col*W,y=point.y-row*H;
+ if(x<C&&y<C&&x+y<C)return null;
+ if(x>W-C&&y<C&&(W-x)+y<C)return null;
+ if(x<C&&y>H-C&&x+(H-y)<C)return null;
+ if(x>W-C&&y>H-C&&(W-x)+(H-y)<C)return null;
+ return cells[idAt(col,row)];
+}
+function statusCheck(){
+ const result=validateRoads();
+ $("status").textContent=result.ok?
+  "Graph: "+result.joins+" matching calculated joins · "+result.connected+"/4 reachable":
+  "FAIL · "+result.errors.join("; ");
+ $("status").classList.toggle("fail",!result.ok);
+ $("count").textContent=result.ok?"3 graph joins":"Road validation failed";
+ $("detail").textContent=result.ok?
+  "Four landscape sources loaded. Graph coordinates pass; painted roads, photo seams, and historic geography remain UNVERIFIED.":
+  "Movement is disabled until the road network is repaired.";
+ return result.ok;
+}
+function tap(px,py){
+ const t=hitCell(screenToWorld(px,py));
+ if(!t)return;
+ if(!validateRoads().ok)return;
+ beginMarch(t.id);
+}
+function zoomAround(newZoom,px=sw/2,py=sh/2){
+ const prior=screenToWorld(px,py);
+ zoom=Math.min(.7,Math.max(.015,newZoom));
+ view.x=prior.x-(px-sw/2)/zoom;view.y=prior.y-(py-sh/2)/zoom;
+ requestDraw();
+}
+canvas.addEventListener("pointerdown",e=>{
+ canvas.setPointerCapture(e.pointerId);
+ pointer={id:e.pointerId,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,dist:0};
+});
+canvas.addEventListener("pointermove",e=>{
+ if(!pointer||e.pointerId!==pointer.id||pinch)return;
+ const dx=e.clientX-pointer.lx,dy=e.clientY-pointer.ly;
+ pointer.dist+=Math.abs(dx)+Math.abs(dy);
+ view.x-=dx/zoom;view.y-=dy/zoom;pointer.lx=e.clientX;pointer.ly=e.clientY;requestDraw();
+});
+canvas.addEventListener("pointerup",e=>{
+ if(!pointer||e.pointerId!==pointer.id)return;
+ if(pointer.dist<14)tap(e.clientX,e.clientY);
+ pointer=null;
+});
+canvas.addEventListener("pointercancel",()=>pointer=null);
+canvas.addEventListener("wheel",e=>{e.preventDefault();zoomAround(zoom*(e.deltaY<0?1.16:.86),e.clientX,e.clientY)},{passive:false});
+let fingers=new Map();
+canvas.addEventListener("touchstart",e=>{
+ for(const t of e.changedTouches)fingers.set(t.identifier,{x:t.clientX,y:t.clientY});
+ if(fingers.size===2){const a=[...fingers.values()];pinch={distance:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),zoom};pointer=null;}
+},{passive:true});
+canvas.addEventListener("touchmove",e=>{
+ for(const t of e.changedTouches)fingers.set(t.identifier,{x:t.clientX,y:t.clientY});
+ if(pinch&&fingers.size>=2){
+  const a=[...fingers.values()],distance=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+  zoomAround(pinch.zoom*distance/Math.max(1,pinch.distance),(a[0].x+a[1].x)/2,(a[0].y+a[1].y)/2);
+ }
+},{passive:true});
+const touchEnd=e=>{for(const t of e.changedTouches)fingers.delete(t.identifier);if(fingers.size<2)pinch=null;};
+canvas.addEventListener("touchend",touchEnd,{passive:true});canvas.addEventListener("touchcancel",touchEnd,{passive:true});
+$("zoomIn").onclick=()=>zoomAround(zoom*1.4);
+$("zoomOut").onclick=()=>zoomAround(zoom/1.4);
+$("fit").onclick=fit;$("home").onclick=focusTown;$("fourth").onclick=()=>{view=center(cells[2]);zoom=Math.max(.18,Math.min(.35,Math.min(sw/W,sh/H)*.85));$("status").textContent="Southwestern countryside: distinct photographic source, UNAPPROVED";requestDraw();};
+$("verify").onclick=statusCheck;
+$("roads").onclick=()=>{roadVisible=!roadVisible;$("roads").textContent="Guide: "+(roadVisible?"ON":"OFF");requestDraw()};
+$("outline").onclick=()=>{gridVisible=!gridVisible;$("outline").textContent="Grid: "+(gridVisible?"ON":"OFF");requestDraw()};
+$("reset").onclick=()=>{armyCell=MATREI_ID;armyAt=null;movement=null;trail=[];selected=MATREI_ID;view=center(cells[MATREI_ID]);statusCheck();requestDraw()};
+window.addEventListener("resize",size);
+const roadOk=statusCheck();
+size();fit();requestAnimationFrame(animate);
+Promise.all(Object.entries(RESOURCES).map(([key,src])=>new Promise(resolve=>{
+ const im=new Image();im.onload=()=>{art[key]=im;resolve({key,ok:true})};
+ im.onerror=()=>resolve({key,ok:false});im.src=src;
+}))).then(results=>{
+ const failures=results.filter(v=>!v.ok);
+ if(failures.length){$("status").classList.add("fail");$("status").textContent="Missing original source art: "+failures.map(x=>x.key).join(", ");$("count").textContent="Art loading failed";}
+ else if(roadOk){statusCheck();$("detail").textContent="FOUR DIFFERENT landscape sources now loaded, including a distinct southwest candidate. Artwork fit and road connection are NOT approved.";}
+ requestDraw();
+});
+window.COE301=Object.freeze({cells,validateRoads,pathBetween,port,roadCurve,routePoints,sourceArt:RESOURCES,sourceCount:4,tileCount:4,preservedExisting:3,fourthApproved:false,roadArtApproved:false,prototype:"v301"});
+})();
+</script></body></html>

@@ -49,7 +49,7 @@ footer button{min-height:35px;padding:6px 8px}
 <div id="detail">Drag to inspect. New scenes are NOT road, geographic or visual-approved.</div>
 <div class="actions">
 <button id="verify">Verify road joins</button>
-<button id="roads">Roads: ON</button>
+<button id="roads">Roads: OFF</button>
 <button id="outline">Grid: OFF</button>
 <button id="reset" class="flag">Return army to Matrei</button>
 </div>
@@ -86,7 +86,7 @@ const VERTICAL=new Set([2,5,8]);
 const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d",{alpha:false});
 const art={};let dpr=1,sw=0,sh=0;
-let zoom=.035,view={x:(COLS*W)/2,y:(ROWS*H)/2},roadVisible=true,gridVisible=false;
+let zoom=.035,view={x:(COLS*W)/2,y:(ROWS*H)/2},roadVisible=false,gridVisible=false;
 let armyCell=MATREI_ID,armyAt=null,trail=[],movement=null,lastFrame=0,selected=MATREI_ID;
 let pointer=null,pinch=null,renderQueued=false;
 // V272: compare 18 DISTINCT candidate scenes alongside the 3 protected approved cells.
@@ -316,12 +316,12 @@ function hitCell(point){
 function statusCheck(){
  const result=validateRoads();
  $("status").textContent=result.ok?
-  "PASS · "+result.joins+" matched road joins · "+result.connected+"/50 reachable · 0 open seams":
+  "GRAPH PASS · "+result.joins+" logical links · "+result.connected+"/50 reachable · VISUAL SEAMS UNVERIFIED":
   "FAIL · "+result.errors.join("; ");
  $("status").classList.toggle("fail",!result.ok);
- $("count").textContent=result.ok?"57 road joins PASS":"Road validation failed";
+ $("count").textContent=result.ok?"57 graph links":"Road validation failed";
  $("detail").textContent=result.ok?
-  "All 114 road ports are reciprocal, at identical world coordinates. Army travel uses the identical curves. Painted transitions still require visual acceptance.":
+  "114 route endpoints match numerically. Painted roads, landscape seams and historical routes are NOT verified.":
   "Movement is disabled until the road network is repaired.";
  return result.ok;
 }

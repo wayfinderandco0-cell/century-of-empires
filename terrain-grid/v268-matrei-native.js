@@ -64,8 +64,8 @@ function draw(ctx,worldToScreen,scale){
  }
  // Octagons are translucent logical selection/ownership outlines ONLY.
  // Ground beneath them remains continuous and never clipped into diamonds.
- ctx.save();ctx.strokeStyle="rgba(231,206,141,.34)";
- ctx.lineWidth=1.2;
+ ctx.save();ctx.strokeStyle="rgba(255,229,151,.92)";
+ ctx.lineWidth=2.1;
  for(const cell of manifest.cells){
   const x=cell.col*1536,y=cell.row*1024;
   const points=[[256,0],[1280,0],[1536,256],[1536,768],
@@ -74,6 +74,17 @@ function draw(ctx,worldToScreen,scale){
   points.forEach((p,i)=>{const q=worldToScreen([x+p[0],y+p[1]]);
     if(i)ctx.lineTo(...q);else ctx.moveTo(...q);});
   ctx.closePath();ctx.stroke();
+ }
+ // Label all four actual geographic sections so the first phone view
+ // cannot be mistaken for the legacy three WEST/MATREI/SOUTH cells.
+ ctx.save();ctx.textAlign="center";ctx.textBaseline="middle";
+ ctx.font="bold 13px system-ui";
+ for(let i=0;i<manifest.cells.length;i++){
+  const cell=manifest.cells[i];
+  const q=worldToScreen([(cell.col+.5)*1536,(cell.row+.5)*1024]);
+  const label="GEO "+(i+1)+" / 4";
+  ctx.fillStyle="rgba(10,29,25,.90)";ctx.fillRect(q[0]-45,q[1]-12,90,24);
+  ctx.fillStyle="#fff4c9";ctx.fillText(label,q[0],q[1]);
  }
  ctx.restore();
  if(root.COEV269Explore?.enabled)root.COEV269Explore.draw(ctx,worldToScreen,scale);
@@ -112,13 +123,13 @@ async function enable(){
   root.COEAtlas.halt();root.COEAtlas.open();active=true;
   slopeButton.hidden=false;
   setRoadControls(true);
-  // A full 3:2 panorama letterboxes badly on a narrow portrait iPhone.
-  // Start closer to the central source-ground terrain; Whole restores overview.
-  const rect=$("atlasCanvas").getBoundingClientRect();
-  const portrait=rect.height>rect.width*1.25;
-  root.COEAtlas.centerAt(1536,1024,portrait?2.25:1.05);
+  // Prior V268 auto-open zoom=2.25 cropped most geographic cells on an
+  // iPhone. Start with all FOUR labeled cells visible, then allow a close
+  // camera focus when the player chooses the moving army.
+  root.COEAtlas.centerAt(1536,1024,.95);
   $("atlasStatus").textContent="V268 Matrei DEM 2×2 · actual georeferenced art · 0 NEW PLAYABLE · movement blocked";
   if(root.COEV269Explore)await root.COEV269Explore.enable();
+  $("atlasBar").querySelector("small").textContent="V269 · 4 GEO TEST CELLS · 0 CERTIFIED";
   button.textContent="Back to approved 3";
  }catch(e){
   error=String(e.message||e);active=false;slopeButton.hidden=true;
@@ -131,6 +142,7 @@ function disable(){
  active=false;slopeVisible=false;slopeButton.hidden=true;slopeButton.textContent="Slope view";setRoadControls(false);
  if(previousCamera)root.COEAtlas.centerAt(...previousCamera.center,previousCamera.zoom);
  $("atlasStatus").textContent="3 approved WEST/MATREI/SOUTH · V268 geography unapproved";
+ $("atlasBar").querySelector("small").textContent=root.COEAtlas?.playability?.label||"3 PLAYABLE · 0 NEW FINISHED";
  button.textContent="Matrei geography";
 }
 button.onclick=()=>active?disable():enable();

@@ -1,0 +1,37 @@
+name: V301 12-Province Road-Alignment Gameplay QA
+on:
+  push:
+    branches: [gameplay-v301-march-road-parity-20261103]
+    paths:
+      - 'playtest-12-v2.html'
+      - 'scripts/qa_playtest12_v2.py'
+      - '.github/workflows/qa-playtest12-v2.yml'
+  pull_request:
+    paths:
+      - 'playtest-12-v2.html'
+      - 'scripts/qa_playtest12_v2.py'
+      - '.github/workflows/qa-playtest12-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  iphone-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install browsers
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify touch selection, route alignment, conquest, saves, and reset
+        run: python scripts/qa_playtest12_v2.py
+      - name: Save real 390x844 screenshots including marching troop
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v301-iphone-road-alignment
+          path: qa/playtest12v2/

@@ -41,7 +41,7 @@ const edges=[[4,5],[5,6],[6,7],[0,4],[1,5],[2,6],[3,7],[4,8],[5,9],[6,10],[7,11]
 const graph=new Map(tiles.map(t=>[t.id,[]]));
 for(const [a,b] of edges){graph.get(a).push(b);graph.get(b).push(a);}
 let app,camera,army,selectionMarker,claimFlag,land,device;
-let spin=-.65, distance=142, bearing=.96, focal={x:1,z:0};
+let spin=-.72, distance=236, bearing=.73, focal={x:2,z:0};
 let owned=false, supplies=50, selected=6, current=4, moving=null, boundaries=true, roadCenterlines=[];
 const color=(r,g,b)=>new pc.Color(r/255,g/255,b/255);
 const mat=(r,g,b,emissive=false)=>{
@@ -114,7 +114,7 @@ function makeRibbon(name,points,width,material,ydelta=.28){
   const px=-dz/len*width*.5,pz=dx/len*width*.5;
   p.push(v.x+px,height(v.x+px,v.z+pz)+ydelta,v.z+pz);
   p.push(v.x-px,height(v.x-px,v.z-pz)+ydelta,v.z-pz);
-  if(i){const k=2*i;index.push(k-2,k-1,k,k-1,k+1,k);}
+  if(i){const k=2*i;index.push(k-2,k,k-1,k-1,k,k+1);}
  }
  return drawMesh(name,p,index,material);
 }

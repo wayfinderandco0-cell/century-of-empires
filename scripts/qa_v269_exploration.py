@@ -54,7 +54,7 @@ try:
         page.screenshot(path=str(OUT / "webkit-v269-before-crossing.png"))
         started = page.evaluate("COEV269Explore.nextCell()")
         assert started, "No slope-eligible shared-edge route from actual GLO-30 terrain"
-        page.wait_for_function("() => COEV269Explore.crossings >= 1", timeout=30000)
+        page.wait_for_function("() => COEV269Explore.crossings >= 1 && !COEV269Explore.moving", timeout=30000)
         after = page.evaluate("""() => ({
             visitedCells: COEV269Explore.visitedCells,
             position: COEV269Explore.position,
@@ -62,7 +62,7 @@ try:
             orders: COEV269Explore.orders,
             originalGraphNodes: COEAtlas.nodes
         })""")
-        assert len(after["visitedCells"]) >= 2 and after["originalGraphNodes"] == 100, after
+        assert len(after["visitedCells"]) >= 2 and after["position"][0] >= 1590 and after["originalGraphNodes"] == 100, after
         page.screenshot(path=str(OUT / "webkit-v269-after-crossing.png"))
         page.evaluate("COEV268Geo.disable()")
         assert page.evaluate("COEAtlas.startMarch() === true"), "Original V123 route regressed"

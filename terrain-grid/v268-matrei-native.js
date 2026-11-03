@@ -76,6 +76,7 @@ function draw(ctx,worldToScreen,scale){
   ctx.closePath();ctx.stroke();
  }
  ctx.restore();
+ if(root.COEV269Explore?.enabled)root.COEV269Explore.draw(ctx,worldToScreen,scale);
  return true;
 }
 function setRoadControls(hidden){
@@ -117,6 +118,7 @@ async function enable(){
   const portrait=rect.height>rect.width*1.25;
   root.COEAtlas.centerAt(1536,1024,portrait?2.25:1.05);
   $("atlasStatus").textContent="V268 Matrei DEM 2×2 · actual georeferenced art · 0 NEW PLAYABLE · movement blocked";
+  if(root.COEV269Explore)await root.COEV269Explore.enable();
   button.textContent="Back to approved 3";
  }catch(e){
   error=String(e.message||e);active=false;slopeButton.hidden=true;
@@ -125,6 +127,7 @@ async function enable(){
  }finally{button.disabled=false;}
 }
 function disable(){
+ if(root.COEV269Explore)root.COEV269Explore.disable();
  active=false;slopeVisible=false;slopeButton.hidden=true;slopeButton.textContent="Slope view";setRoadControls(false);
  if(previousCamera)root.COEAtlas.centerAt(...previousCamera.center,previousCamera.zoom);
  $("atlasStatus").textContent="3 approved WEST/MATREI/SOUTH · V268 geography unapproved";

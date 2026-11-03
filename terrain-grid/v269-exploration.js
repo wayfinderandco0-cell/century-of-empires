@@ -49,6 +49,21 @@ function nearestOpen(p){
  }
  return -1;
 }
+function findMeasuredEdgeStart(){
+ // Discover a modest-slope crossing from the actual source slope raster.
+ // This is an experimental LAND movement anchor, not evidence of a bridge/ford.
+ let best=null;
+ for(const row of [0,1])for(let y=row*1024+296;y<=row*1024+728;y+=16){
+  let score=0,clear=true;
+  for(let x=1472;x<=1600;x+=16){
+   const at=indexAt([x,y]);
+   if(!walkable(at)){clear=false;break;}
+   score+=slope([x,y]);
+  }
+  if(clear&&(!best||score<best.score))best={p:[1480,y],score};
+ }
+ return best?.p||null;
+}
 function plan(start,goal){
  const a=nearestOpen(start),b=nearestOpen(goal);
  if(a<0||b<0)return null;
@@ -114,6 +129,12 @@ function tapWorld(p){
 }
 function nextCell(){
  if(!enabled)return false;
+ // First prove a short native boundary crossing instead of requiring
+ // a fabricated long road to the distant center of another tile.
+ if(unit[0]>=1392&&unit[0]<1536){
+  const short=plan(unit,[1600,unit[1]]);
+  if(short)return setRoute(short);
+ }
  const c=cell(unit);
  const order=["[0,0]","[1,0]","[1,1]","[0,1]"];
  const i=order.indexOf(c);if(i<0)return false;
@@ -165,7 +186,9 @@ async function enable(){
   const c=document.createElement("canvas");c.width=768;c.height=512;
   const cx=c.getContext("2d",{willReadFrequently:true});cx.drawImage(im,0,0);
   slopeData=cx.getImageData(0,0,768,512).data;slopeWidth=768;slopeHeight=512;
-  const anchor=nearestOpen(unit);if(anchor<0)throw Error("No measured slope-safe starting ground");
+  const edgeStart=findMeasuredEdgeStart();
+  const anchor=nearestOpen(edgeStart||unit);
+  if(anchor<0)throw Error("No measured slope-safe starting ground");
   unit=centerOf(anchor);visited=new Set([cell(unit)]);lastCell=cell(unit);ready=true;
  }
  enabled=true;next.hidden=false;halt.hidden=false;

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#101d20">
+<title>Century of Empires | PlayCanvas 3D Field Test</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;width:100%;overflow:hidden;background:#0b1717;font-family:system-ui,-apple-system,sans-serif;color:#f5e8c7}
+#game{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+#top{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;padding:10px 12px;pointer-events:none;display:flex;justify-content:space-between;gap:9px}
+.panel{background:#0e2423e8;border:1px solid #977a47;border-radius:12px;box-shadow:0 3px 15px #07141280;padding:10px 12px;pointer-events:auto}
+#head{max-width:75%}#head h1{font:700 18px Georgia,serif;margin:0 0 4px;color:#f1d69b}#head p{font-size:11px;line-height:1.35;margin:0;color:#d9dbc8}
+#metrics{min-width:92px;text-align:right;font-size:12px;color:#f0deb6;line-height:1.6}
+#bottom{position:absolute;bottom:env(safe-area-inset-bottom,0px);left:0;right:0;padding:9px 10px;pointer-events:none}
+#hud{max-width:720px;margin:auto;pointer-events:auto}
+#status{font-size:13px;font-weight:700;color:#e8f2d7;line-height:1.35}
+#detail{font-size:11px;color:#cecfba;margin-top:4px;line-height:1.35}
+.controls{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+button{appearance:none;border-radius:9px;border:1px solid #998659;background:#24483e;color:#f7e7be;font-weight:700;font-size:12px;padding:9px 10px;min-height:41px;touch-action:manipulation}
+button.primary{background:#87622e;color:#fff3d5;border-color:#cfab5b}
+button:disabled{opacity:.5}
+#hint{position:absolute;right:10px;top:calc(116px + env(safe-area-inset-top,0px));padding:7px 10px;font-size:10px;background:#0c2624c9;border-radius:8px;border:1px solid #57716b;color:#cfdece;pointer-events:none;max-width:134px}
+#error{display:none;position:absolute;left:15px;right:15px;top:42%;padding:16px;border-radius:10px;background:#3b1721ed;border:1px solid #e19783;color:white;line-height:1.5;z-index:5}
+@media(min-width:700px){#head h1{font-size:22px}#head p{font-size:13px}#hint{top:84px}}
+</style>
+<script type="importmap">
+{"imports":{"playcanvas":"https://cdn.jsdelivr.net/npm/playcanvas@2.23.1/build/playcanvas.mjs"}}
+</script>
+</head>
+<body>
+<canvas id="game" aria-label="Interactive PlayCanvas 3D Alpine landscape and army movement"></canvas>
+<header id="top"><section id="head" class="panel"><h1>Century of Empires</h1><p>3D ENGINE PROOF · real continuous terrain · 12 octagonal territories</p></section><section class="panel" id="metrics"><strong>MATREI</strong><div id="ownership">Neutral</div><div id="supply">Supplies: 50</div></section></header>
+<div id="hint">Drag to rotate<br>Pinch to zoom<br>Tap a territory<br>Then move army</div>
+<section id="bottom"><div id="hud" class="panel"><div id="status" role="status">Starting real 3D engine…</div><div id="detail">This is a separate experiment. The approved original game is unchanged.</div><div class="controls">
+<button class="primary" id="capture">March to Matrei</button>
+<button id="move">Move to selected</button>
+<button id="overview">Overview</button>
+<button id="toggle">Boundaries: ON</button>
+<button id="reset">Reset scenario</button>
+</div></div></section>
+<div id="error" role="alert"></div>
+<script type="module" src="./terrain-playcanvas/v300-scene.js"></script>
+</body>
+</html>

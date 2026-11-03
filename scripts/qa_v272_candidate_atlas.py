@@ -2,7 +2,7 @@
 """Mobile WebKit QA for 50-cell Atlas with 18 unapproved scenic candidates.
 No new candidate may be marked user-approved by this mechanical test.
 """
-import socket, subprocess, time
+import socket, subprocess, time, hashlib
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -30,7 +30,8 @@ try:
             approved:cs.filter(x=>x.locked).length,
             candidateTypes:[...new Set(cs.filter(x=>!x.locked).map(x=>x.type))],
             initialZoomText:document.querySelector('#zoomIn')?.textContent,
-            gridOff:document.querySelector('#outline')?.textContent.includes('OFF')
+            gridOff:document.querySelector('#outline')?.textContent.includes('OFF'),
+            roadsOff:document.querySelector('#roads')?.textContent.includes('OFF')
           };
         }""")
         assert result["count"]==50,result
@@ -38,13 +39,18 @@ try:
         assert result["approved"]==3,result
         assert len(result["candidateTypes"])>=12,result
         assert result["roads"]["ok"] and result["roads"]["joins"]==57,result
-        assert result["gridOff"],result
+        assert result["gridOff"] and result["roadsOff"],result
         page.wait_for_function("() => document.querySelector('#detail')?.textContent.includes('18 distinct landscape sources')",timeout=60000)
-        page.screenshot(path=str(OUT/"webkit-iphone-candidate-close.png"),animations="disabled",full_page=True)
+        def capture(name):
+            page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
+            data=page.screenshot(path=str(OUT/name),animations="disabled",full_page=True)
+            return hashlib.sha256(data).hexdigest()
+        close_hash=capture("webkit-iphone-candidate-close.png")
         page.click("#fit")
-        page.screenshot(path=str(OUT/"webkit-iphone-all-50.png"),animations="disabled",full_page=True)
+        fit_hash=capture("webkit-iphone-all-50.png")
         page.click("#home")
-        page.screenshot(path=str(OUT/"webkit-iphone-matrei.png"),animations="disabled",full_page=True)
+        home_hash=capture("webkit-iphone-matrei.png")
+        assert len({close_hash,fit_hash,home_hash})==3, "Zoom buttons failed to change actual iPhone canvas image"
         assert not errors,errors
         print("PASS: 50 cells, 21 distinct image sources, 3 protected positions, >=12 candidate types in use, 57 road joins, WebKit image loads and screenshots")
         browser.close()

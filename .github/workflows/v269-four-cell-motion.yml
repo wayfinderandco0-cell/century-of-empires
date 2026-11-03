@@ -40,3 +40,41 @@ jobs:
           name: v269-real-webkit-cross-cell-proof
           path: generated/v269-qa/
           retention-days: 14
+
+  public-preview-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Confirm SHA-pinned public browser preview serves exact V269 and four geographic images
+        run: |
+          python - <<'PY'
+          import json,urllib.request,time
+          # Pin to the tested implementation so a changing branch cannot silently substitute another build.
+          base='https://raw.githack.com/wayfinderandco0-cell/century-of-empires/4d58b57a60935452a405e78a6a24d923cd5cac5a'
+          paths=['/index.html?v268Geo=1&v269Explore=1&autoOpen=1',
+                 '/terrain-grid/v269-exploration.js',
+                 '/terrain-grid/v268-matrei-geographic/manifest.json']
+          error=None
+          for attempt in range(4):
+            try:
+              result={}
+              for path in paths:
+                with urllib.request.urlopen(base+path,timeout=25) as r:
+                  if r.status!=200:raise RuntimeError(path+' HTTP '+str(r.status))
+                  result[path]=r.read()
+              html=result[paths[0]].decode()
+              assert 'v269-exploration.js' in html and 'v268-matrei-native.js' in html
+              manifest=json.loads(result[paths[2]])
+              assert len(manifest['cells'])==4
+              assert manifest['newNativePlayable']==0
+              for c in manifest['cells']:
+                with urllib.request.urlopen(base+'/terrain-grid/v268-matrei-geographic/'+c['artWebp'],timeout=25) as r:
+                  assert r.status==200 and len(r.read())>5000
+              print('PASS: independent public HTTPS preview serves exact SHA-pinned V269 code and four real source-ground images')
+              break
+            except Exception as e:
+              error=e
+              print('External preview attempt',attempt+1,repr(e))
+              time.sleep(5)
+          else:raise RuntimeError('Public preview NOT verified: '+repr(error))
+          PY

@@ -1,5 +1,6 @@
 """V304: mobile WebKit + Chromium proof for passive geographical terrain."""
 import functools
+import json
 import http.server
 import pathlib
 import threading
@@ -59,6 +60,10 @@ def run(browser_type,name,url):
     context.close();browser.close()
 
 def main():
+    anchors=json.loads((ROOT/'terrain-grid'/'brenner-historical-anchors.json').read_text())
+    assert len(anchors['anchors'])==6
+    assert all(s['gameplayProvinceId'] is None for s in anchors['anchors'])
+    assert all(r['routeGeometry'] is None and r['drawApproved'] is False for r in anchors['historicallyConstrainedTransport'])
     server=http.server.ThreadingHTTPServer(('127.0.0.1',0),
              functools.partial(Quiet,directory=str(ROOT)))
     threading.Thread(target=server.serve_forever,daemon=True).start()

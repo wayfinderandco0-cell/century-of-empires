@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'terrain-v94/map-lod.js'
+      - 'terrain-grid/brenner-historical-anchors.json'
       - 'scripts/qa_v304_geography.py'
       - '.github/workflows/qa-v304-geography.yml'
   workflow_dispatch:

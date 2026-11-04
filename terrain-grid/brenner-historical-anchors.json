@@ -1,0 +1,167 @@
+{
+  "schema": "century-of-empires/historical-map-anchors/v1",
+  "corridor": "Brenner Pass and Wipptal, Tyrol",
+  "geographicCrs": "EPSG:4326 (longitude, latitude)",
+  "accuracyNotice": "Coordinates refer to approximate modern town centers; not surveyed 1780-1880 building or carriage-road positions. No gameplay unit, province, movement or capture rule may be inferred from a point or scenic art chunk.",
+  "productionStatus": "research-anchors-only",
+  "anchors": [
+    {
+      "id": "innsbruck",
+      "name1780": "Innsbruck",
+      "coordinates": [
+        11.392,
+        47.268
+      ],
+      "feature": "historic-town",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement coordinates",
+      "certainty": "approximate"
+    },
+    {
+      "id": "matrei",
+      "name1780": "Matrei",
+      "modernName": "Matrei am Brenner",
+      "coordinates": [
+        11.45366,
+        47.13125
+      ],
+      "feature": "historic-town",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement coordinates",
+      "certainty": "approximate",
+      "approvedScene": "v121 Matrei reference (visual only; positioning not proven)"
+    },
+    {
+      "id": "steinach",
+      "name1780": "Steinach",
+      "modernName": "Steinach am Brenner",
+      "coordinates": [
+        11.46657,
+        47.09075
+      ],
+      "feature": "historic-town",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement coordinates",
+      "certainty": "approximate"
+    },
+    {
+      "id": "gries",
+      "name1780": "Gries",
+      "modernName": "Gries am Brenner",
+      "coordinates": [
+        11.47989,
+        47.03809
+      ],
+      "feature": "historic-settlement-reference",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement coordinates",
+      "certainty": "approximate"
+    },
+    {
+      "id": "brenner-pass",
+      "name1780": "Brenner Pass",
+      "coordinates": [
+        11.5047,
+        47.00374
+      ],
+      "feature": "mountain-pass",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement/pass-area reference",
+      "certainty": "approximate"
+    },
+    {
+      "id": "sterzing",
+      "name1780": "Sterzing",
+      "modernName": "Vipiteno",
+      "coordinates": [
+        11.4322,
+        46.8962
+      ],
+      "feature": "historic-town",
+      "gameplayProvinceId": null,
+      "positionEvidence": "modern settlement coordinates",
+      "certainty": "approximate"
+    }
+  ],
+  "historicallyConstrainedTransport": [
+    {
+      "id": "pre1833-north",
+      "from": "innsbruck",
+      "to": "matrei",
+      "period": [
+        1780,
+        1832
+      ],
+      "mode": "historic-road",
+      "corridorEvidence": "Route via Patsch and Ellbögen was used before the 1833-1845 Wilten-Schönberg road reconstruction",
+      "routeGeometry": null,
+      "drawApproved": false
+    },
+    {
+      "id": "old-south-corridor",
+      "from": "steinach",
+      "to": "brenner-pass",
+      "period": [
+        1780,
+        1880
+      ],
+      "mode": "historic-road-corridor",
+      "corridorEvidence": "Historic mule route via Vinaders; exact carriage-road line and timeline need period map registration",
+      "routeGeometry": null,
+      "drawApproved": false
+    },
+    {
+      "id": "north-road-upgrade",
+      "from": "innsbruck",
+      "to": "matrei",
+      "period": [
+        1833,
+        1845
+      ],
+      "mode": "road-construction-period",
+      "corridorEvidence": "Wilten-Schönberg route built 1833–45; no exact surveyed alignment in current assets",
+      "routeGeometry": null,
+      "drawApproved": false
+    },
+    {
+      "id": "railway-inauguration",
+      "from": "innsbruck",
+      "to": "brenner-pass",
+      "period": [
+        1867,
+        1880
+      ],
+      "mode": "railway-period",
+      "corridorEvidence": "Brenner rail line opened to traffic in 1867",
+      "routeGeometry": null,
+      "drawApproved": false
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://orawww.uibk.ac.at/apex/uprod/f?p=LLW:3:0::NO::P3_ID:1179",
+      "claim": "Ancient/medieval road alignment, old routes via Patsch–Ellbögen–Matrei and Steinach–Vinaders; Wilten–Schönberg built 1833–1845; railway 1867"
+    },
+    {
+      "url": "https://www.habsburger.net/en/chapter/through-monarchy-mail-coach-improvements-road-network",
+      "claim": "Late 18th/early 19th century Brenner road improvements"
+    },
+    {
+      "url": "https://www.bbt-se.com/en/brenner-base-tunnel/bbt-history/",
+      "claim": "Long-standing Brenner trade road; railway built 1860–1867"
+    },
+    {
+      "url": "https://www.jakobswege-europa.de/wege/tab/491.htm",
+      "claim": "Modern route settlement coordinates for Sterzing, Brenner and Gries; not historic road geometry"
+    },
+    {
+      "url": "https://www.bonnesroutes.com/distance/matrei-am-brenner/steinach-am-brenner/",
+      "claim": "Modern Matrei and Steinach coordinates; not historic road geometry"
+    },
+    {
+      "url": "https://www.bonnesroutes.com/distance/matrei-am-brenner/gries-am-brenner/",
+      "claim": "Modern Gries coordinates; not historic road geometry"
+    }
+  ],
+  "integrationRule": "For map labels and art-georeferencing only. Do not render a route from endpoints alone or attach unit commands to graphic chunks. Date-specific roads must have sourced and registered geometry before drawing as historical fact."
+}

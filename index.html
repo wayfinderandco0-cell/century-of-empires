@@ -895,4 +895,6 @@ $('startBtn').addEventListener('click',()=>{state=initialState($('countrySelect'
 function frame(){if(!state)return;const now=Date.now();if(!Number.isFinite(Number(state.nextTickAt)))state.nextTickAt=now+MONTH_MS;if(state.year>=1880){$('clockProgress').style.width='100%';$('clockCountdown').textContent='Campaign complete · 1880';return}if(now>=state.nextTickAt){const steps=Math.min(1200,1+Math.floor((now-state.nextTickAt)/MONTH_MS));for(let i=0;i<steps&&state.year<1880;i++){doMonth();state.nextTickAt+=MONTH_MS}render()}if(state.year<1880){const remains=Math.max(0,state.nextTickAt-Date.now());$('clockProgress').style.width=`${Math.max(0,Math.min(100,(1-remains/MONTH_MS)*100))}%`;const min=Math.floor(remains/60000),sec=Math.floor(remains%60000/1000);$('clockCountdown').textContent=`Next month in ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}}
 switchScreen('map');if(restore()){initialEnvoy();selected=capitals[state.player]||state.provinces.find(x=>x.owner===state.player)?.id||state.provinces[0].id;$('startOverlay').hidden=true;frame();render();centerMapAt(selected);notice('Campaign restored. World time continues while you are away and catches up on your return.')}else{$('startOverlay').hidden=false}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state)save();else if(state)frame()});window.addEventListener('pagehide',()=>{if(state)save()});setInterval(frame,250);
 })();
-</script></body></html>
+</script>
+<script src="terrain-grid/brenner-campaign-link.js"></script>
+</body></html>

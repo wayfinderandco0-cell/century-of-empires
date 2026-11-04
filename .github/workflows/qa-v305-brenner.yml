@@ -1,0 +1,35 @@
+name: V305 Brenner geographic terrain iPhone QA
+on:
+  push:
+    branches: [map-v305-brenner-regional-lens-20261103]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'brenner-corridor.html'
+      - 'terrain-grid/brenner-campaign-link.js'
+      - 'scripts/qa_v305_brenner.py'
+      - '.github/workflows/qa-v305-brenner.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regional-terrain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install mobile Chromium and WebKit
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Confirm actual topography, mapped streams and unchanged game
+        run: python scripts/qa_v305_brenner.py
+      - name: Save visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v305-brenner-iphone
+          path: qa/v305/

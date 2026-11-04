@@ -1,0 +1,163 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Century of Empires — Brenner Geographic Terrain</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17271f;color:#f4e9d2;font:12px system-ui,sans-serif}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+header,footer{position:absolute;left:8px;right:8px;pointer-events:none;z-index:2}header{top:max(8px,env(safe-area-inset-top));display:flex;justify-content:space-between;gap:7px;align-items:flex-start}
+footer{bottom:max(8px,env(safe-area-inset-bottom));max-width:670px}
+.panel{pointer-events:auto;padding:9px 10px;background:#10241ee8;border:1px solid #a69269;border-radius:9px;box-shadow:0 2px 12px #0008}
+strong{font:700 16px Georgia,serif;color:#ffe3af}small{display:block;margin-top:3px;line-height:1.4;color:#ded4b9}
+button{color:#fff0d6;background:#254638;border:1px solid #ad9565;border-radius:7px;min-height:39px;padding:7px 9px;font:700 12px system-ui,sans-serif;touch-action:manipulation}
+button:focus-visible{outline:2px solid #ffde78}.actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
+#status{color:#e8e7be;font-weight:750}#detail{line-height:1.45;color:#e2d7be;margin:4px 0}
+#photo[hidden]{display:none}#photo{position:fixed;inset:0;z-index:10;overflow:auto;background:#0e2019f5;padding:12px;display:grid;align-items:center;justify-items:center}
+#photoContent{max-width:630px;width:100%;background:#1a2a20;border:1px solid #bba47b;border-radius:10px;padding:10px}
+#photo img{width:100%;max-height:43dvh;object-fit:contain}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.thumbs img{height:90px;object-fit:cover}.thumbs small{font-size:10px}
+#closePhoto{width:100%;margin-top:8px}
+</style></head><body>
+<canvas id="geo" aria-label="Real topographic relief of Brenner and Wipptal, tap towns, drag and pinch zoom"></canvas>
+<header><div class="panel"><strong>Brenner · Wipptal</strong><small>Regional terrain · 1780–1880</small><small id="era">Campaign: 1780</small></div>
+<div class="panel actions"><button id="out" aria-label="Zoom out">−</button><button id="in" aria-label="Zoom in">+</button><button id="all">Region</button><button id="matrei">Matrei</button><button id="art">Terrain art</button></div></header>
+<footer><div class="panel"><div id="status">Loading geographic terrain…</div><div id="detail">Drag to pan · pinch to zoom · tap a town to identify it. Roads shown as approximate historical corridors, not certified alignments.</div>
+<div class="actions"><button id="roads">Historic corridor: ON</button><button id="rivers">Mapped streams: ON</button></div></div></footer>
+<div id="photo" hidden><div id="photoContent"><strong>Approved visual direction and unfinished adjacent art</strong>
+<small>Source images are art references, not registered geographical scenes. West and South are review versions, not accepted road seams.</small>
+<img src="./terrain-grid/art/matrei-v121-original.webp" alt="Previously accepted Matrei landscape source">
+<div class="thumbs">
+<div><img src="./terrain-grid/art/matrei-v121-original.webp" alt="Matrei original"><small>Matrei V121: accepted source</small></div>
+<div><img src="./terrain-grid/art/west-v267-review.webp" alt="West experiment"><small>West V267: review only</small></div>
+<div><img src="./terrain-grid/art/south-v267-review.webp" alt="South experiment"><small>South V267: review only</small></div>
+</div><button id="closePhoto">Back to relief map</button></div></div>
+<script>
+(()=>{'use strict';
+const W=1552,H=1782,B={w:11.26,e:11.8,s:46.8,n:47.42};
+const $=id=>document.getElementById(id),C=$('geo'),ctx=C.getContext('2d',{alpha:false});
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const xy=(lon,lat)=>({x:W*(lon-B.w)/(B.e-B.w),y:H*(B.n-lat)/(B.n-B.s)});
+const ll=(x,y)=>({lon:B.w+x*(B.e-B.w)/W,lat:B.n-y*(B.n-B.s)/H});
+const towns=[
+{id:'innsbruck',label:'Innsbruck',lon:11.392,lat:47.268},
+{id:'matrei',label:'Matrei am Brenner',lon:11.45366,lat:47.13125},
+{id:'steinach',label:'Steinach',lon:11.46657,lat:47.09075},
+{id:'gries',label:'Gries',lon:11.47989,lat:47.03809},
+{id:'brenner',label:'Brenner Pass',lon:11.5047,lat:47.00374},
+{id:'sterzing',label:'Sterzing / Vipiteno',lon:11.4322,lat:46.8962}
+];
+const early=[[11.392,47.268],[11.413,47.205],[11.456,47.188],[11.45366,47.13125],[11.46657,47.09075],[11.47989,47.03809],[11.5047,47.00374],[11.4322,46.8962]];
+const late=[[11.392,47.268],[11.420,47.192],[11.45366,47.13125],[11.46657,47.09075],[11.47989,47.03809],[11.5047,47.00374],[11.4322,46.8962]];
+const year=clamp(Number(new URLSearchParams(location.search).get('year'))||1780,1780,1880);
+$('era').textContent='Campaign year: '+year;
+let sw=390,sh=800,dpr=1,relief=null,streams=[],loaded=false,streamsError='',showRoads=true,showRivers=true,selected='matrei',frames=0,queued=0;
+const camera={x:xy(11.48,47.115).x,y:xy(11.48,47.115).y,scale:.48};
+const pointers=new Map();let pinch=null,tap=null;
+const screen=p=>({x:sw/2+(p.x-camera.x)*camera.scale,y:sh/2+(p.y-camera.y)*camera.scale});
+const world=p=>({x:camera.x+(p.x-sw/2)/camera.scale,y:camera.y+(p.y-sh/2)/camera.scale});
+function changeZoom(value,x=sw/2,y=sh/2){
+ const anchor=world({x,y});camera.scale=clamp(value,Math.min(sw/W,sh/H)*.85,4);
+ camera.x=anchor.x-(x-sw/2)/camera.scale;camera.y=anchor.y-(y-sh/2)/camera.scale;requestDraw();
+}
+function fit(){camera.scale=Math.min(sw/W,sh/H)*1.04;camera.x=W/2;camera.y=H/2;requestDraw()}
+function focus(id){
+ const t=towns.find(t=>t.id===id);if(!t)return;
+ const a=xy(t.lon,t.lat);camera.x=a.x;camera.y=a.y;camera.scale=Math.max(camera.scale,.7);
+ selected=id;describe(t);requestDraw();
+}
+function describe(t){
+ $('status').textContent=t.label+' — geographical anchor';
+ $('detail').textContent='Approximate modern center: '+t.lat.toFixed(5)+'° N, '+t.lon.toFixed(5)+'° E. Historic positions of the carriageway and bridges are not certified. No army orders or campaign rules were altered.';
+}
+function polyline(coords,color,width,dashes=[]){
+ if(coords.length<2)return;
+ ctx.beginPath();coords.forEach((v,i)=>{const p=xy(v[0],v[1]);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});
+ ctx.strokeStyle=color;ctx.lineWidth=width/camera.scale;ctx.lineJoin='round';ctx.lineCap='round';
+ ctx.setLineDash(dashes.map(x=>x/camera.scale));ctx.stroke();ctx.setLineDash([]);
+}
+function draw(){
+ frames++;
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#233d31';ctx.fillRect(0,0,sw,sh);
+ ctx.save();ctx.translate(sw/2,sh/2);ctx.scale(camera.scale,camera.scale);ctx.translate(-camera.x,-camera.y);
+ if(relief)ctx.drawImage(relief,0,0,W,H);
+ if(showRivers)for(const s of streams){const c=s.coords;if(c?.length>1){polyline(c,'#163c48c0',5);polyline(c,'#76d0dbea',2.2)}}
+ if(showRoads){
+  const route=year<1845?early:late;
+  polyline(route,'#281e13e8',6,[8,8]);polyline(route,'#e0b076ed',2.8,[8,8]);
+ }
+ ctx.restore();
+ for(const t of towns){
+  const p=screen(xy(t.lon,t.lat));if(p.x<-100||p.x>sw+100||p.y<-80||p.y>sh+80)continue;
+  const active=t.id===selected;
+  ctx.beginPath();ctx.arc(p.x,p.y,active?7.5:5.5,0,Math.PI*2);ctx.fillStyle=active?'#ffd37c':'#fff0d6';ctx.fill();ctx.strokeStyle='#15261c';ctx.lineWidth=2;ctx.stroke();
+  if(camera.scale>.43||active||t.id==='brenner'){
+   ctx.font=(active?'700 ':'600 ')+(active?13:11)+'px system-ui';
+   ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineWidth=3.4;ctx.strokeStyle='#10221de8';
+   ctx.strokeText(t.label,p.x+10,p.y-10);ctx.fillStyle='#fff1d5';ctx.fillText(t.label,p.x+10,p.y-10);
+  }
+ }
+ ctx.textAlign='right';ctx.font='700 12px Georgia,serif';ctx.fillStyle='#f9e6bd';ctx.fillText('N ↑',sw-16,95);
+}
+function requestDraw(){if(queued)return;queued=requestAnimationFrame(()=>{queued=0;draw()})}
+function resize(){sw=C.clientWidth;sh=C.clientHeight;dpr=Math.min(devicePixelRatio||1,2);C.width=Math.round(sw*dpr);C.height=Math.round(sh*dpr);requestDraw()}
+function point(e){const r=C.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function pinchUpdate(){
+ const a=[...pointers.values()];if(a.length!==2){pinch=null;return}
+ const mid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};
+ const distance=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+ if(!pinch){pinch={distance:Math.max(1,distance),scale:camera.scale,anchor:world(mid)};return}
+ camera.scale=clamp(pinch.scale*distance/pinch.distance,Math.min(sw/W,sh/H)*.85,4);
+ camera.x=pinch.anchor.x-(mid.x-sw/2)/camera.scale;
+ camera.y=pinch.anchor.y-(mid.y-sh/2)/camera.scale;requestDraw();
+}
+C.addEventListener('pointerdown',e=>{
+ C.setPointerCapture(e.pointerId);const p=point(e);pointers.set(e.pointerId,p);
+ if(pointers.size===1)tap={p,drag:false};else{tap=null;pinchUpdate()}
+});
+C.addEventListener('pointermove',e=>{
+ const prev=pointers.get(e.pointerId);if(!prev)return;
+ const next=point(e);pointers.set(e.pointerId,next);
+ if(tap&&Math.hypot(next.x-tap.p.x,next.y-tap.p.y)>7)tap.drag=true;
+ if(pointers.size===1){camera.x-=(next.x-prev.x)/camera.scale;camera.y-=(next.y-prev.y)/camera.scale;requestDraw()}
+ else pinchUpdate();
+});
+function end(e){
+ const p=point(e),single=pointers.size===1&&!tap?.drag&&!!tap;
+ pointers.delete(e.pointerId);pinch=null;
+ if(single){
+  let nearest=null,dist=28;
+  for(const t of towns){const s=screen(xy(t.lon,t.lat)),d=Math.hypot(s.x-p.x,s.y-p.y);if(d<dist){dist=d;nearest=t}}
+  if(nearest){selected=nearest.id;describe(nearest);requestDraw()}
+ }
+ tap=null;
+}
+C.addEventListener('pointerup',end);C.addEventListener('pointercancel',end);
+C.addEventListener('wheel',e=>{e.preventDefault();const p=point(e);changeZoom(camera.scale*(e.deltaY<0?1.2:.84),p.x,p.y)},{passive:false});
+$('in').onclick=()=>changeZoom(camera.scale*1.5);$('out').onclick=()=>changeZoom(camera.scale/1.5);
+$('all').onclick=fit;$('matrei').onclick=()=>focus('matrei');
+$('roads').onclick=()=>{showRoads=!showRoads;$('roads').textContent='Historic corridor: '+(showRoads?'ON':'OFF');requestDraw()};
+$('rivers').onclick=()=>{showRivers=!showRivers;$('rivers').textContent='Mapped streams: '+(showRivers?'ON':'OFF');requestDraw()};
+$('art').onclick=()=>$('photo').hidden=false;$('closePhoto').onclick=()=>$('photo').hidden=true;
+const metrics={year,source:'Copernicus DEM GLO-30 V97',streamSource:'OSM V99',bounds:B,
+ isGameplay:false,campaignPreserved:true,roadsHistoricallyGeoreferenced:false,
+ get ready(){return loaded},get streams(){return streams.length},get streamsError(){return streamsError},
+ get scale(){return camera.scale},get selectedTown(){return selected},get frames(){return frames},
+ geoToPixel:xy,pixelToGeo:ll,focus,fit};
+window.COEBrenner=Object.freeze(metrics);
+window.addEventListener('resize',resize);resize();
+(async()=>{
+ const img=new Image();
+ const imageReady=new Promise((resolve,reject)=>{img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Brenner image unavailable'))});
+ img.src='./terrain-v97/brenner-relief.webp';
+ try{
+  const res=await fetch('./terrain-v99/brenner-streams.json');
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const data=await res.json();streams=(data.waterways||[]).filter(x=>x.coords?.length>1);
+ }catch(e){streamsError=String(e)}
+ try{
+  relief=await imageReady;loaded=true;
+  $('status').textContent='Geographic Brenner relief ready · '+streams.length+' stream segments';
+  $('detail').textContent='Copernicus terrain + modern OpenStreetMap local streams. Brown dashed line = historical route corridor, approximate alignment; NOT a certified 1780–1880 carriageway. Tap towns or pinch to inspect.';
+ }catch(e){$('status').textContent='Geographic imagery failed';$('detail').textContent=String(e);console.error(e)}
+ requestDraw();
+})();
+})();
+</script></body></html>

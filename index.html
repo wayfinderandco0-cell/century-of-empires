@@ -140,6 +140,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 <div class="footer">PROTOTYPE 13 — Designed for phone browsers. Countries and relationships are historically inspired, but city locations, province connections, resource concentrations, strength bonuses, and battles are a simplified game model—not historical resource surveys. No purchases or payment processing are enabled. Save is local to this browser only, and this version is not online multiplayer. All named game brands are independent of this prototype.</div>
 </div>
 <div class="start-overlay" id="startOverlay" hidden><div class="start-box"><div class="eyebrow">1780 · A continent on the brink</div><h2>Who will shape the century?</h2><p>Take command of a major nation. Other kingdoms, republics, and empires will develop, wage wars, and form alliances on their own. <span class="highlight">Small AI countries can rise into great powers.</span> Grain regions feed armies, ore-rich hills forge weapons, and trading ports bring wealth.</p><label for="countrySelect">SELECT YOUR COUNTRY</label><select id="countrySelect"><option value="FR">Kingdom of France — strong armies</option><option value="GB">Great Britain — naval trade</option><option value="PR">Prussia — military organization</option><option value="AT">Habsburg Monarchy — fortifications</option><option value="RU">Russian Empire — deep defenses</option><option value="ES">Spain — colonial trade</option><option value="OT">Ottoman Empire — frontier defense</option></select><p class="small">Mobile demo · schematic map · one game month every five real minutes · no pause · single-player AI prototype.</p><button id="startBtn" class="strong">Begin Campaign</button></div></div>
+<script src="terrain-v94/map-lod.js"></script>
 <script>
 (()=>{'use strict';
 const FACTIONS={FR:{name:'France',full:'Kingdom of France',color:'#1d5ed9',trait:'Maneuvering armies',atk:1.08,def:1,inc:1},GB:{name:'Britain',full:'Great Britain',color:'#e34843',trait:'Naval commerce',atk:1,def:1,inc:1.14},PR:{name:'Prussia',full:'Kingdom of Prussia',color:'#272930',trait:'Drilled infantry',atk:1.08,def:1.05,inc:1},AT:{name:'Austria',full:'Habsburg Monarchy',color:'#d6b14f',trait:'Defensive fortresses',atk:1,def:1.11,inc:1},RU:{name:'Russia',full:'Russian Empire',color:'#4da5c5',trait:'Strategic depth',atk:1,def:1.10,inc:1},ES:{name:'Spain',full:'Kingdom of Spain',color:'#e2a11c',trait:'Colonial trade',atk:1,def:1,inc:1.10},OT:{name:'Ottomans',full:'Ottoman Empire',color:'#167764',trait:'Frontier resilience',atk:1,def:1.09,inc:1},PT:{name:'Portugal',full:'Kingdom of Portugal',color:'#21824f',trait:'Atlantic merchant routes',atk:1,def:1,inc:1.10},NL:{name:'Dutch Republic',full:'Dutch Republic',color:'#e87934',trait:'Trading cities',atk:1,def:1,inc:1.15},HA:{name:'Hanover',full:'Electorate of Hanover',color:'#b45ccc',trait:'Court diplomacy',atk:1,def:1.03,inc:1},BA:{name:'Bavaria',full:'Electorate of Bavaria',color:'#58b5e3',trait:'Alpine defenses',atk:1,def:1.08,inc:1},SA:{name:'Saxony',full:'Electorate of Saxony',color:'#9aac3e',trait:'Skilled manufacturing',atk:1,def:1,inc:1.08},DN:{name:'Denmark–Norway',full:'Denmark–Norway',color:'#b63758',trait:'Northern trade',atk:1,def:1.04,inc:1},SW:{name:'Sweden',full:'Kingdom of Sweden',color:'#2e60ae',trait:'Northern defense',atk:1,def:1.06,inc:1},PL:{name:'Poland–Lithuania',full:'Polish–Lithuanian Commonwealth',color:'#d7749c',trait:'Cavalry traditions',atk:1.05,def:1,inc:1},SD:{name:'Sardinia',full:'Kingdom of Sardinia',color:'#7360c3',trait:'Mountain defense',atk:1,def:1.07,inc:1},NA:{name:'Naples',full:'Kingdom of Naples',color:'#d39a24',trait:'Southern agriculture',atk:1,def:1,inc:1.07},CH:{name:'Swiss',full:'Swiss Confederacy',color:'#f23c50',trait:'Alpine terrain',atk:1,def:1.15,inc:1},VE:{name:'Venice',full:'Republic of Venice',color:'#8c3872',trait:'Adriatic trade',atk:1,def:1.02,inc:1.09},PA:{name:'Papal States',full:'Papal States',color:'#cec0a0',trait:'Diplomatic mediation',atk:1,def:1,inc:1}};
@@ -409,6 +410,7 @@ function drawTerrain(){
   const pt=proj(area[0],area[1]);elem('ellipse',{cx:pt.x,cy:pt.y,rx:area[2],ry:area[3],fill:'url(#hillTexture)',opacity:'.37'},layer)
  }
  for(const river of RIVERS){const d=river.map((c,i)=>{const pt=proj(c[0],c[1]);return (i?'L':'M')+pt.x.toFixed(1)+','+pt.y.toFixed(1)}).join('');elem('path',{d,stroke:'#8ad3db','stroke-opacity':'.64','stroke-width':3,'stroke-linecap':'round',fill:'none'},detail)}
+ window.COEMapArt?.mount(); // passive geographic relief, no game mechanics changes
 }
 function renderMap(){
  const routes=$('routes'),ps=$('provinces'),tr=$('travel');routes.textContent='';ps.textContent='';tr.textContent='';renderControlOverlay();
@@ -766,6 +768,7 @@ function setupScreens(){
  const source=document.createElement('p');source.className='small';source.textContent='Historical political boundary layer: 1783 reconstruction by A. Ourednik and contributors. Approximate, GPL-3.0. Province gameplay sectors are a simplified overlay. ';
  const link=document.createElement('a');link.href='https://github.com/aourednik/historical-basemaps';link.target='_blank';link.rel='noopener noreferrer';link.textContent='Historical Basemaps source and license';
  source.append(link);empire.appendChild(source);
+ const terrainNote=document.createElement('p');terrainNote.className='small';terrainNote.textContent='V304 topographic rendering uses Mapzen z8 elevation and Natural Earth physical features with idealized pre-modern vegetation. It is geographic terrain reference, not verified 1780–1880 forest coverage, roads, bridges, or settlement positions.';empire.appendChild(terrainNote);
  dip.appendChild($('diplomacyPanel'));
  const inbox=document.createElement('div');inbox.className='report-inbox';inbox.innerHTML='<h2>📨 Diplomatic inbox</h2><div id="inboxList">No pending messages.</div>';reports.append(inbox,root.querySelector('.two'));
  old.replaceWith(map,dip,empire,reports)
@@ -809,6 +812,7 @@ function applyMapZoom(width,pointX=null,pointY=null,anchorX=null,anchorY=null){
  svg.style.setProperty('height','auto','important');
  sc.scrollLeft=Math.max(0,fx*nextW-x);
  sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO-y);
+ window.COEMapArt?.update();
  $('zoomIndicator').textContent=Math.round(nextW/2250*100)+'%';
  return nextW
 }

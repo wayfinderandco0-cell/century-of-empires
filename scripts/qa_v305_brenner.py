@@ -28,6 +28,7 @@ def test(browser_type,name,base):
     response=page.goto(base+'/brenner-corridor.html?year=1780',wait_until='load')
     assert response.status==200
     page.wait_for_function("window.COEBrenner && window.COEBrenner.ready",timeout=30000)
+    page.wait_for_function("window.COEBrenner.frames > 0",timeout=10000)
     q=page.evaluate("""() => ({
       count: COEBrenner.streams,year:COEBrenner.year,geo:COEBrenner.geoToPixel(11.45366,47.13125),
       roundtrip: COEBrenner.pixelToGeo(...Object.values(COEBrenner.geoToPixel(11.45366,47.13125))),

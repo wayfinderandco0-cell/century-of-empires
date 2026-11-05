@@ -1,0 +1,17 @@
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const gate=require("./octagon_1_corridor_gate.js");
+const candidate=JSON.parse(fs.readFileSync("terrain-grid/octagon-1-east-candidate.json","utf8"));
+const bad=gate.connectionStatus(candidate);
+assert.equal(bad.traversable,false);
+assert.ok(bad.reasons.includes("unverified_status"));
+assert.ok(bad.reasons.includes("missing_neighbor"));
+const proof={review:"verified",source:"independent review",reviewer:"reviewer"};
+const edge={status:"verified",fromCell:"a",toCell:"b",exit:[1100,704],entry:[0,704],crossesRiver:true,routeArt:proof,terrainAccess:proof,neighborArt:proof,bridgeOrFord:proof};
+assert.equal(gate.connectionStatus(edge).traversable,true);
+assert.equal(gate.connectionStatus({...edge,entry:[0,705]}).traversable,false);
+const exportData={kind:"octagon-1-art-authored-candidate",schemaVersion:1,approvedForProduction:false,eastEdge:[1100,704],neighborEntry:[0,704]};
+assert.equal(gate.authoringExportStatus(exportData,edge).traversable,false);
+assert.equal(gate.authoringExportStatus({...exportData,approvedForProduction:true},edge).traversable,false);
+assert.equal(gate.authoringExportStatus(exportData,candidate).traversable,false);
+console.log("7 Octagon 1 export evidence-gate assertions passed");

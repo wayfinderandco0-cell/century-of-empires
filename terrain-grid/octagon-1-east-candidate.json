@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "status": "unverified_candidate_not_playable",
+  "fromCell": "octagon-1-local-art",
+  "toCell": null,
+  "exit": [
+    1100,
+    704
+  ],
+  "entry": null,
+  "crossesRiver": null,
+  "routeArt": {
+    "review": "candidate",
+    "source": "octagon-1-road-authoring.html overlay; not source-paint proof"
+  },
+  "terrainAccess": {
+    "review": "unknown",
+    "source": null
+  },
+  "neighborArt": {
+    "review": "missing",
+    "source": null
+  },
+  "bridgeOrFord": {
+    "review": "unknown",
+    "source": null
+  },
+  "sourceBridgeEndpoint": [
+    699,
+    799
+  ],
+  "notes": "A candidate east-edge point does not establish a neighboring cell, historical road, or navigable crossing."
+}

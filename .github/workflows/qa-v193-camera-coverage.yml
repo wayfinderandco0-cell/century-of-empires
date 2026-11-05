@@ -1,0 +1,29 @@
+name: V193 iPhone Camera Coverage Regression
+on:
+  push:
+    branches: ['terrain-v193-camera-coverage-20261025']
+    paths:
+      - 'v192-weathered-cartways-graphics-test.html'
+      - 'scripts/qa_v193_camera_coverage.py'
+      - '.github/workflows/qa-v193-camera-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v193-camera-bounds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_v193_camera_coverage.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v193-camera-phone-screenshots
+          path: qa/v193-camera-coverage/

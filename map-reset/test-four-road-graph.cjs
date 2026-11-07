@@ -22,7 +22,7 @@ assert.equal(g.verify.connected,true);
 assert.equal(g.verify.roadCount,10);
 assert.equal(g.verify.nodeCount,112);
 assert.equal(g.verify.segmentCount,111);
-const west=[275,550], south=[2806,1629], east=[4502,1526], border=[3072,1629];
+const west=[275,550], south=[2806,1629], east=[4502,1406], border=[3072,1629];
 for(const [a,b] of [[west,south],[west,east],[south,east],[border,east]]){
   const trip=g.route(a,b,1);
   assert(trip && trip.points.length>=2, "Missing movement route: "+JSON.stringify([a,b]));
@@ -33,7 +33,7 @@ for(const s of g.segments){
   const midpoint=[(s.pa[0]+s.pb[0])/2,(s.pa[1]+s.pb[1])/2];
   assert(g.route(west,midpoint,1),"Segment not available to army: "+s.id);
 }
-assert(g.route(west,[3072+810,1024+556],110),"Off-node click on east cartway must route");
+assert(g.route(west,[3072+810,1024+518],110),"Off-node click on east cartway must route");
 const broken=structuredClone(manifest);
 broken.tileArt[3].roads.west[0][1]+=1;
 assert.throws(()=>roads.build(broken),/Disconnected visible roads/);

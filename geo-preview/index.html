@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15222a"><title>Century of Empires — Geography-First Alpine Proof</title>
+<link href="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:#15242c;color:#efe5cf;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+header{background:#14232b;border-bottom:1px solid #52626a;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex:0 0 auto}
+h1{font:700 18px Georgia,serif;margin:0;color:#f5ddaa}
+.kicker{font-size:10px;color:#afc5bf;margin-top:3px;letter-spacing:.05em}
+#zoom{min-width:56px;text-align:center;font-size:11px;color:#e1c99a}
+#map{position:relative;flex:1;min-height:120px;touch-action:none;background:#708577}
+#map .maplibregl-control-container{font-size:9px}
+.maplibregl-ctrl-attrib{font-size:10px!important}
+#overlay{position:absolute;top:8px;left:8px;z-index:2;max-width:min(76%,310px);background:#15232cde;border:1px solid #b4a7809c;padding:8px 9px;border-radius:5px;pointer-events:none;font-size:10px;line-height:1.45}
+#overlay b{display:block;color:#f7db9c;letter-spacing:.06em;font-size:11px;margin-bottom:2px}
+.town-pin{display:flex;flex-direction:column;align-items:center;cursor:pointer;white-space:nowrap;filter:drop-shadow(0 1px 2px #000b)}
+.town-dot{width:9px;height:9px;background:#f0e0b8;border-radius:50%;border:2px solid #263b3a}
+.town-label{font:700 11px Georgia,serif;color:#fff7db;text-shadow:-1px -1px 2px #1d2727,1px 1px 2px #1d2727,0 0 4px #1d2727;padding-top:2px}
+.town-pin.minor .town-label{font-size:10px}
+.army-marker{width:31px;height:35px;display:flex;align-items:center;justify-content:center;border:2px solid #ffdfa3;border-radius:50% 50% 45% 45%;background:#23312fee;box-shadow:0 0 0 3px #3043369e,0 3px 9px #000b;color:#ffe5ab;font-size:19px}
+.army-marker.selected{box-shadow:0 0 0 5px #e4b65798,0 0 17px #efca7b}
+#controls{z-index:4;background:#172731;border-top:1px solid #5e6b69;padding:8px 10px max(8px,env(safe-area-inset-bottom));flex:0 0 auto}
+#status{font-size:12px;color:#f3dfb8;min-height:30px;line-height:1.4;margin-bottom:7px}
+.controls-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+button,select{min-height:42px;border:1px solid #687f87;border-radius:6px;background:#253b46;color:#f6ebd6;font:700 12px system-ui;padding:8px;cursor:pointer}
+button.primary{background:#b99861;border-color:#edcf93;color:#1b2629}
+button:disabled{opacity:.40;cursor:default}
+select{flex:1;min-width:120px;max-width:220px}
+#position{color:#9fc3bc;font-size:10px;margin-top:6px;letter-spacing:.01em}
+#failure{display:none;position:absolute;inset:0;z-index:10;background:#19272de8;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:14px;line-height:1.5}
+@media(max-width:420px){h1{font-size:15px}.controls-row{gap:5px}button,select{font-size:11px;padding:7px}#overlay{font-size:9px;max-width:74%}}
+</style>
+</head><body><div id="app">
+<header><div><h1>Century of Empires</h1><div class="kicker">1780–1880 · MATREI–BRENNER · GEOGRAPHY TEST</div></div><div id="zoom">Zoom —</div></header>
+<main id="map"><div id="overlay"><b>PROTOTYPE · NOT HISTORICALLY CERTIFIED</b>
+Continuous georeferenced terrain. Settlement positions are geographic references; the gold cartway is a <strong>provisional historical corridor</strong>, not a surveyed period road. Current-day road lines and labels are suppressed.</div>
+<div id="failure" role="alert">Map could not load. Check internet access and reload this preview.</div></main>
+<section id="controls"><div id="status" aria-live="polite">Loading geographic terrain…</div>
+<div class="controls-row"><button id="selectArmy" type="button">Select army</button><select id="destination" aria-label="Destination">
+<option value="">Choose a settlement</option></select>
+<button id="execute" class="primary" type="button" disabled>Execute march</button>
+<button id="halt" type="button" disabled>Halt</button>
+<button id="reset" type="button">Reset</button></div>
+<div id="position">Tap a settlement or any point near the visible cartway after selecting the army. Drag to pan; pinch to zoom. Movement uses a demo clock, not the saved campaign rules.</div></section></div>
+<script src="./corridor-data.js"></script>
+<script src="./road-graph.js"></script>
+<script type="module">
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs";
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const qa=window.__COE_GEO_QA={ready:false,selected:false,planned:false,moveCount:0,terrainEnabled:false,error:null};
+const data=window.COEGeographyData,engine=window.COEGeoRoads.build(data.corridors);
+qa.roadNodes=engine.verify.nodeCount;qa.roadSegments=engine.verify.segments;
+let map=null,armyMarker=null,armyPoint=data.settlements.find(s=>s.id==="matrei").point.slice();
+let selected=false,planned=null,march=null,lastTick=0,raf=0;
+function status(message){$("status").textContent=message}
+function routeFeature(points){return {type:"FeatureCollection",features:points&&points.length>1?[{type:"Feature",properties:{},geometry:{type:"LineString",coordinates:points}}]:[]}}
+function moveMarker(point){armyPoint=point.slice();if(armyMarker)armyMarker.setLngLat(point);qa.armyPoint=point.slice()}
+function updateUI(){
+ $("selectArmy").textContent=selected?"Army selected":"Select army";
+ $("execute").disabled=!planned||!!march;
+ $("halt").disabled=!march;
+ qa.selected=selected;qa.planned=!!planned;
+}
+function clearPlan(){
+ planned=null;
+ if(map&&map.getSource("orders"))map.getSource("orders").setData(routeFeature(null));
+ updateUI();
+}
+function stopMarch(reason){
+ if(march){cancelAnimationFrame(raf);march=null}
+ clearPlan();status(reason||"Army halted.");updateUI();
+}
+function chooseDestination(point,label){
+ if(!selected){status("Select the army first, then choose a destination.");return}
+ if(march){status("Halt the army before issuing a new order.");return}
+ const possible=engine.route(armyPoint,point,650);
+ if(!possible){status("Destination is outside the registered cartway (650 m snap limit).");return}
+ planned=possible;
+ map.getSource("orders").setData(routeFeature(possible.coordinates));
+ const kms=(possible.meters/1000).toFixed(1);
+ status("Order planned: "+(label||"point on cartway")+" · "+kms+" km · press Execute.");
+ updateUI();
+}
+function frame(time){
+ if(!march)return;
+ if(!lastTick)lastTick=time;
+ // Accelerated QA animation; does not override campaign time or unit speed.
+ march.progress=Math.min(1,march.progress+Math.max(0,time-lastTick)/6500);
+ lastTick=time;
+ const p=engine.interpolate(march.path,march.progress*march.meters);
+ moveMarker(p);qa.moveCount++;
+ if(march.progress>=1){
+  const goal=march.path[march.path.length-1].slice();
+  march=null;lastTick=0;moveMarker(goal);clearPlan();status("Army arrived at road destination.");return;
+ }
+ raf=requestAnimationFrame(frame);
+}
+function execute(){
+ if(!planned||march)return;
+ const p=planned;planned=null;
+ march={path:p.coordinates,meters:p.meters,progress:0};lastTick=0;
+ qa.marshes=(qa.marshes||0)+1;updateUI();
+ status("Marching along the displayed cartway…");
+ raf=requestAnimationFrame(frame);
+}
+function reset(){
+ if(march){cancelAnimationFrame(raf);march=null}
+ lastTick=0;selected=false;moveMarker(data.settlements.find(s=>s.id==="matrei").point);
+ clearPlan();$("destination").value="";status("Demo army reset at Matrei. Select army to order a road march.");
+}
+function installMapLayers(){
+ const original=map.getStyle().layers||[];
+ // No modern highways, traffic classification, transit or town labels are
+ // presented as 1780 cartways. The underlying OSM data is for geography only.
+ for(const layer of [...original]){
+  if(layer.type==="symbol"||/road|transportation|highway|motorway|rail|aeroway|building|bridge|tunnel/i.test(layer.id))
+   map.removeLayer(layer.id);
+ }
+ const dem="geographic-elevation";
+ try{
+  map.addSource(dem,{type:"raster-dem",tiles:["https://tiles.mapterhorn.com/{z}/{x}/{y}.webp"],
+   tileSize:512,maxzoom:13,encoding:"terrarium",attribution:"© Mapterhorn"});
+  map.addLayer({id:"mountain-relief",type:"hillshade",source:dem,paint:{
+   "hillshade-exaggeration":0.55,
+   "hillshade-shadow-color":"#3b4a41","hillshade-highlight-color":"#fff1cd",
+   "hillshade-accent-color":"#55624c"
+  }});
+  // Enable subdued relief if available; leave a flat, functional map if not.
+  try{map.setTerrain({source:dem,exaggeration:0.35});qa.terrainEnabled=true}catch(e){qa.terrainError=String(e)}
+ }catch(e){qa.terrainError=String(e)}
+ map.addSource("cartways",{type:"geojson",data:engine.geometry});
+ map.addLayer({id:"cartway-casing",type:"line",source:"cartways",layout:{"line-join":"round","line-cap":"round"},
+  paint:{"line-color":"#47352b","line-width":["interpolate",["linear"],["zoom"],8,2,11,5,15,12],"line-opacity":0.96}});
+ map.addLayer({id:"cartway-visible",type:"line",source:"cartways",layout:{"line-join":"round","line-cap":"round"},
+  paint:{"line-color":"#e3bb75","line-width":["interpolate",["linear"],["zoom"],8,1.1,11,2.7,15,7],"line-opacity":1}});
+ map.addSource("orders",{type:"geojson",data:routeFeature(null)});
+ map.addLayer({id:"army-order-line",type:"line",source:"orders",layout:{"line-join":"round","line-cap":"round"},
+  paint:{"line-color":"#ffedab","line-width":4,"line-dasharray":[1.3,1.2]}});
+ for(const site of data.settlements){
+  const pin=document.createElement("div");
+  pin.className="town-pin"+((site.id==="schoenberg"||site.id==="gossensass")?" minor":"");
+  const dot=document.createElement("div");dot.className="town-dot";
+  const label=document.createElement("div");label.className="town-label";label.textContent=site.name;
+  pin.append(dot,label);pin.title=site.name+" — "+site.confidence;
+  pin.addEventListener("click",ev=>{ev.stopPropagation();chooseDestination(site.point,site.name)});
+  new maplibregl.Marker({element:pin,anchor:"center"}).setLngLat(site.point).addTo(map);
+  const opt=document.createElement("option");opt.value=site.id;opt.textContent=site.name;
+  $("destination").appendChild(opt);
+ }
+ const marker=document.createElement("div");marker.className="army-marker";marker.textContent="♞";
+ marker.setAttribute("role","button");marker.setAttribute("aria-label","Select demo army");
+ marker.addEventListener("click",ev=>{ev.stopPropagation();selected=true;marker.classList.add("selected");status("Army selected. Tap the golden cartway or choose a settlement.");updateUI()});
+ armyMarker=new maplibregl.Marker({element:marker,anchor:"bottom"}).setLngLat(armyPoint).addTo(map);
+ map.on("click",ev=>chooseDestination([ev.lngLat.lng,ev.lngLat.lat],"cartway point"));
+ map.on("zoom",()=>{qa.zoom=map.getZoom();$("zoom").textContent="Zoom "+map.getZoom().toFixed(1)});
+ $("selectArmy").addEventListener("click",()=>{selected=true;marker.classList.add("selected");status("Army selected. Tap a road or choose a settlement.");updateUI()});
+ $("destination").addEventListener("change",ev=>{
+  const site=data.settlements.find(s=>s.id===ev.target.value);if(site)chooseDestination(site.point,site.name);
+ });
+ $("execute").addEventListener("click",execute);
+ $("halt").addEventListener("click",()=>stopMarch("March halted on the cartway."));
+ $("reset").addEventListener("click",()=>{marker.classList.remove("selected");reset()});
+ qa.ready=true;qa.zoom=map.getZoom();qa.mapLoaded=true;
+ qa.sourceStatus=data.status;qa.roadGeometrySource="cartways";qa.orderGeometrySource="orders";
+ status("Geographic map ready. Select the army at Matrei. Roads and movement share one graph.");
+ updateUI();
+}
+if(!maplibregl||!data||!window.COEGeoRoads){
+ qa.error="Missing map library or route modules";$("failure").style.display="flex";status(qa.error);return;
+}
+try{
+ map=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/liberty",
+  center:[11.462,47.115],zoom:10.3,minZoom:8.3,maxZoom:16.8,pitch:23,maxPitch:48,
+  antialias:true,attributionControl:true,
+  maxBounds:[[11.22,46.84],[11.73,47.34]],
+  dragPan:true,scrollZoom:true,doubleClickZoom:true,touchZoomRotate:true});
+ map.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");
+ map.once("load",installMapLayers);
+ map.on("error",e=>{qa.lastMapError=String(e.error?.message||e.error||"unknown")});
+}catch(e){qa.error=String(e);$("failure").style.display="flex";status(qa.error)}
+window.addEventListener("pagehide",()=>{if(raf)cancelAnimationFrame(raf)});
+})();
+</script></body></html>

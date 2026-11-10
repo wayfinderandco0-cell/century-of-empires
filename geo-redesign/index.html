@@ -43,10 +43,10 @@ Continuous georeferenced terrain. Settlement positions are geographic references
 <button id="halt" type="button" disabled>Halt</button>
 <button id="reset" type="button">Reset</button></div>
 <div id="position">Tap a settlement or any point near the visible cartway after selecting the army. Drag to pan; pinch to zoom. Movement uses a demo clock, not the saved campaign rules.</div></section></div>
-<script src="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.js"></script>
 <script src="./corridor-data.js"></script>
 <script src="./road-graph.js"></script>
-<script>
+<script type="module">
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs";
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
@@ -168,7 +168,7 @@ function installMapLayers(){
  status("Geographic map ready. Select the army at Matrei. Roads and movement share one graph.");
  updateUI();
 }
-if(!window.maplibregl||!data||!window.COEGeoRoads){
+if(!maplibregl||!data||!window.COEGeoRoads){
  qa.error="Missing map library or route modules";$("failure").style.display="flex";status(qa.error);return;
 }
 try{

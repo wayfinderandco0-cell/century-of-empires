@@ -1,0 +1,26 @@
+name: QA - Original Three and Fourth Road Extension
+on:
+  push:
+    branches:
+      - map-restart-approved-three-road-first-20261105
+    paths:
+      - 'map-reset/**'
+      - '.github/workflows/qa-four-sector-roads.yml'
+  pull_request:
+    paths:
+      - 'map-reset/**'
+      - '.github/workflows/qa-four-sector-roads.yml'
+jobs:
+  road-network:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve original three road contract
+        run: node map-reset/test-road-graph.cjs
+      - name: Test fourth east-sector connection
+        run: node map-reset/test-four-road-graph.cjs

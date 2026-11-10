@@ -3,14 +3,14 @@
 These are Chromium/WebKit engine simulations, NOT physical iPhone Safari tests.
 Screenshots are published as CI artifacts even if a browser fails."""
 from __future__ import annotations
-import json, pathlib, subprocess, time, urllib.request
+import json, os, pathlib, subprocess, time, urllib.request
 from playwright.sync_api import sync_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-OUT = ROOT / "qa" / "geo-redesign"
+OUT = ROOT / "qa" / "geo-redesign" / os.getenv("COE_QA_TAG", "local")
 OUT.mkdir(parents=True, exist_ok=True)
 PORT = 8787
-URL = f"http://127.0.0.1:{PORT}/geo-redesign/index.html"
+URL = os.getenv("COE_PREVIEW_URL", f"http://127.0.0.1:{PORT}/geo-redesign/index.html")
 server = subprocess.Popen(
     ["python3", "-m", "http.server", str(PORT), "--bind", "127.0.0.1", "--directory", str(ROOT)],
     stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
@@ -19,7 +19,7 @@ time.sleep(1.0)
 failures = []
 try:
     with sync_playwright() as playwright:
-        for name in ("chromium", "webkit"):
+        for name in os.getenv("COE_BROWSERS", "chromium,webkit").split(","):
             browser = None
             page = None
             try:

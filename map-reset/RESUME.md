@@ -1,3 +1,17 @@
+# Latest status — November 10, 2026
+
+**Four-section iPhone preview now published** without merging draft PR #26 or changing the live game's homepage, mechanics, saves, or the three approved source photographs.
+
+- Public review URL: https://wayfinderandco0-cell.github.io/century-of-empires/four-section-iphone-review.html
+- Source file copied byte-for-byte from this draft branch's `map-reset/approved-four-playable-review.html` into *main* as a **separate standalone file** `four-section-iphone-review.html`. The gameplay `index.html` is unchanged.
+- Publishing commit on main: `72e72b93cab9eb5d18de1cf80de065622eeeb737`.
+- GitHub Pages deployment: https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/42886595996 — **completed successfully**.
+- Original/extension road-graph CI passed on latest PR head `94db3f5c5f9257d5f4f950153f6f7fa2ec843ba9`.
+- This confirms hosted **publication**, not real iPhone Safari usability. **NEXT: have user open live preview on iPhone, see all four artworks, drag/pinch, tap "March to eastern valley", and inspect the road seams.** Repair defects on isolated review prototype only; do not merge without explicit visual approval.
+- Prior historical note below says "no hosted four-section page"; that note refers to the November 7 checkpoint and is **superseded** by this November 10 deployment. Do not restart that work.
+
+---
+
 # Resume the Alpine map review
 
 Continue Century of Empires from draft PR #26 on branch `map-restart-approved-three-road-first-20261105` in `wayfinderandco0-cell/century-of-empires`. Read this file at the branch tip after any interruption. Do not start another map experiment.

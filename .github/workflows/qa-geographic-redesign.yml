@@ -28,6 +28,12 @@ jobs:
           python -m playwright install --with-deps chromium webkit
       - name: Test real browser rendering, march, pan and zoom at iPhone size
         run: python geo-redesign/browser_qa.py
+      - name: Verify playable external HTTPS branch preview in Chromium
+        env:
+          COE_PREVIEW_URL: https://raw.githack.com/wayfinderandco0-cell/century-of-empires/map-geographic-redesign-matrei-20261110/geo-redesign/index.html
+          COE_QA_TAG: hosted
+          COE_BROWSERS: chromium
+        run: python geo-redesign/browser_qa.py
       - name: Preserve visual evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

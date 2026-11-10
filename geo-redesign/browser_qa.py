@@ -60,6 +60,28 @@ try:
                 initial_zoom = page.evaluate("window.__COE_GEO_QA.zoom")
                 page.locator(".maplibregl-ctrl-zoom-in").click()
                 page.wait_for_function("(before) => window.__COE_GEO_QA.zoom > before + 0.2", arg=initial_zoom, timeout=15000)
+                # Physical multitouch events, rather than merely tapping the zoom button.
+                # Chromium CDP emulates two simultaneous finger contacts. A real
+                # iPhone Safari device is still required for physical QA.
+                if name == "chromium":
+                    before_pinch = page.evaluate("window.__COE_GEO_QA.zoom")
+                    bounds = page.locator("#map").bounding_box()
+                    x = bounds["x"] + bounds["width"] * .52
+                    y = bounds["y"] + bounds["height"] * .55
+                    client = context.new_cdp_session(page)
+                    def fingers(radius):
+                        return [{"x": x-radius, "y": y, "id": 0},
+                                {"x": x+radius, "y": y, "id": 1}]
+                    client.send("Input.dispatchTouchEvent", {"type":"touchStart","touchPoints":fingers(42)})
+                    for step in range(1, 11):
+                        client.send("Input.dispatchTouchEvent", {
+                            "type":"touchMove", "touchPoints":fingers(42 + step*7)})
+                        page.wait_for_timeout(24)
+                    client.send("Input.dispatchTouchEvent", {"type":"touchEnd","touchPoints":[]})
+                    page.wait_for_timeout(550)
+                    after_pinch = page.evaluate("window.__COE_GEO_QA.zoom")
+                    assert after_pinch > before_pinch + .25, f"Two-finger pinch zoom failed: {before_pinch} -> {after_pinch}"
+                    print("PASS simulated two-finger pinch zoom", before_pinch, after_pinch)
                 page.screenshot(path=str(OUT / f"{name}-close.png"), full_page=True)
                 page.mouse.move(235, 340)
                 page.mouse.down()

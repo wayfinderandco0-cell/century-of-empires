@@ -4,7 +4,15 @@
 **Started:** 2026-11-10
 **Live game:** UNMODIFIED. **Old octagon approach:** REJECTED.
 **Historical cartway:** PROVISIONAL. **Campaign integration:** NOT YET COMPLETE.
-**Physical iPhone Safari:** NOT YET TESTED. **Public deployment:** NOT YET VERIFIED.
+**Physical iPhone Safari:** NOT YET TESTED. **Public deployment:** VERIFIED hosted Chromium browser QA on 2026-11-10 (GitHub Pages).
+
+## Verified isolated public demonstration
+
+- Hosted page: https://wayfinderandco0-cell.github.io/century-of-empires/geo-preview/index.html
+- GitHub Pages build: https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/42891898927 (success).
+- External HTTPS and local browser QA: https://github.com/wayfinderandco0-cell/century-of-empires/actions/runs/42892291685 (success, latest tested branch source).
+- Browser at 390x844: Chromium and WebKit render geography and terrain; selected test army marched on shown road; panning and zoom; two-contact simulated pinch raised zoom from about 10.6 to about 12.1. Real physical iPhone Safari STILL NOT tested.
+- Separate main/geo-preview/ standalone three-file copy serves the experiment publicly; no saved campaign, production homepage or game rules were replaced. Dev branch and draft PR #27 remain isolated and unmerged.
 
 ## Decision
 

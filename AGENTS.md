@@ -1,3 +1,11 @@
+# AUTHORITATIVE UPDATE — 10 NOVEMBER 2026
+
+The user has **REJECTED the entire octagon / stitched landscape-image map method**. This NEW user instruction supersedes the older 3-November map art instructions below. **Never resume or repair photographic octagons, seam blending or tile multiplication.** Preserve those historical assets/files for reference only. See draft PR #27 and branch `map-geographic-redesign-matrei-20261110` (`geo-redesign/README.md`, `geo-redesign/RESUME.md`). The branch selects MapLibre GL JS/OpenFreeMap georeferenced terrain + Mapterhorn DEM; rendered roads and demo marching reuse one coordinate-based graph. The Matrei–Brenner period-road vertices are PROVISIONAL and **not** historically certified. This is an independent proof, NOT yet original campaign/save-mechanics integration.
+
+The review-only HTTPS preview is **https://wayfinderandco0-cell.github.io/century-of-empires/geo-preview/index.html**. GitHub Pages deployment and automated Chromium browser loading, destination selection and visible marching passed in Actions run #42891922313. Full iPhone Safari device and historical-road checks remain outstanding. The production `index.html` is unchanged; the main branch contains only standalone `geo-preview/` copies for hosting. PR #26 is superseded/unmerged. **Do not merge PR #27 without user approval.** New map renderer changes must remain isolated and preserve historical campaign mechanics, saved-game IDs/state, army sprites/selection/orders and campaign progression. **Do not expand Europe until a small genuinely integrated Matrei geographic slice passes.**
+
+---
+
 # Century of Empires — project instructions
 
 ## Current user direction: 3 November 2026, America/Chicago

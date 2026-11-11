@@ -1,0 +1,35 @@
+name: Octagon 1 V121 Painted Road QA
+on:
+  push:
+    branches: [octagon-1-v121-painted-roads]
+    paths:
+      - "v121-octagon-1-painted-road.html"
+      - "scripts/qa_octagon_v121.py"
+      - ".github/workflows/qa-octagon-v121.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "v121-octagon-1-painted-road.html"
+      - "scripts/qa_octagon_v121.py"
+      - ".github/workflows/qa-octagon-v121.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - run: python scripts/qa_octagon_v121.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: octagon-1-v121-mobile-browser-proofs
+          path: qa/octagon-v121/

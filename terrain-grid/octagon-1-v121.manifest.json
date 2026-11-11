@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "id": "octagon-1-matrei-brenner-v121",
+  "era": "1780s-inspired; precise historical road placement unverified",
+  "dimensions": {
+    "width": 1536,
+    "height": 1024
+  },
+  "art": {
+    "path": "terrain-grid/octagon-1-v121.webp",
+    "gitBlobSha": "c4b81d2a168700bed66c05f8cfe3dc3d39ac3c3e",
+    "roadsPaintedIntoArt": true,
+    "bakedInLabels": false
+  },
+  "movement": {
+    "units": "image pixels",
+    "graphNodeCount": 73,
+    "roads": {
+      "west": [
+        [
+          99,
+          478
+        ],
+        [
+          160,
+          477
+        ],
+        [
+          216,
+          489
+        ],
+        [
+          268,
+          511
+        ],
+        [
+          328,
+          529
+        ],
+        [
+          396,
+          536
+        ],
+        [
+          448,
+          529
+        ],
+        [
+          484,
+          518
+        ],
+        [
+          518,
+          519
+        ]
+      ],
+      "north": [
+        [
+          518,
+          519
+        ],
+        [
+          516,
+          491
+        ],
+        [
+          504,
+          462
+        ],
+        [
+          477,
+          429
+        ],
+        [
+          457,
+          398
+        ],
+        [
+          465,
+          371
+        ],
+        [
+          492,
+          343
+        ],
+        [
+          527,
+          320
+        ],
+        [
+          562,
+          285
+        ],
+        [
+          558,
+          267
+        ],
+        [
+          527,
+          241
+        ]
+      ],
+      "south": [
+        [
+          518,
+          519
+        ],
+        [
+          517,
+          553
+        ],
+        [
+          515,
+          584
+        ],
+        [
+          503,
+          619
+        ],
+        [
+          487,
+          644
+        ],
+        [
+          462,
+          664
+        ],
+        [
+          430,
+          678
+        ],
+        [
+          405,
+          690
+        ],
+        [
+          378,
+          707
+        ],
+        [
+          381,
+          726
+        ],
+        [
+          399,
+          742
+        ],
+        [
+          427,
+          766
+        ],
+        [
+          457,
+          807
+        ],
+        [
+          478,
+          836
+        ],
+        [
+          487,
+          866
+        ],
+        [
+          480,
+          897
+        ],
+        [
+          466,
+          935
+        ],
+        [
+          466,
+          958
+        ]
+      ],
+      "bridge": [
+        [
+          518,
+          519
+        ],
+        [
+          566,
+          508
+        ],
+        [
+          618,
+          497
+        ],
+        [
+          660,
+          485
+        ],
+        [
+          707,
+          478
+        ],
+        [
+          741,
+          475
+        ],
+        [
+          773,
+          479
+        ],
+        [
+          813,
+          486
+        ],
+        [
+          855,
+          495
+        ],
+        [
+          898,
+          507
+        ],
+        [
+          953,
+          519
+        ],
+        [
+          1014,
+          535
+        ],
+        [
+          1069,
+          549
+        ],
+        [
+          1128,
+          563
+        ],
+        [
+          1150,
+          568
+        ]
+      ],
+      "village": [
+        [
+          1150,
+          568
+        ],
+        [
+          1165,
+          531
+        ],
+        [
+          1167,
+          503
+        ],
+        [
+          1153,
+          476
+        ],
+        [
+          1112,
+          444
+        ],
+        [
+          1062,
+          416
+        ],
+        [
+          1023,
+          393
+        ],
+        [
+          991,
+          371
+        ],
+        [
+          994,
+          339
+        ],
+        [
+          1019,
+          304
+        ],
+        [
+          1051,
+          270
+        ],
+        [
+          1061,
+          244
+        ],
+        [
+          1058,
+          220
+        ],
+        [
+          1040,
+          197
+        ],
+        [
+          1054,
+          167
+        ],
+        [
+          1093,
+          135
+        ],
+        [
+          1137,
+          112
+        ]
+      ],
+      "southeast": [
+        [
+          1150,
+          568
+        ],
+        [
+          1185,
+          594
+        ],
+        [
+          1226,
+          621
+        ],
+        [
+          1266,
+          650
+        ],
+        [
+          1304,
+          673
+        ],
+        [
+          1340,
+          695
+        ],
+        [
+          1352,
+          727
+        ],
+        [
+          1351,
+          749
+        ]
+      ]
+    },
+    "primaryStoneBridgeEnds": [
+      [
+        741,
+        475
+      ],
+      [
+        898,
+        507
+      ]
+    ],
+    "coordinateRule": "use these coordinates for movement and painted-road inspection; do not separately redraw an unrelated route"
+  },
+  "edgeConnections": [
+    {
+      "road": "west",
+      "point": [
+        99,
+        478
+      ],
+      "neighborStatus": "not authored"
+    },
+    {
+      "road": "south",
+      "point": [
+        466,
+        958
+      ],
+      "neighborStatus": "not authored"
+    },
+    {
+      "road": "southeast",
+      "point": [
+        1351,
+        749
+      ],
+      "neighborStatus": "not authored"
+    }
+  ],
+  "acceptance": {
+    "connectedGraph": true,
+    "chromiumPortraitLandscapeAutomated": true,
+    "webkitPortraitLandscapeAutomated": true,
+    "physicalIphoneVisualApproval": false,
+    "historicalRoadAccuracyVerified": false,
+    "neighborSeamVerified": false,
+    "productionGameplayIntegrated": false
+  },
+  "source": {
+    "prototype": "v121-octagon-1-painted-road.html",
+    "branch": "octagon-1-v121-painted-roads"
+  }
+}

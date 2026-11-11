@@ -1,0 +1,21 @@
+name: Octagon 1 Fast Source Integrity
+on:
+  push:
+    branches: [octagon-1-art-review-clean-20261022]
+    paths:
+      - "octagon-1-road-authoring.html"
+      - "terrain-grid/octagon-1-v119-source.jpg"
+      - "scripts/octagon_1_corridor_gate.js"
+      - "scripts/test_octagon_1_source_static.cjs"
+      - ".github/workflows/qa-octagon-1-source-static.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  source-static-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: node scripts/test_octagon_1_source_static.cjs

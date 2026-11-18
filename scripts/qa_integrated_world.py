@@ -34,6 +34,8 @@ def run(browser_type, name, url, width, height):
     page.wait_for_function("document.getElementById('hudNation').textContent !== 'France' || !!localStorage.getItem('century_of_empires_prototype_1780_v1')",
         timeout=10000)
     assert page.locator("#marchBtn").count() == 1
+    assert page.locator("#incomingToggle").count() == 1
+    assert "is-collapsed" in (page.locator("#incomingAlert").get_attribute("class") or "")
     save_before = page.evaluate("localStorage.getItem('century_of_empires_prototype_1780_v1')")
     assert save_before and '"provinces"' in save_before, "Original campaign was not saved"
     original_provinces = page.evaluate("document.querySelectorAll('#provinces .flag-province').length")
@@ -56,6 +58,9 @@ def run(browser_type, name, url, width, height):
     }""")
     assert abs(frame["viewport"]-frame["mapWidth"]) <= 2, frame
     assert frame["roadVisibility"] == "none", frame
+    if height > width:
+        margin = page.locator("#map").evaluate("(el) => parseFloat(el.style.marginTop)||0")
+        assert margin > 150, f"Portrait fitted map not centered: {margin}"
     assert page.locator("#provinces .flag-province").count() == original_provinces
     assert page.locator("#marchBtn").count() == 1
     assert page.evaluate("localStorage.getItem('century_of_empires_prototype_1780_v1')") == save_before, "Atlas actions mutated the save"

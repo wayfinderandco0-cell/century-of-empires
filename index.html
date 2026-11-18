@@ -85,7 +85,12 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
  .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){border:1px solid #d8b775;min-width:94px;background:rgba(34,55,67,.97)}
  .statbar .stat:nth-child(1) strong,.statbar .stat:nth-child(2) strong{color:#ffe8a2;font-size:19px}
  .statbar .stat:nth-child(1) span::before{content:'🪙 ';font-size:12px} .statbar .stat:nth-child(2) span::before{content:'⛏️ ';font-size:12px}
-#mapPanel .map-top .split button:not([id=mapZoomOut]):not([id=mapZoomIn]){display:none!important}
+#mapPanel .map-top .split button:not([id=mapZoomOut]):not([id=mapZoomIn]):not([id=mapZoomFit]):not([id=mapViewToggle]){display:none!important}
+#mapPanel .map-top #mapViewToggle{font-size:12px!important;min-width:55px!important}
+#mapPanel .map-top #mapZoomFit{font-size:12px!important;min-width:43px!important}
+#mapPanel .map-top #mapViewToggle[disabled]{opacity:.5}
+/* Original network links are strategic adjacency, not surveyed cartways. */
+#map #routes{display:none}
 @media(orientation:landscape){.statbar{display:flex!important;top:39px;left:5px;right:auto;width:auto;max-width:min(76vw,630px);height:41px}.statbar .stat{display:none} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){display:block;min-width:106px;min-height:38px} .statbar .stat:nth-child(1) strong,.statbar .stat:nth-child(2) strong{font-size:18px}}
 @media(max-width:650px){.statbar .stat{min-width:71px;padding:4px 7px} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){min-width:92px}.statbar .stat strong{font-size:16px}}
 
@@ -113,7 +118,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 <div class="statbar" role="group" aria-label="National statistics"><div class="stat"><span>Treasury</span><strong id="hudMoney">120</strong></div><div class="stat"><span>Iron</span><strong id="hudIron">60</strong></div><div class="stat"><span>Food stores</span><strong id="hudFood">90</strong></div><div class="stat"><span>Popularity</span><strong class="gold" id="hudPopularity">65/100</strong></div><div class="stat"><span>Nation</span><strong id="hudNation">France</strong></div><div class="stat"><span>Year</span><strong class="gold" id="hudDate">1780</strong></div><div class="stat"><span>Provinces</span><strong class="green" id="hudLand">3</strong></div></div>
 <nav class="main-tabs" aria-label="Game screens"><button type="button" data-tab="map">🗺️ Map</button><button type="button" data-tab="diplomacy">🤝 Diplomacy</button><button type="button" data-tab="empire">🏛️ Empire</button><button type="button" data-tab="reports">📜 Reports <span id="unreadBadge" hidden></span></button></nav>
 <div class="incoming-alert" id="incomingAlert" hidden role="status" aria-live="polite"><strong id="incomingTitle">📨 Diplomatic message</strong><span id="incomingText"></span><div class="incoming-actions"><button type="button" id="alertAcceptBtn" class="strong">Accept</button><button type="button" id="alertDeclineBtn" class="ghost">Decline</button><button type="button" id="alertInboxBtn" class="outline">All offers</button></div></div>
-<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 1700 1070" role="img" aria-label="Historical Europe strategy map based on reconstructed 1783 borders and geographic provinces. Tap a territory or army for orders.">
+<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><button class="outline" id="mapZoomFit" type="button" aria-label="Fit whole Europe map">Fit</button><button class="outline" id="mapViewToggle" type="button" aria-label="Toggle historical world map" disabled>World</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 1700 1070" role="img" aria-label="Historical Europe strategy map based on reconstructed 1783 borders and geographic provinces. Tap a territory or army for orders.">
 <defs>
 <linearGradient id="oceanGrad" x1="0" y1="0" x2=".65" y2="1"><stop offset="0" stop-color="#102d41"/><stop offset=".6" stop-color="#164355"/><stop offset="1" stop-color="#254a54"/></linearGradient>
 <linearGradient id="landGrad" x1="0" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#7b8d72"/><stop offset="1" stop-color="#a1a181"/></linearGradient>
@@ -270,6 +275,7 @@ function mapPoint(p){return MAP_POINTS[p?.id]||p}
 // world_1783.geojson (GPL-3.0, approximate historical reconstruction).
 // Loaded client-side and attributed in the in-game map footer.
 const HISTORIC_GEO_URLS=[
+ 'historical-data/world_1783_simplified.geojson',
  'https://raw.githubusercontent.com/aourednik/historical-basemaps/master/geojson/world_1783.geojson',
  'https://cdn.jsdelivr.net/gh/aourednik/historical-basemaps@master/geojson/world_1783.geojson'
 ];
@@ -349,6 +355,7 @@ async function loadHistoricalMap(){
    const data=await response.json();
    if(!data?.features?.length)throw Error('No map features');
    if(!renderHistoricalPolygons(data))throw Error('No European outlines');
+   buildWorldAtlas(data);
    if(state)render();
    return
   }catch(err){error=String(err)}
@@ -822,6 +829,8 @@ function bindMapZoom(){
  applyMapZoom(mapPixelWidth);
  $('mapZoomIn').addEventListener('click',()=>applyMapZoom(mapPixelWidth*1.5));
  $('mapZoomOut').addEventListener('click',()=>applyMapZoom(mapPixelWidth/1.5));
+ $('mapZoomFit').addEventListener('click',()=>{if(worldAtlasMode)setWorldAtlas(false);applyMapZoom(mapWidthRange().min);sc.scrollLeft=0;sc.scrollTop=0});
+ $('mapViewToggle').addEventListener('click',()=>setWorldAtlas(!worldAtlasMode));
  // Native horizontal/vertical swipes are handled here because touch-action:none enables reliable two-finger pinch.
  sc.addEventListener('touchstart',e=>{
   const box=sc.getBoundingClientRect();

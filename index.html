@@ -112,6 +112,16 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 #map .army-travel{stroke:#fff0a4;stroke-width:3.5;stroke-dasharray:11 7}
 #map .army-click{filter:drop-shadow(0 2px 3px #10202bbb)}
 #map .flag-province:focus-visible{outline:2px solid #ffdc80}
+
+/* Keep the active game map usable on a 390px iPhone without a giant offer panel. */
+#incomingAlert.is-collapsed{top:90px;left:7px;right:auto;width:auto;max-width:calc(100vw - 14px);
+ padding:5px 7px;gap:8px;align-items:center;flex-wrap:nowrap;border-radius:8px}
+#incomingAlert.is-collapsed #incomingText,#incomingAlert.is-collapsed .incoming-actions{display:none!important}
+#incomingAlert #incomingToggle{min-height:34px;min-width:51px;background:#3e5263;border:1px solid #b1a383;
+ color:#fff3cf;border-radius:6px;font-size:11px;font-weight:800;padding:4px 7px}
+#incomingAlert.is-collapsed strong{font-size:11px;white-space:nowrap}
+.atlas-world .historical-caption,.atlas-world #brennerLensBtn{display:none!important}
+@media(orientation:landscape){#incomingAlert.is-collapsed{top:42px;max-width:calc(100vw - 14px)}}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
@@ -441,6 +451,7 @@ function setWorldAtlas(on){
   if(previous){applyMapZoom(previous.width);sc.scrollLeft=previous.left;sc.scrollTop=previous.top}
  }
  $('mapViewToggle').textContent=worldAtlasMode?'Europe':'World';
+ document.body.classList.toggle('atlas-world',worldAtlasMode);
  $('mapViewToggle').setAttribute('aria-pressed',String(worldAtlasMode));
 }
 
@@ -908,20 +919,39 @@ function applyMapZoom(width,pointX=null,pointY=null,anchorX=null,anchorY=null){
  const sc=$('mapScroll'),svg=$('map'),oldW=svg.getBoundingClientRect().width||mapPixelWidth;
  const bounds=mapWidthRange(),nextW=Math.max(bounds.min,Math.min(bounds.max,Math.round(width)));
  const x=pointX??sc.clientWidth/2,y=pointY??sc.clientHeight/2;
- const fx=anchorX??((sc.scrollLeft+x)/oldW),fy=anchorY??((sc.scrollTop+y)/(oldW*MAP_RATIO));
+ const oldTopMargin=parseFloat(svg.style.marginTop)||0;
+ const fx=anchorX??((sc.scrollLeft+x)/oldW),fy=anchorY??((sc.scrollTop+y-oldTopMargin)/(oldW*MAP_RATIO));
  mapPixelWidth=nextW;
  svg.setAttribute('width',String(nextW));
  svg.style.setProperty('width',nextW+'px','important');
  svg.style.setProperty('min-width','0px','important');
  svg.style.setProperty('max-width','none','important');
  svg.style.setProperty('height','auto','important');
+  // Center a fitted historical atlas vertically instead of leaving hundreds of empty pixels below it.
+ const newTopMargin=Math.max(0,Math.floor((sc.clientHeight-nextW*MAP_RATIO)/2));
+ svg.style.setProperty('margin-top',newTopMargin+'px','important');
  sc.scrollLeft=Math.max(0,fx*nextW-x);
- sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO-y);
+ sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO+newTopMargin-y);
  window.COEMapArt?.update();
  $('zoomIndicator').textContent=Math.round(nextW/2250*100)+'%';
  return nextW
 }
 function pinchDistance(touches){return Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY)}
+// Notification presentation only. Diplomacy actions, state and inbox remain unmodified.
+function setupCompactDiplomaticNotice(){
+ const box=$('incomingAlert');if(!box||box.querySelector('#incomingToggle'))return;
+ const toggle=document.createElement('button');
+ toggle.id='incomingToggle';toggle.type='button';toggle.textContent='View';
+ toggle.setAttribute('aria-label','Expand or collapse incoming diplomatic offer');
+ toggle.setAttribute('aria-expanded','false');
+ box.classList.add('is-collapsed');
+ box.insertBefore(toggle,box.querySelector('.incoming-actions'));
+ toggle.addEventListener('click',()=>{
+  const collapsed=box.classList.toggle('is-collapsed');
+  toggle.textContent=collapsed?'View':'Hide';
+  toggle.setAttribute('aria-expanded',String(!collapsed));
+ });
+}
 function bindMapZoom(){
  const sc=$('mapScroll'),svg=$('map');
  applyMapZoom(mapPixelWidth);
@@ -975,7 +1005,7 @@ function wireTroopPicker(which,minusId,plusId,maxId){
  input.addEventListener('input',()=>{if(input.value!==''&&Number.isFinite(Number(input.value)))syncTroopCount(which,input.value,false)});
  input.addEventListener('change',()=>syncTroopCount(which,input.value));
 }
-setupScreens();bindMapZoom();loadHistoricalMap();
+setupScreens();setupCompactDiplomaticNotice();bindMapZoom();loadHistoricalMap();
 wireTroopPicker('own','ownTroopMinus','ownTroopPlus','ownTroopMax');
 wireTroopPicker('foreign','singleTroopMinus','singleTroopPlus','singleTroopMax');
 $('ownMarchContinue').addEventListener('click',()=>{if(!state||!marchMode)return;syncTroopCount('own',$('troopNumber').value);hideProvinceSheet();notice('Selected '+$('troopSlider').value+' troops. Tap a destination town on the map to send them.')});

@@ -41,7 +41,7 @@ def run(browser_type, name, url, width, height):
     page.locator("#mapViewToggle").click()
     assert page.locator("#worldAtlasGroup").is_visible()
     assert page.locator("#mapViewToggle").inner_text() == "Europe"
-    assert "1783" in page.locator("#worldAtlasGroup").inner_text()
+    assert "1783" in page.locator("#worldAtlasGroup").text_content()
     page.screenshot(path=str(OUT / f"{name}-{width}-world.png"))
     page.locator("#mapViewToggle").click()
     assert page.locator("#worldAtlasGroup").is_hidden()

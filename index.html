@@ -85,7 +85,12 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
  .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){border:1px solid #d8b775;min-width:94px;background:rgba(34,55,67,.97)}
  .statbar .stat:nth-child(1) strong,.statbar .stat:nth-child(2) strong{color:#ffe8a2;font-size:19px}
  .statbar .stat:nth-child(1) span::before{content:'🪙 ';font-size:12px} .statbar .stat:nth-child(2) span::before{content:'⛏️ ';font-size:12px}
-#mapPanel .map-top .split button:not([id=mapZoomOut]):not([id=mapZoomIn]){display:none!important}
+#mapPanel .map-top .split button:not([id=mapZoomOut]):not([id=mapZoomIn]):not([id=mapZoomFit]):not([id=mapViewToggle]){display:none!important}
+#mapPanel .map-top #mapViewToggle{font-size:12px!important;min-width:55px!important}
+#mapPanel .map-top #mapZoomFit{font-size:12px!important;min-width:43px!important}
+#mapPanel .map-top #mapViewToggle[disabled]{opacity:.5}
+/* Original network links are strategic adjacency, not surveyed cartways. */
+#map #routes{display:none}
 @media(orientation:landscape){.statbar{display:flex!important;top:39px;left:5px;right:auto;width:auto;max-width:min(76vw,630px);height:41px}.statbar .stat{display:none} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){display:block;min-width:106px;min-height:38px} .statbar .stat:nth-child(1) strong,.statbar .stat:nth-child(2) strong{font-size:18px}}
 @media(max-width:650px){.statbar .stat{min-width:71px;padding:4px 7px} .statbar .stat:nth-child(1),.statbar .stat:nth-child(2){min-width:92px}.statbar .stat strong{font-size:16px}}
 
@@ -107,13 +112,31 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 #map .army-travel{stroke:#fff0a4;stroke-width:3.5;stroke-dasharray:11 7}
 #map .army-click{filter:drop-shadow(0 2px 3px #10202bbb)}
 #map .flag-province:focus-visible{outline:2px solid #ffdc80}
+
+/* Keep the active game map usable on a 390px iPhone without a giant offer panel. */
+#incomingAlert.is-collapsed{top:90px;left:7px;right:auto;width:auto;max-width:calc(100vw - 14px);
+ padding:5px 7px;gap:8px;align-items:center;flex-wrap:nowrap;border-radius:8px}
+#incomingAlert.is-collapsed #incomingText,#incomingAlert.is-collapsed .incoming-actions{display:none!important}
+#incomingAlert #incomingToggle{min-height:34px;min-width:51px;background:#3e5263;border:1px solid #b1a383;
+ color:#fff3cf;border-radius:6px;font-size:11px;font-weight:800;padding:4px 7px}
+#incomingAlert.is-collapsed strong{font-size:11px;white-space:nowrap}
+.atlas-world .historical-caption,.atlas-world #brennerLensBtn{display:none!important}
+/* Single-line compact diplomatic notice while the map is in focus. */
+#incomingAlert.is-collapsed{max-width:min(312px,calc(100vw - 14px));min-height:40px;
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ justify-content:space-between;gap:5px!important}
+#incomingAlert.is-collapsed strong{display:block;flex:1 1 auto;min-width:0;max-width:222px;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#incomingAlert.is-collapsed #incomingToggle{flex:0 0 auto;min-height:32px;min-width:46px;padding:3px 5px}
+
+@media(orientation:landscape){#incomingAlert.is-collapsed{top:42px;max-width:calc(100vw - 14px)}}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
 <div class="statbar" role="group" aria-label="National statistics"><div class="stat"><span>Treasury</span><strong id="hudMoney">120</strong></div><div class="stat"><span>Iron</span><strong id="hudIron">60</strong></div><div class="stat"><span>Food stores</span><strong id="hudFood">90</strong></div><div class="stat"><span>Popularity</span><strong class="gold" id="hudPopularity">65/100</strong></div><div class="stat"><span>Nation</span><strong id="hudNation">France</strong></div><div class="stat"><span>Year</span><strong class="gold" id="hudDate">1780</strong></div><div class="stat"><span>Provinces</span><strong class="green" id="hudLand">3</strong></div></div>
 <nav class="main-tabs" aria-label="Game screens"><button type="button" data-tab="map">🗺️ Map</button><button type="button" data-tab="diplomacy">🤝 Diplomacy</button><button type="button" data-tab="empire">🏛️ Empire</button><button type="button" data-tab="reports">📜 Reports <span id="unreadBadge" hidden></span></button></nav>
 <div class="incoming-alert" id="incomingAlert" hidden role="status" aria-live="polite"><strong id="incomingTitle">📨 Diplomatic message</strong><span id="incomingText"></span><div class="incoming-actions"><button type="button" id="alertAcceptBtn" class="strong">Accept</button><button type="button" id="alertDeclineBtn" class="ghost">Decline</button><button type="button" id="alertInboxBtn" class="outline">All offers</button></div></div>
-<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 1700 1070" role="img" aria-label="Historical Europe strategy map based on reconstructed 1783 borders and geographic provinces. Tap a territory or army for orders.">
+<div class="body-grid"><section class="card" id="mapPanel"><div class="map-top"><div><div class="map-title">EUROPE 1780–1880 <span class="small">· Schematic map</span></div><div class="map-key">Tap a national flag · troop numbers inside · 🛡 fort</div></div><div class="split" style="gap:6px"><span class="small" id="eraLabel" hidden>Age of Revolutions</span><button class="outline" id="mapZoomOut" type="button" aria-label="Zoom map out">−</button><button class="outline" id="mapZoomIn" type="button" aria-label="Zoom map in">+</button><button class="outline" id="mapZoomFit" type="button" aria-label="Fit whole Europe map">Fit</button><button class="outline" id="mapViewToggle" type="button" aria-label="Toggle historical world map" disabled>World</button><span id="zoomIndicator" class="zoom-indicator">100%</span><button class="outline" id="mapWest" style="padding:5px 9px;min-height:34px">West</button><button class="outline" id="mapCenter" style="padding:5px 9px;min-height:34px">Central</button><button class="outline" id="mapEast" style="padding:5px 9px;min-height:34px">East</button></div></div><div class="map-wrap" id="mapScroll"><svg id="map" viewBox="0 0 1700 1070" role="img" aria-label="Historical Europe strategy map based on reconstructed 1783 borders and geographic provinces. Tap a territory or army for orders.">
 <defs>
 <linearGradient id="oceanGrad" x1="0" y1="0" x2=".65" y2="1"><stop offset="0" stop-color="#102d41"/><stop offset=".6" stop-color="#164355"/><stop offset="1" stop-color="#254a54"/></linearGradient>
 <linearGradient id="landGrad" x1="0" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#7b8d72"/><stop offset="1" stop-color="#a1a181"/></linearGradient>
@@ -270,6 +293,7 @@ function mapPoint(p){return MAP_POINTS[p?.id]||p}
 // world_1783.geojson (GPL-3.0, approximate historical reconstruction).
 // Loaded client-side and attributed in the in-game map footer.
 const HISTORIC_GEO_URLS=[
+ 'historical-data/world_1783_simplified.geojson',
  'https://raw.githubusercontent.com/aourednik/historical-basemaps/master/geojson/world_1783.geojson',
  'https://cdn.jsdelivr.net/gh/aourednik/historical-basemaps@master/geojson/world_1783.geojson'
 ];
@@ -340,6 +364,105 @@ function renderHistoricalPolygons(data){
   'Historical outlines are unavailable; check internet connection.';
  return historyReady
 }
+// Worldwide historical atlas integrated into the original campaign renderer.
+// Does not change save keys, province IDs, army orders, campaign pace, or economy.
+let worldAtlasGroup=null,worldAtlasMode=false,worldAtlasPrevious=null;
+function projectWorld(lon,lat){
+ return {x:(Number(lon)+180)*1700/360,y:90+(90-Number(lat))*890/180};
+}
+function worldGeometryPaths(geom){
+ const polygons=geom?.type==='Polygon'?[geom.coordinates]:geom?.type==='MultiPolygon'?geom.coordinates:[];
+ const result=[];
+ for(const poly of polygons){
+  let d='';
+  for(const ring of poly){
+   if(!Array.isArray(ring)||ring.length<4)continue;
+   d+=ring.map((pair,i)=>{
+    const p=projectWorld(pair[0],pair[1]);
+    return (i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1);
+   }).join('')+'Z';
+  }
+  if(d)result.push(d);
+ }
+ return result;
+}
+function buildWorldAtlas(data){
+ const svg=$('map');
+ if(worldAtlasGroup)worldAtlasGroup.remove();
+ const root=worldAtlasGroup=elem('g',{id:'worldAtlasGroup',hidden:'hidden',
+  'aria-label':'1783 worldwide historical atlas; Europe remains the current playable theater'},svg);
+ elem('rect',{width:1700,height:1070,fill:'#173a4c'},root);
+ const ocean=elem('g',{},root);
+ for(const lat of [-60,-30,0,30,60]){
+  const y=projectWorld(0,lat).y;
+  elem('path',{d:'M0 '+y+' H1700',stroke:'#a2c1bd','stroke-width':'.7','stroke-opacity':'.24'},ocean);
+ }
+ for(const lon of [-120,-60,0,60,120]){
+  const x=projectWorld(lon,0).x;
+  elem('path',{d:'M'+x+' 90 V980',stroke:'#a2c1bd','stroke-width':'.7','stroke-opacity':'.24'},ocean);
+ }
+ const lands=elem('g',{id:'worldHistoricalLands'},root);
+ let total=0;
+ for(const feature of data?.features||[]){
+  const name=String(feature.properties?.NAME||'Historical region').trim();
+  const faction=historicalFaction(feature.properties?.SUBJECTO)||historicalFaction(name);
+  for(const d of worldGeometryPaths(feature.geometry)){
+   const shape=elem('path',{d,fill:faction?FACTIONS[faction].color:'#a6a187',
+    'fill-opacity':faction?'.82':'.67',stroke:'#d5c8a4','stroke-width':'.65',
+    'stroke-opacity':'.7','fill-rule':'evenodd','vector-effect':'non-scaling-stroke'},lands);
+   const tip=elem('title',{},shape);tip.textContent=name+' · historical reconstruction circa 1783';
+   shape.addEventListener('click',()=>{
+    if(faction&&state&&nationProvinces(faction).length){
+     setWorldAtlas(false);selectCountry(faction);return;
+    }
+    $('worldAtlasCaption').textContent=name+' · reference geography. Europe is currently playable.';
+   });
+   total++;
+  }
+ }
+ const bases=elem('g',{id:'worldPlayableCapitals'},root);
+ for(const row of DATA){
+  if(!row[7])continue;
+  const place=GEO_CITIES[row[0]];if(!place)continue;
+  const pt=projectWorld(place[0],place[1]);
+  const node=elem('g',{role:'button',tabindex:'0','aria-label':row[1]+' · European campaign'},bases);
+  elem('circle',{cx:pt.x,cy:pt.y,r:7,fill:'#f9d181',stroke:'#1b2735','stroke-width':2},node);
+  const txt=elem('text',{x:pt.x+8,y:pt.y-8,fill:'#fff0c8','font-size':12,
+   'font-weight':700,'paint-order':'stroke',stroke:'#1a2632','stroke-width':3},node);
+  txt.textContent=row[1];
+  const go=()=>{if(!state)return;setWorldAtlas(false);selectProvince(row[0]);centerMapAt(row[0])};
+  node.addEventListener('click',go);
+  node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+ }
+ elem('rect',{x:12,y:10,width:1150,height:62,rx:10,fill:'#132b3c',
+  'fill-opacity':'.95',stroke:'#af9c72'},root);
+ const heading=elem('text',{x:27,y:35,fill:'#f2d7a4','font-size':22,'font-weight':800},root);
+ heading.textContent='THE WORLD · HISTORICAL ATLAS, CIRCA 1783';
+ const caption=elem('text',{id:'worldAtlasCaption',x:27,y:57,fill:'#e9e0ce','font-size':15},root);
+ caption.textContent='Worldwide historical geography; the existing European campaign remains playable.';
+ $('mapViewToggle').disabled=total===0;
+ $('mapViewToggle').textContent='World';
+ window.COEAtlasQA={worldFeatureCount:data?.features?.length||0,
+  worldPolygonCount:total,ready:total>0};
+}
+function setWorldAtlas(on){
+ if(!worldAtlasGroup)return;
+ const sc=$('mapScroll');
+ if(on&&!worldAtlasMode){
+  worldAtlasPrevious={width:mapPixelWidth,left:sc.scrollLeft,top:sc.scrollTop};
+  worldAtlasGroup.removeAttribute('hidden');worldAtlasMode=true;
+  applyMapZoom(Math.max(300,sc.clientWidth));
+  sc.scrollLeft=0;sc.scrollTop=0;
+ }else if(!on&&worldAtlasMode){
+  worldAtlasGroup.setAttribute('hidden','hidden');worldAtlasMode=false;
+  const previous=worldAtlasPrevious;
+  if(previous){applyMapZoom(previous.width);sc.scrollLeft=previous.left;sc.scrollTop=previous.top}
+ }
+ $('mapViewToggle').textContent=worldAtlasMode?'Europe':'World';
+ document.body.classList.toggle('atlas-world',worldAtlasMode);
+ $('mapViewToggle').setAttribute('aria-pressed',String(worldAtlasMode));
+}
+
 async function loadHistoricalMap(){
  let error='';
  for(const url of HISTORIC_GEO_URLS){
@@ -349,6 +472,7 @@ async function loadHistoricalMap(){
    const data=await response.json();
    if(!data?.features?.length)throw Error('No map features');
    if(!renderHistoricalPolygons(data))throw Error('No European outlines');
+   buildWorldAtlas(data);
    if(state)render();
    return
   }catch(err){error=String(err)}
@@ -803,25 +927,46 @@ function applyMapZoom(width,pointX=null,pointY=null,anchorX=null,anchorY=null){
  const sc=$('mapScroll'),svg=$('map'),oldW=svg.getBoundingClientRect().width||mapPixelWidth;
  const bounds=mapWidthRange(),nextW=Math.max(bounds.min,Math.min(bounds.max,Math.round(width)));
  const x=pointX??sc.clientWidth/2,y=pointY??sc.clientHeight/2;
- const fx=anchorX??((sc.scrollLeft+x)/oldW),fy=anchorY??((sc.scrollTop+y)/(oldW*MAP_RATIO));
+ const oldTopMargin=parseFloat(svg.style.marginTop)||0;
+ const fx=anchorX??((sc.scrollLeft+x)/oldW),fy=anchorY??((sc.scrollTop+y-oldTopMargin)/(oldW*MAP_RATIO));
  mapPixelWidth=nextW;
  svg.setAttribute('width',String(nextW));
  svg.style.setProperty('width',nextW+'px','important');
  svg.style.setProperty('min-width','0px','important');
  svg.style.setProperty('max-width','none','important');
  svg.style.setProperty('height','auto','important');
+  // Center a fitted historical atlas vertically instead of leaving hundreds of empty pixels below it.
+ const newTopMargin=Math.max(0,Math.floor((sc.clientHeight-nextW*MAP_RATIO)/2));
+ svg.style.setProperty('margin-top',newTopMargin+'px','important');
  sc.scrollLeft=Math.max(0,fx*nextW-x);
- sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO-y);
+ sc.scrollTop=Math.max(0,fy*nextW*MAP_RATIO+newTopMargin-y);
  window.COEMapArt?.update();
  $('zoomIndicator').textContent=Math.round(nextW/2250*100)+'%';
  return nextW
 }
 function pinchDistance(touches){return Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY)}
+// Notification presentation only. Diplomacy actions, state and inbox remain unmodified.
+function setupCompactDiplomaticNotice(){
+ const box=$('incomingAlert');if(!box||box.querySelector('#incomingToggle'))return;
+ const toggle=document.createElement('button');
+ toggle.id='incomingToggle';toggle.type='button';toggle.textContent='View';
+ toggle.setAttribute('aria-label','Expand or collapse incoming diplomatic offer');
+ toggle.setAttribute('aria-expanded','false');
+ box.classList.add('is-collapsed');
+ box.insertBefore(toggle,box.querySelector('.incoming-actions'));
+ toggle.addEventListener('click',()=>{
+  const collapsed=box.classList.toggle('is-collapsed');
+  toggle.textContent=collapsed?'View':'Hide';
+  toggle.setAttribute('aria-expanded',String(!collapsed));
+ });
+}
 function bindMapZoom(){
  const sc=$('mapScroll'),svg=$('map');
  applyMapZoom(mapPixelWidth);
  $('mapZoomIn').addEventListener('click',()=>applyMapZoom(mapPixelWidth*1.5));
  $('mapZoomOut').addEventListener('click',()=>applyMapZoom(mapPixelWidth/1.5));
+ $('mapZoomFit').addEventListener('click',()=>{if(worldAtlasMode)setWorldAtlas(false);applyMapZoom(mapWidthRange().min);sc.scrollLeft=0;sc.scrollTop=0});
+ $('mapViewToggle').addEventListener('click',()=>setWorldAtlas(!worldAtlasMode));
  // Native horizontal/vertical swipes are handled here because touch-action:none enables reliable two-finger pinch.
  sc.addEventListener('touchstart',e=>{
   const box=sc.getBoundingClientRect();
@@ -868,7 +1013,7 @@ function wireTroopPicker(which,minusId,plusId,maxId){
  input.addEventListener('input',()=>{if(input.value!==''&&Number.isFinite(Number(input.value)))syncTroopCount(which,input.value,false)});
  input.addEventListener('change',()=>syncTroopCount(which,input.value));
 }
-setupScreens();bindMapZoom();loadHistoricalMap();
+setupScreens();setupCompactDiplomaticNotice();bindMapZoom();loadHistoricalMap();
 wireTroopPicker('own','ownTroopMinus','ownTroopPlus','ownTroopMax');
 wireTroopPicker('foreign','singleTroopMinus','singleTroopPlus','singleTroopMax');
 $('ownMarchContinue').addEventListener('click',()=>{if(!state||!marchMode)return;syncTroopCount('own',$('troopNumber').value);hideProvinceSheet();notice('Selected '+$('troopSlider').value+' troops. Tap a destination town on the map to send them.')});

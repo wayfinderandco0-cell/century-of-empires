@@ -1,3 +1,20 @@
+# AUTHORITATIVE STATUS — 17 NOVEMBER 2026 (SUPERSEDES CONFLICTING MAP PLAN ORDER BELOW)
+
+The user has repeatedly rejected more isolated map demonstrations, cosmetic octagon/stitched photograph experiments, and claims of progress without an integrated, playable historical campaign. The long-term requirement is **a coherent navigable historical WORLD map, 1780–1880, with all intended regions/countries and ultimately roughly 800–1,200 actual gameplay provinces**; geography and dynamic province ownership must be separated, and all original gameplay and save IDs preserved. Do not present 1783 background polygons, graphical tile counts or mock units as expanded playable provinces.
+
+**Critical architecture finding:** The main `index.html` is a separate **32-town local-save campaign**, while `multiplayer-alpha/` is an **80-region server-authoritative game**. Neither is a finished global game. Do not conflate them or claim a change in one automatically updates the other. Preserve both saved-state formats, gameplay and orders. Decide integration against the actual game code, not simulated demo movement.
+
+**Actual repair work (draft PR #28, `fix-integrated-world-atlas-20261117`):**
+- Added local compressed 1783 **worldwide reference boundaries** (641 features, 1,075 polygons; A. Ourednik GPL-3.0, license copied under historical-data). It is only reference geography, not 641 playable provinces.
+- Wired a full-world historical atlas, World/Europe toggle and Europe Fit into the existing main `index.html`, rather than adding another separate game; existing 32-town local campaign remains untouched in movement/economy/saves.
+- Removed misleading straight-line strategic adjacency from visual cartways, centered fitted maps on iPhone portrait, and collapsed the enormous diplomatic popup until the player chooses to view it.
+- `scripts/qa_integrated_world.py` / `.github/workflows/qa-integrated-world.yml` runs on actual main campaign through 390×844 and 844×390 mobile-sized Chromium AND WebKit; checks atlas loading, 32 active towns, save invariants, fit/toggle and JS errors, with screenshots.
+- **Do not merge** before human iPhone Safari visual approval and GPL-3.0 licensing review; worldwide military movement, detailed period cartways, world playable province topology, and the 80-region server game are NOT integrated by this PR.
+
+**Execution criterion:** No more detached Matrei demos or new prototype chains. Map work must connect to a selected authoritative existing gameplay state and advance the full geography framework, with explicit coverage checks, editable vector provinces, real army-order continuity and mobile visual evidence. A true global playable world is still unfinished.
+
+---
+
 # AUTHORITATIVE UPDATE — 10 NOVEMBER 2026
 
 The user has **REJECTED the entire octagon / stitched landscape-image map method**. This NEW user instruction supersedes the older 3-November map art instructions below. **Never resume or repair photographic octagons, seam blending or tile multiplication.** Preserve those historical assets/files for reference only. See draft PR #27 and branch `map-geographic-redesign-matrei-20261110` (`geo-redesign/README.md`, `geo-redesign/RESUME.md`). The branch selects MapLibre GL JS/OpenFreeMap georeferenced terrain + Mapterhorn DEM; rendered roads and demo marching reuse one coordinate-based graph. The Matrei–Brenner period-road vertices are PROVISIONAL and **not** historically certified. This is an independent proof, NOT yet original campaign/save-mechanics integration.

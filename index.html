@@ -121,6 +121,14 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
  color:#fff3cf;border-radius:6px;font-size:11px;font-weight:800;padding:4px 7px}
 #incomingAlert.is-collapsed strong{font-size:11px;white-space:nowrap}
 .atlas-world .historical-caption,.atlas-world #brennerLensBtn{display:none!important}
+/* Single-line compact diplomatic notice while the map is in focus. */
+#incomingAlert.is-collapsed{max-width:min(312px,calc(100vw - 14px));min-height:40px;
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ justify-content:space-between;gap:5px!important}
+#incomingAlert.is-collapsed strong{display:block;flex:1 1 auto;min-width:0;max-width:222px;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#incomingAlert.is-collapsed #incomingToggle{flex:0 0 auto;min-height:32px;min-width:46px;padding:3px 5px}
+
 @media(orientation:landscape){#incomingAlert.is-collapsed{top:42px;max-width:calc(100vw - 14px)}}
 </style></head>
 <body><div class="container">

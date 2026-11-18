@@ -346,6 +346,104 @@ function renderHistoricalPolygons(data){
   'Historical outlines are unavailable; check internet connection.';
  return historyReady
 }
+// Worldwide historical atlas integrated into the original campaign renderer.
+// Does not change save keys, province IDs, army orders, campaign pace, or economy.
+let worldAtlasGroup=null,worldAtlasMode=false,worldAtlasPrevious=null;
+function projectWorld(lon,lat){
+ return {x:(Number(lon)+180)*1700/360,y:90+(90-Number(lat))*890/180};
+}
+function worldGeometryPaths(geom){
+ const polygons=geom?.type==='Polygon'?[geom.coordinates]:geom?.type==='MultiPolygon'?geom.coordinates:[];
+ const result=[];
+ for(const poly of polygons){
+  let d='';
+  for(const ring of poly){
+   if(!Array.isArray(ring)||ring.length<4)continue;
+   d+=ring.map((pair,i)=>{
+    const p=projectWorld(pair[0],pair[1]);
+    return (i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1);
+   }).join('')+'Z';
+  }
+  if(d)result.push(d);
+ }
+ return result;
+}
+function buildWorldAtlas(data){
+ const svg=$('map');
+ if(worldAtlasGroup)worldAtlasGroup.remove();
+ const root=worldAtlasGroup=elem('g',{id:'worldAtlasGroup',hidden:'hidden',
+  'aria-label':'1783 worldwide historical atlas; Europe remains the current playable theater'},svg);
+ elem('rect',{width:1700,height:1070,fill:'#173a4c'},root);
+ const ocean=elem('g',{},root);
+ for(const lat of [-60,-30,0,30,60]){
+  const y=projectWorld(0,lat).y;
+  elem('path',{d:'M0 '+y+' H1700',stroke:'#a2c1bd','stroke-width':'.7','stroke-opacity':'.24'},ocean);
+ }
+ for(const lon of [-120,-60,0,60,120]){
+  const x=projectWorld(lon,0).x;
+  elem('path',{d:'M'+x+' 90 V980',stroke:'#a2c1bd','stroke-width':'.7','stroke-opacity':'.24'},ocean);
+ }
+ const lands=elem('g',{id:'worldHistoricalLands'},root);
+ let total=0;
+ for(const feature of data?.features||[]){
+  const name=String(feature.properties?.NAME||'Historical region').trim();
+  const faction=historicalFaction(feature.properties?.SUBJECTO)||historicalFaction(name);
+  for(const d of worldGeometryPaths(feature.geometry)){
+   const shape=elem('path',{d,fill:faction?FACTIONS[faction].color:'#a6a187',
+    'fill-opacity':faction?'.82':'.67',stroke:'#d5c8a4','stroke-width':'.65',
+    'stroke-opacity':'.7','fill-rule':'evenodd','vector-effect':'non-scaling-stroke'},lands);
+   const tip=elem('title',{},shape);tip.textContent=name+' · historical reconstruction circa 1783';
+   shape.addEventListener('click',()=>{
+    if(faction&&state&&nationProvinces(faction).length){
+     setWorldAtlas(false);selectCountry(faction);return;
+    }
+    $('worldAtlasCaption').textContent=name+' · reference geography. Europe is currently playable.';
+   });
+   total++;
+  }
+ }
+ const bases=elem('g',{id:'worldPlayableCapitals'},root);
+ for(const row of DATA){
+  if(!row[7])continue;
+  const place=GEO_CITIES[row[0]];if(!place)continue;
+  const pt=projectWorld(place[0],place[1]);
+  const node=elem('g',{role:'button',tabindex:'0','aria-label':row[1]+' · European campaign'},bases);
+  elem('circle',{cx:pt.x,cy:pt.y,r:7,fill:'#f9d181',stroke:'#1b2735','stroke-width':2},node);
+  const txt=elem('text',{x:pt.x+8,y:pt.y-8,fill:'#fff0c8','font-size':12,
+   'font-weight':700,'paint-order':'stroke',stroke:'#1a2632','stroke-width':3},node);
+  txt.textContent=row[1];
+  const go=()=>{if(!state)return;setWorldAtlas(false);selectProvince(row[0]);centerMapAt(row[0])};
+  node.addEventListener('click',go);
+  node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+ }
+ elem('rect',{x:12,y:10,width:1150,height:62,rx:10,fill:'#132b3c',
+  'fill-opacity':'.95',stroke:'#af9c72'},root);
+ const heading=elem('text',{x:27,y:35,fill:'#f2d7a4','font-size':22,'font-weight':800},root);
+ heading.textContent='THE WORLD · HISTORICAL ATLAS, CIRCA 1783';
+ const caption=elem('text',{id:'worldAtlasCaption',x:27,y:57,fill:'#e9e0ce','font-size':15},root);
+ caption.textContent='Worldwide historical geography; the existing European campaign remains playable.';
+ $('mapViewToggle').disabled=total===0;
+ $('mapViewToggle').textContent='World';
+ window.COEAtlasQA={worldFeatureCount:data?.features?.length||0,
+  worldPolygonCount:total,ready:total>0};
+}
+function setWorldAtlas(on){
+ if(!worldAtlasGroup)return;
+ const sc=$('mapScroll');
+ if(on&&!worldAtlasMode){
+  worldAtlasPrevious={width:mapPixelWidth,left:sc.scrollLeft,top:sc.scrollTop};
+  worldAtlasGroup.removeAttribute('hidden');worldAtlasMode=true;
+  applyMapZoom(Math.max(300,sc.clientWidth));
+  sc.scrollLeft=0;sc.scrollTop=0;
+ }else if(!on&&worldAtlasMode){
+  worldAtlasGroup.setAttribute('hidden','hidden');worldAtlasMode=false;
+  const previous=worldAtlasPrevious;
+  if(previous){applyMapZoom(previous.width);sc.scrollLeft=previous.left;sc.scrollTop=previous.top}
+ }
+ $('mapViewToggle').textContent=worldAtlasMode?'Europe':'World';
+ $('mapViewToggle').setAttribute('aria-pressed',String(worldAtlasMode));
+}
+
 async function loadHistoricalMap(){
  let error='';
  for(const url of HISTORIC_GEO_URLS){

@@ -46,11 +46,18 @@ def run(browser_type, name, url, width, height):
     assert page.locator("#provinces .town-hit").count() == original_provinces
     assert page.locator("#provinces .town-core").count() == 0, "Gold globe markers still present"
     assert page.locator("#provinces .town-label").count() == 0, "Town names should only appear in selected town details"
-    assert page.locator("#provinces .town-capital-flag").count() == page.evaluate(
+    assert page.locator("#provinces .capital-cockade").count() == page.evaluate(
         "JSON.parse(localStorage.getItem('century_of_empires_prototype_1780_v1')).provinces.filter(p=>p.capital).length"
-    )
+    ), "Circular capital badges missing"
+    assert page.locator("#provinces .town-capital-flag").count() == 0, "Square flags remain"
     assert page.locator("#provinces .town-noncapital-dot").count() > 0
-    assert page.locator("#nationalLabels .territory-name").count() >= 15
+    assert page.locator("#nationalLabels clipPath[id^='coec-realm-']").count() >= 15
+    assert page.locator("#nationalLabels .atlas-realm-name").first.evaluate(
+        "(el) => el.parentNode.hasAttribute('clip-path')"
+    )
+    assert page.locator("#provinces .capital-cockade circle.cockade-ring").count() >= 12
+    assert page.locator("#provinces .tiny-flag-border").count() == 0
+    assert page.locator("#nationalLabels .atlas-realm-name").count() >= 15
     assert page.locator("#nationalLabels .territory-name").first.evaluate("(el) => getComputedStyle(el).display") != "none"
     assert page.locator("#terrainVisual ellipse").count() == 0, "Cartoon mountain or forest shapes still drawn"
     assert page.locator("#naturalDetails path").count() == 0, "Schematic bright rivers still drawn"
@@ -72,7 +79,7 @@ def run(browser_type, name, url, width, height):
         roadVisibility:getComputedStyle(document.getElementById('routes')).display}
     }""")
     assert abs(frame["viewport"]-frame["mapWidth"]) <= 2, frame
-    assert frame["roadVisibility"] == "none", frame
+    assert frame["roadVisibility"] != "none", "Major roads should be visible at strategic zoom"
     if height > width:
         margin = page.locator("#map").evaluate("(el) => parseFloat(el.style.marginTop)||0")
         assert margin > 150, f"Portrait fitted map not centered: {margin}"
@@ -85,16 +92,21 @@ def run(browser_type, name, url, width, height):
         page.locator("#mapZoomIn").click()
     assert page.evaluate("document.getElementById('map').getBoundingClientRect().width") > 900
     # Country names remain; town labels never appear at any zoom level.
-    assert page.locator("#nationalLabels .territory-name").count() >= 15
+    assert page.locator("#nationalLabels .atlas-realm-name").count() >= 15
     assert page.locator("#provinces .town-label").count() == 0
-    assert page.locator("#provinces .town-capital-flag").count() >= 12
-    page.locator("#mapRoutesToggle").click()
+    assert page.locator("#provinces .capital-cockade").count() >= 12
     assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "true"
     visible_routes = page.locator("#routes").evaluate("(el) => getComputedStyle(el).display")
-    assert visible_routes != "none", f"Routes toggle failed: {visible_routes}"
+    assert visible_routes != "none", f"Routes should be visible by default: {visible_routes}"
+    assert page.locator("#routes path.route").count() >= 50
+    assert page.locator("#routes path.route.sea").count() >= 5
+    assert page.locator("#routes .alpine-pass").count() == 3
     page.screenshot(path=str(OUT / f"{name}-{width}-regional-routes.png"))
     page.locator("#mapRoutesToggle").click()
+    assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "false"
     assert page.locator("#routes").evaluate("(el) => getComputedStyle(el).display") == "none"
+    page.locator("#mapRoutesToggle").click()
+    assert page.locator("#routes").evaluate("(el) => getComputedStyle(el).display") != "none"
     page.locator("#mapZoomFit").click()
     assert page.locator("#nationalLabels").evaluate("(el) => getComputedStyle(el).display") != "none"
     assert page.locator("#marchBtn").count() == 1

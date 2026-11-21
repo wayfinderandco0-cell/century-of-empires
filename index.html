@@ -724,10 +724,11 @@ function updateMapLOD(){
  // SVG content zooms with the map. Keep iconic markers ~12px across on a phone,
  // and don't let invisible hit circles expand to hundreds of screen pixels.
  const nodes=[...document.querySelectorAll('#provinces .map-city-node')];
+ const playerCapital=state?.provinces?.find(p=>p.owner===state.player&&p.capital)?.id;
  const priorities=nodes.sort((a,b)=>{
   const weight=node=>node.classList.contains('selected')?0:
    node.classList.contains('source')?1:
-   node.getAttribute('data-site')===nationProvinces(state?.player||'FR').find(p=>p.capital)?.id?2:3;
+   node.getAttribute('data-site')===playerCapital?2:3;
   return weight(a)-weight(b);
  });
  const used=[];

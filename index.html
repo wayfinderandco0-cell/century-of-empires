@@ -265,6 +265,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 <rect width="1700" height="1070" fill="url(#oceanGrad)"/><rect width="1700" height="1070" fill="url(#seaStripes)"/>
 <g clip-path="url(#historicalMapClip)">
 <g id="historyPolygons"></g><g id="terrainVisual" mask="url(#historicalLandMask)"></g>
+<g id="inactiveTerritories" mask="url(#historicalLandMask)"></g>
 <g id="provinceControl" mask="url(#historicalLandMask)"></g><g id="historicalBorders"></g>
 <g id="naturalDetails" mask="url(#historicalLandMask)"></g>
 <g id="routes"></g><g id="travel"></g><g id="provinces"></g>
@@ -468,8 +469,9 @@ function historyBBox(d){
 }
 
 function renderHistoricalPolygons(data){
- const base=$('historyPolygons'),mask=$('historicalMaskPaths'),edges=$('historicalBorders');
- base.textContent='';mask.textContent='';edges.textContent='';historicBoundaries=[];
+ const base=$('historyPolygons'),mask=$('historicalMaskPaths'),
+  edges=$('historicalBorders'),inactive=$('inactiveTerritories');
+ base.textContent='';mask.textContent='';edges.textContent='';inactive.textContent='';historicBoundaries=[];
  const feats=(data?.features||[]),seen=new Set();
  for(const feat of feats){
   const name=String(feat.properties?.NAME||'').trim(),subject=String(feat.properties?.SUBJECTO||'').trim();
@@ -483,6 +485,8 @@ function renderHistoricalPolygons(data){
     'data-playable':String(playable)},base);
    const t=elem('title',{},path);t.textContent=(name||'Historic region')+' · reconstructed boundaries c.1783';
    if(playable)path.addEventListener('click',e=>historicalClick(e,owner));
+   else elem('path',{d,fill:'#828b8c','fill-opacity':'.52',
+    'fill-rule':'evenodd','pointer-events':'none',class:'inactive-realm'},inactive);
    elem('path',{d,fill:'white','fill-rule':'evenodd'},mask);
    elem('path',{d,fill:'none',stroke:'#ddd1b5','stroke-opacity':playable?.48:.1,
     'stroke-width':playable?1.1:.55,'vector-effect':'non-scaling-stroke',

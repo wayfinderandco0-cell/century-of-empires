@@ -189,6 +189,41 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 .atlas-world #map #nationalLabels{display:none!important}
 #map #terrainVisual ellipse,#map #naturalDetails path{display:none!important}
 #brennerLensBtn,#brennerLensPin{display:none!important}
+
+/* Heritage atlas visual system D: restrained cockades, readable routes, territory-fit type. */
+#map #provinces .town-capital-flag{display:none!important}
+#map #provinces .capital-cockade{pointer-events:none}
+#map #provinces .capital-cockade .cockade-ring{fill:none;stroke:#d2c29e;stroke-width:1.05}
+#map #provinces .capital-cockade .cockade-base{stroke:#192e35;stroke-width:.7}
+#map #nationalLabels{display:block!important}
+#map #nationalLabels .atlas-realm-name{
+ font-family:Georgia,'Times New Roman',serif!important;
+ font-weight:500!important;font-size:15px!important;
+ letter-spacing:2.2px!important;fill:#f4edda!important;
+ stroke:#172a31!important;stroke-width:.85px!important;
+ paint-order:stroke;opacity:.53!important;pointer-events:none;
+}
+#map #nationalLabels .atlas-realm-name.small-realm{
+ font-size:11px!important;letter-spacing:1.1px!important;opacity:.61!important;
+}
+#map #routes{display:none}
+.map-show-links:not(.atlas-world) #map #routes{display:block!important}
+#map #routes .route{fill:none;stroke:#b6a181;stroke-width:1.45px;stroke-opacity:.69;
+ stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;vector-effect:non-scaling-stroke}
+#map #routes .route.sea{stroke:#9cbfcc;stroke-width:1.2px;stroke-opacity:.52;
+ stroke-dasharray:2 6;vector-effect:non-scaling-stroke}
+#map #routes .route.alpine-route{stroke:#c7b399;stroke-dasharray:4 3}
+#map #routes .route.pass-corridor{stroke:#d2be99;stroke-width:1.7px}
+#map #routes .route-primary{stroke-opacity:.77}
+#map #routes .sea-waypoint{r:1.7;fill:#aecbd2;stroke:none;opacity:.55;pointer-events:none}
+.map-strategic #map #routes .route:not(.route-primary){display:none}
+.map-strategic #map #routes .sea-waypoint{display:none}
+#map #routes .alpine-pass-symbol{pointer-events:none;fill:#ead4aa;stroke:#3a4140;stroke-width:1}
+#map #routes .alpine-pass-name{font:italic 10px Georgia,serif;fill:#e5ddc7;
+ stroke:#1a3034;stroke-width:2;paint-order:stroke;pointer-events:none;opacity:.82}
+.map-strategic #map #routes .alpine-pass-symbol,
+.map-strategic #map #routes .alpine-pass-name{display:none}
+.atlas-world #map #routes{display:none!important}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
@@ -398,6 +433,18 @@ function historicalClick(evt,faction){
  })[0];
  if(closest)selectProvince(closest.id)
 }
+/* Approximate 1783 political outline is the only basis for these labels.
+   Clip every label to its associated reconstructed polygon, never across borders. */
+function historyBBox(d){
+ const pairs=d.matchAll(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g);
+ let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+ for(const m of pairs){
+  const x=Number(m[1]),y=Number(m[2]);
+  if(x<minX)minX=x;if(y<minY)minY=y;if(x>maxX)maxX=x;if(y>maxY)maxY=y;
+ }
+ return minX===Infinity?null:{x:minX,y:minY,width:maxX-minX,height:maxY-minY};
+}
+
 function renderHistoricalPolygons(data){
  const base=$('historyPolygons'),mask=$('historicalMaskPaths'),edges=$('historicalBorders');
  base.textContent='';mask.textContent='';edges.textContent='';historicBoundaries=[];
@@ -413,7 +460,7 @@ function renderHistoricalPolygons(data){
    path.addEventListener('click',e=>historicalClick(e,owner));
    elem('path',{d,fill:'white','fill-rule':'evenodd'},mask);
    elem('path',{d,fill:'none',stroke:'#ede6c9','stroke-opacity':owner?.57:.25,'stroke-width':owner?1.4:.9,'vector-effect':'non-scaling-stroke',class:'historic-border'},edges);
-   historicBoundaries.push({d,owner})
+   historicBoundaries.push({d,owner,box:owner?historyBBox(d):null})
   }
  }
  historyFeatures=historicBoundaries.length;historyReady=historyFeatures>0;
@@ -585,8 +632,14 @@ function drawTerrain(){
    Existing campaign adjacency, combat, production, and monthly timing are unchanged. */
 const ROUTE_VIA={
  'munich|vienna':[[12.94,47.80],[14.29,48.30]],
- 'munich|turin':[[11.40,47.26],[11.35,46.49],[9.19,45.46]],
- 'venice|vienna':[[13.24,46.07],[15.44,47.07]]
+ 'munich|turin':[[10.95,47.3],[9.33,46.5],[8.85,45.9]],
+ 'venice|vienna':[[13.58,46.51],[15.44,47.07]],
+ 'bern|turin':[[7.17,45.87],[7.68,45.4]],
+ 'turin|venice':[[9.19,45.46],[11.0,45.43]],
+ 'berlin|warsaw':[[15.25,52.3],[18.5,52.25]],
+ 'venice|naples':[[11.3,44.5],[12.4,42.7],[13.2,41.8]],
+ 'budapest|vienna':[[17.05,48.1]],
+ 'naples|rome':[[13.25,41.28]]
 };
 function visualRoute(a,b){
  const k=[a,b].sort().join('|'),mid=(ROUTE_VIA[k]||[]).map(p=>proj(p[0],p[1]));
@@ -626,12 +679,12 @@ function pointOnPath(pts,portion){
  }
  return {x:pts[0]?.x||0,y:pts[0]?.y||0,angle:0}
 }
-let showLinks=false,travelVisuals=[];
+let showLinks=true,travelVisuals=[];
 function updateMapLOD(){
  const wide=mapPixelWidth<=1100;
  document.body.classList.toggle('map-strategic',wide);
  document.body.classList.toggle('map-regional',!wide&&mapPixelWidth<2600);
- document.body.classList.toggle('map-show-links',!wide&&(showLinks||marchMode));
+ document.body.classList.toggle('map-show-links',!worldAtlasMode&&(showLinks||marchMode));
  const b=$('mapRoutesToggle');if(b){b.textContent=showLinks?'Routes ✓':'Routes';b.setAttribute('aria-pressed',String(showLinks))}
 }
 function animateTravel(now){
@@ -647,26 +700,72 @@ function animateTravel(now){
 
 
 /* Small faction flags appear only at capital sites; town labels remain inside the tapped panel. */
-function paintTinyCapitalFlag(el,parent,faction){
- const cfg=FLAGS[faction]||['horizontal','#687476','#e9e5dc','#a5a6a1'];
- const flag=el('g',{class:'town-capital-flag',transform:'translate(-6 -6)'},parent);
- el('rect',{x:-.7,y:-.7,width:13.4,height:9.4,rx:.4,class:'tiny-flag-border'},flag);
- const g=el('g',{},flag);
- const stripe=(x,y,w,h,color)=>el('rect',{x,y,width:w,height:h,fill:color},g);
- if(cfg[0]==='vertical'){stripe(0,0,4,8,cfg[1]);stripe(4,0,4,8,cfg[2]);stripe(8,0,4,8,cfg[3])}
- else if(cfg[0]==='cross'){stripe(0,0,12,8,cfg[1]);stripe(4.5,0,3,8,cfg[2]);stripe(0,2.8,12,2.4,cfg[2])}
- else if(cfg[0]==='diamond'){stripe(0,0,12,8,cfg[1]);el('polygon',{points:'6 1,10 4,6 7,2 4',fill:cfg[2]},g)}
- else if(cfg[0]==='moon'){stripe(0,0,12,8,cfg[1]);el('circle',{cx:5.3,cy:4,r:2.7,fill:cfg[2]},g);el('circle',{cx:6.4,cy:3.2,r:2.3,fill:cfg[1]},g)}
- else{stripe(0,0,12,2.67,cfg[1]);stripe(0,2.67,12,2.67,cfg[2]);stripe(0,5.34,12,2.66,cfg[3])}
- el('path',{d:'M0 0 V10',stroke:'#eadfcb','stroke-width':.65},flag);
+/* Historical-inspired imperial roundels: graphic faction colors rather than modern state flags.
+   One capital-only emblem, same invisible tap target as before. Not authenticated period insignia. */
+const HERALDRY={
+ FR:['#f6ebc8','#caa559','fleur'],GB:['#263d59','#c9d3d3','cross'],PR:['#272c2c','#ede3ce','eagle'],
+ AT:['#282c2b','#c8a15b','eagle'],RU:['#ede7d8','#496b94','cross'],ES:['#a53d35','#d7b568','band'],
+ OT:['#853636','#e5c488','crescent'],PT:['#2c694c','#d1aa65','diamond'],
+ NL:['#ac6b40','#e5dccb','band'],HA:['#9b7c43','#e2d5ba','cross'],
+ BA:['#527a8c','#e7e2d1','diamond'],SA:['#587260','#e3c998','band'],
+ DN:['#873e4c','#e9e0cf','cross'],SW:['#3b5f83','#d5b467','cross'],
+ PL:['#a64652','#e6dfd0','eagle'],SD:['#584c7a','#ddc89f','diamond'],
+ NA:['#5b6b8c','#dfc39b','band'],CH:['#ad4b4a','#f4e6cb','cross'],
+ VE:['#743d44','#d8b46e','lion'],PA:['#e0d2b2','#b8a164','cross']
+};
+function paintCapitalCockade(el,parent,faction,siteId){
+ const [field,metal,motif]=HERALDRY[faction]||['#485766','#d4c7a5','diamond'];
+ const group=el('g',{class:'capital-cockade','data-faction':faction},parent);
+ const clipId='coec-cap-'+siteId;
+ const clip=el('clipPath',{id:clipId,clipPathUnits:'userSpaceOnUse'},group);
+ el('circle',{r:6.1},clip);
+ const cloth=el('g',{'clip-path':'url(#'+clipId+')'},group);
+ el('circle',{r:6.1,fill:field,class:'cockade-base'},cloth);
+ if(motif==='band'){
+  el('rect',{x:-6.1,y:-2.25,width:12.2,height:4.5,fill:metal},cloth);
+ }else if(motif==='cross'){
+  el('path',{d:'M-1.5 -6.3H1.5V-1.5H6.3V1.5H1.5V6.3H-1.5V1.5H-6.3V-1.5H-1.5Z',fill:metal},cloth);
+ }else if(motif==='crescent'){
+  el('circle',{r:3.45,cx:.35,fill:metal},cloth);
+  el('circle',{r:3.05,cx:1.8,cy:-.85,fill:field},cloth);
+ }else if(motif==='fleur'){
+  el('path',{d:'M0 -4.4C-3.9 -2.1 -2.7 .2 -1.5 .6C-2.6 -2.7 -4.7 -1 -3.8 1.4L-1.4 2H-2.8V3.1H2.8V2H1.4L3.8 1.4C4.7 -1 2.6 -2.7 1.5 .6C2.7 .2 3.9 -2.1 0 -4.4Z',fill:metal},cloth);
+ }else if(motif==='eagle'||motif==='lion'){
+  el('path',{d:'M0 -3.8 L-1.25 -1.1 L-4 -2.35 L-3.2 1 L-1.05 .5 L-1.7 3 L0 2 L1.7 3 L1.05 .5 L3.2 1 L4 -2.35 L1.25 -1.1 Z',fill:metal},cloth);
+ }else{
+  el('path',{d:'M0 -4L4 0L0 4L-4 0Z',fill:metal},cloth);
+ }
+ el('circle',{r:6.1,class:'cockade-ring'},group);
+ el('circle',{r:4.7,fill:'none',stroke:metal,'stroke-width':'.4',opacity:'.76'},group);
 }
-
 function renderMap(){
  const routes=$('routes'),ps=$('provinces'),tr=$('travel');routes.textContent='';ps.textContent='';tr.textContent='';travelVisuals=[];renderControlOverlay();
  const NS='http://www.w3.org/2000/svg';
  function el(t,attrs,parent){const e=document.createElementNS(NS,t);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.appendChild(e);return e}
- for(const [a,b] of LINKS){const p=visualRoute(a,b);el('path',{d:visualPath(p),class:'route '+(isSea(a,b)?'sea':''),fill:'none'},routes);
-  if(isSea(a,b))for(const t of [.33,.67]){const x=pointOnPath(p,t);el('circle',{cx:x.x,cy:x.y,r:2.5,class:'sea-waypoint'},routes)}
+ const primaryRoutes=new Set(['paris|lyon','paris|bordeaux','amsterdam|paris','munich|vienna',
+  'venice|vienna','budapest|vienna','berlin|warsaw','berlin|hanover','rome|venice',
+  'naples|rome','lisbon|madrid','berlin|konigsberg','stockholm|gothenburg',
+  'copenhagen|oslo','london|paris','london|amsterdam','munich|turin']);
+ for(const [a,b] of LINKS){
+  const pts=visualRoute(a,b),key=[a,b].sort().join('|');
+  const sea=isSea(a,b),mountain=['munich|turin','bern|turin','venice|vienna'].includes(key);
+  const cls='route '+(sea?'sea ':'')+(primaryRoutes.has(key)||primaryRoutes.has(a+'|'+b)||primaryRoutes.has(b+'|'+a)?'route-primary ':'')
+   +(mountain?'alpine-route ':'');
+  const road=el('path',{d:visualPath(pts),class:cls,'data-from':a,'data-to':b,fill:'none'},routes);
+  el('title',{},road).textContent=sea?'Gameplay sea connection (approximate)':'Strategic land connection, not a verified 1783 road';
+  if(sea)for(const t of [.33,.67]){const p=pointOnPath(pts,t);el('circle',{cx:p.x,cy:p.y,r:1.7,class:'sea-waypoint'},routes)}
+ }
+ // Named geographical passes near active approximate Alpine corridors; no new gameplay links.
+ for(const pass of [
+  {name:'Splügen Pass',lon:9.33,lat:46.50,from:'munich',to:'turin'},
+  {name:'Great St Bernard',lon:7.17,lat:45.87,from:'bern',to:'turin'},
+  {name:'Tarvisio Pass',lon:13.58,lat:46.51,from:'venice',to:'vienna'}
+ ]){
+  const p=proj(pass.lon,pass.lat),g=el('g',{class:'alpine-pass','data-pass':pass.name},routes);
+  el('path',{d:'M'+(p.x-3)+' '+(p.y+3)+'L'+p.x+' '+(p.y-3)+'L'+(p.x+3)+' '+(p.y+3)+'Z',
+   class:'alpine-pass-symbol'},g);
+  const label=el('text',{x:p.x+6,y:p.y-6,class:'alpine-pass-name'},g);label.textContent=pass.name;
+  el('title',{},g).textContent=pass.name+' · geographic guide, approximate road alignment';
  }
  for(const p of state.provinces){
   const at=mapPoint(p);
@@ -676,7 +775,7 @@ function renderMap(){
   const icon=el('g',{transform:'translate('+at.x+' '+at.y+')'},group);
   // Invisible phone-sized target but unobtrusive atlas mark.
   el('circle',{cx:0,cy:0,r:21,class:'town-hit'},icon);
-  if(p.capital)paintTinyCapitalFlag(el,icon,p.owner);
+  if(p.capital)paintCapitalCockade(el,icon,p.owner,p.id);
   else el('circle',{r:2.2,class:'town-noncapital-dot'},icon);
   el('circle',{r:11,class:'town-selected'},icon);
   const tip=el('title',{},group);
@@ -697,16 +796,48 @@ function renderMap(){
   group.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openArmyOrder(o)}})
  }
  const names=$('nationalLabels')||el('g',{id:'nationalLabels'},$('map'));names.textContent='';
- // Labels track current territory owners, including one-province states.
- const nameOverride={GB:'GREAT BRITAIN',PR:'PRUSSIA',AT:'HABSBURG MONARCHY',
+ const realmTitles={GB:'GREAT BRITAIN',PR:'PRUSSIA',AT:'HABSBURG MONARCHY',
   FR:'FRANCE',ES:'SPAIN',RU:'RUSSIAN EMPIRE',OT:'OTTOMAN EMPIRE',
   PL:'POLAND–LITHUANIA',DN:'DENMARK–NORWAY'};
+ const labelDefs=el('defs',{},names);
  for(const id of nations()){
   const owned=nationProvinces(id);if(!owned.length)continue;
-  const positions=owned.map(mapPoint),x=positions.reduce((n,p)=>n+p.x,0)/positions.length,y=positions.reduce((n,p)=>n+p.y,0)/positions.length;
-  const name=el('text',{x:x.toFixed(1),y:(y+27).toFixed(1),
-   'text-anchor':'middle',class:'territory-name','aria-label':FACTIONS[id].full+' territory'},names);
-  name.textContent=nameOverride[id]||FACTIONS[id].name.toUpperCase();
+  const territoryText=realmTitles[id]||FACTIONS[id].name.toUpperCase();
+  // Original owner areas come from actual polygons. Label locations must be inside polygon clip.
+  const eligible=historicBoundaries.filter(h=>h.owner===id&&h.box&&h.box.width>=30&&h.box.height>=15)
+   .map(h=>({...h,area:h.box.width*h.box.height}))
+   .sort((a,b)=>b.area-a.area);
+  const selectedAreas=[];
+  for(const shape of eligible){
+   const center={x:shape.box.x+shape.box.width/2,y:shape.box.y+shape.box.height/2};
+   if(selectedAreas.some(h=>Math.hypot(center.x-h.x,center.y-h.y)<105))continue;
+   selectedAreas.push({...shape,centerX:center.x,centerY:center.y});
+   if(selectedAreas.length >= (id==='AT'||id==='RU'||id==='OT'||id==='PL'?3:2))break;
+  }
+  // Smaller states may have no sufficiently large polygon: clip to current province sector.
+  if(!selectedAreas.length){
+   const home=owned.find(p=>p.capital)||owned[0],pt=mapPoint(home);
+   const sector=PROVINCE_CELLS[home.id];
+   if(sector)selectedAreas.push({d:sector,box:{x:pt.x-36,y:pt.y-19,width:72,height:38},
+    centerX:pt.x,centerY:pt.y,fallback:true});
+  }
+  for(const [index,shape] of selectedAreas.entries()){
+   const box=shape.box,small=box.width<120||box.height<65;
+   const idClip='coec-realm-'+id+'-'+index;
+   const clip=el('clipPath',{id:idClip,clipPathUnits:'userSpaceOnUse'},labelDefs);
+   el('path',{d:shape.d},clip);
+   const labelLayer=el('g',{'clip-path':'url(#'+idClip+')'},names);
+   // Fit text length to the actual country's broadest region, with a gentle map-axis tilt.
+   const x=shape.centerX,y=shape.centerY;
+   const width=Math.max(19,Math.min(box.width*.60,territoryText.length*(small?8:11)));
+   const rotation=box.width>box.height*1.7?-5:box.width>box.height?7:0;
+   const label=el('text',{x:x.toFixed(1),y:y.toFixed(1),
+    'text-anchor':'middle',class:'territory-name atlas-realm-name'+(small?' small-realm':''),
+    'textLength':width.toFixed(1),'lengthAdjust':'spacingAndGlyphs',
+    'transform':'rotate('+rotation+' '+x.toFixed(1)+' '+y.toFixed(1)+')',
+    'aria-label':FACTIONS[id].full+' territory'},labelLayer);
+   label.textContent=territoryText;
+  }
  }
  updateMapLOD();animateTravel(Date.now());
 }

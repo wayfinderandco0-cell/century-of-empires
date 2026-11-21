@@ -62,6 +62,22 @@ def run(browser_type, name, url, width, height):
         margin = page.locator("#map").evaluate("(el) => parseFloat(el.style.marginTop)||0")
         assert margin > 150, f"Portrait fitted map not centered: {margin}"
     assert page.locator("#provinces .flag-province").count() == original_provinces
+    assert page.locator("#nationalLabels text").count() >= 4, "Strategic nation labels missing"
+    assert page.locator("#mapRoutesToggle").count() == 1, "Movement route control missing"
+    assert page.locator("#routes path").count() >= 50, "Route topology failed to draw"
+    # Fit intentionally hides the regional movement network; zoom to inspect it.
+    for _ in range(4):
+        page.locator("#mapZoomIn").click()
+    assert page.evaluate("document.getElementById('map').getBoundingClientRect().width") > 900
+    page.locator("#mapRoutesToggle").click()
+    assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "true"
+    visible_routes = page.locator("#routes").evaluate("(el) => getComputedStyle(el).display")
+    assert visible_routes != "none", f"Routes toggle failed: {visible_routes}"
+    page.screenshot(path=str(OUT / f"{name}-{width}-regional-routes.png"))
+    page.locator("#mapRoutesToggle").click()
+    assert page.locator("#routes").evaluate("(el) => getComputedStyle(el).display") == "none"
+    page.locator("#mapZoomFit").click()
+    assert page.locator("#nationalLabels").evaluate("(el) => getComputedStyle(el).display") != "none"
     assert page.locator("#marchBtn").count() == 1
     assert page.evaluate("localStorage.getItem('century_of_empires_prototype_1780_v1')") == save_before, "Atlas actions mutated the save"
     page.screenshot(path=str(OUT / f"{name}-{width}-europe.png"))

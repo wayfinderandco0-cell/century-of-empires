@@ -81,6 +81,28 @@ def run(browser_type, name, url, width, height):
     assert page.locator("#marchBtn").count() == 1
     assert page.evaluate("localStorage.getItem('century_of_empires_prototype_1780_v1')") == save_before, "Atlas actions mutated the save"
     page.screenshot(path=str(OUT / f"{name}-{width}-europe.png"))
+    # Issue a genuine order through the current campaign UI, not a separate simulation.
+    page.evaluate("""() => {
+      const paris = document.querySelector('#provinces .flag-province[aria-label^="Paris,"]');
+      if (!paris) throw Error('Paris troop marker not found');
+      paris.dispatchEvent(new MouseEvent('click', {bubbles:true}));
+      document.getElementById('marchBtn').click();
+      document.getElementById('ownMarchContinue').click();
+      const bordeaux = document.querySelector('#provinces .flag-province[aria-label^="Bordeaux,"]');
+      if (!bordeaux) throw Error('Bordeaux destination marker not found');
+      bordeaux.dispatchEvent(new MouseEvent('click', {bubbles:true}));
+    }""")
+    order = page.evaluate("""() => {
+      const save=JSON.parse(localStorage.getItem('century_of_empires_prototype_1780_v1'));
+      return save.orders.find(o => o.from==='paris' && o.to==='bordeaux');
+    }""")
+    assert order and order["totalEta"] >= 1, f"Marching order missing: {order}"
+    assert page.locator("#travel .army-click").count() >= 1
+    first_position = page.locator("#travel .army-click").first.get_attribute("transform")
+    page.wait_for_timeout(1200)
+    second_position = page.locator("#travel .army-click").first.get_attribute("transform")
+    assert first_position != second_position, (first_position, second_position)
+    page.screenshot(path=str(OUT / f"{name}-{width}-actual-march.png"))
     assert not errors, errors
     print(f"PASS {name} {width}x{height}: {geography['worldFeatureCount']} world features, original {original_provinces} playable towns, fit/world toggle, save unchanged")
     context.close()

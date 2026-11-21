@@ -135,6 +135,7 @@ def run(browser_type, name, url, width, height):
     assert bounds["maxLabelHeight"] <= 25, bounds
     assert bounds["maxCapitalWidth"] <= 22, bounds
     assert bounds["nonplayable"] > 0, bounds
+    assert page.locator("#inactiveTerritories .inactive-realm").count() > 0, "Neutral land not grayed"
     page.screenshot(path=str(OUT / f"{name}-{width}-deep-zoom.png"))
     page.locator("#mapZoomFit").click()
     # Issue a genuine order through the current campaign UI, not a separate simulation.

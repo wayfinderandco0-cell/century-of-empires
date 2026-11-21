@@ -141,6 +141,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 .map-show-links:not(.map-strategic):not(.atlas-world) #map #routes{display:block}
 #map .sea-waypoint{fill:#eee;stroke:#15506b;stroke-width:1;pointer-events:none}
 #mapPanel .map-top #mapRoutesToggle{font-size:12px!important;min-width:49px!important;padding:4px 6px!important}
+/* Keep the separate Brenner lens launcher clear of the game zoom toolbar on iPhone. */
+#brennerLensBtn{bottom:calc(86px + env(safe-area-inset-bottom))!important}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>

@@ -143,6 +143,33 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}.container{positi
 #mapPanel .map-top #mapRoutesToggle{font-size:12px!important;min-width:49px!important;padding:4px 6px!important}
 /* Keep the separate Brenner lens launcher clear of the game zoom toolbar on iPhone. */
 #brennerLensBtn{bottom:calc(86px + env(safe-area-inset-bottom))!important}
+
+/* Historical military atlas presentation: subdued ownership, minimal town markers. */
+#historyPolygons{filter:saturate(.65)}
+#provinceControl path{stroke-opacity:.22}
+.map-city-node{cursor:pointer}
+.map-city-node .town-hit{fill:transparent;stroke:none;pointer-events:all}
+.map-city-node .town-ring{fill:none;stroke-width:1.5;opacity:.72;pointer-events:none}
+.map-city-node .town-core{fill:#eee5cf;stroke:#27373a;stroke-width:1.4;pointer-events:none}
+.map-city-node.capital-node .town-core{fill:#f5dfab;stroke-width:1.7}
+.map-city-node .town-selected{display:none;fill:none;stroke:#f4d68c;stroke-width:2;pointer-events:none}
+.map-city-node.selected .town-selected,.map-city-node.source .town-selected{display:block}
+.map-city-node.source .town-selected{stroke:#a1e0c1}
+.map-city-node .town-garrison rect{fill:#243945;fill-opacity:.94;stroke:#b6a783;stroke-width:.85;pointer-events:none}
+.map-city-node .town-garrison text{font:700 10px system-ui,sans-serif;fill:#f6efdf;text-anchor:middle;pointer-events:none}
+.map-city-node .town-label{font:500 9.5px Georgia,serif;fill:#f3ead5;stroke:#1c3038;stroke-width:1.8px;paint-order:stroke;text-anchor:middle;pointer-events:none}
+.map-city-node .town-fort{fill:#c9bb90;stroke:#303c3a;stroke-width:.9;pointer-events:none}
+.map-strategic #provinces{display:block!important}
+.map-strategic #provinces .map-city-node:not(.capital-node){display:none}
+.map-strategic #provinces .town-garrison,.map-strategic #provinces .town-label,.map-strategic #provinces .town-fort{display:none}
+.map-strategic #provinces .town-ring{opacity:.45}
+.map-regional #provinces .town-label:not(.major-label){display:none}
+.map-regional #provinces .town-garrison{display:none}
+.map-regional #provinces .map-city-node.selected .town-garrison,.map-regional #provinces .map-city-node.source .town-garrison{display:block}
+#nationalLabels text{font:500 22px Georgia,serif!important;letter-spacing:1.2px;fill:#f0e7d1;stroke:#23383c;stroke-width:3px!important;paint-order:stroke;opacity:.87;cursor:pointer}
+#map .army-travel{stroke:#d3c59b;stroke-width:1.7px;stroke-dasharray:5 6;opacity:.83}
+#map .army-click rect{stroke:#c2b99e;stroke-width:1.1}
+#map .army-click .army-text{font-size:10px}
 </style></head>
 <body><div class="container">
 <header class="head"><div><div class="eyebrow">Playable prototype 13 · Continuous-time grand strategy</div><h1>Century of Empires</h1><div class="small">The long nineteenth century · 1780–1880 · Every empire can fall · Geography shapes wealth</div></div><div class="header-actions"><button class="outline" id="resetBtn">New Campaign</button></div></header>
@@ -362,11 +389,11 @@ function renderHistoricalPolygons(data){
   const polygons=pathsFromGeometry(feat.geometry);
   for(const d of polygons){
    const key=d.slice(0,130);if(seen.has(key))continue;seen.add(key);
-   const path=elem('path',{d,fill:owner?FACTIONS[owner].color:'#b2aa87','fill-opacity':owner?.56:.28,'fill-rule':'evenodd',class:'historical-realm'},base);
+   const path=elem('path',{d,fill:owner?FACTIONS[owner].color:'#b2aa87','fill-opacity':owner?.28:.17,'fill-rule':'evenodd',class:'historical-realm'},base);
    const t=elem('title',{},path);t.textContent=(name||'Historic region')+' · reconstructed boundaries c.1783';
    path.addEventListener('click',e=>historicalClick(e,owner));
    elem('path',{d,fill:'white','fill-rule':'evenodd'},mask);
-   elem('path',{d,fill:'none',stroke:'#ede6c9','stroke-opacity':owner?.72:.32,'stroke-width':owner?1.7:1.1,'vector-effect':'non-scaling-stroke',class:'historic-border'},edges);
+   elem('path',{d,fill:'none',stroke:'#ede6c9','stroke-opacity':owner?.57:.25,'stroke-width':owner?1.4:.9,'vector-effect':'non-scaling-stroke',class:'historic-border'},edges);
    historicBoundaries.push({d,owner})
   }
  }
@@ -517,7 +544,7 @@ function renderControlOverlay(){
  if(!historyReady||!state)return;
  const layer=$('provinceControl');layer.textContent='';
  for(const p of state.provinces){
-  const cell=elem('path',{d:PROVINCE_CELLS[p.id],fill:FACTIONS[p.owner].color,'fill-opacity':'.13',stroke:FACTIONS[p.owner].color,
+  const cell=elem('path',{d:PROVINCE_CELLS[p.id],fill:FACTIONS[p.owner].color,'fill-opacity':'.055',stroke:FACTIONS[p.owner].color,
    'stroke-opacity':'.42','stroke-width':'1.4','vector-effect':'non-scaling-stroke'},layer);
   const title=elem('title',{},cell);title.textContent=p.name+' · '+FACTIONS[p.owner].name;
   cell.addEventListener('click',()=>selectProvince(p.id))
@@ -597,9 +624,9 @@ function pointOnPath(pts,portion){
 }
 let showLinks=false,travelVisuals=[];
 function updateMapLOD(){
- const wide=mapPixelWidth<=900;
+ const wide=mapPixelWidth<=1100;
  document.body.classList.toggle('map-strategic',wide);
- document.body.classList.toggle('map-regional',!wide&&mapPixelWidth<1400);
+ document.body.classList.toggle('map-regional',!wide&&mapPixelWidth<2600);
  document.body.classList.toggle('map-show-links',!wide&&(showLinks||marchMode));
  const b=$('mapRoutesToggle');if(b){b.textContent=showLinks?'Routes ✓':'Routes';b.setAttribute('aria-pressed',String(showLinks))}
 }
@@ -622,30 +649,26 @@ function renderMap(){
   if(isSea(a,b))for(const t of [.33,.67]){const x=pointOnPath(p,t);el('circle',{cx:x.x,cy:x.y,r:2.5,class:'sea-waypoint'},routes)}
  }
  for(const p of state.provinces){
-  const at=mapPoint(p),cfg=FLAGS[p.owner]||['horizontal',FACTIONS[p.owner]?.color||'#53636f','#fafafa','#bca34f'];
-  const group=el('g',{class:'province flag-province '+(selected===p.id?'selected ':'')+(origin===p.id?'source':''),tabindex:'0',role:'button',
+  const at=mapPoint(p);
+  const cls='province flag-province map-city-node '+(p.capital?'capital-node ':'')+(selected===p.id?'selected ':'')+(origin===p.id?'source ':'');
+  const group=el('g',{class:cls,tabindex:'0',role:'button',
    'aria-label':p.name+', '+FACTIONS[p.owner].name+', '+p.troops+' troops, fort '+(p.fort||0)},ps);
-  const flag=el('g',{transform:'translate('+at.x+' '+at.y+')'},group);
-  const shape=el('path',{d:'M-30 -23 L27 -23 L32 -3 L27 17 L-30 17 Z',fill:cfg[1],stroke:selected===p.id?'#ffe39e':origin===p.id?'#8effd7':'#f5e7c6','stroke-width':selected===p.id?3.3:2.1,'stroke-linejoin':'round',class:'banner-outline'},flag);
-  const stripe=(x,y,w,h,color)=>el('rect',{x,y,width:w,height:h,fill:color,'pointer-events':'none'},flag);
-  if(cfg[0]==='vertical'){stripe(-29,-21,17.5,36,cfg[1]);stripe(-11.5,-21,17.5,36,cfg[2]);stripe(6,-21,20,36,cfg[3])}
-  else if(cfg[0]==='horizontal'){stripe(-29,-21,55,12,cfg[1]);stripe(-29,-9,55,12,cfg[2]);stripe(-29,3,55,12,cfg[3])}
-  else if(cfg[0]==='cross'){stripe(-29,-21,55,36,cfg[1]);stripe(-29,-7,55,8,cfg[2]);stripe(-7,-21,8,36,cfg[2])}
-  else if(cfg[0]==='diamond'){stripe(-29,-21,55,36,cfg[1]);el('polygon',{points:'-20,-3 -2,-21 16,-3 -2,15',fill:cfg[2],'pointer-events':'none'},flag)}
-  else if(cfg[0]==='moon'){stripe(-29,-21,55,36,cfg[1]);el('circle',{cx:-9,cy:-3,r:12,fill:'#fff','pointer-events':'none'},flag);el('circle',{cx:-5,cy:-6,r:10,fill:cfg[1],'pointer-events':'none'},flag)}
-  // Troop quantity overlays the national flag, not a separate round province marker.
-  el('rect',{x:3,y:-17,width:25,height:28,rx:3,fill:'#101b2e','fill-opacity':'.88','pointer-events':'none'},flag);
-  const count=el('text',{x:15.5,y:3,'text-anchor':'middle','dominant-baseline':'central',class:'flag-troops','pointer-events':'none'},flag);
-  count.textContent=p.troops>=1000?Math.floor(p.troops/1000)+'k':p.troops;
-  const abbreviation=el('text',{x:-19,y:4,'text-anchor':'middle','dominant-baseline':'central',class:'flag-initials','pointer-events':'none'},flag);
-  abbreviation.textContent=p.owner;
-  if(p.capital){const star=el('text',{x:-28,y:-28,class:'flag-capital','pointer-events':'none'},flag);star.textContent='★'}
-  const type=geography(p).specialty;
-  el('rect',{x:25,y:-29,width:19,height:19,rx:4,fill:'#233744',stroke:'#f5d28f','stroke-width':1.3},flag);
-  const res=el('text',{x:34.5,y:-15,'text-anchor':'middle',class:'flag-resource','pointer-events':'none'},flag);res.textContent=type==='food'?'F':type==='iron'?'I':'$';
-  const label=el('text',{x:at.x,y:at.y+36,class:'name map-city-label'},group);label.textContent=p.name;
-  if(p.fort>0){const fort=el('text',{x:at.x-30,y:at.y-32,class:'fort-tag','pointer-events':'none'},group);fort.textContent='🛡'+p.fort}
-  const tooltip=el('title',{},group);tooltip.textContent=FACTIONS[p.owner].name+' · '+p.name+' · '+p.troops+' troops · fort '+(p.fort||0);
+  const icon=el('g',{transform:'translate('+at.x+' '+at.y+')'},group);
+  // Keep the touch target generous while the visible symbol stays small.
+  el('circle',{cx:0,cy:0,r:23,class:'town-hit'},icon);
+  el('circle',{cx:0,cy:0,r:p.capital?10:7.5,class:'town-ring',stroke:FACTIONS[p.owner].color},icon);
+  el('circle',{cx:0,cy:0,r:p.capital?5.5:3.9,class:'town-core'},icon);
+  el('circle',{cx:0,cy:0,r:p.capital?13:10,class:'town-selected'},icon);
+  const garrison=el('g',{class:'town-garrison'},icon);
+  el('rect',{x:8,y:-16,width:23,height:15,rx:3},garrison);
+  const amount=el('text',{x:19.5,y:-5.4},garrison);
+  amount.textContent=p.troops>=1000?Math.floor(p.troops/1000)+'k':String(p.troops);
+  if(p.fort>0)el('rect',{x:-9,y:-15,width:6,height:6,class:'town-fort'},icon);
+  const major=new Set(['london','paris','berlin','vienna','petersburg','moscow','madrid','stockholm','warsaw','constantinople','rome','amsterdam']);
+  const city=el('text',{x:0,y:p.capital?21:17,class:'town-label '+(major.has(p.id)?'major-label':'')},icon);
+  city.textContent=p.name;
+  const tip=el('title',{},group);
+  tip.textContent=p.name+' · '+FACTIONS[p.owner].name+' · '+p.troops+' troops'+(p.fort?' · fort '+p.fort:'');
   group.addEventListener('click',()=>selectProvince(p.id));
   group.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectProvince(p.id)}})
  }
@@ -654,9 +677,9 @@ function renderMap(){
   el('path',{d:visualPath(points),class:'army-travel',fill:'none','pointer-events':'none'},tr);
   const group=el('g',{class:'army-click',tabindex:'0',role:'button','aria-label':o.troops+' troops marching to '+find(o.to).name+'; '+o.eta+' months remaining'},tr);
   el('circle',{r:22,fill:'transparent'},group);
-  el('rect',{x:-17,y:-13,width:34,height:26,rx:5,fill:FACTIONS[o.owner].color,stroke:'#fff4ca','stroke-width':2},group);
-  const label=el('text',{x:0,y:5,class:'army-text','pointer-events':'none'},group);label.textContent=o.troops;
-  const arrow=el('path',{d:'M3 -4 L11 0 L3 4 Z',fill:'#fff2b4','pointer-events':'none'},group);
+  el('rect',{x:-11,y:-9,width:22,height:18,rx:3,fill:'#28434b',stroke:'#c6b99b','stroke-width':1.3},group);
+  const label=el('text',{x:0,y:3,class:'army-text','pointer-events':'none'},group);label.textContent=o.troops;
+  const arrow=el('path',{d:'M2 -3 L8 0 L2 3 Z',fill:'#d4c49b','pointer-events':'none'},group);
   travelVisuals.push({order:o,points,group,arrow});
   group.addEventListener('click',()=>openArmyOrder(o));
   group.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openArmyOrder(o)}})

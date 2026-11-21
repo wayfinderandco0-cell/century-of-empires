@@ -43,11 +43,18 @@ def run(browser_type, name, url, width, height):
     # All 32 interactive provinces remain, without oversized flag art.
     assert page.locator("#provinces .map-city-node").count() == original_provinces
     assert page.locator("#provinces .banner-outline").count() == 0
-    assert page.locator("#provinces .town-core").count() == original_provinces
     assert page.locator("#provinces .town-hit").count() == original_provinces
-    assert page.locator("#provinces .town-garrison").count() == original_provinces
-    assert page.evaluate("document.body.classList.contains('map-regional')"), "Initial map should use minimal regional labels"
-    assert page.locator("#provinces .town-label").first.evaluate("(el) => getComputedStyle(el).fontSize") == "9.5px"
+    assert page.locator("#provinces .town-core").count() == 0, "Gold globe markers still present"
+    assert page.locator("#provinces .town-label").count() == 0, "Town names should only appear in selected town details"
+    assert page.locator("#provinces .town-capital-flag").count() == page.evaluate(
+        "JSON.parse(localStorage.getItem('century_of_empires_prototype_1780_v1')).provinces.filter(p=>p.capital).length"
+    )
+    assert page.locator("#provinces .town-noncapital-dot").count() > 0
+    assert page.locator("#nationalLabels .territory-name").count() >= 15
+    assert page.locator("#nationalLabels .territory-name").first.evaluate("(el) => getComputedStyle(el).display") != "none"
+    assert page.locator("#terrainVisual ellipse").count() == 0, "Cartoon mountain or forest shapes still drawn"
+    assert page.locator("#naturalDetails path").count() == 0, "Schematic bright rivers still drawn"
+    assert page.locator("#brennerLensPin").evaluate("(el) => getComputedStyle(el).display") == "none"
     page.locator("#mapViewToggle").click()
     assert page.locator("#worldAtlasGroup").is_visible()
     assert page.locator("#mapViewToggle").inner_text() == "Europe"
@@ -77,13 +84,10 @@ def run(browser_type, name, url, width, height):
     for _ in range(4):
         page.locator("#mapZoomIn").click()
     assert page.evaluate("document.getElementById('map').getBoundingClientRect().width") > 900
-    # Portrait reaches regional scale; wide landscape reaches tactical scale after four clicks.
-    active_width = page.evaluate("document.getElementById('map').getBoundingClientRect().width")
-    if active_width < 2600:
-        assert page.evaluate("document.body.classList.contains('map-regional')"), "Regional zoom should remain uncluttered"
-        assert page.locator("#provinces .town-label:not(.major-label)").first.evaluate("(el) => getComputedStyle(el).display") == "none"
-    else:
-        assert not page.evaluate("document.body.classList.contains('map-regional')")
+    # Country names remain; town labels never appear at any zoom level.
+    assert page.locator("#nationalLabels .territory-name").count() >= 15
+    assert page.locator("#provinces .town-label").count() == 0
+    assert page.locator("#provinces .town-capital-flag").count() >= 12
     page.locator("#mapRoutesToggle").click()
     assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "true"
     visible_routes = page.locator("#routes").evaluate("(el) => getComputedStyle(el).display")

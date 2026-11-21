@@ -77,8 +77,13 @@ def run(browser_type, name, url, width, height):
     for _ in range(4):
         page.locator("#mapZoomIn").click()
     assert page.evaluate("document.getElementById('map').getBoundingClientRect().width") > 900
-    assert page.evaluate("document.body.classList.contains('map-regional')"), "Regional zoom should remain uncluttered"
-    assert page.locator("#provinces .town-label:not(.major-label)").first.evaluate("(el) => getComputedStyle(el).display") == "none"
+    # Portrait reaches regional scale; wide landscape reaches tactical scale after four clicks.
+    active_width = page.evaluate("document.getElementById('map').getBoundingClientRect().width")
+    if active_width < 2600:
+        assert page.evaluate("document.body.classList.contains('map-regional')"), "Regional zoom should remain uncluttered"
+        assert page.locator("#provinces .town-label:not(.major-label)").first.evaluate("(el) => getComputedStyle(el).display") == "none"
+    else:
+        assert not page.evaluate("document.body.classList.contains('map-regional')")
     page.locator("#mapRoutesToggle").click()
     assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "true"
     visible_routes = page.locator("#routes").evaluate("(el) => getComputedStyle(el).display")

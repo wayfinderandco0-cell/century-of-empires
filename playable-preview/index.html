@@ -1020,6 +1020,11 @@ function setupScreens(){
  for(const card of [...sidebar.children])empire.appendChild(card);
  // Campaign reset stays available but is removed from the battlefield header.
  empire.appendChild($('resetBtn'));
+ // Offer optional Brenner reference from Empire settings, not on the playable map surface.
+ const terrainReference=document.createElement('button');terrainReference.id='empireTerrainReference';terrainReference.type='button';terrainReference.className='outline';
+ terrainReference.textContent='Inspect Brenner terrain reference';
+ terrainReference.addEventListener('click',()=>window.COEBrennerLens?.open());
+ empire.appendChild(terrainReference);
  const rotate=document.createElement('p');rotate.className='small';rotate.textContent='Landscape play: rotate your iPhone sideways with Portrait Orientation Lock off.';empire.appendChild(rotate);
  const source=document.createElement('p');source.className='small';source.textContent='Historical political boundary layer: 1783 reconstruction by A. Ourednik and contributors. Approximate, GPL-3.0. Province gameplay sectors are a simplified overlay. ';
  const link=document.createElement('a');link.href='https://github.com/aourednik/historical-basemaps';link.target='_blank';link.rel='noopener noreferrer';link.textContent='Historical Basemaps source and license';

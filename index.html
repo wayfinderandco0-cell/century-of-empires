@@ -765,8 +765,8 @@ function updateMapLOD(){
   const territoryHeight=Number(label.dataset.areaHeight)*scale;
   const name=label.textContent||'';
   const key=label.dataset.realm;
-  const fontPx=Math.min(11.5,Math.max(8.5,territoryWidth/15));
-  const widthPx=Math.max(16,Math.min(115,territoryWidth*.57,name.length*fontPx*.67));
+  const fontPx=Math.min(10,Math.max(7.5,territoryWidth/16));
+  const widthPx=Math.max(15,Math.min(94,territoryWidth*.50,name.length*fontPx*.64));
   const canFit=territoryWidth>=Math.max(36,widthPx*.75)&&territoryHeight>=fontPx*1.3;
   // Don't render a title that would take up more room than the actual country's land.
   const collides=placed.some(r=>Math.abs(r.x-x)<(r.w+widthPx)/2+5&&Math.abs(r.y-y)<(r.h+fontPx)/2+7);
@@ -925,7 +925,7 @@ function renderMap(){
    // Fit text length to the actual country's broadest region, with a gentle map-axis tilt.
    const x=shape.centerX,y=shape.centerY;
    const width=Math.max(19,Math.min(box.width*.60,territoryText.length*(small?8:11)));
-   const rotation=box.width>box.height*1.7?-5:box.width>box.height?7:0;
+   const rotation=box.width>box.height*1.7?-3:box.width>box.height?3:0;
    const label=el('text',{x:x.toFixed(1),y:y.toFixed(1),
     'text-anchor':'middle',class:'territory-name atlas-realm-name'+(small?' small-realm':''),
     'textLength':width.toFixed(1),'lengthAdjust':'spacingAndGlyphs',

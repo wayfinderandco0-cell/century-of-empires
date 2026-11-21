@@ -28,7 +28,7 @@ def run(browser_type, name, url, width, height):
     assert geography["worldFeatureCount"] == 641, geography
     assert geography["worldPolygonCount"] >= 641, geography
     assert page.locator("#worldHistoricalLands path").count() >= 641
-    assert page.locator("#mapViewToggle").is_enabled()
+    assert not page.locator("#mapViewToggle").is_visible(), "World mode must not occupy playable map UI"
     assert page.locator("#worldAtlasGroup").is_hidden()
     page.locator("#startBtn").click()
     page.wait_for_function("document.getElementById('hudNation').textContent !== 'France' || !!localStorage.getItem('century_of_empires_prototype_1780_v1')",
@@ -58,16 +58,20 @@ def run(browser_type, name, url, width, height):
     assert page.locator("#provinces .capital-cockade circle.cockade-ring").count() >= 12
     assert page.locator("#provinces .tiny-flag-border").count() == 0
     assert page.locator("#nationalLabels .atlas-realm-name").count() >= 15
-    assert page.locator("#nationalLabels .territory-name").first.evaluate("(el) => getComputedStyle(el).display") != "none"
+    assert page.locator("#nationalLabels .atlas-realm-name").evaluate_all(
+        "(els) => els.some(el => getComputedStyle(el).display !== 'none')"
+    ), "No visible realm labels"
     assert page.locator("#terrainVisual ellipse").count() == 0, "Cartoon mountain or forest shapes still drawn"
     assert page.locator("#naturalDetails path").count() == 0, "Schematic bright rivers still drawn"
     assert page.locator("#brennerLensPin").evaluate("(el) => getComputedStyle(el).display") == "none"
-    page.locator("#mapViewToggle").click()
+    page.evaluate("document.getElementById('mapViewToggle').click()")
     assert page.locator("#worldAtlasGroup").is_visible()
     assert page.locator("#mapViewToggle").inner_text() == "Europe"
     assert "1783" in page.locator("#worldAtlasGroup").text_content()
+    assert page.locator("#worldHistoricalLands path[data-playable='false']").count() > 200
+    assert not page.locator("#worldPlayableCapitals").is_visible()
     page.screenshot(path=str(OUT / f"{name}-{width}-world.png"))
-    page.locator("#mapViewToggle").click()
+    page.evaluate("document.getElementById('mapViewToggle').click()")
     assert page.locator("#worldAtlasGroup").is_hidden()
     assert page.locator("#mapViewToggle").inner_text() == "World"
     page.locator("#mapZoomFit").click()
@@ -112,6 +116,27 @@ def run(browser_type, name, url, width, height):
     assert page.locator("#marchBtn").count() == 1
     assert page.evaluate("localStorage.getItem('century_of_empires_prototype_1780_v1')") == save_before, "Atlas actions mutated the save"
     page.screenshot(path=str(OUT / f"{name}-{width}-europe.png"))
+    # At deep zoom, roundels and political labels must stay small in *screen* pixels.
+    for _ in range(4):
+        page.locator("#mapZoomIn").click()
+    bounds = page.evaluate("""() => {
+      const visible = el => getComputedStyle(el).display !== 'none' &&
+        el.getBoundingClientRect().width > 0;
+      const labels=[...document.querySelectorAll('#nationalLabels .atlas-realm-name')].filter(visible);
+      const caps=[...document.querySelectorAll('#provinces .capital-cockade')].filter(visible);
+      const w=elems=>elems.map(el=>el.getBoundingClientRect().width);
+      const h=elems=>elems.map(el=>el.getBoundingClientRect().height);
+      return {labelCount:labels.length,capCount:caps.length,
+        maxLabelWidth:Math.max(0,...w(labels)),maxLabelHeight:Math.max(0,...h(labels)),
+        maxCapitalWidth:Math.max(0,...w(caps)),
+        nonplayable:document.querySelectorAll('#historyPolygons [data-playable="false"]').length};
+    }""")
+    assert bounds["maxLabelWidth"] <= 175, bounds
+    assert bounds["maxLabelHeight"] <= 25, bounds
+    assert bounds["maxCapitalWidth"] <= 22, bounds
+    assert bounds["nonplayable"] > 0, bounds
+    page.screenshot(path=str(OUT / f"{name}-{width}-deep-zoom.png"))
+    page.locator("#mapZoomFit").click()
     # Issue a genuine order through the current campaign UI, not a separate simulation.
     page.evaluate("""() => {
       const paris = document.querySelector('#provinces .flag-province[aria-label^="Paris,"]');

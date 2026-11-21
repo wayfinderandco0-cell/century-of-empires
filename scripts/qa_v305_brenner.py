@@ -60,7 +60,9 @@ def test(browser_type,name,base):
     original=page.evaluate("JSON.stringify(Object.assign({},localStorage))")
     assert page.locator('#marchBtn').count()==1
     assert page.locator('#brennerLensPin').count()==1
-    page.locator('#brennerLensBtn').click()
+    assert not page.locator('#brennerLensBtn').is_visible(), 'Reference shortcut must not obscure the political map'
+    page.locator('[data-tab="empire"]').click()
+    page.locator('#empireTerrainReference').click()
     frame=page.frame_locator('#brennerLensFrame')
     frame.locator('#geo').wait_for(state='visible',timeout=30000)
     frame.locator('#status').wait_for(state='visible')

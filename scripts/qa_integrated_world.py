@@ -40,6 +40,14 @@ def run(browser_type, name, url, width, height):
     assert save_before and '"provinces"' in save_before, "Original campaign was not saved"
     original_provinces = page.evaluate("document.querySelectorAll('#provinces .flag-province').length")
     assert original_provinces >= 25, original_provinces
+    # All 32 interactive provinces remain, without oversized flag art.
+    assert page.locator("#provinces .map-city-node").count() == original_provinces
+    assert page.locator("#provinces .banner-outline").count() == 0
+    assert page.locator("#provinces .town-core").count() == original_provinces
+    assert page.locator("#provinces .town-hit").count() == original_provinces
+    assert page.locator("#provinces .town-garrison").count() == original_provinces
+    assert page.evaluate("document.body.classList.contains('map-regional')"), "Initial map should use minimal regional labels"
+    assert page.locator("#provinces .town-label").first.evaluate("(el) => getComputedStyle(el).fontSize") == "9.5px"
     page.locator("#mapViewToggle").click()
     assert page.locator("#worldAtlasGroup").is_visible()
     assert page.locator("#mapViewToggle").inner_text() == "Europe"
@@ -69,6 +77,8 @@ def run(browser_type, name, url, width, height):
     for _ in range(4):
         page.locator("#mapZoomIn").click()
     assert page.evaluate("document.getElementById('map').getBoundingClientRect().width") > 900
+    assert page.evaluate("document.body.classList.contains('map-regional')"), "Regional zoom should remain uncluttered"
+    assert page.locator("#provinces .town-label:not(.major-label)").first.evaluate("(el) => getComputedStyle(el).display") == "none"
     page.locator("#mapRoutesToggle").click()
     assert page.locator("#mapRoutesToggle").get_attribute("aria-pressed") == "true"
     visible_routes = page.locator("#routes").evaluate("(el) => getComputedStyle(el).display")
